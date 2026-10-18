@@ -1,21 +1,14 @@
 import { palette } from '../style/palette.ts';
+import { POSE_BLEND_FRAMES, type Box } from '../motion/entrances.ts';
+import { WipeMask } from '../motion/entranceViews.tsx';
 import { poseUrl } from '../style/assets.ts';
 import { SEAM_X, H, W } from '../layout.ts';
-import { onTwos } from '../math.ts';
 import { POSES, poseWho, type PoseId } from './poses.ts';
 
 export type Bg = 'navy' | 'cream';
 
 /** Which colouring reads on a background: humans are navy bodies (home = navy room), the AI is cream (home = cream room). */
 export const tersFor = (pose: PoseId, bg: Bg): boolean => (poseWho(pose) === 'human' ? bg === 'cream' : bg === 'navy');
-
-/** Last key whose frame has been reached; the pose steps on twos (12 fps). */
-export const poseAt = <T extends string>(frame: number, keys: readonly (readonly [number, T])[]): T => {
-  const f = onTwos(frame);
-  let cur = keys[0] as readonly [number, T];
-  for (const k of keys) if (f >= k[0]) cur = k;
-  return cur[1];
-};
 
 interface FigProps {
   pose: PoseId;
@@ -26,11 +19,11 @@ interface FigProps {
   /** Extra scale on top of the pose's own (smooth moves are fine). */
   zoom?: number;
   opacity?: number;
-  /** Paint over the AI's cursor slit (a blink). */
-  blink?: boolean;
+  /** Paint over the AI's cursor slit: 0 = open, 1 = shut (a blink eases between them). */
+  blink?: number;
 }
 
-const Img = ({ pose, ters, x, y, flip = false, zoom = 1, opacity = 1, blink = false }: FigProps & { ters: boolean }) => {
+const Img = ({ pose, ters, x, y, flip = false, zoom = 1, opacity = 1, blink = 0 }: FigProps & { ters: boolean }) => {
   const m = POSES[pose];
   const s = m.scale * zoom;
   const w = m.w * s;
@@ -39,7 +32,7 @@ const Img = ({ pose, ters, x, y, flip = false, zoom = 1, opacity = 1, blink = fa
   return (
     <g transform={`translate(${x.toFixed(1)} ${y.toFixed(1)})${flip ? ' scale(-1 1)' : ''}`} opacity={opacity}>
       <image href={poseUrl(pose, ters)} x={-ax} y={-h} width={w} height={h} preserveAspectRatio="none" />
-      {blink && m.slit && <rect x={-ax + m.slit.x * s} y={-h + m.slit.y * s} width={m.slit.w * s} height={m.slit.h * s} rx={3} fill={ters ? palette.navy : palette.cream} />}
+      {blink > 0 && m.slit && <rect x={-ax + m.slit.x * s} y={-h + m.slit.y * s} width={m.slit.w * s} height={m.slit.h * s} rx={3} fill={ters ? palette.navy : palette.cream} opacity={blink} />}
     </g>
   );
 };
@@ -61,11 +54,30 @@ export const CrossingFigure = ({
   seamX = SEAM_X,
   leftBg = 'navy',
   rightBg = 'cream',
+  soft = 0,
   ...p
-}: FigProps & { uid: string; seamX?: number; leftBg?: Bg; rightBg?: Bg }) => {
+}: FigProps & { uid: string; seamX?: number; leftBg?: Bg; rightBg?: Bg; soft?: number }) => {
   const lt = tersFor(p.pose, leftBg);
   const rt = tersFor(p.pose, rightBg);
   if (lt === rt) return <Img {...p} ters={lt} />;
+  if (soft > 0) {
+    // the colour swap follows a soft wipe edge: fully left colouring until seamX - soft, fully right from seamX
+    const from = seamX - soft;
+    return (
+      <g>
+        <defs>
+          <WipeMask id={`${uid}-ml`} p={1} axis="x" from={from} to={from} soft={soft} invert />
+          <WipeMask id={`${uid}-mr`} p={1} axis="x" from={from} to={from} soft={soft} />
+        </defs>
+        <g mask={`url(#${uid}-ml)`}>
+          <Img {...p} ters={lt} />
+        </g>
+        <g mask={`url(#${uid}-mr)`}>
+          <Img {...p} ters={rt} />
+        </g>
+      </g>
+    );
+  }
   return (
     <g>
       <clipPath id={`${uid}-l`}>
@@ -80,6 +92,50 @@ export const CrossingFigure = ({
       <g clipPath={`url(#${uid}-r)`}>
         <Img {...p} ters={rt} />
       </g>
+    </g>
+  );
+};
+
+/** Bounding box of a pose standing on (x, y); the halftone screen covers it. */
+export const poseBox = (pose: PoseId, x: number, y: number, zoom = 1): Box => {
+  const m = POSES[pose];
+  const s = m.scale * zoom;
+  const w = m.w * s;
+  const h = m.h * s;
+  return { x: x - m.anchorX * w, y: y - h, w, h };
+};
+
+/** Pose keys switch on twos (12 fps); the frame a pose takes over, rounded up to an even frame. */
+const takeOver = (k: number): number => k + (k % 2);
+
+/**
+ * A figure whose pose changes over time. Poses stay on twos but never hard-cut: when the pose
+ * switches, the old one dissolves into the new one over POSE_BLEND_FRAMES.
+ */
+export const PoseFigure = ({
+  frame,
+  keys,
+  uid,
+  seamX,
+  leftBg,
+  rightBg,
+  soft,
+  ...p
+}: Omit<FigProps, 'pose'> & { frame: number; keys: readonly (readonly [number, PoseId])[]; uid: string; seamX?: number; leftBg?: Bg; rightBg?: Bg; soft?: number }) => {
+  let cur = 0;
+  keys.forEach((k, i) => {
+    if (frame >= takeOver(k[0])) cur = i;
+  });
+  const now = keys[cur] as readonly [number, PoseId];
+  const t = cur === 0 ? 1 : Math.min(1, (frame - takeOver(now[0]) + 1) / POSE_BLEND_FRAMES);
+  const base = p.opacity ?? 1;
+  const draw = (pose: PoseId, id: string, opacity: number) => <CrossingFigure key={id} uid={id} pose={pose} seamX={seamX} leftBg={leftBg} rightBg={rightBg} soft={soft} {...p} opacity={opacity} />;
+  if (t >= 1) return draw(now[1], `${uid}-n`, base);
+  const prev = keys[cur - 1] as readonly [number, PoseId];
+  return (
+    <g>
+      {draw(prev[1], `${uid}-p`, base * (1 - t))}
+      {draw(now[1], `${uid}-n`, base * t)}
     </g>
   );
 };

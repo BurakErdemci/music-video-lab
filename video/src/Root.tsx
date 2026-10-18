@@ -30,6 +30,6 @@ export const Root = () => (
     <Composition id="HerSabahBastan" component={Video} durationInFrames={DURATION_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Test30" component={Video} durationInFrames={900} fps={FPS} width={W} height={H} />
     <Composition id="Lineup" component={LineupScene} durationInFrames={1} fps={FPS} width={W} height={H} />
-    <Composition id="Parts" component={Parts} durationInFrames={90} fps={FPS} width={W} height={H} />
+    <Composition id="Parts" component={Parts} durationInFrames={130} fps={FPS} width={W} height={H} />
   </>
 );

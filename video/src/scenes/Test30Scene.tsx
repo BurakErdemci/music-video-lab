@@ -1,11 +1,13 @@
 import { AbsoluteFill } from 'remotion';
-import { CrossingFigure, Figure } from '../characters/Figure.tsx';
+import { PoseFigure, poseBox } from '../characters/Figure.tsx';
 import { ev, evFrames } from '../events.ts';
 import { AI_X, FLOOR_Y, H, MOON_R, MOON_SEAM_Y, SEAM_X, W } from '../layout.ts';
-import { clamp01, lerp, onTwos, smooth } from '../math.ts';
+import { lerp, onTwos } from '../math.ts';
+import { Halftone, Squeegee } from '../motion/entranceViews.tsx';
+import { blinkAlpha, dotP, EASE_WIPE, ENTER_FRAMES, fadeIn, fadeOut, glide, progress, regOffset, wipeP } from '../motion/entrances.ts';
 import { STAMP_FONT } from '../style/fonts.ts';
 import { palette } from '../style/palette.ts';
-import { PaperGrain, plateOffset, printIn } from '../style/screenprint.tsx';
+import { PaperGrain, plateOffset } from '../style/screenprint.tsx';
 import { TIMING } from '../timing.ts';
 import { LyricLine } from '../type/LyricLine.tsx';
 import { StampWord, upperTr } from '../type/StampWord.tsx';
@@ -18,16 +20,17 @@ import { SplitMoon } from '../world/SplitMoon.tsx';
 const LINE1 = (TIMING.lines[1] as { text: string }).text;
 const LINE2 = (TIMING.lines[2] as { text: string }).text;
 
-/** The human sits at the plate's desk. */
-const HUMAN_DESK_X = 340;
+/** Pose h06 carries its own desk: it stands where the old plate's desk was, chair and desk legs on the plate floor. */
+const HUMAN_X = 278;
+const HUMAN_FLOOR = 1000;
 const CURSOR = { x: SEAM_X, y: 528 };
 const TITLE = 'Her Sabah Baştan';
-
-/** A blink starts on each event frame: off for 4 frames (two 12 fps steps), then on again. */
-const blinkOn = (frame: number, starts: number[]): boolean => !starts.some((s) => frame >= s && frame < s + 4);
+const TITLE_H = 200;
+/** Soft edge of the room-open squeegee, in px. */
+const WIPE_SOFT_X = 140;
 
 /** Crosshair registration marks in the four corners; navy where the cream wipe has passed. */
-const RegMarks = ({ front }: { front: number }) => {
+const RegMarks = ({ front, op }: { front: number; op: number }) => {
   const pts = [
     [44, 44],
     [W - 44, 44],
@@ -35,7 +38,7 @@ const RegMarks = ({ front }: { front: number }) => {
     [W - 44, H - 44],
   ] as const;
   return (
-    <g>
+    <g opacity={op}>
       {pts.map(([x, y], i) => {
         const ink = x < front ? palette.navy : palette.cream;
         const col = x < SEAM_X ? palette.cream : ink;
@@ -51,13 +54,15 @@ const RegMarks = ({ front }: { front: number }) => {
   );
 };
 
+const pad = (b: { x: number; y: number; w: number; h: number }) => ({ x: b.x - 12, y: b.y - 12, w: b.w + 24, h: b.h + 24 });
+
 export const Test30Scene = ({ frame }: { frame: number }) => {
+  const enterFrames = (id: string): number => ev(id).enter.frames;
   const revStart = ev('room.reveal.start').frame;
   const revEnd = ev('room.reveal.end').frame;
-  const reveal = clamp01((frame - revStart) / (revEnd - revStart));
-  const e = smooth(reveal);
-  const settled = frame >= revEnd;
-  const front = SEAM_X + (W - SEAM_X) * e;
+  // the room opens with a soft squeegee wipe from the glass to the right edge; e is its eased progress
+  const e = wipeP(frame, revStart, enterFrames('room.reveal.start'), EASE_WIPE);
+  const front = SEAM_X + e * (W - SEAM_X + WIPE_SOFT_X);
 
   // ---- intro print plates
   const fCursor = ev('intro.cursor').frame;
@@ -76,42 +81,45 @@ export const Test30Scene = ({ frame }: { frame: number }) => {
 
   const ohFrames = [ev('intro.oh1').frame, ev('intro.oh2').frame];
   const introBlink = evFrames('intro.blink.');
-  const cursorPrint = printIn(frame, fCursor, 'cursor');
-  const cursorOn = frame >= fCursor && frame < fAi && blinkOn(frame, introBlink);
-  const cursorH = frame < fWake ? 44 : 104;
+  const cursorP = wipeP(frame, fCursor, enterFrames('intro.cursor'));
+  const cursorH = lerp(44, 104, glide(frame, fWake, enterFrames('intro.cursor.wake')));
+  // the cursor hands over to the AI figure: it fades out while the figure's dots grow in
+  const cursorOp = blinkAlpha(frame, introBlink) * (frame >= fAi ? fadeOut(frame, fAi, enterFrames('intro.ai')) : 1);
 
-  const seamP = frame < fSeam ? 0 : clamp01((onTwos(frame) - onTwos(fSeam)) / (fSeamEnd - fSeam));
-  const moonPrint = printIn(frame, fMoon, 'crescent');
+  const seamP = wipeP(frame, fSeam, enterFrames('intro.seam'));
+  const seamSettle = regOffset('seam', progress(frame, fSeamEnd, enterFrames('intro.seam.end')), 6);
+  const moonP = wipeP(frame, fMoon, enterFrames('intro.moon'));
 
-  const keyPrint = printIn(frame, fRoom, 'room-key');
-  const inkPrint = printIn(frame, fInk, 'room-ink');
-  const keyLayer = keyPrint && { dx: inkPrint ? inkPrint.dx : keyPrint.dx, dy: inkPrint ? inkPrint.dy : keyPrint.dy, op: frame < fInk ? 0.55 * keyPrint.op : 1 };
-  const moonLayer = printIn(frame, fMoonWin, 'room-moon');
-  const notesLayer = printIn(frame, fNotes, 'room-notes');
-  const humanPrint = printIn(frame, fHuman, 'human');
-  const aiPrint = printIn(frame, fAi, 'ai');
+  const keyP = wipeP(frame, fRoom, enterFrames('intro.room'));
+  const keyOp = lerp(0.55, 1, glide(frame, fInk, enterFrames('intro.room.ink')));
+  const moonWinP = wipeP(frame, fMoonWin, enterFrames('intro.moonwin'));
+  const notesP = wipeP(frame, fNotes, enterFrames('intro.notes'));
+  const humanP = dotP(frame, fHuman, enterFrames('intro.human'));
+  const aiP = dotP(frame, fAi, enterFrames('intro.ai'));
 
-  const titleFade = frame < fTitleFade ? 1 : 1 - clamp01((onTwos(frame) - fTitleFade) / (fRoom - fTitleFade));
-  const titleStep = Math.floor(onTwos(frame - fTitle) / 2);
-  const titleScale = [1.15, 1.1, 1.05][titleStep] ?? 1;
+  const titleFade = frame < fTitleFade ? 1 : fadeOut(frame, fTitleFade, enterFrames('intro.title.fade'));
+  const titleP = wipeP(frame, fTitle, enterFrames('intro.title'));
+  const titleScale = 1 + 0.08 * (1 - titleP);
   const titleOff = plateOffset('title');
+  const titleFront = titleP * (TITLE_H + 60);
+  const titleMask = titleP >= 1 ? undefined : `linear-gradient(180deg, #000 ${(titleFront - 60).toFixed(1)}px, transparent ${titleFront.toFixed(1)}px)`;
 
   // ---- verse
   const hold = onTwos(frame);
   const aiBob = Math.round(Math.sin(hold * 0.11 + 1.7) * 2);
-  const aiBlink = frame >= ev('ai.blink.imlec').frame && frame < ev('ai.blink.imlec').frame + 4;
+  const aiBlink = 1 - blinkAlpha(frame, [ev('ai.blink.imlec').frame]);
 
   const wallFrames = evFrames('wall.');
-  const wallCount = wallFrames.filter((f) => f <= frame).length;
-  const lastWall = wallFrames.filter((f) => f <= frame).pop();
-  const popAge = lastWall === undefined ? 9 : Math.floor((onTwos(frame) - onTwos(lastWall)) / 2);
 
   const note1 = { fly: ev('note1.fly').frame, land: ev('note1.land').frame };
   const note2 = { fly: ev('note2.fly').frame, land: ev('note2.land').frame };
-  const handFrom = { x: HUMAN_DESK_X + 130, y: 700 };
+  const handFrom = { x: HUMAN_X + 70, y: HUMAN_FLOOR - 280 };
 
   const aiBg = 'cream' as const;
   const headY = FLOOR_Y - 670 + 40;
+  const aiY = FLOOR_Y + aiBob;
+
+  const regOp = Math.min(fadeIn(frame, fRoom, ENTER_FRAMES.ease), frame >= revEnd ? fadeOut(frame, revEnd, ENTER_FRAMES.ease) : 1);
 
   return (
     <AbsoluteFill style={{ background: palette.navy }}>
@@ -119,64 +127,88 @@ export const Test30Scene = ({ frame }: { frame: number }) => {
         <rect width={W} height={H} fill={palette.navy} />
 
         {/* left room: key plate, then the yellow plates, then the code notes */}
-        <PlateRoom key1={keyLayer} moon={moonLayer} notes={notesLayer} />
-        {wallCount > 0 && <WallNotes count={wallCount} popAge={popAge} />}
+        <PlateRoom key1={{ p: keyP, op: keyOp }} moon={{ p: moonWinP }} notes={{ p: notesP }} />
+        <WallNotes frame={frame} starts={wallFrames} frames={ENTER_FRAMES.drift} />
 
-        {/* right room: the cream wipes open from the glass; its edge is exact, nothing overshoots */}
-        {reveal > 0 && (
-          <>
-            <clipPath id="reveal-clip">
-              <rect x={SEAM_X} y={0} width={Math.max(0, front - SEAM_X)} height={H} />
-            </clipPath>
-            <g clipPath="url(#reveal-clip)">
-              <WhiteRoom />
-            </g>
-          </>
+        {/* right room: the cream is pulled across from the glass by a soft squeegee edge */}
+        {e > 0 && (
+          <Squeegee id="sq-room" p={e} axis="x" from={SEAM_X} to={W} soft={WIPE_SOFT_X}>
+            <WhiteRoom />
+          </Squeegee>
         )}
 
-        {moonPrint && (
-          <g transform={`translate(${reveal > 0 ? 0 : moonPrint.dx} ${reveal > 0 ? 0 : moonPrint.dy})`} opacity={reveal > 0 ? 1 : moonPrint.op}>
-            <SplitMoon cx={lerp(1710, SEAM_X, e)} cy={lerp(145, MOON_SEAM_Y, e)} r={lerp(100, MOON_R, e)} phase={lerp(0.2, 0.82, e)} split={settled} />
+        {moonP > 0 && (
+          <Squeegee id="sq-crescent" p={moonP} from={20} to={270} soft={80} reg="crescent" regAmp={14}>
+            <SplitMoon cx={lerp(1710, SEAM_X, e)} cy={lerp(145, MOON_SEAM_Y, e)} r={lerp(100, MOON_R, e)} phase={lerp(0.2, 0.82, e)} split />
+          </Squeegee>
+        )}
+
+        {seamP > 0 && (
+          <g transform={`translate(${seamSettle.dx.toFixed(2)} 0)`}>
+            <Squeegee id="sq-seam" p={seamP} from={0} to={H} soft={140}>
+              <GlassSeam />
+            </Squeegee>
           </g>
         )}
 
-        {seamP > 0 && <GlassSeam bottom={H * seamP} />}
-
-        {humanPrint && (
-          <g transform={`translate(${humanPrint.dx} ${humanPrint.dy})`}>
-            <Figure pose="h06" x={HUMAN_DESK_X} y={FLOOR_Y} opacity={humanPrint.op} />
-          </g>
+        {humanP > 0 && (
+          <Halftone
+            id="ht-human"
+            p={humanP}
+            box={pad(poseBox('h06', HUMAN_X, HUMAN_FLOOR))}
+            seed="human"
+            reg="human"
+            proof={<PoseFigure uid="human-proof" frame={frame} keys={[[0, 'h06']]} x={HUMAN_X} y={HUMAN_FLOOR} leftBg="cream" rightBg="cream" />}
+          >
+            <PoseFigure uid="human" frame={frame} keys={[[0, 'h06']]} x={HUMAN_X} y={HUMAN_FLOOR} />
+          </Halftone>
         )}
-        {aiPrint && (
-          <g transform={`translate(${aiPrint.dx} ${aiPrint.dy})`}>
-            <CrossingFigure uid="ai" pose="a01" x={AI_X} y={FLOOR_Y + aiBob} seamX={front} leftBg={aiBg} rightBg="navy" opacity={aiPrint.op} blink={aiBlink} />
-          </g>
+        {aiP > 0 && (
+          <Halftone id="ht-ai" p={aiP} box={pad(poseBox('a01', AI_X, aiY))} seed="ai" reg="ai">
+            <PoseFigure uid="ai" frame={frame} keys={[[0, 'a01']]} x={AI_X} y={aiY} seamX={front} leftBg={aiBg} rightBg="navy" soft={WIPE_SOFT_X} blink={aiBlink} />
+          </Halftone>
         )}
 
-        <NoteFly frame={frame} startFrame={note1.fly} duration={note1.land - note1.fly} from={handFrom} to={{ x: 1560, y: 330 }} seed="n1" />
-        <NoteFly frame={frame} startFrame={note2.fly} duration={note2.land - note2.fly} from={handFrom} to={{ x: 1690, y: 470 }} seed="n2" arc={120} />
+        <NoteFly frame={frame} startFrame={note1.fly} duration={note1.land - note1.fly} from={handFrom} to={{ x: 1560, y: 330 }} seed="n1" settle={enterFrames('note1.land')} />
+        <NoteFly frame={frame} startFrame={note2.fly} duration={note2.land - note2.fly} from={handFrom} to={{ x: 1690, y: 470 }} seed="n2" arc={120} settle={enterFrames('note2.land')} />
 
         {/* intro: the cursor on the seam, the oh rings, the registration marks */}
-        {cursorOn && cursorPrint && (
-          <rect x={CURSOR.x - 5 + cursorPrint.dx * 0.3} y={CURSOR.y - cursorH / 2} width={10} height={cursorH} fill={palette.cream} opacity={cursorPrint.op} />
+        {cursorP > 0 && cursorOp > 0 && (
+          <g opacity={cursorOp}>
+            <Squeegee id="sq-cursor" p={cursorP} from={CURSOR.y - 70} to={CURSOR.y + 70} soft={50} reg="cursor" regAmp={10}>
+              <rect x={CURSOR.x - 5} y={CURSOR.y - cursorH / 2} width={10} height={cursorH} fill={palette.cream} />
+            </Squeegee>
+          </g>
         )}
         {ohFrames.map((f, i) => {
-          const step = Math.floor((onTwos(frame) - onTwos(f)) / 2);
-          if (frame < f || step > 3) return null;
-          return <circle key={i} cx={CURSOR.x} cy={CURSOR.y} r={[34, 74, 124, 180][step]} fill="none" stroke={palette.cream} strokeWidth={4} opacity={[1, 0.8, 0.5, 0.25][step]} />;
+          const t = progress(frame, f, ENTER_FRAMES.ring);
+          if (frame < f || t >= 1) return null;
+          const grow = 1 - Math.pow(1 - t, 3);
+          return <circle key={i} cx={CURSOR.x} cy={CURSOR.y} r={lerp(18, 190, grow)} fill="none" stroke={palette.cream} strokeWidth={lerp(6, 2, t)} opacity={Math.min(1, (frame - f + 1) / 4) * (1 - t) * 0.9} />;
         })}
-        {frame >= fRoom && frame < revEnd && <RegMarks front={front} />}
+        {frame >= fRoom && regOp > 0 && <RegMarks front={front} op={regOp} />}
 
         {/* the AI's "Merhaba" on the AI side, tail at its head (never over the human) */}
-        <Bubble frame={frame} startFrame={ev('intro.bubble').frame} endFrame={revEnd} x={AI_X + 22} y={headY + 20} text={frame < ev('intro.bubble.text').frame ? '...' : 'Merhaba'} />
-        <Bubble frame={frame} startFrame={ev('bubble.merhaba').frame} x={AI_X + 22} y={headY + 20} />
+        <Bubble
+          frame={frame}
+          startFrame={ev('intro.bubble').frame}
+          frames={enterFrames('intro.bubble')}
+          endFrame={revEnd}
+          x={AI_X + 22}
+          y={headY + 20}
+          text="Merhaba"
+          swap={{ frame: ev('intro.bubble.text').frame, from: '...', frames: enterFrames('intro.bubble.text') }}
+        />
+        <Bubble frame={frame} startFrame={ev('bubble.merhaba').frame} frames={enterFrames('bubble.merhaba')} x={AI_X + 22} y={headY + 20} />
       </svg>
 
-      {/* title plate: bar 4, cream, fades by bar 5 */}
+      {/* title plate: bar 4, cream, pulled in by a squeegee, fades by bar 5 */}
       {frame >= fTitle && titleFade > 0 && (
-        <div style={{ position: 'absolute', left: 0, top: 300, width: W, textAlign: 'center', opacity: titleFade, transform: `scale(${titleScale})`, fontFamily: STAMP_FONT, fontSize: 176, letterSpacing: '0.03em', lineHeight: 1.1, whiteSpace: 'nowrap' }}>
-          <div style={{ position: 'absolute', left: 0, width: W, color: palette.moonYellow, transform: `translate(${titleOff.dx * 2}px, ${titleOff.dy * 2}px)` }}>{upperTr(TITLE)}</div>
-          <div style={{ position: 'relative', color: palette.cream }}>{upperTr(TITLE)}</div>
+        <div style={{ position: 'absolute', left: 0, top: 300, width: W, height: TITLE_H, opacity: titleFade, transform: `scale(${titleScale})` }}>
+          <div style={{ position: 'absolute', inset: 0, textAlign: 'center', fontFamily: STAMP_FONT, fontSize: 176, letterSpacing: '0.03em', lineHeight: 1.1, whiteSpace: 'nowrap', maskImage: titleMask, WebkitMaskImage: titleMask }}>
+            <div style={{ position: 'absolute', left: 0, width: W, color: palette.moonYellow, transform: `translate(${titleOff.dx * 2}px, ${titleOff.dy * 2}px)` }}>{upperTr(TITLE)}</div>
+            <div style={{ position: 'relative', color: palette.cream }}>{upperTr(TITLE)}</div>
+          </div>
         </div>
       )}
 

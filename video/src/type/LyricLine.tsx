@@ -1,6 +1,7 @@
 import { palette } from '../style/palette.ts';
 import { TEXT_FONT } from '../style/fonts.ts';
 import { SEAM_X } from '../layout.ts';
+import { fadeIn, fadeOut, LYRIC_FRAMES } from '../motion/entrances.ts';
 
 interface Props {
   frame: number;
@@ -17,7 +18,10 @@ const BOX = 880;
 
 /** Small quiet lyric line. All layers share one fixed box so they wrap identically. */
 export const LyricLine = ({ frame, startFrame, endFrame, text, side, y, size = 28 }: Props) => {
-  if (frame < startFrame || frame >= endFrame) return null;
+  if (frame < startFrame || frame >= endFrame + LYRIC_FRAMES) return null;
+  // soft 8-frame fade and 8 px slide in on the show beat, the same out on the hide beat
+  const op = Math.min(fadeIn(frame, startFrame, LYRIC_FRAMES), frame >= endFrame ? fadeOut(frame, endFrame, LYRIC_FRAMES) : 1);
+  const slide = frame >= endFrame ? -8 * (1 - fadeOut(frame, endFrame, LYRIC_FRAMES)) : 8 * (1 - fadeIn(frame, startFrame, LYRIC_FRAMES));
   const style = {
     position: 'absolute',
     top: 0,
@@ -31,7 +35,7 @@ export const LyricLine = ({ frame, startFrame, endFrame, text, side, y, size = 2
   if (side === 'seam') {
     const left = SEAM_X - BOX / 2;
     return (
-      <div style={{ position: 'absolute', left, top: y, width: BOX, height: size * 1.4 }}>
+      <div style={{ position: 'absolute', left, top: y + slide, width: BOX, height: size * 1.4, opacity: op }}>
         <div style={{ ...style, left: 0, textAlign: 'center', color: palette.cream, clipPath: `inset(0 ${BOX / 2}px 0 0)` }}>{text}</div>
         <div style={{ ...style, left: 0, textAlign: 'center', color: palette.navy, clipPath: `inset(0 0 0 ${BOX / 2}px)` }}>{text}</div>
       </div>
@@ -39,7 +43,7 @@ export const LyricLine = ({ frame, startFrame, endFrame, text, side, y, size = 2
   }
   const left = side === 'left' ? 72 : SEAM_X + 72;
   return (
-    <div style={{ position: 'absolute', left, top: y, width: BOX - 40, height: size * 1.4 }}>
+    <div style={{ position: 'absolute', left, top: y + slide, width: BOX - 40, height: size * 1.4, opacity: op }}>
       <div style={{ ...style, left: 0, color: side === 'left' ? palette.cream : palette.navy }}>{text}</div>
     </div>
   );

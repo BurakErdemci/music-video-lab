@@ -1,10 +1,10 @@
-# Splits stil/pozlar/oda-levha.png (left half = room) into print plates for the intro:
+# Splits stil/pozlar/oda-levha-masasiz.png (the deskless plate; the desk comes with pose h06) (left half = room) into print plates for the intro:
 #   room-key.png   navy/cream key plate, yellow pixels knocked back to a dim navy
 #   room-moon.png  yellow plate, window moon only (RGBA)
 #   room-notes.png yellow plate, everything outside the window (RGBA)
 # All three are 960x1080 (plate scaled to 1920x1080, left half).
 from PIL import Image, ImageChops
-src = Image.open('../stil/pozlar/oda-levha.png').convert('RGB').resize((1920, 1080), Image.LANCZOS).crop((0, 0, 960, 1080))
+src = Image.open('../stil/pozlar/oda-levha-masasiz.png').convert('RGB').resize((1920, 1080), Image.LANCZOS).crop((0, 0, 960, 1080))
 r, g, b = src.split()
 # yellowness = R - B, ramped 40..100 into an alpha mask
 rb = ImageChops.subtract(r, b)

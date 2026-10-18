@@ -3,11 +3,13 @@ import { PLATE } from '../style/assets.ts';
 import { YellowPlate, plateOffset } from '../style/screenprint.tsx';
 import { seeded, range } from '../style/seeded.ts';
 import { Sticky } from './Notes.tsx';
+import { Squeegee } from '../motion/entranceViews.tsx';
+import { drift, ENTER_FRAMES } from '../motion/entrances.ts';
 import { FLOOR_Y, H, SEAM_X, W } from '../layout.ts';
 
 export const WALL_MAX = 72;
 
-// Free wall space of the room plate: right of the window and the strip left of it (shelf and desk excluded).
+// Free wall space of the room plate: right of the window and the strip left of it (shelf excluded; the desk is part of pose h06).
 const REGIONS = [
   { x0: 600, x1: 830, y0: 110, y1: 900 },
   { x0: 165, x1: 330, y0: 110, y1: 470 },
@@ -43,44 +45,51 @@ const wall: WallNote[] = (() => {
   return out;
 })();
 
-const POP = [1.5, 1.2, 1.05, 1];
-
 /**
- * The human's wall of code notes on top of the plate. `count` notes are shown; `popAge` is the age in
- * 12 fps steps of the newest one (it slams in from 1.5x).
+ * The human's wall of code notes on top of the plate. `starts` holds the frame each note arrives on
+ * (one per wall event); a note drifts in over `frames` and then stays.
  */
-export const WallNotes = ({ count, popAge }: { count: number; popAge: number }) => (
+export const WallNotes = ({ frame, starts, frames = ENTER_FRAMES.drift }: { frame: number; starts: readonly number[]; frames?: number }) => (
   <g>
-    {wall.slice(0, Math.min(WALL_MAX, count)).map((n, i, arr) => {
-      const newest = i === arr.length - 1;
-      const s = newest ? (POP[Math.min(popAge, POP.length - 1)] as number) : 1;
-      const t = `translate(${n.x.toFixed(1)} ${n.y.toFixed(1)}) rotate(${n.rot.toFixed(1)}) scale(${s})`;
+    {wall.slice(0, Math.min(WALL_MAX, starts.length)).map((n, i) => {
+      const start = starts[i] as number;
+      if (frame < start) return null;
+      const d = drift(frame, start, frames, { from: { x: -14, y: 22 }, bulge: 8 });
+      const t = `translate(${(n.x + d.ox).toFixed(1)} ${(n.y + d.oy).toFixed(1)}) rotate(${n.rot.toFixed(1)}) scale(${d.s.toFixed(4)})`;
       return n.kind === 'paper' ? (
-        <g key={i} transform={t}>
+        <g key={i} transform={t} opacity={d.op}>
           <rect x={-n.w / 2} y={-n.h / 2} width={n.w} height={n.h} fill={palette.cream} />
           {Array.from({ length: n.lines }, (_, k) => (
             <rect key={k} x={-n.w / 2 + 8} y={-n.h / 2 + 14 + k * 11} width={n.w - 16 - (k % 3) * 9} height={2} fill={palette.navy} />
           ))}
         </g>
       ) : (
-        <YellowPlate key={i} k={`wall-${i}`}>
-          <g transform={t}>
-            <Sticky size={n.w} />
-          </g>
-        </YellowPlate>
+        <g key={i} opacity={d.op}>
+          <YellowPlate k={`wall-${i}`}>
+            <g transform={t}>
+              <Sticky size={n.w} />
+            </g>
+          </YellowPlate>
+        </g>
       );
     })}
   </g>
 );
 
+/** One print plate: squeegee progress `p` (0..1, eased), optional opacity (the ink deepening). */
+export interface PlateLayer {
+  p: number;
+  op?: number;
+}
 interface PlateProps {
-  /** Key plate (navy + cream) offset and opacity; null = not printed yet. */
-  key1: { dx: number; dy: number; op: number } | null;
-  moon: { dx: number; dy: number; op: number } | null;
-  notes: { dx: number; dy: number; op: number } | null;
+  key1: PlateLayer;
+  moon: PlateLayer;
+  notes: PlateLayer;
 }
 
-/** Left half: the room plate split into three print plates (see scripts/make-plates.py). */
+const WIPE_SOFT = 110;
+
+/** Left half: the deskless room plate split into three print plates (see scripts/make-plates.py), each pulled in by a squeegee. */
 export const PlateRoom = ({ key1, moon, notes }: PlateProps) => {
   const yo = plateOffset('room-yellow');
   return (
@@ -90,9 +99,15 @@ export const PlateRoom = ({ key1, moon, notes }: PlateProps) => {
         <rect x={0} y={0} width={SEAM_X} height={H} />
       </clipPath>
       <g clipPath="url(#plate-clip)">
-        {key1 && <image href={PLATE.key} x={key1.dx} y={key1.dy} width={SEAM_X} height={H} opacity={key1.op} />}
-        {moon && <image href={PLATE.moon} x={moon.dx + yo.dx} y={moon.dy + yo.dy} width={SEAM_X} height={H} opacity={moon.op} />}
-        {notes && <image href={PLATE.notes} x={notes.dx + yo.dx} y={notes.dy + yo.dy} width={SEAM_X} height={H} opacity={notes.op} />}
+        <Squeegee id="sq-key" p={key1.p} from={0} to={H} soft={WIPE_SOFT} reg="room-key" regAmp={14}>
+          <image href={PLATE.key} x={0} y={0} width={SEAM_X} height={H} opacity={key1.op ?? 1} />
+        </Squeegee>
+        <Squeegee id="sq-moon" p={moon.p} from={0} to={H} soft={WIPE_SOFT} reg="room-moon" regAmp={18}>
+          <image href={PLATE.moon} x={yo.dx} y={yo.dy} width={SEAM_X} height={H} />
+        </Squeegee>
+        <Squeegee id="sq-notes" p={notes.p} from={0} to={H} soft={WIPE_SOFT} reg="room-notes" regAmp={18}>
+          <image href={PLATE.notes} x={yo.dx} y={yo.dy} width={SEAM_X} height={H} />
+        </Squeegee>
       </g>
     </g>
   );
