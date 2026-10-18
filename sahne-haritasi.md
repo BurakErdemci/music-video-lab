@@ -94,3 +94,35 @@ Times = measured line start–end. KEY = stamped word.
 | 3:33.2–3:47.9 | — | Wordless coda (loudest) | — | Shatter; whole moon; rooms merge (05). |
 | 3:31.0–3:31.9 | F | Merhaba (1st) | — | Sung twice (both Whisper passes, p 0.82–0.98). The first one, right before the shatter: the "Merhaba" bubble appears ON the trembling glass. |
 | 3:55.5–3:56.9 | F | Merhaba. (2nd, in the −37 dB fade) | — | After the final white wave: morning, empty white room, cursor, the bubble one last time; the human opens the notebook. Loop closed. |
+
+## Intro rebuilt as print plates (approved 2026-10-18)
+
+Burak: the first test showed one static screen for 15 s. The beat check passed only
+because cursor blinks counted as events; a blink is not a visible change. Rule from
+now on: every bar of the intro adds something the eye notices.
+
+| Bar | Event |
+|---|---|
+| 1 | Cursor alone in the navy void (blinks on the two "oh"s). |
+| 2 | The crescent is printed (yellow plate stamps in). |
+| 3 | The glass seam is drawn top to bottom. |
+| 4 | Title "HER SABAH BAŞTAN" stamped (stamp face, cream), fades by bar 5. |
+| 5 | Navy room plate prints in on the left (registration marks appear in the corners). |
+| 6 | Yellow plate prints: window moon, the few pinned notes; slight misregistration settles. |
+| 7 | The two silhouettes appear in the dark (human left, AI right), on twos. |
+| 8 | "Merhaba" bubble opens on the AI side (NOT over the human — test30 bug). |
+
+## Crossing into the other's world (approved 2026-10-18, Burak's idea)
+
+The two-colour palette makes it literal: whatever crosses the glass seam takes the
+other world's colours (navy ↔ cream, moon yellow stays). Pose cut-outs exist in both
+colourings: `stil/pozlar/kesik/<pose>.png` and `<pose>-ters.png`; while a body
+crosses, mask the swap exactly at the seam (same language as the split moon).
+
+| Time | Moment |
+|---|---|
+| 2:00.4 (chorus 2, "buradayız") | Palms meet; for one beat the hands pass through the glass and the part past the seam inverts. First hint. |
+| 2:34.9 ("Seni buraya o getirdi") | The AI reaches through the glass and leaves the yellow note on the human's side; its arm is navy past the seam. |
+| 2:35.9–2:52.6 (solo) | On each crack downbeat the whole frame swaps worlds for a few frames, then snaps back. |
+| 3:33.2–3:47.9 (coda) | Full crossing after the shatter: they walk into each other's world. The AI turns navy and sticky notes stick to it (it keeps something for the first time); the human turns cream and their notes fall off (relief). |
+| 3:47.9 → 3:55.5 | The white wave resets everything: the AI is cream again and loses its notes; "Merhaba." |
