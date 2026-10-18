@@ -5,7 +5,7 @@ outline touches the background colour. Flood-fill from the border instead of a
 colour threshold: a threshold also eats magenta-ish anti-aliasing inside the
 figure, flood-fill cannot cross the outline.
 
-usage: python cutout.py <in_dir> <out_dir>
+usage: python cutout.py <in_dir> <out_dir> [glob]   (default glob: [ha]*.png)
 """
 import glob
 import os
@@ -62,10 +62,10 @@ def invert(im):
     return out
 
 
-def main(src, dst):
+def main(src, dst, pattern="[ha]*.png"):
     os.makedirs(dst, exist_ok=True)
     cuts = []
-    for f in sorted(glob.glob(os.path.join(src, "[ha]*.png"))):
+    for f in sorted(glob.glob(os.path.join(src, pattern))):
         im = cut(f)
         name = os.path.basename(f)
         im.save(os.path.join(dst, name))
@@ -94,4 +94,4 @@ def main(src, dst):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1], sys.argv[2])
+    main(*sys.argv[1:4])
