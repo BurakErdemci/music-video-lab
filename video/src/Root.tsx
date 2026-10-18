@@ -3,6 +3,7 @@ import { DURATION_FRAMES, FPS } from './timing.ts';
 import { W, H } from './layout.ts';
 import { Test30Scene } from './scenes/Test30Scene.tsx';
 import { LineupScene, PartsScene } from './scenes/PartsScene.tsx';
+import { CharMaskScene } from './scenes/CharMaskScene.tsx';
 import './style/fonts.ts';
 import './style/assets.ts';
 
@@ -31,6 +32,7 @@ export const Root = () => (
     <Composition id="Test30" component={Video} durationInFrames={900} fps={FPS} width={W} height={H} />
     <Composition id="Test90" component={Video} durationInFrames={2700} fps={FPS} width={W} height={H} />
     <Composition id="Lineup" component={LineupScene} durationInFrames={1} fps={FPS} width={W} height={H} />
+    <Composition id="CharMask" component={CharMaskScene} defaultProps={{ who: 'human' as 'human' | 'ai' }} durationInFrames={2700} fps={FPS} width={W} height={H} />
     <Composition id="Parts" component={Parts} durationInFrames={130} fps={FPS} width={W} height={H} />
   </>
 );

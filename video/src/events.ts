@@ -168,7 +168,7 @@ atTime('check.off', 'print', lineWordTime(8, 1), enter('fade', 12));
 // ---- chorus 1: one cream wave per bar over the AI side, the AI pins two notes between waves
 const C1 = [31, 32, 33, 34, 35, 36, 37, 38] as const;
 for (const b of C1) {
-  atBar(`wave.c${b}`, 'wave', b, 0, enter('squeegee', 16));
+  atBar(`wave.c${b}`, 'wave', b, 0, enter('squeegee', 30)); // a 1 s sweep (16 frames flickered, test90-v3)
   atBar(`cnote.${b}.a.fly`, 'note', b, 0, enter('drift'));
   atBar(`cnote.${b}.a.land`, 'note', b, 2, enter('settle', ENTER_FRAMES.fade));
   atBar(`cnote.${b}.b.fly`, 'note', b, 1, enter('drift'));

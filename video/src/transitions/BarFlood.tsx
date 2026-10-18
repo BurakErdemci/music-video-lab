@@ -19,9 +19,11 @@ const ROWS = 48;
 const BULGE = 150;
 const X0 = -520;
 const X1 = W + 560;
-/** The navy front crosses the frame in this share of the wave; the cream cover follows it a few frames later. */
-const LEAD = 0.66;
-const LAG = 0.3;
+/** The navy band's width, px: the cream cover follows the navy front this far behind (test90-v4). In v3 the cover
+ * started a share of the wave later, so for 2-3 frames the band spanned the whole frame: a full-navy flicker. Now
+ * the band is a wave of fixed width sweeping across, never the whole picture. */
+const BAND = 560;
+const LEAD = 1;
 
 /** Frame-wide breathing of the whole picture on a flood bar: 1 -> 1.014 -> 1. */
 export const floodPulse = (frame: number, startFrame: number, endFrame: number): number => {
@@ -38,10 +40,8 @@ export const floodPulse = (frame: number, startFrame: number, endFrame: number):
 export const BarFlood = ({ frame, startFrame, endFrame, seed, noteRows = [], bits = 40 }: Props) => {
   if (frame < startFrame || frame > endFrame + 1) return null;
   const p = clamp01((frame - startFrame + 1) / (endFrame - startFrame));
-  const pLead = clamp01(p / LEAD);
-  const pTrail = clamp01((p - LAG) / (1 - LAG));
-  const xLead = X0 + smooth(pLead) * (X1 - X0);
-  const xTrail = X0 + smooth(pTrail) * (X1 - X0);
+  const xLead = X0 + smooth(p) * (X1 + BAND - X0);
+  const xTrail = xLead - BAND;
   const step = Math.floor(onTwos(frame) / 2);
   const jag = (row: number, tag: string): number => {
     const r = seeded(`${seed}:${tag}:${row}:${step}`);

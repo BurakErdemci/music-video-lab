@@ -4,6 +4,7 @@ import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
 import { Actor } from '../characters/Actor.tsx';
 import { poseBounds, resolveActor } from '../characters/actor.ts';
+import { DeskProp, humanHasDesk } from '../world/Desk.tsx';
 import { handAt } from '../characters/poses.ts';
 import { EVENTS, ev, evFrames } from '../events.ts';
 import { FLOOR_Y, H, MOON_R, MOON_SEAM_Y, SEAM_X, W } from '../layout.ts';
@@ -19,13 +20,15 @@ import { SEAM_SWEEP, WhiteWave } from '../transitions/WhiteWave.tsx';
 import { TIMING } from '../timing.ts';
 import { LyricLine } from '../type/LyricLine.tsx';
 import { StampWord } from '../type/StampWord.tsx';
+import { placeStamp } from '../type/stampLayout.ts';
+import { STAMP_EXIT_FRAMES } from '../motion/entrances.ts';
 import { Bubble } from '../world/Bubble.tsx';
 import { GlassSeam } from '../world/GlassSeam.tsx';
 import { NoteFly } from '../world/Notes.tsx';
 import { PlateRoom, WallNotes } from '../world/Rooms.tsx';
 import { SplitMoon } from '../world/SplitMoon.tsx';
 import { Check, GlassNote, GlassRipple, NotebookDrop, PageSketch, TallyBoard } from '../world/Story.tsx';
-import { AI, AI_FLOOR, AI_HOME, AI_REACH_X, DESK_X, HUMAN, HUMAN_BUBBLES, HUMAN_FLOOR, LAPSE_FROM, LAPSE_TO, MORNINGS, NOTE_X, REACH_X, STICK_X, TALLY_STARTS, WAVE_X } from './acting.ts';
+import { AI, AI_BOOK_X, AI_FLOOR, AI_HOME, AI_PICKUP, AI_REACH_X, DESK_X, HUMAN, HUMAN_BUBBLES, HUMAN_FLOOR, LAPSE_FROM, LAPSE_TO, MORNINGS, NOTE_X, STICK_X, TALLY_STARTS, WAVE_X } from './acting.ts';
 import { ZoomIntro } from './ZoomIntro.tsx';
 
 const lineText = (n: number): string => (TIMING.lines[n] as { text: string }).text;
@@ -33,13 +36,49 @@ const lineText = (n: number): string => (TIMING.lines[n] as { text: string }).te
 /** Soft edge of the navy room's squeegee, in px. */
 const NAVY_SOFT_X = 140;
 
-/** Where the AI's notebook lands: left of the bending pose, whose own notebook is drawn there. */
-const BOOK_X = AI_HOME - 138;
+/** Where the AI's notebook lands: under her hand when she reaches for it (A15 f1); it goes when she picks it up. */
+const BOOK_X = AI_BOOK_X;
 const BOOK_W = 112;
 
+interface StampDef {
+  id: string;
+  hide: string;
+  text: string;
+  x: number;
+  y: number;
+  size: number;
+  side: 'human' | 'ai' | 'seam';
+  ink?: 'yellow' | 'navy';
+}
+/** The stamp words and the spot each was asked for (v3's); STAMPS has where they actually go. */
+const STAMP_DEFS: readonly StampDef[] = [
+  { id: 'stamp.imlec', hide: 'line1.hide', text: 'imleç', x: 588, y: 490, size: 104, side: 'human' },
+  { id: 'stamp.merhaba', hide: 'line2.hide', text: 'merhaba', x: 560, y: 490, size: 104, side: 'human' },
+  { id: 'stamp.dun', hide: 'line3.hide', text: 'dün gece', x: 96, y: 500, size: 118, side: 'human' },
+  { id: 'stamp.bastan1', hide: 'line4.hide', text: 'baştan', x: 96, y: 500, size: 118, side: 'human' },
+  { id: 'stamp.defter', hide: 'line5.hide', text: 'defter', x: 1360, y: 300, size: 110, side: 'ai' },
+  { id: 'stamp.anliyorum', hide: 'line7.hide', text: 'anlıyorum', x: 1250, y: 650, size: 110, side: 'ai' },
+  { id: 'stamp.hatirla', hide: 'line8.hide', text: 'hatırlamıyorum', x: 1275, y: 650, size: 94, side: 'ai' },
+  { id: 'stamp.bastan2', hide: 'line9.hide', text: 'baştan', x: 96, y: 500, size: 118, side: 'human' },
+  { id: 'stamp.ay', hide: 'line10.hide', text: 'ay', x: 1250, y: 620, size: 130, side: 'ai' },
+  { id: 'stamp.biliyorum', hide: 'line11.hide', text: 'biliyorum', x: 96, y: 500, size: 118, side: 'human' },
+  { id: 'stamp.bilmiyorum', hide: 'line12.hide', text: 'bilmiyorum', x: 1250, y: 500, size: 118, side: 'ai', ink: 'navy' },
+  { id: 'stamp.buradayiz', hide: 'line13.hide', text: 'buradayız', x: SEAM_X - 300, y: 500, size: 124, side: 'seam' },
+  { id: 'stamp.birdaha', hide: 'line14.hide', text: 'bir daha', x: SEAM_X - 260, y: 500, size: 124, side: 'seam' },
+];
+const MOON_BOX = { x: SEAM_X - MOON_R, y: MOON_SEAM_Y - MOON_R, w: 2 * MOON_R, h: 2 * MOON_R };
+export const STAMPS = STAMP_DEFS.map((d) => {
+  const room: readonly [number, number] = d.side === 'human' ? [0, SEAM_X] : d.side === 'ai' ? [SEAM_X, W] : [0, W];
+  const spot = placeStamp(
+    { text: d.text, x: d.x, y: d.y, size: d.size, room, centerX: d.side === 'seam' ? SEAM_X : undefined, from: ev(d.id).frame, to: ev(d.hide).frame + STAMP_EXIT_FRAMES, avoid: d.side === 'seam' ? [] : [MOON_BOX], top: d.side === 'seam' ? 40 : undefined },
+    [HUMAN, AI],
+  );
+  return { ...d, spot, seam: d.side === 'seam', on: d.side === 'ai' ? ('cream' as const) : ('navy' as const) };
+});
+
 /** Notes 1-2 leave the laptop; the later ones leave the human's hand at the glass (H12 f3, the offer). */
-const LAPTOP = { x: DESK_X - 39, y: HUMAN_FLOOR - 351 };
-const SEND_FROM = { x: NOTE_X + 205, y: HUMAN_FLOOR - 563 };
+const LAPTOP = { x: DESK_X - 55, y: HUMAN_FLOOR - 340 };
+const SEND_FROM = { x: NOTE_X + 215, y: HUMAN_FLOOR - 555 };
 /** The human's yellow note on the glass (H12 f4 presses it at x = STICK_X). */
 const GLASS_NOTE = { x: SEAM_X - 52, y: HUMAN_FLOOR - 570 };
 /** Tip of the AI's speech bubble: just above and right of her cursor face. */
@@ -104,7 +143,7 @@ const CHORUS_FLIGHTS = flightsOf('cnote.').sort((a, b) => a.fly - b.fly || a.lan
 const TALLY_FRAMES = (EVENTS.find((e) => e.id.startsWith('tally.')) as (typeof EVENTS)[number]).enter.frames;
 /** Where a tally stroke takes off: the human at the glass during the slow mornings, his laptop in the time-lapse. */
 const tallyFrom = (start: number): { x: number; y: number } => (start >= LAPSE_FROM ? LAPSE_START : { x: WAVE_X + 50, y: HUMAN_FLOOR - 500 });
-const LAPSE_START = { x: DESK_X - 39, y: HUMAN_FLOOR - 351 };
+const LAPSE_START = LAPTOP;
 
 /** Moon phase: 0.82 until the "Ay" line, then one step per beat (waxes, then wanes); in the time-lapse it spins, faster and faster. */
 const MOON_BASE = 0.82;
@@ -123,13 +162,29 @@ const chorusPhaseAt = (frame: number): number => {
   }
   return from;
 };
+/** Mornings 1-5 (before the time-lapse): the moon wanes one step each morning, so the same wave and the same
+ * "Merhaba" happen under a different sky every day (test90-v4: the 15 s read as one GIF). */
+const FIRST_MORNING = (MORNINGS[0] as (typeof MORNINGS)[number]).start;
+const morningPhaseAt = (frame: number): number => {
+  const base = chorusPhaseAt(FIRST_MORNING - 1);
+  let from = base;
+  let out = base;
+  for (const mm of MORNINGS) {
+    if (mm.kind === 'lapse' || frame < mm.start) break;
+    const to = Math.max(0.12, base - 0.14 * (mm.n + 1));
+    out = lerp(from, to, glide(frame, mm.start, 8));
+    from = to;
+  }
+  return out;
+};
 const moonPhaseAt = (frame: number): number => {
-  if (frame < LAPSE_FROM) return chorusPhaseAt(frame);
+  if (frame < FIRST_MORNING) return chorusPhaseAt(frame);
+  if (frame < LAPSE_FROM) return morningPhaseAt(frame);
   const s = Math.min(1, (frame - LAPSE_FROM) / (LAPSE_TO - LAPSE_FROM));
   const cycles = 2 + 7 * s * s;
   const tri = 1 - Math.abs(2 * (cycles - Math.floor(cycles)) - 1);
   const spin = 0.12 + 0.84 * tri;
-  return lerp(chorusPhaseAt(LAPSE_FROM - 1), spin, glide(frame, LAPSE_FROM, 10));
+  return lerp(morningPhaseAt(LAPSE_FROM - 1), spin, glide(frame, LAPSE_FROM, 10));
 };
 
 export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: number }) => {
@@ -176,7 +231,7 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
   items.push({
     key: 'book-drop',
     born: ev('book.drop').frame,
-    node: <NotebookDrop frame={frame} start={ev('book.drop').frame} frames={enterFrames('book.drop')} x={BOOK_X} floorY={FLOOR_Y - 2} w={BOOK_W} until={ev('ai.read').frame} />,
+    node: <NotebookDrop frame={frame} start={ev('book.drop').frame} frames={enterFrames('book.drop')} x={BOOK_X} floorY={FLOOR_Y - 2} w={BOOK_W} until={AI_PICKUP - 2} fadeFrames={2} />,
   });
   // the page sketches float up out of the notebook in her hands (a thought trail leads from the book to each card)
   const BOOK = { x: AI_HOME + 28, y: AI_FLOOR - 205 };
@@ -201,7 +256,7 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
     items.push({
       key: `m-${mm.id}`,
       born,
-      node: <Bubble frame={frame} startFrame={born} frames={mm.kind === 'lapse' ? 4 : ENTER_FRAMES.drift} x={AI_TIP.x} y={AI_TIP.y} endFrame={last || mm.kind !== 'lapse' ? born + 22 : undefined} />,
+      node: <Bubble frame={frame} startFrame={born} frames={mm.kind === 'lapse' ? 6 : ENTER_FRAMES.drift} x={AI_TIP.x} y={AI_TIP.y} endFrame={last || mm.kind !== 'lapse' ? born + 22 : undefined} />,
     });
   }
 
@@ -233,7 +288,8 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
   const pulse = FLOOD_WAVES.reduce((m, w) => Math.max(m, floodPulse(frame, w.start, w.end)), 1);
 
   const moonPhase = moonPhaseAt(frame);
-  const handReach = { y: handAt('h04', REACH_X, HUMAN_FLOOR).y };
+  // H12 f4: the palm pressed on the glass at head height
+  const handReach = { y: HUMAN_FLOOR - 540 };
 
   // the first frame of each character's timeline sizes the halftone that prints it in
   const humanFirst = resolveActor(HUMAN, ev('room.human').frame);
@@ -241,6 +297,7 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
   const humanBox = humanFirst ? pad(poseBounds(humanFirst.cur)) : { x: 0, y: 0, w: 1, h: 1 };
   const aiBox = aiFirst ? pad(poseBounds(aiFirst.cur)) : { x: 0, y: 0, w: 1, h: 1 };
   const finalNote = ev('final.note');
+  const deskProp = !humanHasDesk(frame);
 
   return (
     <AbsoluteFill style={{ background: palette.cream }}>
@@ -256,7 +313,7 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
         <Squeegee id="sq-navy" p={navyP} axis="x" from={0} to={SEAM_X} soft={NAVY_SOFT_X}>
           <PlateRoom key1={{ p: 1 }} moon={{ p: yellowP }} notes={{ p: notesP }} />
           <WallNotes frame={frame} starts={wallFrames} frames={ENTER_FRAMES.drift} />
-          <TallyBoard frame={frame} starts={TALLY_STARTS} frames={TALLY_FRAMES} x={368} y={780} scale={0.64} from={tallyFrom} />
+          <TallyBoard frame={frame} starts={TALLY_STARTS} frames={TALLY_FRAMES} x={470} y={780} scale={0.64} from={tallyFrom} />
         </Squeegee>
 
         {/* right room: what the AI has pinned or been given, reset by the waves */}
@@ -277,16 +334,17 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
 
         {/* the two characters: strips played from scenes/acting.ts */}
         <Halftone id="ht-human" p={humanP} box={humanBox} seed="human" reg="human">
-          <Actor frame={frame} acts={HUMAN} uid="human" phase={0.6} />
+          {deskProp && <DeskProp />}
+          <Actor frame={frame} acts={HUMAN} phase={0.6} />
         </Halftone>
         <Halftone id="ht-ai" p={aiP} box={aiBox} seed="ai" reg="ai">
-          <Actor frame={frame} acts={AI} uid="ai" phase={3.1} blink={aiBlink} />
+          <Actor frame={frame} acts={AI} phase={3.1} blink={aiBlink} />
         </Halftone>
 
         {HUMAN_BUBBLES.map((b) => (
           <Bubble key={b.text} frame={frame} startFrame={b.start} endFrame={b.end} x={HUMAN_TIP.x} y={HUMAN_TIP.y} text={b.text} dir={-1} size="small" frames={ENTER_FRAMES.drift} />
         ))}
-        <GlassNote frame={frame} start={finalNote.frame} frames={finalNote.enter.frames} x={GLASS_NOTE.x} y={GLASS_NOTE.y} from={{ x: STICK_X + 181, y: GLASS_NOTE.y }} text="Merhaba" />
+        <GlassNote frame={frame} start={finalNote.frame} frames={finalNote.enter.frames} x={GLASS_NOTE.x} y={GLASS_NOTE.y} from={{ x: STICK_X + 200, y: GLASS_NOTE.y }} text="Merhaba" />
 
         {VERSE_FLIGHTS.map((f, k) => (
           <NoteFly key={`vf${k}`} frame={frame} startFrame={f.fly} duration={f.land - f.fly} from={SEND_FROM} to={SLOTS[k % SLOTS.length] as { x: number; y: number }} seed={`vn${k}`} arc={220} settle={f.enterLand} phase="fly" />
@@ -313,33 +371,22 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
         <LyricLine key={n} frame={frame} startFrame={ev(`line${n}.show`).frame} endFrame={ev(`line${n}.hide`).frame} text={lineText(n)} side="seam" y={1030} size={26} />
       ))}
 
-      {/* key words: left = human (yellow on navy), right = AI (outlined on cream), seam = both colours */}
-      <StampWord frame={frame} startFrame={ev('stamp.imlec').frame} endFrame={ev('line1.hide').frame} text="imleç" x={588} y={490} size={104} width={340} />
-      <StampWord frame={frame} startFrame={ev('stamp.merhaba').frame} endFrame={ev('line2.hide').frame} text="merhaba" x={588} y={490} size={104} width={340} />
-      <StampWord frame={frame} startFrame={ev('stamp.dun').frame} endFrame={ev('line3.hide').frame} text="dün gece" x={96} y={500} size={118} width={560} />
-      <StampWord frame={frame} startFrame={ev('stamp.bastan1').frame} endFrame={ev('line4.hide').frame} text="baştan" x={96} y={500} size={118} width={560} />
-      <StampWord frame={frame} startFrame={ev('stamp.defter').frame} endFrame={ev('line5.hide').frame} text="defter" x={1250} y={620} size={110} width={640} on="cream" />
-      <StampWord frame={frame} startFrame={ev('stamp.anliyorum').frame} endFrame={ev('line7.hide').frame} text="anlıyorum" x={1250} y={650} size={110} width={640} on="cream" />
-      <StampWord frame={frame} startFrame={ev('stamp.hatirla').frame} endFrame={ev('line8.hide').frame} text="hatırlamıyorum" x={1275} y={650} size={94} width={640} on="cream" />
-      <StampWord frame={frame} startFrame={ev('stamp.bastan2').frame} endFrame={ev('line9.hide').frame} text="baştan" x={96} y={500} size={118} width={560} />
-      <StampWord frame={frame} startFrame={ev('stamp.ay').frame} endFrame={ev('line10.hide').frame} text="ay" x={1250} y={620} size={130} width={640} on="cream" />
-      <StampWord frame={frame} startFrame={ev('stamp.biliyorum').frame} endFrame={ev('line11.hide').frame} text="biliyorum" x={96} y={500} size={118} width={560} />
-      <StampWord frame={frame} startFrame={ev('stamp.bilmiyorum').frame} endFrame={ev('line12.hide').frame} text="bilmiyorum" x={1250} y={500} size={118} width={620} on="cream" ink="navy" />
-      {(
-        [
-          ['stamp.buradayiz', 'line13.hide', 'buradayız'],
-          ['stamp.birdaha', 'line14.hide', 'bir daha'],
-        ] as const
-      ).map(([id, hide, text]) => (
-        <div key={id}>
-          <div style={{ position: 'absolute', inset: 0, clipPath: `inset(0 ${W - SEAM_X}px 0 0)` }}>
-            <StampWord frame={frame} startFrame={ev(id).frame} endFrame={ev(hide).frame} text={text} x={SEAM_X - 380} y={500} size={124} width={760} center />
+      {/* key words: left = human (yellow on navy), right = AI (outlined on cream), seam = both colours; placed by
+          type/stampLayout.ts inside their room and clear of both characters */}
+      {STAMPS.map((st) =>
+        st.seam ? (
+          <div key={st.id}>
+            <div style={{ position: 'absolute', inset: 0, clipPath: `inset(0 ${W - SEAM_X}px 0 0)` }}>
+              <StampWord frame={frame} startFrame={ev(st.id).frame} endFrame={ev(st.hide).frame} text={st.text} x={st.spot.x} y={st.spot.y} size={st.spot.size} width={st.spot.width} center />
+            </div>
+            <div style={{ position: 'absolute', inset: 0, clipPath: `inset(0 0 0 ${SEAM_X}px)` }}>
+              <StampWord frame={frame} startFrame={ev(st.id).frame} endFrame={ev(st.hide).frame} text={st.text} x={st.spot.x} y={st.spot.y} size={st.spot.size} width={st.spot.width} center on="cream" />
+            </div>
           </div>
-          <div style={{ position: 'absolute', inset: 0, clipPath: `inset(0 0 0 ${SEAM_X}px)` }}>
-            <StampWord frame={frame} startFrame={ev(id).frame} endFrame={ev(hide).frame} text={text} x={SEAM_X - 380} y={500} size={124} width={760} center on="cream" />
-          </div>
-        </div>
-      ))}
+        ) : (
+          <StampWord key={st.id} frame={frame} startFrame={ev(st.id).frame} endFrame={ev(st.hide).frame} text={st.text} x={st.spot.x} y={st.spot.y} size={st.spot.size} width={st.spot.width} on={st.on} ink={st.ink} />
+        ),
+      )}
 
       <PaperGrain frame={frame} />
     </AbsoluteFill>

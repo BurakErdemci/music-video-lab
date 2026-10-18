@@ -11,11 +11,11 @@ import { dropBounce } from '../motion/extra.ts';
 import { Sticky } from './Notes.tsx';
 
 /** The closed notebook dropping onto the AI's floor with a small bounce. (x, floorY) is the bottom centre. */
-export const NotebookDrop = ({ frame, start, frames, x, floorY, w = 120, until }: { frame: number; start: number; frames: number; x: number; floorY: number; w?: number; until?: number }) => {
+export const NotebookDrop = ({ frame, start, frames, x, floorY, w = 120, until, fadeFrames = 8 }: { frame: number; start: number; frames: number; x: number; floorY: number; w?: number; until?: number; fadeFrames?: number }) => {
   if (frame < start) return null;
   const h = w * (724 / 915);
   const b = dropBounce(frame, start, frames, 420);
-  const fade = until !== undefined && frame >= until ? fadeOut(frame, until, 8) : 1;
+  const fade = until !== undefined && frame >= until ? fadeOut(frame, until, fadeFrames) : 1;
   if (fade <= 0) return null;
   return (
     <g opacity={b.op * fade} transform={`translate(${x} ${(floorY + b.oy).toFixed(1)}) rotate(${b.rot.toFixed(2)})`}>
