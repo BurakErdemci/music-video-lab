@@ -1,0 +1,6 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image shows the human character at a simple navy chair, a simple navy desk and an open laptop. Draw ONLY that furniture, WITHOUT any person: the SAME chair (on the left), the SAME desk (on the right) and the SAME open laptop on the desk, in profile, identical shapes, proportions, line weight and relative positions as in the attached reference, at the SAME scale as in the reference. Draw it ONCE, centred, the chair empty. Solid midnight navy (#18203A) shapes with thin cream (#F3EFE4) outlines, flat silk-screen style, slight misregistration, fine grain.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line. Wide 16:9 canvas.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no people, no other objects. Palette only navy and cream (+ magenta background).

@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The THIRD attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style). Draw the SAME person in every pose. Model anchors (copy them exactly from the attached frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head); same body size as the reference.
+- Hair: the same short messy hair silhouette as the reference, the same tufts sticking out at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT (no shoes, no sweater, no jeans, no cuffs).
+- Notes: EIGHT moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column of four down the back from the shoulder blade to the hip, two on the front of the chest/ribs, one on the upper arm sleeve. Same note size as the reference (about the size of the head's width).
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, faceless, flat silk-screen style, slight misregistration, fine grain.
+
+Action (four IN-BETWEEN poses of a walk): the FIRST attached image is walk pose A and the SECOND attached image is walk pose B, two consecutive poses of the SAME walking step, profile facing RIGHT. Draw FOUR poses that go EVENLY from A to B (at one fifth, two fifths, three fifths and four fifths of the way): the foot that is planted on the ground in both A and B stays at exactly the same spot in all four; the body moves forward over it by an equal small amount from pose to pose; the swinging leg and both arms move evenly between their positions in A and in B. Same size and same head height as A and B. Do not draw A or B themselves.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

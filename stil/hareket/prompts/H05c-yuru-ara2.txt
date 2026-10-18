@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character; the SECOND attached image shows two consecutive drawings of his walk, LEFT drawing = pose A, RIGHT drawing = pose B, at the scale to keep (silk-screen style). Draw the SAME person in every pose. Model anchors (copy them exactly from the attached frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head); same body size as the reference.
+- Hair: the same short messy hair silhouette as the reference, the same tufts sticking out at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT (no shoes, no sweater, no jeans, no cuffs).
+- Notes: EIGHT moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column of four down the back from the shoulder blade to the hip, two on the front of the chest/ribs, one on the upper arm sleeve. Same note size as the reference (about the size of the head's width).
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, faceless, flat silk-screen style, slight misregistration, fine grain.
+
+Action (four key poses): the four IN-BETWEEN drawings that go from pose A to pose B of the second attached image, evenly spaced in time, in profile facing RIGHT, same scale, same slightly tired posture: 1) one fifth of the way from A to B; 2) two fifths; 3) three fifths; 4) four fifths. The standing foot stays planted on the floor while the body moves forward over it and the swinging leg moves forward step by step; arms swing gently opposite to the legs.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.
