@@ -9,7 +9,8 @@
 //   2. frame == round(beats[beatIdx] * 30)               (drift 0)
 //   3. lyric/word events: beatIdx is the beat nearest to the measured time srcT
 //   4. bar events: beats[beatIdx - offset] is the downbeat of that bar
-//   5. dead air: longest gap (in beats) between events per section is within the limit
+//   5. every event declares visible: boolean (blinks and tiny pulses are false)
+//   6. dead air: longest gap (in beats) between VISIBLE events per section is within the limit
 //      (<= 2 in intro/chorus-type sections, <= 4 elsewhere), over frames 0..CHECK_UNTIL_FRAME
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
@@ -44,6 +45,7 @@ for (const e of EVENTS) {
   const expected = Math.round(bt * FPS);
   const drift = Math.abs(e.frame - expected);
   maxDrift = Math.max(maxDrift, drift);
+  if (typeof e.visible !== 'boolean') errors.push(`${e.id}: visible must be a boolean`);
   if (!Number.isInteger(e.frame)) errors.push(`${e.id}: frame ${e.frame} is not an integer`);
   if (drift) errors.push(`${e.id}: frame ${e.frame} expected ${expected} (drift ${drift})`);
   if (e.frame >= CHECK_UNTIL_FRAME) errors.push(`${e.id}: frame ${e.frame} beyond ${CHECK_UNTIL_FRAME}`);
@@ -55,7 +57,8 @@ for (const e of EVENTS) {
   }
   if (verbose) console.log(`${drift ? 'DRIFT' : 'ok   '} ${e.id.padEnd(22)} ${e.kind.padEnd(7)} beat ${String(e.beatIdx).padStart(3)}  f${String(e.frame).padStart(4)}${e.srcT !== undefined ? `  src ${e.srcT.toFixed(2)}s` : ''}`);
 }
-console.log(`beatcheck: ${EVENTS.length} events, max drift = ${maxDrift} frames, timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
+const VISIBLE = EVENTS.filter((e) => e.visible === true);
+console.log(`beatcheck: ${EVENTS.length} events (${VISIBLE.length} visible, ${EVENTS.length - VISIBLE.length} not), max drift = ${maxDrift} frames, timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
 
 // ---- dead air
 const beatPos = (t) => {
@@ -70,7 +73,7 @@ const violations = [];
 for (const s of T.sections) {
   if (s.start >= endT) break;
   const sEnd = Math.min(s.end, endT);
-  const evs = EVENTS.filter((e) => e.frame / FPS >= s.start && e.frame / FPS < sEnd).sort((a, b) => a.beatIdx - b.beatIdx);
+  const evs = VISIBLE.filter((e) => e.frame / FPS >= s.start && e.frame / FPS < sEnd).sort((a, b) => a.beatIdx - b.beatIdx);
   const pts = [{ pos: beatPos(s.start), id: '(section start)' }, ...evs.map((e) => ({ pos: e.beatIdx, id: e.id })), { pos: beatPos(sEnd), id: '(section end)' }];
   let worst = 0;
   let where = '';
@@ -84,7 +87,7 @@ for (const s of T.sections) {
   const limit = limitFor(s.name);
   const bad = worst > limit + 1e-6;
   if (bad) violations.push(`${s.name}: gap ${worst.toFixed(2)} beats > ${limit} (${where})`);
-  console.log(`${bad ? 'FAIL ' : 'ok   '} ${s.name.padEnd(14)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(2)} beats (limit ${limit})  ${where}`);
+  console.log(`${bad ? 'FAIL ' : 'ok   '} ${s.name.padEnd(14)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(2)} beats between visible events (limit ${limit})  ${where}`);
 }
 for (const m of errors) console.log(`ERROR ${m}`);
 for (const v of violations) console.log(`DEAD-AIR ${v}`);

@@ -2,8 +2,9 @@ import { AbsoluteFill, Audio, Composition, staticFile, useCurrentFrame } from 'r
 import { DURATION_FRAMES, FPS } from './timing.ts';
 import { W, H } from './layout.ts';
 import { Test30Scene } from './scenes/Test30Scene.tsx';
-import { PartsScene } from './scenes/PartsScene.tsx';
+import { LineupScene, PartsScene } from './scenes/PartsScene.tsx';
 import './style/fonts.ts';
+import './style/assets.ts';
 
 const Song = () => <Audio src={staticFile('her-sabah-bastan.wav')} />;
 
@@ -28,6 +29,7 @@ export const Root = () => (
   <>
     <Composition id="HerSabahBastan" component={Video} durationInFrames={DURATION_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Test30" component={Video} durationInFrames={900} fps={FPS} width={W} height={H} />
+    <Composition id="Lineup" component={LineupScene} durationInFrames={1} fps={FPS} width={W} height={H} />
     <Composition id="Parts" component={Parts} durationInFrames={90} fps={FPS} width={W} height={H} />
   </>
 );

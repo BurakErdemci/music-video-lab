@@ -10,6 +10,22 @@ export const plateOffset = (key: string): { dx: number; dy: number } => {
   return { dx: s() * (1 + Math.floor(r() * 3)), dy: s() * (1 + Math.floor(r() * 3)) };
 };
 
+/**
+ * A plate "prints" at startFrame: it lands misregistered and dim, then settles in three 12 fps steps.
+ * Returns null before the plate exists.
+ */
+export const printIn = (frame: number, startFrame: number, key: string): { dx: number; dy: number; op: number; age: number } | null => {
+  if (frame < startFrame) return null;
+  const age = Math.floor((frame - (startFrame - (startFrame % 2))) / 2);
+  const r = seeded(`printin:${key}`);
+  const sx = r() < 0.5 ? -1 : 1;
+  const sy = r() < 0.5 ? -1 : 1;
+  const OFF = [18, 8, 3, 0];
+  const OP = [0.55, 1, 1, 1];
+  const i = Math.min(age, OFF.length - 1);
+  return { dx: sx * (OFF[i] as number), dy: sy * 0.6 * (OFF[i] as number), op: OP[i] as number, age };
+};
+
 /** Everything yellow is printed through this wrapper so the plate is slightly off. */
 export const YellowPlate = ({ k, children }: { k: string; children: ReactNode }) => {
   const { dx, dy } = plateOffset(k);
