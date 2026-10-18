@@ -126,3 +126,57 @@ crosses, mask the swap exactly at the seam (same language as the split moon).
 | 2:35.9–2:52.6 (solo) | On each crack downbeat the whole frame swaps worlds for a few frames, then snaps back. |
 | 3:33.2–3:47.9 (coda) | Full crossing after the shatter: they walk into each other's world. The AI turns navy and sticky notes stick to it (it keeps something for the first time); the human turns cream and their notes fall off (relief). |
 | 3:47.9 → 3:55.5 | The white wave resets everything: the AI is cream again and loses its notes; "Merhaba." |
+
+## Acting plan (approved direction 2026-10-18: "characters feel static")
+
+Burak: the characters just stand and look at each other. Rule from now on: no
+character holds one still pose for more than ~2 bars. Every character is always
+either doing an action from its strip library or, at minimum, breathing.
+
+### Technique
+- Key-pose strips: `stil/hareket/kare/<STRIP>-<1..4>.png` (+ `-ters`), all four frames
+  share height and baseline → anchor bottom-centre. Preview: `stil/hareket/kare/_onizleme.html`.
+- Limited animation: hold each key pose 3–6 frames (on threes by default; faster for
+  walks, slower for tired moments) and HARD-CUT between key poses of the same action
+  (this is the style; no cross-fade inside an action — cross-fades made ghosts).
+  Between two different actions: a 4-frame halftone switch, or a turn strip (H09/A10).
+- Always-on code motion on top: breathing (body scaleY 1 → 1.008, 3.5 s period,
+  different phase per character), slight weight shift (x ±3 px, slow), so even a
+  held pose is never frozen.
+- Walks move the character across the floor in sync with the cycle (contact pose on
+  the beat when it falls near one).
+- The human gets more tired as the film goes on; the AI does every morning's action
+  with the same energy (that contrast IS the story).
+
+### Strip library
+Human (faces right unless noted): H01 typing/deleting at desk · H02 coffee sip ·
+H03 stretch/rub eyes · H04 pin a note (faces LEFT, toward own wall) · H05 walk cycle ·
+H06 writing in notebook on the floor · H07 forehead on glass → kneel · H08 tiredness
+→ asleep · H09 turn left→right · H10 wave back · H11 show the open notebook ·
+H12 write a note and stick it on the glass.
+AI (faces left unless noted): A01 walk cycle · A02 sit and swing legs · A03 draw on
+the glass with a finger · A04 look up at the moon · A05 tidy the pinned notes ·
+A06 curious head tilts · A07 wave "Merhaba" · A08 rock on the heels · A09 read the
+notebook, turn a page · A10 turn right→left · A11 write a note and offer it.
+
+### Per section (0:00–1:29 now; later sections follow the same rule)
+| Time | Human | AI |
+|---|---|---|
+| verse 1 lines 1–2 | H01 typing loop (with deletes) | A08 rocking, A06 tilts, A07 on "Merhaba" |
+| "Dün gece…" | H03 stretch → H09 turn → stands with the note | A01 walks across the empty room, A04 at the moon |
+| "Baştan anlatıyorum" | H04 pins a note on own wall, then faces the glass | A05 pins/tidies the incoming notes |
+| "tanışmışız" | h04 reach (glass stops it) | a04 reach |
+| pre-chorus 1 | H06 writing on the floor | p01 drops, a06 bend → A09 reading |
+| chorus 1 | H02 coffee, then H07 at the glass on "buradayız" | A02 sits swinging legs between waves, faces the glass on "buradayız" |
+
+### Calendar 1:11.8–1:28.7 (redesign — Burak: the repeated Merhaba is a great
+metaphor but feels too long; make it special)
+The AI's morning is IDENTICAL every time (same mini-wave reset, same A07 wave, same
+"Merhaba" bubble). The human's answer changes every morning — that change is the story.
+Human answers are small story bubbles in the quiet text face (not lyrics).
+| Mornings | Pace | Human |
+|---|---|---|
+| 1–2 | one morning per 2 beats | H10 waves back eagerly + bubble "Merhaba! Dün…"; then H11 shows the notebook |
+| 3–5 | one per beat | shorter answers: bubble "Merhaba, ben…" → "Yine ben." → only a raised hand (H10 frame 1) |
+| 6–9+ | half a beat each, time-lapse | the human stays at the desk (H01) and no longer looks up; the AI waves the same way every time; tally marks fly onto the board; the moon spins through phases |
+| last morning (last bar before 1:28.7) | slows down | the loop breaks for the first time: BEFORE the AI says Merhaba, the human writes "Merhaba" on a yellow note (H12) and sticks it on the glass; the AI tilts its head (A06). Cut to verse 2. This mirrors 2:34.9, where the AI leaves a note for the human. |
