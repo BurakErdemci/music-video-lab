@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to EDIT the attached image and output exactly ONE image of the same size. Do not copy or move any files; just generate it, then print DONE.
+
+Edit: remove ONLY the desk, the chair, the desk lamp and the notebook on the desk from the navy room on the left. Where they were, continue the plain navy wall and the dark floor naturally, in the same silk-screen texture. Keep EVERYTHING else pixel-identical in position, size and colour: the window with the moon and tree, the bookshelf, the pinned papers, the loose papers on the floor, the glass seam at the centre, the empty cream right half. Same palette (navy #18203A, moon yellow #F0D35A, cream #F3EFE4), same grain.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks. No people.
