@@ -98,7 +98,7 @@ spanTo('intro.cream', 'room.seam');
 
 // ---- verse 1: split rooms, two lines
 const bar10 = barBeatIndex(10);
-// the human's wall grows by one code note every 2nd beat until the plate wall is full (WALL_MAX = 72 notes)
+// the human's wall grows by one code note every 2nd beat until the wall is full (WALL_SLOTS notes; later ones replace the oldest)
 for (let i = bar10; i < bar10 + 144; i += 2) atBeat(`wall.${i}`, 'wall', i, enter('drift'));
 
 const L1 = lineFrames(1);
@@ -134,52 +134,46 @@ const lineShow = (n: number, id = `line${n}`): void => {
 };
 const beatOf = (t: number): number => nearestBeatIndex(t);
 
-// ---- verse 1, line 3 "Dun gece ne konustuk": the AI side is wiped clean (a morning), the human stands up with yesterday's note
+// ---- verse 1, line 3 "Dun gece ne konustuk": the AI side is wiped clean (a morning); the human stands up (scenes/acting.ts)
 lineShow(3);
 atTime('stamp.dun', 'stamp', lineWordTime(3, 0), STAMP_ENTER);
 atTime('wave.dun', 'wave', lineWordTime(3, 0), enter('squeegee', 16));
-atTime('human.stand', 'pose', lineWordTime(3, 0), enter('halftone'));
-atBeat('note.held', 'note', beatOf(lineWordTime(3, 0)) + 1, enter('drift'));
 
 // ---- line 4 "Bastan anlatiyorum yine": one note per beat through the glass, the AI pins; on "tanismisiz" both reach
 lineShow(4);
 atTime('stamp.bastan1', 'stamp', lineWordTime(4, 0), STAMP_ENTER);
 const pinFrom = beatOf(lineWordTime(4, 0));
 const reachAt = beatOf(lineWordTime(4, 5));
-atBeat('ai.pin', 'pose', pinFrom, enter('settle'));
 for (let i = pinFrom; i < reachAt; i++) {
   atBeat(`vnote.${i}.fly`, 'note', i, enter('drift'));
   atBeat(`vnote.${i}.land`, 'note', i + 2, enter('settle', ENTER_FRAMES.fade));
 }
-atBeat('pose.reach', 'pose', reachAt, enter('settle'));
+atBeat('pose.reach', 'pose', reachAt, enter('settle'), false);
 atBeat('glass.ripple', 'oh', reachAt, enter('ring'));
-atTime('pose.release', 'pose', lineFrames(4).end, enter('settle'));
+atTime('pose.release', 'pose', lineFrames(4).end, enter('settle'), false);
 
 // ---- pre-chorus 1 (the AI side, right): the notebook
 for (const n of [5, 6, 7, 8]) lineShow(n);
 atBar('wave.pre', 'wave', 24, 0, enter('squeegee', 16));
 atTime('stamp.defter', 'stamp', lineWordTime(5, 1), STAMP_ENTER);
 atTime('book.drop', 'print', lineWordTime(5, 1), enter('drift', 16));
-atTime('ai.bend', 'pose', lineWordTime(5, 2), enter('settle'));
-atTime('ai.read', 'pose', lineWordTime(5, 3), enter('settle'));
-atTime('book.open', 'print', lineWordTime(5, 3), enter('drift'));
+atTime('ai.bend', 'pose', lineWordTime(5, 2), enter('settle'), false);
+atTime('ai.read', 'pose', lineWordTime(5, 3), enter('settle'), false);
 for (const k of [0, 1, 2]) atTime(`sketch.${k + 1}`, 'print', lineWordTime(6, k), enter('drift'));
 atTime('stamp.anliyorum', 'stamp', lineWordTime(7, 1), STAMP_ENTER);
 atTime('check.on', 'print', lineWordTime(7, 1), enter('ease'));
 atTime('stamp.hatirla', 'stamp', lineWordTime(8, 1), STAMP_ENTER);
 atTime('check.off', 'print', lineWordTime(8, 1), enter('fade', 12));
-atTime('human.sit', 'pose', lineFrames(8).start, enter('settle'));
 
 // ---- chorus 1: one cream wave per bar over the AI side, the AI pins two notes between waves
 const C1 = [31, 32, 33, 34, 35, 36, 37, 38] as const;
 for (const b of C1) {
-  atBar(`wave.c${b}`, 'wave', b, 0, enter('squeegee', 26));
+  atBar(`wave.c${b}`, 'wave', b, 0, enter('squeegee', 16));
   atBar(`cnote.${b}.a.fly`, 'note', b, 0, enter('drift'));
   atBar(`cnote.${b}.a.land`, 'note', b, 2, enter('settle', ENTER_FRAMES.fade));
   atBar(`cnote.${b}.b.fly`, 'note', b, 1, enter('drift'));
   atBar(`cnote.${b}.b.land`, 'note', b, 3, enter('settle', ENTER_FRAMES.fade));
 }
-atBar('pose.chorus', 'pose', 31, 0, enter('settle'));
 for (const n of [9, 10, 11, 12, 13, 14]) lineShow(n);
 atTime('stamp.bastan2', 'stamp', lineWordTime(9, 2), STAMP_ENTER);
 atTime('stamp.ay', 'stamp', lineWordTime(10, 0), STAMP_ENTER);
@@ -188,21 +182,24 @@ for (let i = beatOf(lineWordTime(10, 0)); i < beatOf(lineFrames(10).end); i++) a
 atTime('stamp.biliyorum', 'stamp', lineWordTime(11, 0), STAMP_ENTER);
 atTime('stamp.bilmiyorum', 'stamp', lineWordTime(12, 0), STAMP_ENTER);
 atTime('stamp.buradayiz', 'stamp', lineWordTime(13, 2), STAMP_ENTER);
-atTime('pose.face', 'pose', lineWordTime(13, 2), enter('settle'));
 atTime('stamp.birdaha', 'stamp', lineWordTime(14, 3), STAMP_ENTER);
 
-// ---- post-chorus: every beat a tally mark, and a new morning (a mini wave that resets the AI side; the same "Merhaba" returns).
-// The tempo is constant (14 frames per beat), so the visual rhythm speeds up instead: one morning per 2 beats in the first
-// two bars, one per beat from bar 41 on.
+// ---- post-chorus "bir daha" (bars 39-47): the calendar. The AI's morning is identical every time (mini wave, A07 wave, the same
+// "Merhaba"); only the pace and the human's answer change (scenes/acting.ts reads the mornings from these events).
 lineShow(15);
 const pcStart = barBeatIndex(39);
 const pcEnd = barBeatIndex(48);
-for (let i = pcStart; i < pcEnd; i++) {
-  atBeat(`tally.${i}`, 'tally', i, enter('ease'));
-  const slow = i < barBeatIndex(41);
-  if (slow && (i - pcStart) % 2 === 1) continue;
-  atBeat(`morning.${i}`, 'wave', i, enter('squeegee', slow ? 22 : 11));
-}
+for (let i = pcStart; i < pcEnd; i++) atBeat(`tally.${i}`, 'tally', i, enter('ease')); // one tally mark per beat
+// mornings 1-2: one per 2 beats; mornings 3-5: one per beat
+for (const k of [0, 2]) atBeat(`morning.${pcStart + k}`, 'wave', pcStart + k, enter('squeegee', 22));
+for (const k of [4, 5, 6]) atBeat(`morning.${pcStart + k}`, 'wave', pcStart + k, enter('squeegee', 11));
+// time-lapse: each beat event carries two mornings (the second sits on the half-beat, derived in acting.ts)
+const lapseFrom = pcStart + 7;
+const lapseTo = barBeatIndex(47) - 4; // the last lapse beat; the beats after it are calm
+for (let i = lapseFrom; i <= lapseTo; i++) atBeat(`lapse.${i}`, 'wave', i, enter('squeegee', 8));
+// the last bar: the human's yellow note lands on the glass BEFORE the AI's slow reset; the AI only tilts its head
+atBar('final.note', 'note', 47, 0, enter('drift'));
+atBar('final.reset', 'wave', 47, 1, enter('squeegee', 30));
 
 export const EVENTS: readonly VideoEvent[] = list.slice().sort((a, b) => a.beatIdx - b.beatIdx || a.id.localeCompare(b.id));
 

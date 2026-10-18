@@ -1,6 +1,7 @@
 // Props and marks of the 0:30-1:28 scenes. All are pure functions of the frame; entrances come from motion/entrances.ts.
 import { PROPS } from '../style/assets.ts';
 import { palette } from '../style/palette.ts';
+import { TEXT_FONT } from '../style/fonts.ts';
 import { YellowPlate } from '../style/screenprint.tsx';
 import { seeded, range } from '../style/seeded.ts';
 import { clamp01 } from '../math.ts';
@@ -8,21 +9,6 @@ import { SEAM_X } from '../layout.ts';
 import { drift, fadeOut, glide, progress } from '../motion/entrances.ts';
 import { dropBounce } from '../motion/extra.ts';
 import { Sticky } from './Notes.tsx';
-
-/** Yesterday's note, held at the human's hand until the first note of line 4 takes off from the same place. */
-export const HeldNote = ({ frame, start, frames, end, x, y }: { frame: number; start: number; frames: number; end: number; x: number; y: number }) => {
-  if (frame < start || frame >= end) return null;
-  const d = drift(frame, start, frames, { from: { x: 0, y: 26 }, bulge: 6 });
-  const hover = Math.sin((frame - start) * 0.18) * 2.5;
-  return (
-    <YellowPlate k="held-note">
-      <g opacity={d.op} transform={`translate(${(x + d.ox).toFixed(1)} ${(y + d.oy + hover).toFixed(1)}) rotate(-8) scale(${d.s.toFixed(4)})`}>
-        <rect x={-48} y={-48} width={96} height={96} fill="none" stroke={palette.cream} strokeWidth={4} />
-        <Sticky size={88} />
-      </g>
-    </YellowPlate>
-  );
-};
 
 /** The closed notebook dropping onto the AI's floor with a small bounce. (x, floorY) is the bottom centre. */
 export const NotebookDrop = ({ frame, start, frames, x, floorY, w = 120, until }: { frame: number; start: number; frames: number; x: number; floorY: number; w?: number; until?: number }) => {
@@ -39,29 +25,30 @@ export const NotebookDrop = ({ frame, start, frames, x, floorY, w = 120, until }
   );
 };
 
-/** The open notebook the AI reads: it hangs to the right of her, its pages carry the three sketches. */
-export const OpenBook = ({ frame, start, frames, cx, cy, w = 560 }: { frame: number; start: number; frames: number; cx: number; cy: number; w?: number }) => {
-  if (frame < start) return null;
-  const h = w * (796 / 1399);
-  const d = drift(frame, start, frames, { from: { x: 30, y: 24 }, bulge: 10 });
-  return (
-    <g opacity={d.op} transform={`translate(${(cx + d.ox).toFixed(1)} ${(cy + d.oy).toFixed(1)}) scale(${d.s.toFixed(4)})`}>
-      <image href={PROPS.notebookOpen} x={-w / 2} y={-h / 2} width={w} height={h} preserveAspectRatio="none" />
-    </g>
-  );
-};
-
 export type SketchKind = 'tag' | 'road' | 'cross';
 const bar = (x: number, y: number, w: number, fill: string = palette.navy, h = 5) => <rect x={x} y={y} width={w} height={h} rx={1.5} fill={fill} />;
 
 /** A small page sketch card (a name tag, a road, a crossed-out line) in the palette. */
-export const PageSketch = ({ kind, frame, start, frames, x, y, rot }: { kind: SketchKind; frame: number; start: number; frames: number; x: number; y: number; rot: number }) => {
-  if (frame < start) return null;
+export const PageSketch = ({ kind, frame, start, frames, x, y, rot, trail }: { kind: SketchKind; frame: number; start: number; frames: number; x: number; y: number; rot: number; trail?: { x: number; y: number } }) => {
+  if (frame < start - 6) return null;
   const d = drift(frame, start, frames, { from: { x: 0, y: 24 }, bulge: 8 });
   const W = 168;
   const H = 128;
+  // a thought trail (three growing dots) rises from the notebook in her hands to the card: the page "opens" into it
+  const dots = trail
+    ? [0.22, 0.46, 0.7].map((u, i) => {
+        const grow = clamp01((progress(frame, start - 6 + i * 3, 6)));
+        const cx = trail.x + (x - trail.x) * u;
+        const cy = trail.y + (y + H / 2 - trail.y) * u - 70 * Math.sin(Math.PI * u);
+        return { cx, cy, r: (5 + i * 2.6) * grow };
+      })
+    : [];
   return (
-    <g opacity={d.op} transform={`translate(${(x + d.ox).toFixed(1)} ${(y + d.oy).toFixed(1)}) rotate(${rot}) scale(${d.s.toFixed(4)})`}>
+    <g>
+      {dots.map((q, i) => (
+        <circle key={i} cx={q.cx} cy={q.cy} r={q.r} fill={palette.cream} stroke={palette.navy} strokeWidth={3} />
+      ))}
+      <g opacity={d.op} transform={`translate(${(x + d.ox).toFixed(1)} ${(y + d.oy).toFixed(1)}) rotate(${rot}) scale(${d.s.toFixed(4)})`}>
       <YellowPlate k={`sketch-${kind}`}>
         <rect x={-W / 2} y={-H / 2} width={W} height={H} fill={palette.moonYellow} />
       </YellowPlate>
@@ -93,6 +80,7 @@ export const PageSketch = ({ kind, frame, start, frames, x, y, rot }: { kind: Sk
           {bar(-62, 32, 70)}
         </g>
       )}
+      </g>
     </g>
   );
 };
@@ -116,7 +104,10 @@ export const Check = ({ frame, start, frames, endFrame, endFrames, x, y }: { fra
 
 const GROUPS_PER_ROW = 4;
 const GROUP_W = 104;
-const GROUP_H = 92;
+const GROUP_H = 76;
+const MARK_H = 60;
+/** Capacity of the board: 3 rows of 4 groups of five. */
+export const TALLY_CAPACITY = 60;
 /** Geometry of mark k of the board (prison tally: four strokes, the fifth crosses them). */
 const markSpec = (k: number) => {
   const g = Math.floor(k / 5);
@@ -126,20 +117,28 @@ const markSpec = (k: number) => {
   const r = seeded(`tally:${k}`);
   if (i < 4) {
     const x = ox + i * 19 + range(r, -1.5, 1.5);
-    return { x1: x, y1: oy + range(r, -1, 2), x2: x + range(r, -3, 3), y2: oy + 66 + range(r, -2, 2) };
+    return { x1: x, y1: oy + range(r, -1, 2), x2: x + range(r, -3, 3), y2: oy + MARK_H + range(r, -2, 2) };
   }
-  return { x1: ox - 9, y1: oy + 58 + range(r, -2, 2), x2: ox + 76, y2: oy + 6 + range(r, -2, 2) };
+  return { x1: ox - 9, y1: oy + MARK_H - 8 + range(r, -2, 2), x2: ox + 76, y2: oy + 6 + range(r, -2, 2) };
 };
 
-/** A paper day-count taped to the human's wall; one stroke is inked per beat (no digits). `starts` holds each mark's frame. */
-export const TallyBoard = ({ frame, starts, frames, x, y }: { frame: number; starts: readonly number[]; frames: number; x: number; y: number }) => {
-  const W = 470;
-  const H = 260;
+const TALLY_W = 470;
+const TALLY_H = 300;
+const TALLY_FLY = 8;
+
+/**
+ * A paper day-count taped to the human's wall. Every mark is a small stroke that flies in from `from(startFrame)` (the
+ * human's hand or laptop, world coordinates) and is inked into its place (no digits). `starts` holds each mark's frame.
+ */
+export const TallyBoard = ({ frame, starts, frames, x, y, scale = 1, from }: { frame: number; starts: readonly number[]; frames: number; x: number; y: number; scale?: number; from: (start: number) => { x: number; y: number } }) => {
   const first = starts[0];
   if (first === undefined || frame < first) return null;
   const d = drift(frame, first, 12, { from: { x: 0, y: 18 }, bulge: 4 });
+  const W = TALLY_W;
+  const H = TALLY_H;
+  const shown = starts.slice(0, TALLY_CAPACITY);
   return (
-    <g opacity={d.op} transform={`translate(${x + W / 2 + d.ox} ${y + H / 2 + d.oy}) rotate(-1.5) scale(${d.s.toFixed(4)}) translate(${-W / 2} ${-H / 2})`}>
+    <g opacity={d.op} transform={`translate(${x + (W * scale) / 2 + d.ox} ${y + (H * scale) / 2 + d.oy}) rotate(-1.5) scale(${(scale * d.s).toFixed(4)}) translate(${-W / 2} ${-H / 2})`}>
       <YellowPlate k="tally-board">
         <rect x={6} y={6} width={W} height={H} fill={palette.moonYellow} />
       </YellowPlate>
@@ -149,15 +148,47 @@ export const TallyBoard = ({ frame, starts, frames, x, y }: { frame: number; sta
         <rect key={i} x={26 + i * 62} y={11} width={36} height={12} rx={2} fill={palette.cream} />
       ))}
       <g transform="translate(46 70)" stroke={palette.navy} strokeWidth={5.5} strokeLinecap="round" fill="none">
-        {starts.map((s, k) => {
+        {shown.map((s, k) => {
           if (frame < s) return null;
-          const t = clamp01(progress(frame, s, frames));
           const m = markSpec(k);
-          const e = 1 - Math.pow(1 - t, 3);
+          const t = progress(frame, s, TALLY_FLY);
+          if (t < 1) {
+            // the stroke is in the air: from the hand (board-local coordinates) to the middle of its place
+            const src = from(s);
+            const sx = (src.x - x) / scale - 46;
+            const sy = (src.y - y) / scale - 70;
+            const e = 1 - Math.pow(1 - t, 2);
+            const cx = sx + ((m.x1 + m.x2) / 2 - sx) * e;
+            const cy = sy + ((m.y1 + m.y2) / 2 - sy) * e - 60 * Math.sin(Math.PI * t);
+            const len = MARK_H * (0.3 + 0.7 * e) * 0.5;
+            return <line key={k} x1={cx - 4 * (1 - e)} y1={cy - len} x2={cx + 4 * (1 - e)} y2={cy + len} opacity={0.9} />;
+          }
+          const ink = clamp01(progress(frame, s + TALLY_FLY, frames));
+          const e = 1 - Math.pow(1 - ink, 3);
           return <line key={k} x1={m.x1} y1={m.y1} x2={m.x1 + (m.x2 - m.x1) * e} y2={m.y1 + (m.y2 - m.y1) * e} />;
         })}
       </g>
       <rect x={W / 2 - 46} y={-14} width={92} height={26} fill={palette.moonYellow} opacity={0.9} transform="rotate(-2)" />
+    </g>
+  );
+};
+
+/** The note the human sticks on the glass: yellow, a hand-written word in the quiet face, navy on yellow. */
+export const GlassNote = ({ frame, start, frames, x, y, from, text }: { frame: number; start: number; frames: number; x: number; y: number; from: { x: number; y: number }; text: string }) => {
+  if (frame < start) return null;
+  const d = drift(frame, start, frames, { from: { x: from.x - x, y: from.y - y }, bulge: 10 });
+  const size = 104;
+  return (
+    <g opacity={d.op} transform={`translate(${(x + d.ox).toFixed(1)} ${(y + d.oy).toFixed(1)}) rotate(-4) scale(${d.s.toFixed(4)})`}>
+      <YellowPlate k="glass-note">
+        <rect x={-size / 2} y={-size / 2} width={size} height={size} fill={palette.moonYellow} />
+      </YellowPlate>
+      <rect x={-size / 2} y={-size / 2} width={size} height={size} fill={palette.moonYellow} stroke={palette.navy} strokeWidth={3} />
+      <rect x={-size / 2 + 8} y={-size / 2 - 7} width={size - 16} height={16} fill={palette.cream} opacity={0.8} />
+      <text x={0} y={7} textAnchor="middle" fontFamily={TEXT_FONT} fontWeight={500} fontSize={19} fill={palette.navy}>
+        {text}
+      </text>
+      <rect x={-34} y={20} width={68} height={3} rx={1.5} fill={palette.navy} opacity={0.5} />
     </g>
   );
 };
