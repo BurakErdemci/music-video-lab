@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the AI character (silk-screen style). Draw the SAME character in every pose, identical design: smooth genderless slender body, solid cream-white (#F3EFE4) fill, thin midnight navy (#18203A) outline, round bald head, NO face except ONE short vertical navy cursor line. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (four key poses): curious idle in profile facing LEFT: 1) leaning forward with hands behind the back; 2) head tilted to one side; 3) head tilted to the other side; 4) straightening up, one finger raised (an idea).
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale, feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.
