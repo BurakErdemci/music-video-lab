@@ -20,6 +20,13 @@ interface Props {
   on?: 'navy' | 'cream';
   /** Fixed box width so main and ghost layers wrap identically. */
   width?: number;
+  /**
+   * Colour of the word. 'yellow' (default) is the moon-yellow stamp; on cream it gets a navy outline to read.
+   * 'navy' is the reversed print (navy word, yellow ghost) used for the right-hand mirror stamp.
+   */
+  ink?: 'yellow' | 'navy';
+  /** Centre the word in its box (for a stamp laid across the glass seam). */
+  center?: boolean;
 }
 
 const SQUASH = [1.15, 1.1, 1.05];
@@ -28,7 +35,7 @@ const SQUASH = [1.15, 1.1, 1.05];
  * Big key word, moon yellow, stamped in: 3 frames of scale 1.15 -> 1 with a small seeded rotation,
  * then it holds. A ghost print (same box, same text) sits 1-3 px off like a misregistered plate.
  */
-export const StampWord = ({ frame, startFrame, endFrame, text, x, y, size = 190, on = 'navy', width = 900 }: Props) => {
+export const StampWord = ({ frame, startFrame, endFrame, text, x, y, size = 190, on = 'navy', width = 900, ink = 'yellow', center = false }: Props) => {
   if (frame < startFrame || (endFrame !== undefined && frame >= endFrame + STAMP_EXIT_FRAMES)) return null;
   // the hard hit in stays (it is the accent); the way out is a short fade
   const op = endFrame !== undefined && frame >= endFrame ? fadeOut(frame, endFrame, STAMP_EXIT_FRAMES) : 1;
@@ -46,12 +53,15 @@ export const StampWord = ({ frame, startFrame, endFrame, text, x, y, size = 190,
     fontSize: size,
     lineHeight: 1.05,
     letterSpacing: '0.02em',
+    textAlign: center ? 'center' : 'left',
   } as const;
-  const ghost = on === 'navy' ? palette.cream : palette.navy;
+  const ghost = ink === 'navy' ? palette.moonYellow : on === 'navy' ? palette.cream : palette.navy;
+  const word = ink === 'navy' ? palette.navy : palette.moonYellow;
+  const outline = ink === 'yellow' && on === 'cream' ? ({ WebkitTextStroke: `${Math.max(4, size / 22)}px ${palette.navy}`, paintOrder: 'stroke fill' } as const) : {};
   return (
-    <div style={{ position: 'absolute', left: x, top: y, width, height: size * 1.1, transform: `rotate(${rot}deg) scale(${scale})`, transformOrigin: '0% 55%', opacity: op }}>
+    <div style={{ position: 'absolute', left: x, top: y, width, height: size * 1.1, transform: `rotate(${rot}deg) scale(${scale})`, transformOrigin: center ? '50% 55%' : '0% 55%', opacity: op }}>
       <div style={{ ...base, color: ghost, transform: `translate(${-dx * 1.5}px, ${-dy * 1.5}px)` }}>{upperTr(text)}</div>
-      <div style={{ ...base, color: palette.moonYellow, transform: `translate(${dx}px, ${dy}px)` }}>{upperTr(text)}</div>
+      <div style={{ ...base, ...outline, color: word, transform: `translate(${dx}px, ${dy}px)` }}>{upperTr(text)}</div>
     </div>
   );
 };

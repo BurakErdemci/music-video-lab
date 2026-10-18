@@ -2,7 +2,9 @@
 // scene (M); M's screen hole shows the next level, drawn recursively. All levels read the same state, so
 // anything that happens in the room (bubble, ring, pin light) happens in every nested copy at once.
 import { Bubble } from './Bubble.tsx';
-import { AI_BOX, AI_SCALE, AI_X0, AI_Y0, BUBBLE_TIP, CURSOR, HOLE, HOLE0, KN, moonPhase, NOTE, NOTE_WIN, SH_PX, SHOLE, SLIT_PATCH, SW } from './droste.ts';
+import { AI_OUTLINE } from './aiOutline.ts';
+import { smooth } from '../math.ts';
+import { AI_BOX, AI_SCALE, AI_X0, AI_Y0, BUBBLE_TIP, CURSOR, HOLE, HOLE0, KN, moonPhase, NOTE, NOTE_WIN, SH_PX, SHOLE, S, SLIT_PATCH, SW } from './droste.ts';
 import { INTRO_ART } from '../style/assets.ts';
 import { palette } from '../style/palette.ts';
 import { plateOffset } from '../style/screenprint.tsx';
@@ -18,6 +20,8 @@ export interface RingState {
 /** Everything that changes over time, resolved once per frame by the scene. */
 export interface WorldState {
   frame: number;
+  /** Camera zoom factor (e^L); with the level index it gives the raster's magnification. */
+  Z: number;
   cursorOp: number;
   echoP: number;
   aiOp: number;
@@ -67,6 +71,9 @@ const Pin = ({ pulse }: { pulse: number }) => (
 export const Level = ({ d, n, depth, st }: { d: number; n: number; depth: number; st: WorldState }) => {
   const paperOff = plateOffset('wall-note');
   const echoOff = { dx: 5 * st.echoP, dy: 4 * st.echoP };
+  // vector head/body outline takes over where the raster is magnified past ~1.5x (it is 243 px wide)
+  const mag = st.Z * Math.pow(S, n) * AI_SCALE;
+  const vec = smooth((mag - 1.2) / 1.3);
   return (
     <g>
       <rect width={SW} height={SH_PX} fill={palette.cream} />
@@ -74,8 +81,19 @@ export const Level = ({ d, n, depth, st }: { d: number; n: number; depth: number
       {st.floorP > 0 && <rect x={AI_BOX.cx - 1700 * st.floorP} y={AI_BOX.floorY - 1.5} width={3400 * st.floorP} height={3} fill={palette.navy} opacity={FLOOR_OPACITY} />}
 
       <g opacity={st.aiOp}>
-        <image href={INTRO_ART.ai} x={AI_X0} y={AI_Y0} width={AI_BOX.imgW * AI_SCALE} height={AI_BOX.imgH * AI_SCALE} preserveAspectRatio="none" />
-        <rect x={SLIT_PATCH.x} y={SLIT_PATCH.y} width={SLIT_PATCH.w} height={SLIT_PATCH.h} fill={SLIT_PATCH.fill} />
+        <g opacity={1 - Math.min(1, Math.max(0, 2 * vec - 1))}>
+          <image href={INTRO_ART.ai} x={AI_X0} y={AI_Y0} width={AI_BOX.imgW * AI_SCALE} height={AI_BOX.imgH * AI_SCALE} preserveAspectRatio="none" />
+          <rect x={SLIT_PATCH.x} y={SLIT_PATCH.y} width={SLIT_PATCH.w} height={SLIT_PATCH.h} fill={SLIT_PATCH.fill} />
+        </g>
+        {vec > 0 && (
+          <g opacity={Math.min(1, 2 * vec)} transform={`translate(${AI_X0} ${AI_Y0}) scale(${AI_SCALE})`}>
+            <clipPath id={`ai-clip-${d}`}>
+              <path d={AI_OUTLINE.d} clipRule="evenodd" />
+            </clipPath>
+            <path d={AI_OUTLINE.d} fill={SLIT_PATCH.fill} fillRule="evenodd" />
+            <path d={AI_OUTLINE.d} fill="none" stroke={palette.navy} strokeWidth={AI_OUTLINE.strokePx * 2} strokeLinejoin="round" clipPath={`url(#ai-clip-${d})`} />
+          </g>
+        )}
       </g>
       {st.echoP > 0 && <rect x={CURSOR.x + echoOff.dx} y={CURSOR.y + echoOff.dy} width={CURSOR.w} height={CURSOR.h} fill={palette.moonYellow} opacity={st.echoP} />}
       <rect x={CURSOR.x} y={CURSOR.y} width={CURSOR.w} height={CURSOR.h} fill={palette.navy} opacity={st.cursorOp} />

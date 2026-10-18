@@ -7,6 +7,11 @@ export const INTRO_ART = {
   ai: staticFile('poses/a10-onden.png'),
   monitor: staticFile('plates/monitor-levha.png'),
 };
+/** Props for the AI's side (navy notebook with cream edges reads on the cream room). */
+export const PROPS = {
+  notebookClosed: staticFile('props/p01-defter-kapali.png'),
+  notebookOpen: staticFile('props/p02-defter-acik.png'),
+};
 export const PLATE = {
   key: staticFile('plates/room-key.png'),
   moon: staticFile('plates/room-moon.png'),
@@ -14,7 +19,7 @@ export const PLATE = {
 };
 
 // SVG <image> does not make Remotion wait: decode everything before the first frame (same as fonts.ts).
-const urls = [...ALL_POSES.flatMap((id) => [poseUrl(id, false), poseUrl(id, true)]), ...Object.values(PLATE), ...Object.values(INTRO_ART)];
+const urls = [...ALL_POSES.flatMap((id) => [poseUrl(id, false), poseUrl(id, true)]), ...Object.values(PLATE), ...Object.values(INTRO_ART), ...Object.values(PROPS)];
 const handle = delayRender('pose and plate images');
 Promise.all(
   urls.map(async (u) => {

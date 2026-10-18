@@ -8,8 +8,8 @@ import './style/assets.ts';
 
 const Song = () => <Audio src={staticFile('her-sabah-bastan.wav')} />;
 
-// Scenes after 0:30 are not built yet: the full composition keeps the last test frame's
-// structure running (no events are scheduled past frame 900).
+// The scene is built to 1:28.7 (frame 2661); past that the full composition keeps the last frame's state
+// running (no events are scheduled after CHECK_UNTIL_FRAME).
 const Video = ({ lOverride }: { lOverride?: number }) => {
   const frame = useCurrentFrame();
   return (
@@ -29,6 +29,7 @@ export const Root = () => (
   <>
     <Composition id="HerSabahBastan" component={Video} durationInFrames={DURATION_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Test30" component={Video} durationInFrames={900} fps={FPS} width={W} height={H} />
+    <Composition id="Test90" component={Video} durationInFrames={2700} fps={FPS} width={W} height={H} />
     <Composition id="Lineup" component={LineupScene} durationInFrames={1} fps={FPS} width={W} height={H} />
     <Composition id="Parts" component={Parts} durationInFrames={130} fps={FPS} width={W} height={H} />
   </>

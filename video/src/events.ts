@@ -11,7 +11,7 @@ import {
 } from './timing.ts';
 import { enter, ENTER_FRAMES, LYRIC_FRAMES, STAMP_ENTER, BLINK_FRAMES, type Enter } from './motion/entrances.ts';
 
-export type EventKind = 'blink' | 'oh' | 'bubble' | 'reveal' | 'line' | 'stamp' | 'note' | 'print' | 'wall';
+export type EventKind = 'blink' | 'oh' | 'bubble' | 'reveal' | 'line' | 'stamp' | 'note' | 'print' | 'wall' | 'wave' | 'moon' | 'tally' | 'pose';
 
 export interface VideoEvent {
   id: string;
@@ -33,8 +33,8 @@ export interface VideoEvent {
   beatOffset?: number;
 }
 
-/** Test30 range: events at or after this frame are not scheduled. */
-export const CHECK_UNTIL_FRAME = 900;
+/** Test90 range: events at or after this frame are not scheduled (1:28.7, the end of the post-chorus). */
+export const CHECK_UNTIL_FRAME = 2661;
 
 const list: VideoEvent[] = [];
 const push = (e: VideoEvent): void => {
@@ -98,8 +98,8 @@ spanTo('intro.cream', 'room.seam');
 
 // ---- verse 1: split rooms, two lines
 const bar10 = barBeatIndex(10);
-// the human's wall grows by one code note every 2nd beat
-for (let i = bar10; i < bar10 + 64; i += 2) atBeat(`wall.${i}`, 'wall', i, enter('drift'));
+// the human's wall grows by one code note every 2nd beat until the plate wall is full (WALL_MAX = 72 notes)
+for (let i = bar10; i < bar10 + 144; i += 2) atBeat(`wall.${i}`, 'wall', i, enter('drift'));
 
 const L1 = lineFrames(1);
 atTime('line1.show', 'line', L1.start, enter('fade', LYRIC_FRAMES));
@@ -121,6 +121,87 @@ for (const [n, endT] of [
   const idx = nearestBeatIndex(endT);
   atBeat(`note${n}.fly`, 'note', idx, enter('drift'));
   atBeat(`note${n}.land`, 'note', idx + 2, enter('settle', ENTER_FRAMES.fade));
+}
+
+
+// ============================================================================================================
+// 0:30 -> 1:28.7. Every entrance below is an event; nothing here appears on a frame that is not a beat.
+// ============================================================================================================
+const lineShow = (n: number, id = `line${n}`): void => {
+  const L = lineFrames(n);
+  atTime(`${id}.show`, 'line', L.start, enter('fade', LYRIC_FRAMES));
+  atTime(`${id}.hide`, 'line', L.end, enter('fade', LYRIC_FRAMES));
+};
+const beatOf = (t: number): number => nearestBeatIndex(t);
+
+// ---- verse 1, line 3 "Dun gece ne konustuk": the AI side is wiped clean (a morning), the human stands up with yesterday's note
+lineShow(3);
+atTime('stamp.dun', 'stamp', lineWordTime(3, 0), STAMP_ENTER);
+atTime('wave.dun', 'wave', lineWordTime(3, 0), enter('squeegee', 16));
+atTime('human.stand', 'pose', lineWordTime(3, 0), enter('halftone'));
+atBeat('note.held', 'note', beatOf(lineWordTime(3, 0)) + 1, enter('drift'));
+
+// ---- line 4 "Bastan anlatiyorum yine": one note per beat through the glass, the AI pins; on "tanismisiz" both reach
+lineShow(4);
+atTime('stamp.bastan1', 'stamp', lineWordTime(4, 0), STAMP_ENTER);
+const pinFrom = beatOf(lineWordTime(4, 0));
+const reachAt = beatOf(lineWordTime(4, 5));
+atBeat('ai.pin', 'pose', pinFrom, enter('settle'));
+for (let i = pinFrom; i < reachAt; i++) {
+  atBeat(`vnote.${i}.fly`, 'note', i, enter('drift'));
+  atBeat(`vnote.${i}.land`, 'note', i + 2, enter('settle', ENTER_FRAMES.fade));
+}
+atBeat('pose.reach', 'pose', reachAt, enter('settle'));
+atBeat('glass.ripple', 'oh', reachAt, enter('ring'));
+atTime('pose.release', 'pose', lineFrames(4).end, enter('settle'));
+
+// ---- pre-chorus 1 (the AI side, right): the notebook
+for (const n of [5, 6, 7, 8]) lineShow(n);
+atBar('wave.pre', 'wave', 24, 0, enter('squeegee', 16));
+atTime('stamp.defter', 'stamp', lineWordTime(5, 1), STAMP_ENTER);
+atTime('book.drop', 'print', lineWordTime(5, 1), enter('drift', 16));
+atTime('ai.bend', 'pose', lineWordTime(5, 2), enter('settle'));
+atTime('ai.read', 'pose', lineWordTime(5, 3), enter('settle'));
+atTime('book.open', 'print', lineWordTime(5, 3), enter('drift'));
+for (const k of [0, 1, 2]) atTime(`sketch.${k + 1}`, 'print', lineWordTime(6, k), enter('drift'));
+atTime('stamp.anliyorum', 'stamp', lineWordTime(7, 1), STAMP_ENTER);
+atTime('check.on', 'print', lineWordTime(7, 1), enter('ease'));
+atTime('stamp.hatirla', 'stamp', lineWordTime(8, 1), STAMP_ENTER);
+atTime('check.off', 'print', lineWordTime(8, 1), enter('fade', 12));
+atTime('human.sit', 'pose', lineFrames(8).start, enter('settle'));
+
+// ---- chorus 1: one cream wave per bar over the AI side, the AI pins two notes between waves
+const C1 = [31, 32, 33, 34, 35, 36, 37, 38] as const;
+for (const b of C1) {
+  atBar(`wave.c${b}`, 'wave', b, 0, enter('squeegee', 26));
+  atBar(`cnote.${b}.a.fly`, 'note', b, 0, enter('drift'));
+  atBar(`cnote.${b}.a.land`, 'note', b, 2, enter('settle', ENTER_FRAMES.fade));
+  atBar(`cnote.${b}.b.fly`, 'note', b, 1, enter('drift'));
+  atBar(`cnote.${b}.b.land`, 'note', b, 3, enter('settle', ENTER_FRAMES.fade));
+}
+atBar('pose.chorus', 'pose', 31, 0, enter('settle'));
+for (const n of [9, 10, 11, 12, 13, 14]) lineShow(n);
+atTime('stamp.bastan2', 'stamp', lineWordTime(9, 2), STAMP_ENTER);
+atTime('stamp.ay', 'stamp', lineWordTime(10, 0), STAMP_ENTER);
+// the split moon steps one phase per beat from "Ay" to the end of its line
+for (let i = beatOf(lineWordTime(10, 0)); i < beatOf(lineFrames(10).end); i++) atBeat(`moon.${i}`, 'moon', i, enter('ease'));
+atTime('stamp.biliyorum', 'stamp', lineWordTime(11, 0), STAMP_ENTER);
+atTime('stamp.bilmiyorum', 'stamp', lineWordTime(12, 0), STAMP_ENTER);
+atTime('stamp.buradayiz', 'stamp', lineWordTime(13, 2), STAMP_ENTER);
+atTime('pose.face', 'pose', lineWordTime(13, 2), enter('settle'));
+atTime('stamp.birdaha', 'stamp', lineWordTime(14, 3), STAMP_ENTER);
+
+// ---- post-chorus: every beat a tally mark, and a new morning (a mini wave that resets the AI side; the same "Merhaba" returns).
+// The tempo is constant (14 frames per beat), so the visual rhythm speeds up instead: one morning per 2 beats in the first
+// two bars, one per beat from bar 41 on.
+lineShow(15);
+const pcStart = barBeatIndex(39);
+const pcEnd = barBeatIndex(48);
+for (let i = pcStart; i < pcEnd; i++) {
+  atBeat(`tally.${i}`, 'tally', i, enter('ease'));
+  const slow = i < barBeatIndex(41);
+  if (slow && (i - pcStart) % 2 === 1) continue;
+  atBeat(`morning.${i}`, 'wave', i, enter('squeegee', slow ? 22 : 11));
 }
 
 export const EVENTS: readonly VideoEvent[] = list.slice().sort((a, b) => a.beatIdx - b.beatIdx || a.id.localeCompare(b.id));

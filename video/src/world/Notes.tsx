@@ -28,12 +28,16 @@ interface FlyProps {
   size?: number;
   /** Frames of the landing settle after the flight. */
   settle?: number;
+  /** 'fly' draws only the flight, 'rest' only the pinned note after it (the scene layers them under/over the wave). */
+  phase?: 'all' | 'fly' | 'rest';
 }
 
 /** A note flying along an arc, crossing the glass; smooth at 30 fps. */
-export const NoteFly = ({ frame, startFrame, duration, from, to, arc = 160, seed, stay = true, size = 64, settle = ENTER_FRAMES.settle }: FlyProps) => {
+export const NoteFly = ({ frame, startFrame, duration, from, to, arc = 160, seed, stay = true, size = 64, settle = ENTER_FRAMES.settle, phase = 'all' }: FlyProps) => {
   if (frame < startFrame) return null;
   const t = clamp01((frame - startFrame) / duration);
+  if (phase === 'fly' && t >= 1) return null;
+  if (phase === 'rest' && t < 1) return null;
   if (t >= 1 && !stay) return null;
   const r = seeded(`fly:${seed}`);
   const rot0 = range(r, -25, 25);

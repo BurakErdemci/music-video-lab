@@ -12,12 +12,14 @@ interface Props {
   side: 'left' | 'right' | 'seam';
   y: number;
   size?: number;
+  /** Distance from the frame edge (left) or the glass (right) to the text. */
+  inset?: number;
 }
 
 const BOX = 880;
 
 /** Small quiet lyric line. All layers share one fixed box so they wrap identically. */
-export const LyricLine = ({ frame, startFrame, endFrame, text, side, y, size = 28 }: Props) => {
+export const LyricLine = ({ frame, startFrame, endFrame, text, side, y, size = 28, inset = 72 }: Props) => {
   if (frame < startFrame || frame >= endFrame + LYRIC_FRAMES) return null;
   // soft 8-frame fade and 8 px slide in on the show beat, the same out on the hide beat
   const op = Math.min(fadeIn(frame, startFrame, LYRIC_FRAMES), frame >= endFrame ? fadeOut(frame, endFrame, LYRIC_FRAMES) : 1);
@@ -41,7 +43,7 @@ export const LyricLine = ({ frame, startFrame, endFrame, text, side, y, size = 2
       </div>
     );
   }
-  const left = side === 'left' ? 72 : SEAM_X + 72;
+  const left = side === 'left' ? inset : SEAM_X + inset;
   return (
     <div style={{ position: 'absolute', left, top: y + slide, width: BOX - 40, height: size * 1.4, opacity: op }}>
       <div style={{ ...style, left: 0, color: side === 'left' ? palette.cream : palette.navy }}>{text}</div>
