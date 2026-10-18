@@ -1,0 +1,20 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style). Draw the SAME person in every pose. Model anchors (copy them exactly from the attached frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head); same body size as the reference.
+- Hair: the same short messy hair silhouette as the reference, the same tufts sticking out at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT (no shoes, no sweater, no jeans, no cuffs).
+- Notes: EIGHT moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column of four down the back from the shoulder blade to the hip, two on the front of the chest/ribs, one on the upper arm sleeve. Same note size as the reference (about the size of the head's width).
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, faceless, flat silk-screen style, slight misregistration, fine grain.
+
+Action (ONE complete walking STEP in SIX drawings, a calm unhurried walk, to be played in a loop: drawing 6 leads straight back into drawing 1 with the other leg). The SECOND attached image is the approved walk strip (same size, same head height). Profile facing RIGHT. The SAME arms, hands and eight sticky notes in every drawing, only a gentle arm swing. The PLANTED foot (the one that carries the weight in this step) stays on ONE floor spot while the hips travel forward over it by an EQUAL distance from drawing to drawing. Horizontal distance from the hips to the planted foot's toes, in foot lengths:
+1) +1 (CONTACT: the planted foot just landed ahead, heel down; the other foot on its toes one foot length behind the hips);
+2) +2/3 (the planted foot flat, knee bending, weight dropping onto it; the back foot lifting off);
+3) +1/3 (the planted leg taking the weight; the other leg bent, swinging forward, foot off the floor behind);
+4) 0 (PASSING: the planted foot directly under the hips, leg straight; the swinging foot passing beside it, off the floor);
+5) -1/3 (the planted foot slightly behind the hips; the swinging leg ahead, knee bent, foot off the floor);
+6) -2/3 (UP: the planted heel lifting, the swinging foot reaching forward low, about to land one foot length ahead).
+Equal spacing is essential: the planted foot moves BACKWARD relative to the body by the same amount in each drawing.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY SIX poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All six at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 21:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

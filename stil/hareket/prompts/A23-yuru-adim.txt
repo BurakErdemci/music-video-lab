@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is an APPROVED key-pose strip of the AI character (silk-screen style). Draw the SAME character, identical design: smooth genderless slender body, solid cream-white (#F3EFE4) fill, thin midnight navy (#18203A) outline, round bald head, NO face except ONE short vertical navy cursor line. KEEP THE SAME HEAD-TO-BODY PROPORTION AS THE REFERENCE: small round head, adult proportions, head height about 1/7.5 of the standing height (NOT a big chibi head). Same figure size as the reference. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (ONE complete walking STEP in four key drawings, a calm unhurried walk; these four drawings will be played in a loop, so drawing 4 must lead straight back into drawing 1 with the other leg). The attached image is the approved walk strip (same size, same head height, same arms and notes in every drawing). Profile facing LEFT. The FRONT foot that lands in drawing 1 is the PLANTED foot of the whole step: it stays flat on the SAME floor spot in all four drawings while the body travels forward over it by an EQUAL distance from drawing to drawing:
+1) CONTACT: legs wide apart, the front heel just touching the floor ahead, the back foot on its toes behind, arms swinging opposite;
+2) DOWN: the weight drops onto the front (planted) foot, knee bent, the body lowest, the back foot lifting off;
+3) PASSING: the planted leg straight under the hips, the other leg passing beside it with the knee bent, arms by the sides;
+4) UP: the body highest, the planted foot behind the hips rising onto its toes, the other leg swinging forward ready to land.
+Keep EVERY drawing's arms, hands drawn the same way except for the gentle swing; nothing else changes between drawings.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

@@ -1,0 +1,18 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style). Draw the SAME person in every pose. Model anchors (copy them exactly from the attached frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head); same body size as the reference.
+- Hair: the same short messy hair silhouette as the reference, the same tufts sticking out at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT (no shoes, no sweater, no jeans, no cuffs).
+- Notes: EIGHT moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column of four down the back from the shoulder blade to the hip, two on the front of the chest/ribs, one on the upper arm sleeve. Same note size as the reference (about the size of the head's width).
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, faceless, flat silk-screen style, slight misregistration, fine grain.
+
+Action (ONE complete walking STEP in four key drawings, a calm unhurried walk, to be played in a loop: drawing 4 leads straight back into drawing 1 with the other leg). The SECOND attached image is the approved walk strip (same size, same head height). Profile facing RIGHT. The SAME arms, hands and eight sticky notes in every drawing, only a gentle arm swing. The PLANTED foot (the one that carries the weight in this step) is flat or rolling on ONE floor spot while the hips travel forward over it by an EQUAL distance (half a foot length) from drawing to drawing:
+1) CONTACT: the planted foot has just landed, its heel ONE foot length AHEAD of the hips; the other foot ONE foot length BEHIND the hips, on its toes;
+2) DOWN: the planted foot flat, HALF a foot length ahead of the hips, its knee bent taking the weight; the other foot just lifting off behind;
+3) PASSING: the planted foot flat DIRECTLY UNDER the hips, leg straight; the other leg passing beside it, knee bent, foot off the floor;
+4) UP: the planted foot HALF a foot length BEHIND the hips, heel lifting; the other leg swinging forward, its foot off the floor, about to land one foot length ahead of the hips.
+The distance from the hips to the planted foot must follow exactly that pattern (+1, +1/2, 0, -1/2 foot lengths): equal spacing is essential.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.
