@@ -14,7 +14,7 @@ export interface StripMeta { who: 'human' | 'ai'; scale: number; /** Folder unde
 export const STRIPS: Record<string, StripMeta> = {
  "A01": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.7706,
   "frames": [
    {
     "file": "A01-yuru-1.png",
@@ -278,7 +278,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A02": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.874,
   "frames": [
    {
     "file": "A02-sallan-1.png",
@@ -401,7 +401,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A05": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.8185,
   "frames": [
    {
     "file": "A05-hizala-1.png",
@@ -597,7 +597,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A09": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.608,
   "frames": [
    {
     "file": "A09-okuma-1.png",
@@ -640,7 +640,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A10": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.7235,
   "frames": [
    {
     "file": "A10-don-1.png",
@@ -695,7 +695,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A11": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.7478,
   "frames": [
    {
     "file": "A11-yaz-1.png",
@@ -750,7 +750,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A14": {
   "who": "ai",
-  "scale": 0.8056,
+  "scale": 0.8512,
   "frames": [
    {
     "file": "A14-oturma-1.png",
@@ -1709,7 +1709,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A20": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.7706,
   "frames": [
    {
     "file": "A20-yuru-ara-1.png",
@@ -1877,7 +1877,7 @@ export const STRIPS: Record<string, StripMeta> = {
  },
  "A19": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.7706,
   "frames": [
    {
     "file": "A19-yuru-ara-1.png",
@@ -2059,14 +2059,14 @@ export const STRIPS: Record<string, StripMeta> = {
     "w": 344,
     "h": 536,
     "ax": 207,
-    "k": 1.03
+    "k": 0.99
    },
    {
     "file": "A15-cokme-3.png",
     "w": 300,
     "h": 536,
     "ax": 120,
-    "k": 1.06
+    "k": 0.985
    },
    {
     "file": "A15-cokme-4.png",
@@ -2079,7 +2079,7 @@ export const STRIPS: Record<string, StripMeta> = {
      "w": 16,
      "h": 47
     },
-    "k": 1.085
+    "k": 0.98
    }
   ],
   "dir": "strips"
@@ -2099,7 +2099,7 @@ export const STRIPS: Record<string, StripMeta> = {
      "w": 9,
      "h": 37
     },
-    "k": 1.15
+    "k": 1.065
    },
    {
     "file": "A16-uzan-2.png",
@@ -2112,7 +2112,7 @@ export const STRIPS: Record<string, StripMeta> = {
      "w": 9,
      "h": 38
     },
-    "k": 1.12
+    "k": 1.07
    },
    {
     "file": "A16-uzan-3.png",
@@ -2125,21 +2125,21 @@ export const STRIPS: Record<string, StripMeta> = {
      "w": 12,
      "h": 33
     },
-    "k": 1.06
+    "k": 1.05
    },
    {
     "file": "A16-uzan-4.png",
     "w": 452,
     "h": 412,
     "ax": 153,
-    "k": 1.03
+    "k": 1.15
    }
   ],
   "dir": "strips"
  },
  "A17": {
   "who": "ai",
-  "scale": 0.76,
+  "scale": 0.6156,
   "frames": [
    {
     "file": "A17-okuma2-1.png",
@@ -2230,21 +2230,21 @@ export const STRIPS: Record<string, StripMeta> = {
     "w": 450,
     "h": 707,
     "ax": 217,
-    "k": 1.03
+    "k": 1.17
    },
    {
     "file": "A18-kalk-2.png",
     "w": 338,
     "h": 707,
     "ax": 119,
-    "k": 1.08
+    "k": 1.17
    },
    {
     "file": "A18-kalk-3.png",
     "w": 317,
     "h": 707,
     "ax": 170,
-    "k": 1.14
+    "k": 1.18
    },
    {
     "file": "A18-kalk-4.png",
@@ -2351,6 +2351,163 @@ export const STRIPS: Record<string, StripMeta> = {
     "k": 1.0444
    }
   ],
+  "dir": "strips"
+ },
+ "H25": {
+  "who": "human",
+  "scale": 0.8131,
+  "frames": [
+   {
+    "file": "H25-cam-yasla-1.png",
+    "w": 240,
+    "h": 813,
+    "ax": 72
+   },
+   {
+    "file": "H25-cam-yasla-2.png",
+    "w": 238,
+    "h": 813,
+    "ax": 78
+   },
+   {
+    "file": "H25-cam-yasla-3.png",
+    "w": 254,
+    "h": 813,
+    "ax": 83
+   },
+   {
+    "file": "H25-cam-yasla-4.png",
+    "w": 330,
+    "h": 813,
+    "ax": 85
+   }
+  ],
+  "dir": "strips"
+ },
+ "H26": {
+  "who": "human",
+  "scale": 0.851,
+  "frames": [
+   {
+    "file": "H26-sirt-kay-1.png",
+    "w": 160,
+    "h": 793,
+    "ax": 71
+   },
+   {
+    "file": "H26-sirt-kay-2.png",
+    "w": 253,
+    "h": 793,
+    "ax": 158
+   },
+   {
+    "file": "H26-sirt-kay-3.png",
+    "w": 293,
+    "h": 793,
+    "ax": 225
+   },
+   {
+    "file": "H26-sirt-kay-4.png",
+    "w": 333,
+    "h": 793,
+    "ax": 208
+   }
+  ],
+  "dir": "strips"
+ },
+ "H27": {
+  "who": "human",
+  "scale": 0.8436,
+  "frames": [
+   {
+    "file": "H27-sirt-otur-1.png",
+    "w": 388,
+    "h": 445,
+    "ax": 135
+   },
+   {
+    "file": "H27-sirt-otur-2.png",
+    "w": 420,
+    "h": 445,
+    "ax": 141
+   },
+   {
+    "file": "H27-sirt-otur-3.png",
+    "w": 400,
+    "h": 445,
+    "ax": 133
+   },
+   {
+    "file": "H27-sirt-otur-4.png",
+    "w": 403,
+    "h": 445,
+    "ax": 139
+   }
+  ],
+  "dir": "strips"
+ },
+ "H28": {
+  "who": "human",
+  "scale": 0.8436,
+  "frames": [
+   {
+    "file": "H28b-yuru-adim-1.png",
+    "w": 415,
+    "h": 769,
+    "ax": 191,
+    "ground": [
+     [
+      46,
+      92
+     ],
+     [
+      309,
+      337
+     ]
+    ],
+    "k": 1.0403
+   },
+   {
+    "file": "H28b-yuru-adim-2.png",
+    "w": 278,
+    "h": 769,
+    "ax": 144,
+    "ground": [
+     [
+      169,
+      277
+     ]
+    ],
+    "k": 1.0403
+   },
+   {
+    "file": "H28b-yuru-adim-3.png",
+    "w": 269,
+    "h": 769,
+    "ax": 134,
+    "ground": [
+     [
+      117,
+      226
+     ]
+    ],
+    "k": 1.0403
+   },
+   {
+    "file": "H28b-yuru-adim-4.png",
+    "w": 380,
+    "h": 769,
+    "ax": 171,
+    "ground": [
+     [
+      44,
+      82
+     ]
+    ],
+    "k": 1.0403
+   }
+  ],
+  "walk": true,
   "dir": "strips"
  },
  "DESK": {

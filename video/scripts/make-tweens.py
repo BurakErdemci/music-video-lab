@@ -2,7 +2,7 @@
 
 usage (repo root): node video/scripts/tween-pairs.mjs && python video/scripts/make-tweens.py [--force]
 
-For every drawing change listed in video/out/tween-pairs.json, seven in-between images (t = 1/8 .. 7/8) go to
+For every drawing change listed in video/out/tween-pairs.json, fifteen in-between images (t = 1/16 .. 15/16) go to
 video/public/tweens/ and their placement to video/src/characters/tweenData.ts.
 
 Why a distance-field morph: the strips have 4 key drawings and no in-betweens. A cut between two of them
@@ -30,9 +30,11 @@ DST = os.path.join(ROOT, 'video', 'public', 'tweens')
 OUT = os.path.join(ROOT, 'video', 'src', 'characters', 'tweenData.ts')
 INDEX = os.path.join(DST, 'index.json')
 
-STEPS = 7
+STEPS = 15
 Q = 2  # distance fields at half resolution
-RING = 2.6  # rim line width on screen, px
+RING = 2.6  # (v4) rim line width on screen, px
+RING_PX = 2  # rim: the morphed mask minus its erosion by this many px (a 5x5 min filter: ~3 px line)
+DETAIL_IN = 6  # px: a drawing's lines and notes are shown only this far inside its own silhouette
 COLORS = {'human': ((24, 32, 58), (243, 239, 228)), 'ai': ((243, 239, 228), (24, 32, 58))}  # fill, rim
 ALIGN_RANGE = 120
 ALIGN_GAIN = 0.06  # realign only if the overlap gets this much better than at the true offset
@@ -468,6 +470,13 @@ def plain_mask(im, fill):
     return ImageChops.multiply(a, diff.point(lambda v: 255 if v < 28 else 0))
 
 
+def core_mask(im):
+    """Alpha of a drawing's pixels at least DETAIL_IN px inside its silhouette (its outline line excluded)."""
+    a = im.split()[3].point(lambda v: 255 if v > 100 else 0)
+    core = a.filter(ImageFilter.MinFilter(2 * DETAIL_IN + 1)).filter(ImageFilter.GaussianBlur(1.0))
+    return ImageChops.multiply(core, im.split()[3])
+
+
 def body_colour(ca, cb):
     """Median colour of the two drawings' opaque pixels: the body fill as drawn (the palette navy is darker than the
     printed texture, and a flat patch of it showed)."""
@@ -478,6 +487,98 @@ def body_colour(ca, cb):
     if not px:
         return (24, 32, 58)
     return tuple(sorted(c[k] for c in px)[len(px) // 2] for k in range(3))
+
+
+# The head (test90-v5). Blended or grown/retracted, a head that moved melted into a lump with a tail (the "ponytail" of
+# test90-v4, human 30.7 s / 72.5 s, and the AI's head knob). It is now found in both drawings and carried whole: it
+# keeps its size and slides from one place to the other while the body morphs without it. The head is the round part
+# that sticks out: the inside point at about the head's radius from the edge whose surrounding ring is the emptiest
+# (a head has only its neck around it; a torso has arms and legs). Checked by eye on every drawing
+# (scratchpad heads_ai / heads_h sheets): right on all AI drawings; on the human's wrong where an arm or a
+# notebook is the roundest thing near the top, listed in HEAD_SKIP (those pairs morph the old way).
+HEAD = {'ai': (21, 34, 1.0, 1.25), 'human': (17, 28, 0.4, 1.55)}  # half-res: inner radius, ring radius, top share searched, carried disc / inner radius (the human's hair reaches further)
+HEAD_SKIP = {'H03v2-gerin-1.png', 'H07v2-cam-3.png', 'H08-yorgun-1.png', 'H11v2-defter-goster-2.png', 'H11v2-defter-goster-3.png',
+             'H11v2-defter-goster-4.png', 'H18-yer-2.png', 'H21-otur-1.png'}
+
+
+def find_head(mask, w, h, who):
+    r_in, r_out, topf, rf = HEAD[who]
+    rows = [y for y in range(h) if any(mask[y * w:(y + 1) * w])]
+    if not rows:
+        return None
+    lim = rows[0] + (rows[-1] - rows[0]) * topf
+    d = edt(Image.frombytes('L', (w, h), bytes(255 if v else 0 for v in mask)))
+    best = None
+    for i in [i for i in range(w * h) if r_in * 3 * 0.7 <= d[i] <= r_in * 3 * 1.3 and i // w <= lim][::3]:
+        cx, cy = i % w, i // w
+        ring = tot = 0
+        for yy in range(max(0, cy - r_out), min(h, cy + r_out + 1), 2):
+            for xx in range(max(0, cx - r_out), min(w, cx + r_out + 1), 2):
+                q = (xx - cx) ** 2 + (yy - cy) ** 2
+                if (r_in * 1.25) ** 2 < q <= r_out ** 2:
+                    tot += 1
+                    ring += mask[yy * w + xx]
+        sc = ring / max(1, tot) + 0.002 * cy / h
+        if best is None or sc < best[0]:
+            best = (sc, cx, cy)
+    if not best:
+        return None
+    _, cx, cy = best
+    R = r_in * rf
+    px = [i for i in range(max(0, int(cy - R)) * w, min(h, int(cy + R) + 1) * w) if mask[i] and (i % w - cx) ** 2 + (i // w - cy) ** 2 <= R * R]
+    return {'px': px, 'cx': cx, 'cy': cy, 'n': len(px), 'id': -1}
+
+
+def neck(m, w, h, head_px, r_in):
+    """Join a carried head to the body: a capsule from the head's centre to the nearest body pixel (the head slides on
+    a straight line while the body morphs, and the gap between them read as a floating head)."""
+    hs = set(head_px)
+    if not hs:
+        return
+    cx = sum(i % w for i in hs) / len(hs)
+    cy = sum(i // w for i in hs) / len(hs)
+    best = None
+    R = int(r_in * 3)
+    for y in range(max(0, int(cy - R)), min(h, int(cy + R) + 1)):
+        for x in range(max(0, int(cx - R)), min(w, int(cx + R) + 1)):
+            i = y * w + x
+            if m[i] and i not in hs:
+                d = (x - cx) ** 2 + (y - cy) ** 2
+                if d > (r_in * 0.9) ** 2 and (best is None or d < best[0]):
+                    best = (d, x, y)
+    if not best:
+        return
+    _, bx, by = best
+    rn = max(2, r_in * 0.42)
+    steps = int(max(abs(bx - cx), abs(by - cy))) + 1
+    for k in range(steps + 1):
+        px = cx + (bx - cx) * k / steps
+        py = cy + (by - cy) * k / steps
+        for y in range(int(py - rn), int(py + rn) + 1):
+            for x in range(int(px - rn), int(px + rn) + 1):
+                if 0 <= x < w and 0 <= y < h and (x - px) ** 2 + (y - py) ** 2 <= rn * rn:
+                    m[y * w + x] = 1
+
+
+def unsliver(mi, opened, w, h):
+    """The opened shape, plus every removed thin part that joins two pieces of it (a thin wrist or neck is a bridge
+    and stays; a hook hanging off one piece goes)."""
+    o = [1 if v else 0 for v in opened.tobytes()]
+    full = [1 if v else 0 for v in mi.tobytes()]
+    lab_o, _ = components(w, h, o)
+    diff = [f & (1 - x) for f, x in zip(full, o)]
+    lab_d, sizes = components(w, h, diff)
+    touch = [set() for _ in sizes]
+    for i in range(w * h):
+        c = lab_d[i]
+        if c < 0:
+            continue
+        x = i % w
+        for j in (i - 1 if x else -1, i + 1 if x < w - 1 else -1, i - w, i + w):
+            if 0 <= j < w * h and lab_o[j] >= 0:
+                touch[c].add(lab_o[j])
+    keep = [len(t) >= 2 for t in touch]
+    return Image.frombytes('L', (w, h), bytes(255 if o[i] or (lab_d[i] >= 0 and keep[lab_d[i]]) else 0 for i in range(w * h)))
 
 
 def morph(pair):
@@ -491,7 +592,24 @@ def morph(pair):
     fb = [max(-TRUNC, min(TRUNC, v)) for v in sdf(mqb)]
     A = [1 if v else 0 for v in mqa.tobytes()]
     B = [1 if v else 0 for v in mqb.tobytes()]
+    # the head is carried whole (see HEAD)
+    heads = None
+    who = pair['a']['who']
+    if not any(os.path.basename(pair[k]['file']) in HEAD_SKIP for k in ('a', 'b')):
+        ha = find_head(A, w, h, who)
+        hb = find_head(B, w, h, who)
+        if ha and hb:
+            heads = (ha, hb, round(hb['cx'] - ha['cx']), round(hb['cy'] - ha['cy']))
+            for i in ha['px']:
+                A[i] = 0
+            for i in hb['px']:
+                B[i] = 0
+            ma_ = Image.frombytes('L', half, bytes(255 if v else 0 for v in A))
+            mb_ = Image.frombytes('L', half, bytes(255 if v else 0 for v in B))
+            fa = [max(-TRUNC, min(TRUNC, v)) for v in sdf(ma_)]
+            fb = [max(-TRUNC, min(TRUNC, v)) for v in sdf(mb_)]
     both = [x & y for x, y in zip(A, B)]
+    both_img = Image.frombytes('L', half, bytes(255 if a_ and b_ else 0 for a_, b_ in zip(mqa.tobytes(), mqb.tobytes())))
     lab, sizes = components(w, h, both)
     if sizes:
         big = max(range(len(sizes)), key=lambda c: sizes[c])
@@ -532,11 +650,15 @@ def morph(pair):
             for i in pr[1]['px']:
                 rB[i] = rB_saved[i]
     carry = ok
+    if heads:
+        ha, hb, dx, dy = heads
+        carry.append((ha, hb, dx, dy, piece_field(w, h, ha['px']), piece_field(w, h, hb['px'])))
     hide = set(i for pr in carry for i in pr[0]['px'] + pr[1]['px'])
     holesAB = [x | y for x, y in zip(hA, hB)]
     fill, rim = body_colour(ca, cb), COLORS[pair['a']['who']][1]
     # the other drawing lends only its plain body texture (its notes and lines would show twice)
     plain = [plain_mask(ca, fill), plain_mask(cb, fill)]
+    cores = [core_mask(ca), core_mask(cb)]
     frames = []
     for i in range(1, STEPS + 1):
         t = i / (STEPS + 1)
@@ -545,23 +667,32 @@ def morph(pair):
             vals[i] = TRUNC
         moved = [carried(t, w, h, pr) for pr in carry]
         m = shape_at(t, w, h, A, B, rA, rB, core, holesAB, vals, [i for px, _ in moved for i in px])
+        if heads:
+            neck(m, w, h, moved[-1][0], HEAD[who][0])
         mi = Image.frombytes('L', half, bytes(255 if v else 0 for v in m))
-        fv = [max(-TRUNC, min(TRUNC, v)) for v in sdf(mi)]
-        f = field_image(fv, half).resize((W, H), Image.BILINEAR)
-        # full-res signed distance = 2 * half-res; alpha ramps over one pixel at the edge
-        outer = f.point(lambda v: v * (-255.0 * Q) + 127.5).convert('L')
-        inner = f.point(lambda v: v * (-255.0 * Q) + 127.5 - 255.0 * RING).convert('L')
-        src, other = (ca, cb) if t < 0.5 else (cb, ca)
-        plain_other = plain[1] if t < 0.5 else plain[0]
+        # drop slivers thinner than ~8 px (a crescent of the old head's back or a hair tuft left behind by the carried
+        # head read as a hook, test90-v5 walk): open the shape, but keep whatever both drawings share there
+        opened = ImageChops.lighter(mi.filter(ImageFilter.MinFilter(5)).filter(ImageFilter.MaxFilter(5)), ImageChops.multiply(mi, both_img))
+        mi = unsliver(mi, opened, w, h)
+        # ONE outline (test90-v5): the edge comes from the morphed mask alone, smoothed at full resolution, and the
+        # drawings' own outlines never reach the frame (v4 pasted the current drawing's pixels, its rim line
+        # included, inside the new rim: two parallel outlines, AI 28.5 s). The current drawing lends its detail
+        # only DETAIL_IN px inside its own silhouette; between that and the new rim, body-coloured texture only.
+        full = mi.filter(ImageFilter.GaussianBlur(1.0)).resize((W, H), Image.BICUBIC).point(lambda v: 255 if v > 127 else 0)
+        full = full.filter(ImageFilter.GaussianBlur(1.8)).point(lambda v: 255 if v > 127 else 0)
+        outer = full.filter(ImageFilter.GaussianBlur(0.7))
+        inner = full.filter(ImageFilter.MinFilter(2 * RING_PX + 1)).filter(ImageFilter.GaussianBlur(0.7))
+        k = 0 if t < 0.5 else 1
+        src, other = (ca, cb) if k == 0 else (cb, ca)
         out = Image.new('RGBA', (W, H), rim + (0,))
         out.putalpha(outer)
         body = Image.new('RGBA', (W, H), fill + (255,))
         out.paste(body, (0, 0), inner)
-        # inside the new outline: the current drawing's own pixels; where it has none, the other drawing's (its
-        # texture instead of a flat patch); the flat body colour only where neither has any
-        out.paste(other, (0, 0), ImageChops.multiply(inner, plain_other))
-        detail = ImageChops.multiply(inner, src.split()[3])
-        out.paste(src, (0, 0), detail)
+        # where the current drawing has no body, the other one's body texture; then the current one's body texture;
+        # its lines and notes only well inside its own outline
+        out.paste(other, (0, 0), ImageChops.multiply(inner, plain[1 - k]))
+        out.paste(src, (0, 0), ImageChops.multiply(inner, plain[k]))
+        out.paste(src, (0, 0), ImageChops.multiply(inner, cores[k]))
         # a carried piece brings its own drawing along (the AI's cursor slit stays in her head)
         for pr, (_, (ox_, oy_)) in zip(carry, moved):
             piece = pr[0] if t < 0.5 else pr[1]
@@ -570,7 +701,7 @@ def morph(pair):
                 pm[i] = 255
             pmask = Image.frombytes('L', half, bytes(pm)).resize((W, H), Image.NEAREST).filter(ImageFilter.MaxFilter(3))
             layer = Image.new('RGBA', (W, H))
-            layer.paste(src, (0, 0), ImageChops.multiply(pmask, src.split()[3]))
+            layer.paste(src, (0, 0), ImageChops.multiply(pmask, cores[k]))
             shifted = Image.new('RGBA', (W, H))
             shifted.paste(layer, (ox_ * Q, oy_ * Q))
             out.paste(shifted, (0, 0), ImageChops.multiply(inner, shifted.split()[3]))
@@ -585,7 +716,7 @@ def stamp(pair):
     for side in ('a', 'b'):
         p = os.path.join(ROOT, pair[side]['file'])
         h.update(str(os.path.getmtime(p)).encode())
-    h.update(f'{STEPS}{Q}{RING}{ALIGN_GAIN}{ISLAND_KEEP}{TRUNC}{REPAIR}{PIECE_MIN}{PIECE_IOU}v7'.encode())
+    h.update(f'{STEPS}{Q}{RING}{ALIGN_GAIN}{ISLAND_KEEP}{TRUNC}{REPAIR}{PIECE_MIN}{PIECE_IOU}{RING_PX}{DETAIL_IN}{HEAD}open5v12'.encode())
     return h.hexdigest()[:16]
 
 

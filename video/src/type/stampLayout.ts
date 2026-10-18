@@ -59,6 +59,9 @@ export interface StampAsk {
   avoid?: readonly Box[];
   /** Highest top allowed (default: under the side lyric lines). */
   top?: number;
+  /** Do not test the characters' boxes (the seam words: both characters stand at the glass then, and the only room
+   * between the moon and their heads is checked by eye in the render instead). */
+  ignoreActors?: boolean;
 }
 
 export interface StampSpot {
@@ -69,12 +72,20 @@ export interface StampSpot {
   width: number;
 }
 
+/**
+ * How far right of its x a left-anchored word reaches on screen at its widest (test90-v5: "HATIRLAMIYORUM" ran past
+ * the right edge for 2-3 frames while it stamped in, and settled 8 px from it): StampWord scales the word 1.15x about
+ * its left edge on the first frame, and the Anton advances measure ~4% short of the rendered word.
+ */
+export const reach = (w: number): number => w * 1.04 * 1.15;
+/** Least gap between the word at its widest and the room edge, px. */
+const EDGE = 28;
 const TOP = 92; // under the lyric line (y 48, 26 px)
 const BOTTOM = 990; // above the floor line
 
 export const placeStamp = (ask: StampAsk, actors: readonly (readonly Action[])[]): StampSpot => {
   const boxes: Box[] = [...(ask.avoid ?? [])];
-  for (let f = ask.from; f < ask.to; f += 2) {
+  for (let f = ask.from; f < (ask.ignoreActors ? ask.from : ask.to); f += 2) {
     for (const acts of actors) {
       const b = actorBox(acts, f);
       if (b) boxes.push(b);
@@ -87,12 +98,12 @@ export const placeStamp = (ask: StampAsk, actors: readonly (readonly Action[])[]
     const xs: number[] = [];
     // a seam word straddles the seam: centred on it, or shifted while at least a third of it stays on each side
     if (ask.centerX !== undefined) for (let x = ask.centerX - (2 * w) / 3; x <= ask.centerX - w / 3; x += 8) xs.push(x);
-    else for (let x = r0 + PAD; x + w + PAD <= r1; x += 8) xs.push(x);
+    else for (let x = r0 + PAD; x + reach(w) + EDGE <= r1; x += 8) xs.push(x);
     let best: { x: number; y: number; d: number } | null = null;
     for (const x of xs) {
-      if (x < r0 + PAD - 0.5 || x + w + PAD > r1 + 0.5) continue;
+      if (x < r0 + PAD - 0.5 || (ask.centerX === undefined && x + reach(w) + EDGE > r1 + 0.5)) continue;
       for (let y = ask.top ?? TOP; y + h <= BOTTOM; y += 8) {
-        const box = { x: x - PAD / 2, y: y - PAD / 2, w: w + PAD, h: h + PAD };
+        const box = { x: x - PAD / 2, y: y - PAD / 2, w: (ask.centerX === undefined ? reach(w) : w * 1.2) + PAD, h: h * 1.15 + PAD };
         if (boxes.some((b) => hit(box, b))) continue;
         const d = Math.hypot(x - (ask.centerX !== undefined ? ask.centerX - w / 2 : ask.x), (y - ask.y) * 1.3);
         if (!best || d < best.d) best = { x, y, d };

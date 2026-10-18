@@ -23,7 +23,7 @@ export const STRIP_TABLE: Record<string, StripMeta> = { ...STRIPS, P_a04: fromPo
 export type StripId = string;
 
 /** Which way a strip's drawings face when not flipped (+1 right, -1 left). Walks need it to face the travel. */
-export const FACING: Record<string, 1 | -1> = { H05: 1, H20: 1, H22: 1, H23: 1, A01: -1, A19: -1, A20: -1 };
+export const FACING: Record<string, 1 | -1> = { H05: 1, H20: 1, H22: 1, H23: 1, H28: 1, A01: -1, A19: -1, A20: -1, A23: -1 };
 
 /** Breathing: the body's scaleY goes 1 -> 1 + BREATH over this many frames (3.5 s at 30 fps). */
 export const BREATH_PERIOD = 105;
@@ -46,6 +46,8 @@ export interface Step {
   hold: number;
   /** Foot anchor x (walks: every drawing has its own, so the stance foot stays planted). */
   x?: number;
+  /** Frames of the morph INTO this drawing (overrides the action's). */
+  tin?: number;
 }
 
 export interface Action {
@@ -68,6 +70,16 @@ export interface Action {
   cut?: boolean;
   /** A walk: drawings change on twos and the figure travels; no morphs inside. */
   walk?: boolean;
+  /**
+   * What the character is doing (test90-v5 tempo rules): one label per action. A change of label is a state change
+   * (video/scripts/tempocheck.mjs counts them); drawing changes inside one label are in-action motion (typing, a wave).
+   * A label starting with '~' is a transition drawn with breakdown drawings (getting up, sitting down).
+   */
+  act?: string;
+  /** Frames of the morph into the action's first drawing (the transition). */
+  tin?: number;
+  /** Frames of the morphs between the action's own drawings (in-action motion). */
+  tinner?: number;
 }
 
 /** One drawing on screen from `from` (inclusive) to `to` (exclusive). */
@@ -82,6 +94,10 @@ export interface Span {
   flip: boolean;
   walk: boolean;
   cut: boolean;
+  /** The action's label (see Action.act). */
+  act: string;
+  /** Requested morph length into this span. */
+  tin?: number;
 }
 
 export interface Pose {
@@ -158,9 +174,11 @@ export const spansOf = (acts: readonly Action[]): Span[] => {
       const k = Math.min(strip.frames.length - 1, Math.max(0, s.k - 1));
       const to = Math.min(end, t + s.hold);
       const prev = out[out.length - 1];
-      const span: Span = { from: t, to, strip: sid, k, x: s.x ?? a.x, y: a.y, flip: a.flip ?? false, walk: a.walk ?? false, cut: first && (a.cut ?? false) };
+      const tin = s.tin ?? (first ? a.tin : a.tinner);
+      const span: Span = { from: t, to, strip: sid, k, x: s.x ?? a.x, y: a.y, flip: a.flip ?? false, walk: a.walk ?? false, cut: first && (a.cut ?? false), act: a.act ?? (a.walk ? 'walk' : `${sid}.${k + 1}`) };
+      if (tin !== undefined) span.tin = tin;
       // the same drawing at the same place continues: merge (no change on screen)
-      if (prev && prev.to === t && prev.strip === span.strip && prev.k === span.k && prev.flip === span.flip && prev.x === span.x && prev.y === span.y && !span.cut) prev.to = to;
+      if (prev && prev.to === t && prev.strip === span.strip && prev.k === span.k && prev.flip === span.flip && prev.x === span.x && prev.y === span.y && prev.walk === span.walk && !span.cut) prev.to = to;
       else out.push(span);
       first = false;
       t = to;
@@ -200,10 +218,17 @@ export const tweenLength = (a: Span, b: Span): number => {
   // inside a walk the drawings change on ones and twos without a morph, except where the change is big: a drawing
   // from another generated image, or the body moving across a stance-foot gap (31 px). There a 2-frame morph with
   // both drawings at their own (foot-planted) places splits the change over two frames (jumpcheck).
-  if (a.walk && b.walk) return walkSource(a) !== walkSource(b) || Math.abs(b.x - a.x) >= 25 ? 2 : 0;
+  if (a.walk && b.walk) {
+    if (b.tin !== undefined) return Math.min(b.tin, a.to - a.from, b.to - b.from) >= 2 ? Math.min(b.tin, a.to - a.from, b.to - b.from) : 0;
+    return walkSource(a) !== walkSource(b) || Math.abs(b.x - a.x) >= 25 ? 2 : 0;
+  }
   if (drawingId(a) === drawingId(b) && Math.abs(a.x - b.x) < 0.5) return 0;
   // into or out of a walk: the walk's drawings last 1-2 frames, so the morph takes its length from the
   // standing side and runs over the walk's first (or last) frames, where it is still ramping up (or down)
+  if (a.walk !== b.walk && b.tin !== undefined) {
+    const n = Math.min(b.tin, a.to - a.from, b.to - b.from);
+    return n >= 2 ? n : 0;
+  }
   if (a.walk !== b.walk) {
     const tw = TWEENS[pairKey(a, b).key];
     // at most 4 frames: standing and mid-stride legs share little, and a longer morph showed the legs scissoring
@@ -212,6 +237,12 @@ export const tweenLength = (a: Span, b: Span): number => {
     return n >= 2 ? n : 0;
   }
   const tw = TWEENS[pairKey(a, b).key];
+  // an explicit transition length (test90-v5: >= 12 frames between actions, eased); the window straddles the
+  // boundary, so it may take at most each side's whole hold
+  if (b.tin !== undefined) {
+    const n = Math.min(b.tin, a.to - a.from, b.to - b.from);
+    return n >= 2 ? n : 0;
+  }
   const n = Math.min(tw ? tweenFor(tw.size) : TWEEN_MAX, a.to - a.from, b.to - b.from);
   return n >= 2 ? n : 0;
 };
@@ -230,8 +261,9 @@ export const neededPairs = (acts: readonly Action[]): { key: string; a: Span; b:
   return out;
 };
 
-/** Ease of a morph: part linear, so the middle images are not skipped on a big change. */
-const ease = (u: number): number => 0.4 * u + 0.6 * u * u * (3 - 2 * u);
+/** Ease of a morph: part linear, so the middle images are not skipped on a big change. A long morph (a transition
+ * between actions, >= 10 frames) eases in and out fully: it starts and lands softly. */
+const ease = (u: number, n: number): number => (n >= 10 ? u * u * (3 - 2 * u) : 0.4 * u + 0.6 * u * u * (3 - 2 * u));
 
 const poseOf = (s: Span): Pose => ({ strip: s.strip, k: s.k, x: s.x, y: s.y, flip: s.flip, moving: s.walk });
 
@@ -248,7 +280,7 @@ export const resolveActor = (acts: readonly Action[], frame: number): ActorState
     if (!n) return null;
     const t0 = b.from - Math.floor(n / 2);
     if (frame < t0 || frame >= t0 + n) return null;
-    const u = ease((frame - t0 + 0.5) / n);
+    const u = ease((frame - t0 + 0.5) / n, n);
     const { key, reversed } = pairKey(a, b);
     const tw = TWEENS[key];
     if (!tw) return null; // not rendered yet: fall back to the cut (jumpcheck reports it)
@@ -331,7 +363,11 @@ export const play = (c: Cursor, spec: Spec, until?: number): Cursor => {
 /** Frames per walk step at full speed: a stride of two steps takes 36 frames = 1.2 s. */
 export const WALK_STEP_FRAMES = 18;
 /** Frames the walk takes to reach full speed, and to stop. */
-export const WALK_EASE = 8;
+export const WALK_EASE = 12;
+/** Standing still on the passing drawing before the first step / after the last one (frames), and the morph into it. */
+export const WALK_LEAD = 14;
+export const WALK_TAIL = 14;
+export const WALK_TIN = 14;
 /** The drawings a walk picks from: the old 12-drawing step plus the support-phase drawings made for test90-v4. */
 export const WALK_POOL: Record<'A01' | 'H05', readonly string[]> = { H05: ['H05', 'H20', 'H22', 'H23'], A01: ['A01', 'A19', 'A20'] };
 /** How far (px) the body may run ahead of or behind its steady path so the stance foot can stay planted. */
@@ -393,13 +429,24 @@ export const walkStep = (strip: 'A01' | 'H05'): number => {
  * foot has fallen far enough behind, a double-support drawing hands the weight to the front foot.
  * Measured by video/scripts/walkcheck.mjs (foot slip) and jumpcheck.mjs (body lurch).
  */
-export const walk = (c: Cursor, strip: 'A01' | 'H05', x0: number, x1: number): Cursor => {
+export interface WalkOpts {
+  /** Frames of the morph from the standing drawing before the walk into its passing drawing (the start). */
+  tin?: number;
+  /** Frames the passing drawing stands still before the first step (the morph into it runs over them). */
+  lead?: number;
+  /** Frames the last walk drawing stands still after the last step (the next action morphs out of it). */
+  tail?: number;
+  /** Frames per step (default WALK_STEP_FRAMES); a slower, calmer walk takes more. */
+  stepFrames?: number;
+}
+
+export const walk = (c: Cursor, strip: 'A01' | 'H05', x0: number, x1: number, opts: WalkOpts = {}): Cursor => {
   const dir = x1 >= x0 ? 1 : -1;
   const pool = contactsOf(WALK_POOL[strip]);
   const step = walkStep(strip);
   const travel = Math.abs(x1 - x0);
   const steps = Math.max(1, Math.round(travel / step));
-  const T = steps * WALK_STEP_FRAMES + WALK_EASE;
+  const T = steps * (opts.stepFrames ?? WALK_STEP_FRAMES) + WALK_EASE;
   const R = WALK_EASE;
   const vmax = travel / (T - R);
   const dist = (t: number): number => {
@@ -450,10 +497,77 @@ export const walk = (c: Cursor, strip: 'A01' | 'H05', x0: number, x1: number): C
     }
   }
   const flip = (FACING[strip] as number) !== dir;
-  const a: Action = { strip, from: c.tl.t, steps: steps_, x: x0, y: c.y, flip, walk: true };
+  // test90-v5: the walk starts and stops standing still on its passing drawing (legs together), so the change from
+  // and to the standing drawings is an ordinary eased morph of the whole body, not legs scissoring while the body
+  // already travels (v4)
+  const lead = opts.lead ?? WALK_LEAD;
+  const tail = opts.tail ?? WALK_TAIL;
+  const first = steps_[0] as Step;
+  const last = steps_[steps_.length - 1] as Step;
+  c.tl.acts.push({ strip: first.strip as string, from: c.tl.t, seq: [first.k], holds: [lead], x: first.x as number, y: c.y, flip, act: 'walk', tin: opts.tin ?? WALK_TIN });
+  c.tl.t += lead;
+  const a: Action = { strip, from: c.tl.t, steps: steps_, x: x0, y: c.y, flip, walk: true, act: 'walk' };
   c.tl.acts.push(a);
   c.tl.t += T;
-  c.x = x1;
+  c.tl.acts.push({ strip: last.strip as string, from: c.tl.t, seq: [last.k], holds: [tail], x: last.x as number, y: c.y, flip, act: 'walk' });
+  c.tl.t += tail;
+  c.x = last.x as number;
+  return c;
+};
+
+/**
+ * A walk from ONE consistent step set (test90-v5; the director: the planted-foot picker of v4 mixed six generated
+ * images and "stuttered along"). The strip's four drawings (contact, down, passing, up) play in a fixed forward
+ * order, each held `hold` frames, every change a `hold`-frame morph (so the body glides instead of jumping a quarter
+ * step every few frames). Each drawing stands where its planted foot is: the foot that lands in the contact drawing
+ * keeps its floor spot for the whole step, and the next contact lands one step length ahead, so nothing slides. The
+ * walk starts and stops standing on the passing drawing (legs together): the morphs from and to the standing
+ * drawings around it are eased and long (WalkOpts.tin), the legs never scissor while the body already travels.
+ * Measured by video/scripts/walkcheck.mjs (cadence, foot slip).
+ */
+export const walkCycle = (c: Cursor, strip: string, x0: number, x1: number, opts: WalkOpts & { hold?: number } = {}): Cursor => {
+  const m = STRIP_TABLE[strip] as StripMeta;
+  const facing = FACING[strip] as number;
+  const dir = x1 >= x0 ? 1 : -1;
+  const flip = facing !== dir;
+  const hold = opts.hold ?? 5;
+  // planted toe of each drawing, px ahead of its anchor in the direction of travel: the front contact while the foot
+  // lands and takes the weight (drawings 1-3), the rear one when it pushes off (drawing 4)
+  const toes = m.frames.map((f) => {
+    const sc = frameScale(m, f);
+    return (f.ground ?? []).map(([a, b]) => ((facing > 0 ? b : a) - f.ax) * sc * facing);
+  });
+  const o = toes.map((t, i) => (i < 3 ? Math.max(...t) : Math.min(...t)));
+  const back1 = Math.min(...(toes[0] as number[]));
+  const L = (o[0] as number) - back1; // one step: from the rear foot to the landing front foot in the contact drawing
+  // the walk covers whole step lengths from passing drawing to passing drawing and ends exactly on x1; what is left
+  // over (less than a step) is covered by the eased morph from the standing drawing into the first passing drawing
+  const whole = Math.max(1, Math.floor(Math.abs(x1 - x0) / L));
+  const steps = whole - 1;
+  const xs = x1 - dir * whole * L;
+  const seq: Step[] = [];
+  // start and end on the passing drawing (index 2): P is the planted foot's floor x of the current step
+  let P = xs + dir * (o[2] as number);
+  const order = [2, 3];
+  for (let s = 0; s < steps; s++) order.push(0, 1, 2, 3);
+  order.push(0, 1, 2);
+  // the step starting at a contact drawing plants the new front foot one step length ahead
+  for (const k of order) {
+    if (k === 0) P += dir * L;
+    seq.push({ strip, k: k + 1, hold, x: Math.round((P - dir * (o[k] as number)) * 10) / 10, tin: hold });
+  }
+  const lead = opts.lead ?? WALK_LEAD;
+  const tail = opts.tail ?? WALK_TAIL;
+  const s0 = seq[0] as Step;
+  const sN = seq[seq.length - 1] as Step;
+  c.tl.acts.push({ strip, from: c.tl.t, seq: [s0.k], holds: [lead], x: s0.x as number, y: c.y, flip, act: 'walk', tin: opts.tin ?? WALK_TIN });
+  c.tl.t += lead;
+  const body = seq.slice(1, -1);
+  c.tl.acts.push({ strip, from: c.tl.t, steps: body, x: s0.x as number, y: c.y, flip, walk: true, act: 'walk', tin: hold });
+  c.tl.t += body.reduce((t, q) => t + q.hold, 0);
+  c.tl.acts.push({ strip, from: c.tl.t, seq: [sN.k], holds: [tail], x: sN.x as number, y: c.y, flip, act: 'walk', tin: hold });
+  c.tl.t += tail;
+  c.x = sN.x as number;
   return c;
 };
 

@@ -237,3 +237,38 @@ export const GlassRipple = ({ frame, start, frames, y }: { frame: number; start:
     </g>
   );
 };
+
+const GN_SIZE = 50;
+/** Slots on the human's side of the glass, under the moon: three columns by the seam, top to bottom. */
+const GLASS_SLOTS: readonly { x: number; y: number; rot: number }[] = (() => {
+  const out: { x: number; y: number; rot: number }[] = [];
+  for (let row = 0; row < 12; row++)
+    for (const [c, x] of [925, 870, 815].entries()) {
+      const r = seeded(`glass-slot:${row}:${c}`);
+      out.push({ x: x + range(r, -5, 5), y: 300 + row * 56 + range(r, -6, 6), rot: range(r, -7, 7) });
+    }
+  return out;
+})();
+
+/**
+ * The calendar's count (test90-v5, replaces the tally board): every morning one more yellow note is stuck on the
+ * human's side of the glass, so his side of the pane fills up while the AI's side is wiped clean every morning.
+ * Each note comes in on its beat with a small press (drift from slightly off the glass, settling flat).
+ */
+export const GlassNotes = ({ frame, starts, frames }: { frame: number; starts: readonly number[]; frames: number }) => (
+  <g>
+    {starts.slice(0, GLASS_SLOTS.length).map((s, k) => {
+      if (frame < s) return null;
+      const slot = GLASS_SLOTS[k] as { x: number; y: number; rot: number };
+      const d = drift(frame, s, frames, { from: { x: -18, y: 10 }, bulge: 4 });
+      return (
+        <g key={k} opacity={d.op} transform={`translate(${(slot.x + d.ox).toFixed(1)} ${(slot.y + d.oy).toFixed(1)}) rotate(${slot.rot.toFixed(1)}) scale(${d.s.toFixed(4)})`}>
+          <rect x={-GN_SIZE / 2 + 3} y={-GN_SIZE / 2 + 3} width={GN_SIZE} height={GN_SIZE} fill={palette.navy} opacity={0.35} />
+          <rect x={-GN_SIZE / 2} y={-GN_SIZE / 2} width={GN_SIZE} height={GN_SIZE} fill={palette.moonYellow} />
+          <rect x={-GN_SIZE / 2 + 7} y={-6} width={GN_SIZE - 16} height={3} rx={1.5} fill={palette.navy} opacity={0.55} />
+          <rect x={-GN_SIZE / 2 + 7} y={4} width={GN_SIZE - 24} height={3} rx={1.5} fill={palette.navy} opacity={0.55} />
+        </g>
+      );
+    })}
+  </g>
+);

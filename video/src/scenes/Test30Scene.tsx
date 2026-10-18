@@ -20,15 +20,16 @@ import { SEAM_SWEEP, WhiteWave } from '../transitions/WhiteWave.tsx';
 import { TIMING } from '../timing.ts';
 import { LyricLine } from '../type/LyricLine.tsx';
 import { StampWord } from '../type/StampWord.tsx';
-import { placeStamp } from '../type/stampLayout.ts';
+import { STAMPS } from '../type/stamps.ts';
 import { STAMP_EXIT_FRAMES } from '../motion/entrances.ts';
 import { Bubble } from '../world/Bubble.tsx';
+import { AI_BUBBLES, HUMAN_BUBBLE_SPECS } from '../world/bubbleLayout.ts';
 import { GlassSeam } from '../world/GlassSeam.tsx';
 import { NoteFly } from '../world/Notes.tsx';
 import { PlateRoom, WallNotes } from '../world/Rooms.tsx';
 import { SplitMoon } from '../world/SplitMoon.tsx';
-import { Check, GlassNote, GlassRipple, NotebookDrop, PageSketch, TallyBoard } from '../world/Story.tsx';
-import { AI, AI_BOOK_X, AI_FLOOR, AI_HOME, AI_PICKUP, AI_REACH_X, DESK_X, HUMAN, HUMAN_BUBBLES, HUMAN_FLOOR, LAPSE_FROM, LAPSE_TO, MORNINGS, NOTE_X, STICK_X, TALLY_STARTS, WAVE_X } from './acting.ts';
+import { Check, GlassNote, GlassNotes, GlassRipple, NotebookDrop, PageSketch } from '../world/Story.tsx';
+import { AI, AI_BOOK_X, AI_FLOOR, AI_HOME, AI_PICKUP, AI_REACH_X, DESK_X, FLOOR_X, HUMAN, HUMAN_BUBBLES, HUMAN_FLOOR, LAPSE_FROM, LAPSE_TO, MORNINGS, NOTE_X, STICK_X, TALLY_STARTS, WAVE_X } from './acting.ts';
 import { ZoomIntro } from './ZoomIntro.tsx';
 
 const lineText = (n: number): string => (TIMING.lines[n] as { text: string }).text;
@@ -40,50 +41,18 @@ const NAVY_SOFT_X = 140;
 const BOOK_X = AI_BOOK_X;
 const BOOK_W = 112;
 
-interface StampDef {
-  id: string;
-  hide: string;
-  text: string;
-  x: number;
-  y: number;
-  size: number;
-  side: 'human' | 'ai' | 'seam';
-  ink?: 'yellow' | 'navy';
-}
-/** The stamp words and the spot each was asked for (v3's); STAMPS has where they actually go. */
-const STAMP_DEFS: readonly StampDef[] = [
-  { id: 'stamp.imlec', hide: 'line1.hide', text: 'imleç', x: 588, y: 490, size: 104, side: 'human' },
-  { id: 'stamp.merhaba', hide: 'line2.hide', text: 'merhaba', x: 560, y: 490, size: 104, side: 'human' },
-  { id: 'stamp.dun', hide: 'line3.hide', text: 'dün gece', x: 96, y: 500, size: 118, side: 'human' },
-  { id: 'stamp.bastan1', hide: 'line4.hide', text: 'baştan', x: 96, y: 500, size: 118, side: 'human' },
-  { id: 'stamp.defter', hide: 'line5.hide', text: 'defter', x: 1360, y: 300, size: 110, side: 'ai' },
-  { id: 'stamp.anliyorum', hide: 'line7.hide', text: 'anlıyorum', x: 1250, y: 650, size: 110, side: 'ai' },
-  { id: 'stamp.hatirla', hide: 'line8.hide', text: 'hatırlamıyorum', x: 1275, y: 650, size: 94, side: 'ai' },
-  { id: 'stamp.bastan2', hide: 'line9.hide', text: 'baştan', x: 96, y: 500, size: 118, side: 'human' },
-  { id: 'stamp.ay', hide: 'line10.hide', text: 'ay', x: 1250, y: 620, size: 130, side: 'ai' },
-  { id: 'stamp.biliyorum', hide: 'line11.hide', text: 'biliyorum', x: 96, y: 500, size: 118, side: 'human' },
-  { id: 'stamp.bilmiyorum', hide: 'line12.hide', text: 'bilmiyorum', x: 1250, y: 500, size: 118, side: 'ai', ink: 'navy' },
-  { id: 'stamp.buradayiz', hide: 'line13.hide', text: 'buradayız', x: SEAM_X - 300, y: 500, size: 124, side: 'seam' },
-  { id: 'stamp.birdaha', hide: 'line14.hide', text: 'bir daha', x: SEAM_X - 260, y: 500, size: 124, side: 'seam' },
-];
-const MOON_BOX = { x: SEAM_X - MOON_R, y: MOON_SEAM_Y - MOON_R, w: 2 * MOON_R, h: 2 * MOON_R };
-export const STAMPS = STAMP_DEFS.map((d) => {
-  const room: readonly [number, number] = d.side === 'human' ? [0, SEAM_X] : d.side === 'ai' ? [SEAM_X, W] : [0, W];
-  const spot = placeStamp(
-    { text: d.text, x: d.x, y: d.y, size: d.size, room, centerX: d.side === 'seam' ? SEAM_X : undefined, from: ev(d.id).frame, to: ev(d.hide).frame + STAMP_EXIT_FRAMES, avoid: d.side === 'seam' ? [] : [MOON_BOX], top: d.side === 'seam' ? 40 : undefined },
-    [HUMAN, AI],
-  );
-  return { ...d, spot, seam: d.side === 'seam', on: d.side === 'ai' ? ('cream' as const) : ('navy' as const) };
-});
-
 /** Notes 1-2 leave the laptop; the later ones leave the human's hand at the glass (H12 f3, the offer). */
 const LAPTOP = { x: DESK_X - 55, y: HUMAN_FLOOR - 340 };
 const SEND_FROM = { x: NOTE_X + 215, y: HUMAN_FLOOR - 555 };
+/** Where a note leaves the human at a frame (test90-v5: the first notes of "Baştan anlatıyorum" leave his hand while
+ * he is still walking to the glass): his hand, at most at the glass. */
+const sendFrom = (f: number): { x: number; y: number } => {
+  const st = resolveActor(HUMAN, f);
+  const x = st ? (st.tween ? st.tween.x : st.cur.x) : NOTE_X;
+  return { x: Math.min(SEND_FROM.x, x + 200), y: SEND_FROM.y };
+};
 /** The human's yellow note on the glass (H12 f4 presses it at x = STICK_X). */
 const GLASS_NOTE = { x: SEAM_X - 52, y: HUMAN_FLOOR - 570 };
-/** Tip of the AI's speech bubble: just above and right of her cursor face. */
-const AI_TIP = { x: AI_HOME - 13, y: AI_FLOOR - 600 };
-const HUMAN_TIP = { x: WAVE_X + 55, y: HUMAN_FLOOR - 580 };
 
 const pad = (b: { x: number; y: number; w: number; h: number }) => ({ x: b.x - 12, y: b.y - 12, w: b.w + 24, h: b.h + 24 });
 
@@ -106,6 +75,8 @@ interface WaveInfo {
   bits: number;
   /** 'flood': the chorus bar (navy over the whole frame, cream behind it on the AI side). 'cream': the AI side only. */
   kind: 'flood' | 'cream';
+  /** How far behind the glass the front starts (px; the morning resets vary it). */
+  back?: number;
 }
 /** Every wave that resets the AI side, in time order. Items born before a wave starts are wiped by it. */
 const WAVES: WaveInfo[] = (() => {
@@ -116,7 +87,9 @@ const WAVES: WaveInfo[] = (() => {
   }
   for (const mm of MORNINGS) {
     const frames = mm.kind === 'slow' ? 22 : mm.kind === 'beat' ? 11 : mm.dur;
-    out.push({ id: `m.${mm.id}`, start: mm.start, end: mm.start + frames, bits: 12, kind: 'cream' });
+    // each morning's reset tears a different number of notes and starts a little further back (test90-v5: the 15
+    // identical resets read as a copied loop); the beat it starts on stays
+    out.push({ id: `m.${mm.id}`, start: mm.start, end: mm.start + frames, bits: 9 + ((mm.n * 7) % 9), kind: 'cream', back: (mm.n * 37) % 90 });
   }
   const fin = ev('final.reset');
   out.push({ id: 'm.final', start: fin.frame, end: fin.frame + fin.enter.frames, bits: 12, kind: 'cream' });
@@ -141,10 +114,6 @@ const flightsOf = (prefix: string): { fly: number; land: number; enterLand: numb
 const VERSE_FLIGHTS = flightsOf('vnote.');
 const CHORUS_FLIGHTS = flightsOf('cnote.').sort((a, b) => a.fly - b.fly || a.land - b.land);
 const TALLY_FRAMES = (EVENTS.find((e) => e.id.startsWith('tally.')) as (typeof EVENTS)[number]).enter.frames;
-/** Where a tally stroke takes off: the human at the glass during the slow mornings, his laptop in the time-lapse. */
-const tallyFrom = (start: number): { x: number; y: number } => (start >= LAPSE_FROM ? LAPSE_START : { x: WAVE_X + 50, y: HUMAN_FLOOR - 500 });
-const LAPSE_START = LAPTOP;
-
 /** Moon phase: 0.82 until the "Ay" line, then one step per beat (waxes, then wanes); in the time-lapse it spins, faster and faster. */
 const MOON_BASE = 0.82;
 const MOON_EVENTS = EVENTS.filter((e) => e.id.startsWith('moon.'));
@@ -211,11 +180,14 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
 
   // ---- everything that lives on the AI side, born at a frame; the next wave after its birth wipes it
   const items: AiItem[] = [];
-  items.push({
-    key: 'bubble-verse',
-    born: ev('bubble.merhaba').frame,
-    node: <Bubble frame={frame} startFrame={ev('bubble.merhaba').frame} frames={enterFrames('bubble.merhaba')} x={AI_TIP.x} y={AI_TIP.y} />,
-  });
+  // the verse "Merhaba" and every morning's (world/bubbleLayout.ts: placed clear of her head, each morning a little different)
+  for (const b of AI_BUBBLES) {
+    items.push({
+      key: b.key,
+      born: b.start,
+      node: <Bubble frame={frame} startFrame={b.start} frames={b.frames} x={b.x} y={b.y} endFrame={b.end} rot={b.rot} scale={b.scale} />,
+    });
+  }
   const restNote = (key: string, fly: number, land: number, settle: number, to: { x: number; y: number }, from: { x: number; y: number }, arc: number) => {
     items.push({
       key,
@@ -226,8 +198,8 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
   };
   restNote('n1', ev('note1.fly').frame, ev('note1.land').frame, enterFrames('note1.land'), USED[0] as { x: number; y: number }, LAPTOP, 160);
   restNote('n2', ev('note2.fly').frame, ev('note2.land').frame, enterFrames('note2.land'), USED[1] as { x: number; y: number }, LAPTOP, 120);
-  VERSE_FLIGHTS.forEach((f, k) => restNote(`vn${k}`, f.fly, f.land, f.enterLand, SLOTS[k % SLOTS.length] as { x: number; y: number }, SEND_FROM, 220));
-  CHORUS_FLIGHTS.forEach((f, k) => restNote(`cn${k}`, f.fly, f.land, f.enterLand, SLOTS[(k * 3 + 2) % SLOTS.length] as { x: number; y: number }, SEND_FROM, 220));
+  VERSE_FLIGHTS.forEach((f, k) => restNote(`vn${k}`, f.fly, f.land, f.enterLand, SLOTS[k % SLOTS.length] as { x: number; y: number }, sendFrom(f.fly), 220));
+  CHORUS_FLIGHTS.forEach((f, k) => restNote(`cn${k}`, f.fly, f.land, f.enterLand, SLOTS[(k * 3 + 2) % SLOTS.length] as { x: number; y: number }, sendFrom(f.fly), 220));
   items.push({
     key: 'book-drop',
     born: ev('book.drop').frame,
@@ -248,18 +220,6 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
     born: ev('check.on').frame,
     node: <Check frame={frame} start={ev('check.on').frame} frames={enterFrames('check.on')} endFrame={ev('check.off').frame} endFrames={enterFrames('check.off')} x={1118} y={AI_FLOOR - 470} />,
   });
-  // the same "Merhaba" returns every morning, as soon as the wave has passed her
-  for (const mm of MORNINGS) {
-    const w = WAVES.find((x) => x.id === `m.${mm.id}`) as WaveInfo;
-    const born = mm.start + Math.round((w.end - w.start) * 0.42);
-    const last = mm.n === MORNINGS.length - 1;
-    items.push({
-      key: `m-${mm.id}`,
-      born,
-      node: <Bubble frame={frame} startFrame={born} frames={mm.kind === 'lapse' ? 6 : ENTER_FRAMES.drift} x={AI_TIP.x} y={AI_TIP.y} endFrame={last || mm.kind !== 'lapse' ? born + 22 : undefined} />,
-    });
-  }
-
   const epochOf = (born: number): number => WAVES.filter((w) => w.start <= born).length;
   const alive = (it: AiItem): boolean => {
     if (frame < it.born) return false;
@@ -278,7 +238,7 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
           <BarFlood key={`wv${e}`} frame={frame} startFrame={w.start} endFrame={w.end} seed={`flood:${w.id}`} bits={w.bits} noteRows={rows} />
         ) : (
           <g key={`wv${e}`} clipPath="url(#ai-side)">
-            <WhiteWave frame={frame} startFrame={w.start} endFrame={w.end} seed={`wave:${w.id}`} baseFrom={SEAM_SWEEP.from} baseTo={SEAM_SWEEP.to} bits={w.bits} noteRows={rows} ink />
+            <WhiteWave frame={frame} startFrame={w.start} endFrame={w.end} seed={`wave:${w.id}`} baseFrom={SEAM_SWEEP.from - (w.back ?? 0)} baseTo={SEAM_SWEEP.to} bits={w.bits} noteRows={rows} ink />
           </g>
         ),
       );
@@ -313,7 +273,6 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
         <Squeegee id="sq-navy" p={navyP} axis="x" from={0} to={SEAM_X} soft={NAVY_SOFT_X}>
           <PlateRoom key1={{ p: 1 }} moon={{ p: yellowP }} notes={{ p: notesP }} />
           <WallNotes frame={frame} starts={wallFrames} frames={ENTER_FRAMES.drift} />
-          <TallyBoard frame={frame} starts={TALLY_STARTS} frames={TALLY_FRAMES} x={470} y={780} scale={0.64} from={tallyFrom} />
         </Squeegee>
 
         {/* right room: what the AI has pinned or been given, reset by the waves */}
@@ -332,6 +291,9 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
           </Squeegee>
         )}
 
+        {/* the calendar's count: one more note on his side of the glass every morning */}
+        <GlassNotes frame={frame} starts={TALLY_STARTS} frames={TALLY_FRAMES} />
+
         {/* the two characters: strips played from scenes/acting.ts */}
         <Halftone id="ht-human" p={humanP} box={humanBox} seed="human" reg="human">
           {deskProp && <DeskProp />}
@@ -341,16 +303,16 @@ export const Test30Scene = ({ frame, lOverride }: { frame: number; lOverride?: n
           <Actor frame={frame} acts={AI} phase={3.1} blink={aiBlink} />
         </Halftone>
 
-        {HUMAN_BUBBLES.map((b) => (
-          <Bubble key={b.text} frame={frame} startFrame={b.start} endFrame={b.end} x={HUMAN_TIP.x} y={HUMAN_TIP.y} text={b.text} dir={-1} size="small" frames={ENTER_FRAMES.drift} />
+        {HUMAN_BUBBLE_SPECS.map((b) => (
+          <Bubble key={b.key} frame={frame} startFrame={b.start} endFrame={b.end} x={b.x} y={b.y} text={b.text} dir={b.dir} size={b.size} frames={b.frames} />
         ))}
         <GlassNote frame={frame} start={finalNote.frame} frames={finalNote.enter.frames} x={GLASS_NOTE.x} y={GLASS_NOTE.y} from={{ x: STICK_X + 200, y: GLASS_NOTE.y }} text="Merhaba" />
 
         {VERSE_FLIGHTS.map((f, k) => (
-          <NoteFly key={`vf${k}`} frame={frame} startFrame={f.fly} duration={f.land - f.fly} from={SEND_FROM} to={SLOTS[k % SLOTS.length] as { x: number; y: number }} seed={`vn${k}`} arc={220} settle={f.enterLand} phase="fly" />
+          <NoteFly key={`vf${k}`} frame={frame} startFrame={f.fly} duration={f.land - f.fly} from={sendFrom(f.fly)} to={SLOTS[k % SLOTS.length] as { x: number; y: number }} seed={`vn${k}`} arc={220} settle={f.enterLand} phase="fly" />
         ))}
         {CHORUS_FLIGHTS.map((f, k) => (
-          <NoteFly key={`cf${k}`} frame={frame} startFrame={f.fly} duration={f.land - f.fly} from={SEND_FROM} to={SLOTS[(k * 3 + 2) % SLOTS.length] as { x: number; y: number }} seed={`cn${k}`} arc={220} settle={f.enterLand} phase="fly" />
+          <NoteFly key={`cf${k}`} frame={frame} startFrame={f.fly} duration={f.land - f.fly} from={sendFrom(f.fly)} to={SLOTS[(k * 3 + 2) % SLOTS.length] as { x: number; y: number }} seed={`cn${k}`} arc={220} settle={f.enterLand} phase="fly" />
         ))}
         <NoteFly frame={frame} startFrame={ev('note1.fly').frame} duration={ev('note1.land').frame - ev('note1.fly').frame} from={LAPTOP} to={USED[0] as { x: number; y: number }} seed="n1" settle={enterFrames('note1.land')} phase="fly" />
         <NoteFly frame={frame} startFrame={ev('note2.fly').frame} duration={ev('note2.land').frame - ev('note2.fly').frame} from={LAPTOP} to={USED[1] as { x: number; y: number }} seed="n2" arc={120} settle={enterFrames('note2.land')} phase="fly" />

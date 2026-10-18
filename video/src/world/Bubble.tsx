@@ -19,12 +19,15 @@ interface Props {
   dir?: 1 | -1;
   /** 'small': the human's story bubbles (quiet face, smaller, wide enough for its text). */
   size?: 'normal' | 'small';
+  /** Tilt (deg) and scale about the tip: each morning's bubble comes in a little differently (world/bubbleLayout.ts). */
+  rot?: number;
+  scale?: number;
 }
 
 const EXIT_FRAMES = 8;
 
 /** The small speech bubble: cream with a navy keyline so it reads on both rooms. Drifts in from the tail tip. */
-export const Bubble = ({ frame, startFrame, x, y, text = 'Merhaba', swap, endFrame, frames = ENTER_FRAMES.drift, dir = 1, size = 'normal' }: Props) => {
+export const Bubble = ({ frame, startFrame, x, y, text = 'Merhaba', swap, endFrame, frames = ENTER_FRAMES.drift, dir = 1, size = 'normal', rot = 0, scale: k = 1 }: Props) => {
   if (frame < startFrame) return null;
   if (endFrame !== undefined && frame >= endFrame + EXIT_FRAMES) return null;
   const d = drift(frame, startFrame, frames, { from: { x: dir * 6, y: 10 }, bulge: 5 });
@@ -51,7 +54,7 @@ export const Bubble = ({ frame, startFrame, x, y, text = 'Merhaba', swap, endFra
       </text>
     );
   return (
-    <g opacity={op} transform={`translate(${(x + d.ox).toFixed(1)} ${(y + d.oy).toFixed(1)}) scale(${scale.toFixed(4)}) translate(${-x} ${-y})`}>
+    <g opacity={op} transform={`translate(${(x + d.ox).toFixed(1)} ${(y + d.oy).toFixed(1)}) rotate(${rot}) scale(${(scale * k).toFixed(4)}) translate(${-x} ${-y})`}>
       <polygon points={`${x},${y} ${t1},${y0 + bh} ${t2},${y0 + bh}`} fill={palette.cream} stroke={palette.navy} strokeWidth={4} strokeLinejoin="round" />
       <rect x={x0} y={y0} width={W} height={bh} rx={small ? 16 : 22} fill={palette.cream} stroke={palette.navy} strokeWidth={4} />
       <rect x={Math.min(t1, t2) + 3} y={y0 + bh - 4} width={Math.abs(t2 - t1) - 6} height={8} fill={palette.cream} />

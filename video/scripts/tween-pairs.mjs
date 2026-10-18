@@ -23,7 +23,9 @@ const PROP = { file: `video/public/${deskM.dir}/${deskF.file}`, scale: frameScal
 const draw = (s) => {
   const m = STRIP_TABLE[s.strip];
   const f = m.frames[s.k];
-  return { file: `video/public/${m.dir}/${f.file}`, scale: frameScale(m, f), ax: f.ax, flip: s.flip, x: s.x, who: m.who };
+  const d = { file: `video/public/${m.dir}/${f.file}`, scale: frameScale(m, f), ax: f.ax, flip: s.flip, x: s.x, who: m.who };
+  if (f.slit) d.slit = f.slit; // the AI's head is carried whole in the morph (make-tweens.py head_piece)
+  return d;
 };
 const out = new Map();
 const isDesk = (s) => STRIP_TABLE[s.strip].desk === true;
@@ -33,7 +35,8 @@ for (const acts of [HUMAN, AI]) {
     const a = draw(p.a);
     const b = draw(p.b);
     const pair = { key: p.key, a, b, d: Math.round(p.b.x - p.a.x) };
-    if (p.a.walk && p.b.walk) pair.fixed = true; // inside a walk: each drawing where its planted foot puts it
+    // inside a walk (test90-v5): the next drawing is aligned onto this one and the morph slides the rest of the way,
+    // so the body glides between the planted-foot places instead of melting across a quarter step
     if (isDesk(p.a) !== isDesk(p.b)) {
       (isDesk(p.a) ? b : a).prop = PROP;
       pair.fixed = true; // the furniture fixes the offset: no best-overlap realignment

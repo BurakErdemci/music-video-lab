@@ -10,6 +10,11 @@ on the silhouette at half resolution (alpha > 100), per frame:
   outline - perimeter longer than OUTLINE x the longer of the two drawings' (a crumbled, jagged edge)
   thin    - area smaller than THIN x the smaller drawing's (the body melting into a strip)
   short   - silhouette height under SHORT x the shorter drawing's (a head shrinking away between two places)
+  bloat   - area larger than BLOAT x the larger drawing's (two heads or two arms side by side: the union of both
+            drawings instead of one body in between; it read as a ponytail on the human, test90-v4 30.7 s)
+  double  - double contour (test90-v4, AI 28.5 s): rim-coloured line pixels DC_IN..DC_OUT px inside the frame's
+            outline that sit on the outline of the drawing whose detail the frame shows (an old outline left inside the new one), per
+            outline pixel, above DC_MAX. One clean outline has its line at the edge and nothing parallel just inside.
 A frame with any of these is flagged; the exit code is 1 when any frame is.
 """
 import importlib.util
@@ -17,7 +22,7 @@ import json
 import os
 import sys
 
-from PIL import Image
+from PIL import Image, ImageChops, ImageFilter
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 PAIRS = os.path.join(ROOT, 'video', 'out', 'tween-pairs.json')
@@ -28,7 +33,13 @@ HOLE = 12
 OUTLINE = 1.25
 THIN = 0.8
 SHORT = 0.94
+BLOAT = 1.08
+DC_IN = 4
+DC_OUT = 12
+DC_MAX = 0.12
+RIM = {'ai': (24, 32, 58), 'human': (243, 239, 228)}
 Q = 2
+KINDS = {}
 
 _spec = importlib.util.spec_from_file_location('make_tweens', os.path.join(os.path.dirname(__file__), 'make-tweens.py'))
 mt = importlib.util.module_from_spec(_spec)
@@ -135,6 +146,25 @@ def metrics(w, h, m):
     return {'pieces': pieces, 'holes': holes, 'area': area, 'per': per, 'height': height}
 
 
+def edge_band(im, r):
+    """Pixels within r px of the outline of an image's silhouette (both sides)."""
+    a = im.split()[3].point(lambda v: 255 if v > 100 else 0)
+    edge = ImageChops.subtract(a, a.filter(ImageFilter.MinFilter(3)))
+    return edge.filter(ImageFilter.MaxFilter(2 * r + 1))
+
+
+def double_contour(im, who, old_edges):
+    """Old outlines left inside the new one: rim-coloured pixels that lie DC_IN..DC_OUT px inside this image's
+    outline AND on (within 3 px of) the outline of one of the two drawings, per outline pixel."""
+    a = im.split()[3].point(lambda v: 255 if v > 100 else 0)
+    band = ImageChops.subtract(a.filter(ImageFilter.MinFilter(2 * DC_IN + 1)), a.filter(ImageFilter.MinFilter(2 * DC_OUT + 1)))
+    diff = ImageChops.difference(im.convert('RGB'), Image.new('RGB', im.size, RIM[who])).convert('L')
+    line = diff.point(lambda v: 255 if v < 60 else 0)
+    n = ImageChops.multiply(ImageChops.multiply(band, line), old_edges).histogram()[255]
+    per = ImageChops.subtract(a, a.filter(ImageFilter.MinFilter(3))).histogram()[255]
+    return n / max(1, per)
+
+
 def check_pair(pair):
     ca, cb, W, H, _, _ = mt.canvases(pair)
     ma, mb = mask(ca), mask(cb)
@@ -142,6 +172,10 @@ def check_pair(pair):
     eb = metrics(*mb)
     w2, h2 = ma[0], ma[1]
     known = bytearray(x | y for x, y in zip(hole_mask(*ma), hole_mask(*mb)))
+    who = pair['a']['who']
+    # the frame shows the first drawing's detail before t = 1/2 and the second's after (make-tweens.py): an outline
+    # left behind is that drawing's own
+    old_edges = (edge_band(ca, 3), edge_band(cb, 3))
     bad = []
     for i in range(mt.STEPS):
         p = os.path.join(DST, f"{pair['key']}-{i}.webp")
@@ -163,10 +197,18 @@ def check_pair(pair):
             why.append(f"outline {f['per'] / max(ea['per'], eb['per']):.2f}x")
         if f['height'] < SHORT * min(ea['height'], eb['height']):
             why.append(f"short {f['height'] / min(ea['height'], eb['height']):.2f}x")
+        if f['area'] > BLOAT * max(ea['area'], eb['area']):
+            why.append(f"bloat {f['area'] / max(ea['area'], eb['area']):.2f}x")
+        dc = double_contour(im, who, old_edges[0 if (i + 1) / (mt.STEPS + 1) < 0.5 else 1])
+        if dc > DC_MAX:
+            why.append(f"double {dc:.2f}")
         if f['area'] < THIN * min(ea['area'], eb['area']):
             why.append(f"thin {f['area'] / min(ea['area'], eb['area']):.2f}x")
         if why:
             bad.append((i, why))
+            for w_ in why:
+                k = w_.split()[0] if not w_[0].isdigit() else 'holes'
+                KINDS[k] = KINDS.get(k, 0) + 1
     return bad
 
 
@@ -187,6 +229,8 @@ def main():
         elif verbose:
             print(f"ok   {pair['key']}")
     print(f'artifactcheck: {flagged_pairs} of {len(pairs)} morphs flagged, {flagged_frames} of {len(pairs) * mt.STEPS} frames')
+    for k, n in sorted(KINDS.items()):
+        print(f'   {k}: {n} frames')
     return 1 if flagged_pairs else 0
 
 

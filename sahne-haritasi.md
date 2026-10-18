@@ -169,14 +169,21 @@ notebook, turn a page · A10 turn right→left · A11 write a note and offer it.
 | pre-chorus 1 | H06 writing on the floor | p01 drops, a06 bend → A09 reading |
 | chorus 1 | H02 coffee, then H07 at the glass on "buradayız" | A02 sits swinging legs between waves, faces the glass on "buradayız" |
 
-### Calendar 1:11.8–1:28.7 (redesign — Burak: the repeated Merhaba is a great
-metaphor but feels too long; make it special)
-The AI's morning is IDENTICAL every time (same mini-wave reset, same A07 wave, same
-"Merhaba" bubble). The human's answer changes every morning — that change is the story.
-Human answers are small story bubbles in the quiet text face (not lyrics).
-| Mornings | Pace | Human |
+### Calendar 1:11.8–1:28.7 (redesign v2, director after test90-v4: the human walking back to the desk and typing
+during the repeated mornings made the scene ordinary)
+The AI's morning is the story and stays: every morning the same white reset of her side, the same wave and the same
+"Merhaba" bubble (each morning the bubble and the reset come in a little differently: place, tilt, size, speed, so
+it never reads as one copied loop). Her wave rests in between (rocking on her heels) under the pacing rules.
+The human NEVER leaves the glass. The camera is static. Only his body changes, a slow decline that runs continuously
+across the AI's resets (calm, eased transitions of 12+ frames, every action 2–5 s):
+| Mornings | Human | His answer (small story bubble) |
 |---|---|---|
-| 1–2 | one morning per 2 beats | H10 waves back eagerly + bubble "Merhaba! Dün…"; then H11 shows the notebook |
-| 3–5 | one per beat | shorter answers: bubble "Merhaba, ben…" → "Yine ben." → only a raised hand (H10 frame 1) |
-| 6–9+ | half a beat each, time-lapse | the human stays at the desk (H01) and no longer looks up; the AI waves the same way every time; tally marks fly onto the board; the moon spins through phases |
-| last morning (last bar before 1:28.7) | slows down | the loop breaks for the first time: BEFORE the AI says Merhaba, the human writes "Merhaba" on a yellow note (H12) and sticks it on the glass; the AI tilts its head (A06). Cut to verse 2. This mirrors 2:34.9, where the AI leaves a note for the human. |
+| 1–2 | eager, close to the glass, holding his note up to it (H12 f3; the notebook pose H11 morphed badly from the palms-on-glass pose) | "Merhaba! Dün…" |
+| 3 | forehead resting on the glass (H25 f2) | "Merhaba, ben…" |
+| 4 | one hand flat on the glass, head down (H25 f3) | "Yine ben." |
+| time-lapse | turns his back to the glass (H09) and slides down it (H26) until he sits on the floor, back against the glass, writing on a small yellow note on his knee (H27 f3) | — |
+| last morning (last bar) | gets up (H26 backwards, H09) BEFORE the AI speaks and presses the "Merhaba" note on the glass (H12 f3 → f4); the AI tilts her head (A06) | — |
+The count of days: every morning (every beat of the post-chorus) one more yellow note appears on the HUMAN's side of
+the glass (three columns by the seam, under the moon), so his side of the pane fills up while each morning's reset
+wipes the AI's side clean: one pane, one side full, the other always empty. (Replaces the tally board.)
+This still mirrors 2:34.9, where the AI leaves a note for the human.

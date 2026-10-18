@@ -52,19 +52,21 @@ STRIPS = {
     # the order follows the stance foot's measured position (see walkAdvance in characters/actor.ts)
     'A01': (['A01-yuru-1', 'A01b-yuru-ara-1', 'A01c-yuru-ara2-1', 'A01c-yuru-ara2-2', 'A01-yuru-2', 'A01b-yuru-ara-2', 'A01-yuru-3',
              'A01b-yuru-ara-3', 'A01-yuru-4', 'A01c-yuru-ara2-3', 'A01c-yuru-ara2-4', 'A01b-yuru-ara-4'], 'torso',
-            {'k': 1.0, 'ref': 857, 'refs': {'A01b': 849, 'A01c': 'measure'}, 'walk': True}),
-    'A02': (four('A02-sallan'), 'right', {'k': 1.0}),
+            {'k': 1.014, 'ref': 857, 'refs': {'A01b': 849, 'A01c': 'measure'}, 'walk': True}),
+    'A02': (four('A02-sallan'), 'right', {'k': 1.15}),
     'A03': (four('A03-camciz'), 'feet', {'k': 1.0}),
     'A04': (four('A04-ay'), 'feet', {'k': 1.0}),
-    'A05': (four('A05-hizala'), 'feet', {'k': 1.0}),
+    'A05': (four('A05-hizala'), 'feet', {'k': 1.077}),
     'A06': (four('A06-merak'), 'feet', {'k': 1.0}),
     'A07': (four('A07-elsalla'), 'feet', {'k': 1.0}),
     'A08': (four('A08-sallanma'), 'feet', {'k': 1.0}),
-    'A09': (four('A09-okuma'), 'feet', {'k': 1.0}),
-    'A10': (four('A10-don'), 'feet', {'k': 1.0}),
-    'A11': (four('A11-yaz'), 'feet', {'k': 1.0}),
-    # head 103 px vs 110 px on A02 (same sitting family): drawn ~6% small
-    'A14': (four('A14-oturma'), 'right', {'k': 1.06}),
+    'A09': (four('A09-okuma'), 'feet', {'k': 0.80}),
+    'A10': (four('A10-don'), 'feet', {'k': 0.952}),
+    'A11': (four('A11-yaz'), 'feet', {'k': 0.984}),
+    # AI continuity (test90-v5): every AI strip is scaled so her head is the canonical standing size (A08 f1: head 87 px
+    # wide, slit 37 px on screen) and standing strips stand 660 px tall. Measured at the slit row; the reading strips
+    # (A09/A17) were drawn ~25% big, the leg-swing family (A02/A14/A18 f1) ~13% small.
+    'A14': (four('A14-oturma'), 'right', {'k': 1.12}),
     'H01': (four('H01v2-yaz'), 'desk', {'desk': 'H16'}),
     'H02': (four('H02v2-kahve'), 'feet', {'ref': 858}),  # f1 upright
     'H03': (four('H03v2-gerin'), 'feet', {'ref': 770}),  # f2 upright leaning back; f4 slumped 718 (head bowed)
@@ -93,24 +95,36 @@ STRIPS = {
     # in-betweens generated between two pool drawings each (H22 f2 -> f3, H20 f2 -> f3), to close the stance-foot gaps
     # that still made the body jump 34-54 px in one frame once the foot was planted
     'H23': (four('H23-yuru-ara') + four('H24-yuru-ara'), 'torso', {'ref': 800, 'refs': {'H23': 'measure', 'H24': 'measure'}, 'walk': True}),
-    'A20': (four('A20-yuru-ara') + four('A21-yuru-ara'), 'torso', {'k': 1.0, 'ref': 857, 'refs': {'A20': 'measure', 'A21': 'measure'}, 'walk': True}),
+    'A20': (four('A20-yuru-ara') + four('A21-yuru-ara'), 'torso', {'k': 1.014, 'ref': 857, 'refs': {'A20': 'measure', 'A21': 'measure'}, 'walk': True}),
     # the AI's support phase, two generations, same reason (A01's stance toe jumped from 43 px behind to 43 ahead)
-    'A19': (four('A19-yuru-ara') + four('A19b-yuru-ara'), 'torso', {'k': 1.0, 'ref': 857, 'refs': {'A19-': 'measure', 'A19b': 'measure'}, 'walk': True}),
+    'A19': (four('A19-yuru-ara') + four('A19b-yuru-ara'), 'torso', {'k': 1.014, 'ref': 857, 'refs': {'A19-': 'measure', 'A19b': 'measure'}, 'walk': True}),
     # the AI sitting down cross-legged with the notebook (A06 f1 -> A09 f1) and changing to legs out (A09 -> A02)
     # (per-frame 'ks': the in-betweens grow from the standing family's size to A09's, which is drawn ~8% bigger)
-    'A15': (four('A15-cokme'), 'feet', {'k': 1.0, 'ks': [1.0, 1.03, 1.06, 1.085]}),
-    'A16': (four('A16-uzan'), 'feet', {'k': 1.0, 'ks': [1.15, 1.12, 1.06, 1.03]}),
-    'A17': (four('A17-okuma2'), 'feet', {'k': 1.0}),
+    'A15': (four('A15-cokme'), 'feet', {'k': 1.0, 'ks': [1.0, 0.99, 0.985, 0.98]}),
+    'A16': (four('A16-uzan'), 'feet', {'k': 1.0, 'ks': [1.065, 1.07, 1.05, 1.15]}),
+    'A17': (four('A17-okuma2'), 'feet', {'k': 0.81}),
     # bending down to the notebook (A06 f1 -> A15 f1 in four steps; that one morph lost her head): f1 741 px vs
     # A06 f1 845, f4 514 vs A15 f1 536
     'A22': (four('A22-egil'), 'feet', {'k': 1.0, 'ks': [1.14, 1.10, 1.07, 1.04]}),
     # getting up from the floor (A02 f1 -> A06 f1): A02 is drawn ~17% smaller than the standing family, so the
     # in-betweens grow from A02's size (f1 417 px vs A02 430) to A06's (f4 707 px vs A06 f1 845, bent less)
-    'A18': (four('A18-kalk'), 'feet', {'k': 1.0, 'ks': [1.03, 1.08, 1.14, 1.19]}),  # more reading business, same size as A09
+    'A18': (four('A18-kalk'), 'feet', {'k': 1.0, 'ks': [1.17, 1.17, 1.18, 1.19]}),  # more reading business, same size as A09
     'H18': (four('H18-yer'), 'feet', {'ref': 858}),  # more floor business, same size as H06
     'H19': (four('H19-not'), 'feet', {'ref': 809}),  # preparing a note at the glass, same size as H12
     # sitting down on the floor with the notebook (standing -> H06 f1); scaled by its standing first drawing
     'H21': (four('H21-otur'), 'feet', {'ref': 800, 'refs': {'H21': 'measure'}}),
+    # the calendar decline at the glass (test90-v5): forehead on the glass, hand flat on it with the head down;
+    # sliding down with his back to the glass (drawn facing right, played mirrored: his back on the glass); sitting
+    # against it. H25 f1 stands slightly bowed (813 px; upright ~830); H26 f1 stands upright; H27 is seated like H26 f4
+    # (393 px vs 387 px), so it takes H26's scale
+    'H25': (four('H25-cam-yasla'), 'feet', {'ref': 830}),
+    'H26': (four('H26-sirt-kay'), 'feet', {'ref': 793}),
+    'H27': (four('H27-sirt-otur'), 'feet', {'ref': 800}),
+    # one walking step in four drawings from ONE image (contact, down, passing, up), played in a fixed order at an
+    # even rate (test90-v5: the planted-foot picker mixed 6 generations and stuttered). Measured: no generated set
+    # spaces the planted foot evenly (H28, H28b, the 6-drawing H29 and the old single-image sets all put 1/2-3/4 of
+    # the step into one change); H28b is the cleanest drawing set; scaled by its tallest drawing
+    'H28': (four('H28b-yuru-adim'), 'torso', {'ref': 800, 'refs': {'H28b': 'measure'}, 'walk': True}),
     'DESK': (['MASA-dekor'], 'desk', {'desk': 'H16'}),
 }
 
@@ -301,7 +315,7 @@ def main():
 
 def contact_sheet(data, out):
     """One frame per human strip at its on-screen size, feet on one baseline: the same-person check."""
-    pick = {'H01': 0, 'H02': 0, 'H03': 1, 'H04': 0, 'H05': 6, 'H06': 1, 'H07': 1, 'H09': 0, 'H10': 3, 'H11': 0, 'H12': 1, 'H15': 2, 'H16': 3}
+    pick = {'H01': 0, 'H02': 0, 'H03': 1, 'H04': 0, 'H05': 6, 'H06': 1, 'H07': 1, 'H09': 0, 'H10': 3, 'H11': 0, 'H12': 1, 'H15': 2, 'H16': 3, 'H25': 1, 'H26': 0, 'H27': 1, 'H28': 2}
     tiles = []
     for sid, k in pick.items():
         m = data[sid]
