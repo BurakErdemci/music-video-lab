@@ -1,0 +1,6994 @@
+{
+ "fps": 30,
+ "duration": 240.76,
+ "bpm": 128.926,
+ "beat_period": 0.46538,
+ "tempo": {
+  "bpm_mean": 128.926,
+  "beat_period_mean": 0.46538,
+  "bpm_first_20s": 127.88,
+  "bpm_last_20s": 130.9,
+  "knots_t": [
+   0.0,
+   20.0,
+   40.0,
+   60.0,
+   80.0,
+   100.0,
+   120.0,
+   140.0,
+   160.0,
+   180.0,
+   200.0,
+   220.0,
+   240.0,
+   260.0
+  ],
+  "knots_bpm": [
+   127.833,
+   127.923,
+   128.006,
+   128.137,
+   128.26,
+   128.344,
+   128.486,
+   128.744,
+   129.046,
+   129.593,
+   130.324,
+   130.728,
+   131.042,
+   131.357
+  ],
+  "bars": 129,
+  "odd_bars": [
+   129
+  ],
+  "first_downbeat": 0.5895,
+  "beats_total": 518,
+  "beats_in_bars": 517,
+  "last_beat": 240.7239,
+  "straight_grid_drift_ms": {
+   "30": -2.0,
+   "60": -14.0,
+   "120": 85.0,
+   "180": 481.0,
+   "240": 1592.0
+  },
+  "onset_residual_ms": {
+   "max": 39.7,
+   "median_abs": 5.6,
+   "n_over_one_frame": 30,
+   "n": 518
+  }
+ },
+ "beats": [
+  0.1202,
+  0.5895,
+  1.0589,
+  1.5282,
+  1.9975,
+  2.4669,
+  2.9362,
+  3.4055,
+  3.8748,
+  4.3441,
+  4.8134,
+  5.2827,
+  5.7519,
+  6.2212,
+  6.6904,
+  7.1597,
+  7.6289,
+  8.0982,
+  8.5674,
+  9.0366,
+  9.5058,
+  9.975,
+  10.4442,
+  10.9134,
+  11.3826,
+  11.8517,
+  12.3209,
+  12.7901,
+  13.2592,
+  13.7283,
+  14.1975,
+  14.6666,
+  15.1357,
+  15.6048,
+  16.0739,
+  16.543,
+  17.0121,
+  17.4812,
+  17.9503,
+  18.4193,
+  18.8884,
+  19.3574,
+  19.8265,
+  20.2955,
+  20.7645,
+  21.2335,
+  21.7025,
+  22.1715,
+  22.6405,
+  23.1095,
+  23.5785,
+  24.0475,
+  24.5164,
+  24.9854,
+  25.4544,
+  25.9233,
+  26.3922,
+  26.8612,
+  27.3301,
+  27.799,
+  28.2679,
+  28.7368,
+  29.2057,
+  29.6746,
+  30.1435,
+  30.6124,
+  31.0812,
+  31.5501,
+  32.0189,
+  32.4878,
+  32.9566,
+  33.4255,
+  33.8943,
+  34.3631,
+  34.8319,
+  35.3007,
+  35.7695,
+  36.2383,
+  36.7071,
+  37.1759,
+  37.6446,
+  38.1134,
+  38.5821,
+  39.0509,
+  39.5196,
+  39.9884,
+  40.4571,
+  40.9258,
+  41.3945,
+  41.8632,
+  42.3319,
+  42.8005,
+  43.2692,
+  43.7378,
+  44.2065,
+  44.6751,
+  45.1437,
+  45.6123,
+  46.0809,
+  46.5495,
+  47.018,
+  47.4866,
+  47.9551,
+  48.4237,
+  48.8922,
+  49.3607,
+  49.8292,
+  50.2977,
+  50.7661,
+  51.2346,
+  51.7031,
+  52.1715,
+  52.6399,
+  53.1084,
+  53.5768,
+  54.0452,
+  54.5136,
+  54.9819,
+  55.4503,
+  55.9186,
+  56.387,
+  56.8553,
+  57.3236,
+  57.7919,
+  58.2602,
+  58.7285,
+  59.1968,
+  59.6651,
+  60.1333,
+  60.6016,
+  61.0698,
+  61.538,
+  62.0062,
+  62.4744,
+  62.9426,
+  63.4108,
+  63.8789,
+  64.3471,
+  64.8152,
+  65.2834,
+  65.7515,
+  66.2196,
+  66.6877,
+  67.1558,
+  67.6239,
+  68.092,
+  68.56,
+  69.0281,
+  69.4961,
+  69.9642,
+  70.4322,
+  70.9002,
+  71.3682,
+  71.8362,
+  72.3042,
+  72.7721,
+  73.2401,
+  73.708,
+  74.176,
+  74.6439,
+  75.1118,
+  75.5797,
+  76.0476,
+  76.5155,
+  76.9834,
+  77.4512,
+  77.9191,
+  78.3869,
+  78.8548,
+  79.3226,
+  79.7904,
+  80.2582,
+  80.726,
+  81.1938,
+  81.6615,
+  82.1293,
+  82.5971,
+  83.0648,
+  83.5326,
+  84.0003,
+  84.4681,
+  84.9358,
+  85.4035,
+  85.8712,
+  86.3389,
+  86.8066,
+  87.2743,
+  87.742,
+  88.2097,
+  88.6774,
+  89.145,
+  89.6127,
+  90.0803,
+  90.548,
+  91.0156,
+  91.4833,
+  91.9509,
+  92.4185,
+  92.8861,
+  93.3537,
+  93.8213,
+  94.2889,
+  94.7565,
+  95.224,
+  95.6916,
+  96.1591,
+  96.6267,
+  97.0942,
+  97.5618,
+  98.0293,
+  98.4968,
+  98.9643,
+  99.4318,
+  99.8993,
+  100.3668,
+  100.8343,
+  101.3018,
+  101.7692,
+  102.2367,
+  102.7041,
+  103.1715,
+  103.6389,
+  104.1063,
+  104.5737,
+  105.0411,
+  105.5084,
+  105.9758,
+  106.4431,
+  106.9104,
+  107.3778,
+  107.8451,
+  108.3123,
+  108.7796,
+  109.2469,
+  109.7141,
+  110.1814,
+  110.6486,
+  111.1158,
+  111.583,
+  112.0502,
+  112.5174,
+  112.9845,
+  113.4517,
+  113.9188,
+  114.386,
+  114.8531,
+  115.3202,
+  115.7873,
+  116.2544,
+  116.7214,
+  117.1885,
+  117.6555,
+  118.1226,
+  118.5896,
+  119.0566,
+  119.5236,
+  119.9906,
+  120.4575,
+  120.9245,
+  121.3914,
+  121.8583,
+  122.3252,
+  122.792,
+  123.2589,
+  123.7257,
+  124.1925,
+  124.6592,
+  125.126,
+  125.5927,
+  126.0594,
+  126.5261,
+  126.9928,
+  127.4594,
+  127.926,
+  128.3926,
+  128.8592,
+  129.3257,
+  129.7923,
+  130.2588,
+  130.7253,
+  131.1917,
+  131.6582,
+  132.1246,
+  132.591,
+  133.0574,
+  133.5237,
+  133.9901,
+  134.4564,
+  134.9227,
+  135.3889,
+  135.8552,
+  136.3214,
+  136.7876,
+  137.2538,
+  137.72,
+  138.1861,
+  138.6522,
+  139.1183,
+  139.5844,
+  140.0504,
+  140.5165,
+  140.9825,
+  141.4484,
+  141.9144,
+  142.3803,
+  142.8462,
+  143.3121,
+  143.7779,
+  144.2437,
+  144.7095,
+  145.1753,
+  145.6411,
+  146.1068,
+  146.5725,
+  147.0382,
+  147.5038,
+  147.9694,
+  148.435,
+  148.9006,
+  149.3661,
+  149.8316,
+  150.2971,
+  150.7626,
+  151.228,
+  151.6935,
+  152.1589,
+  152.6242,
+  153.0896,
+  153.5549,
+  154.0202,
+  154.4854,
+  154.9507,
+  155.4159,
+  155.8811,
+  156.3462,
+  156.8114,
+  157.2765,
+  157.7416,
+  158.2066,
+  158.6717,
+  159.1367,
+  159.6017,
+  160.0666,
+  160.5315,
+  160.9964,
+  161.4612,
+  161.926,
+  162.3908,
+  162.8554,
+  163.3201,
+  163.7847,
+  164.2493,
+  164.7138,
+  165.1782,
+  165.6427,
+  166.107,
+  166.5714,
+  167.0356,
+  167.4999,
+  167.9641,
+  168.4282,
+  168.8923,
+  169.3564,
+  169.8204,
+  170.2843,
+  170.7483,
+  171.2121,
+  171.676,
+  172.1397,
+  172.6035,
+  173.0672,
+  173.5308,
+  173.9944,
+  174.458,
+  174.9215,
+  175.385,
+  175.8484,
+  176.3117,
+  176.7751,
+  177.2384,
+  177.7016,
+  178.1648,
+  178.6279,
+  179.091,
+  179.5541,
+  180.0171,
+  180.4801,
+  180.943,
+  181.4058,
+  181.8686,
+  182.3313,
+  182.7939,
+  183.2565,
+  183.7191,
+  184.1816,
+  184.644,
+  185.1063,
+  185.5686,
+  186.0309,
+  186.493,
+  186.9551,
+  187.4172,
+  187.8792,
+  188.3411,
+  188.803,
+  189.2648,
+  189.7266,
+  190.1883,
+  190.6499,
+  191.1115,
+  191.573,
+  192.0345,
+  192.4959,
+  192.9572,
+  193.4185,
+  193.8797,
+  194.3408,
+  194.8019,
+  195.263,
+  195.724,
+  196.1849,
+  196.6457,
+  197.1065,
+  197.5673,
+  198.0279,
+  198.4886,
+  198.9491,
+  199.4096,
+  199.8701,
+  200.3304,
+  200.7908,
+  201.2511,
+  201.7114,
+  202.1717,
+  202.6319,
+  203.0921,
+  203.5522,
+  204.0123,
+  204.4724,
+  204.9325,
+  205.3925,
+  205.8525,
+  206.3125,
+  206.7724,
+  207.2323,
+  207.6921,
+  208.152,
+  208.6118,
+  209.0715,
+  209.5313,
+  209.991,
+  210.4506,
+  210.9103,
+  211.3699,
+  211.8294,
+  212.289,
+  212.7485,
+  213.2079,
+  213.6674,
+  214.1268,
+  214.5861,
+  215.0455,
+  215.5048,
+  215.9641,
+  216.4233,
+  216.8825,
+  217.3417,
+  217.8008,
+  218.2599,
+  218.719,
+  219.178,
+  219.6371,
+  220.096,
+  220.555,
+  221.0139,
+  221.4728,
+  221.9317,
+  222.3905,
+  222.8494,
+  223.3082,
+  223.7669,
+  224.2257,
+  224.6844,
+  225.1431,
+  225.6018,
+  226.0604,
+  226.5191,
+  226.9777,
+  227.4362,
+  227.8948,
+  228.3533,
+  228.8118,
+  229.2703,
+  229.7287,
+  230.1871,
+  230.6455,
+  231.1039,
+  231.5622,
+  232.0206,
+  232.4789,
+  232.9371,
+  233.3954,
+  233.8536,
+  234.3118,
+  234.77,
+  235.2281,
+  235.6862,
+  236.1443,
+  236.6024,
+  237.0604,
+  237.5184,
+  237.9764,
+  238.4344,
+  238.8923,
+  239.3503,
+  239.8082,
+  240.266,
+  240.7239
+ ],
+ "downbeats": [
+  0.5895,
+  2.4669,
+  4.3441,
+  6.2212,
+  8.0982,
+  9.975,
+  11.8517,
+  13.7283,
+  15.6048,
+  17.4812,
+  19.3574,
+  21.2335,
+  23.1095,
+  24.9854,
+  26.8612,
+  28.7368,
+  30.6124,
+  32.4878,
+  34.3631,
+  36.2383,
+  38.1134,
+  39.9884,
+  41.8632,
+  43.7378,
+  45.6123,
+  47.4866,
+  49.3607,
+  51.2346,
+  53.1084,
+  54.9819,
+  56.8553,
+  58.7285,
+  60.6016,
+  62.4744,
+  64.3471,
+  66.2196,
+  68.092,
+  69.9642,
+  71.8362,
+  73.708,
+  75.5797,
+  77.4512,
+  79.3226,
+  81.1938,
+  83.0648,
+  84.9358,
+  86.8066,
+  88.6774,
+  90.548,
+  92.4185,
+  94.2889,
+  96.1591,
+  98.0293,
+  99.8993,
+  101.7692,
+  103.6389,
+  105.5084,
+  107.3778,
+  109.2469,
+  111.1158,
+  112.9845,
+  114.8531,
+  116.7214,
+  118.5896,
+  120.4575,
+  122.3252,
+  124.1925,
+  126.0594,
+  127.926,
+  129.7923,
+  131.6582,
+  133.5237,
+  135.3889,
+  137.2538,
+  139.1183,
+  140.9825,
+  142.8462,
+  144.7095,
+  146.5725,
+  148.435,
+  150.2971,
+  152.1589,
+  154.0202,
+  155.8811,
+  157.7416,
+  159.6017,
+  161.4612,
+  163.3201,
+  165.1782,
+  167.0356,
+  168.8923,
+  170.7483,
+  172.6035,
+  174.458,
+  176.3117,
+  178.1648,
+  180.0171,
+  181.8686,
+  183.7191,
+  185.5686,
+  187.4172,
+  189.2648,
+  191.1115,
+  192.9572,
+  194.8019,
+  196.6457,
+  198.4886,
+  200.3304,
+  202.1717,
+  204.0123,
+  205.8525,
+  207.6921,
+  209.5313,
+  211.3699,
+  213.2079,
+  215.0455,
+  216.8825,
+  218.719,
+  220.555,
+  222.3905,
+  224.2257,
+  226.0604,
+  227.8948,
+  229.7287,
+  231.5622,
+  233.3954,
+  235.2281,
+  237.0604,
+  238.8923
+ ],
+ "bars": [
+  {
+   "bar": 1,
+   "start": 0.5895,
+   "end": 2.4669,
+   "beats": 4,
+   "mean_db": -36.32
+  },
+  {
+   "bar": 2,
+   "start": 2.4669,
+   "end": 4.3441,
+   "beats": 4,
+   "mean_db": -26.62
+  },
+  {
+   "bar": 3,
+   "start": 4.3441,
+   "end": 6.2212,
+   "beats": 4,
+   "mean_db": -22.64
+  },
+  {
+   "bar": 4,
+   "start": 6.2212,
+   "end": 8.0982,
+   "beats": 4,
+   "mean_db": -20.67
+  },
+  {
+   "bar": 5,
+   "start": 8.0982,
+   "end": 9.975,
+   "beats": 4,
+   "mean_db": -22.87
+  },
+  {
+   "bar": 6,
+   "start": 9.975,
+   "end": 11.8517,
+   "beats": 4,
+   "mean_db": -20.72
+  },
+  {
+   "bar": 7,
+   "start": 11.8517,
+   "end": 13.7283,
+   "beats": 4,
+   "mean_db": -24.42
+  },
+  {
+   "bar": 8,
+   "start": 13.7283,
+   "end": 15.6048,
+   "beats": 4,
+   "mean_db": -22.22
+  },
+  {
+   "bar": 9,
+   "start": 15.6048,
+   "end": 17.4812,
+   "beats": 4,
+   "mean_db": -21.76
+  },
+  {
+   "bar": 10,
+   "start": 17.4812,
+   "end": 19.3574,
+   "beats": 4,
+   "mean_db": -21.18
+  },
+  {
+   "bar": 11,
+   "start": 19.3574,
+   "end": 21.2335,
+   "beats": 4,
+   "mean_db": -21.4
+  },
+  {
+   "bar": 12,
+   "start": 21.2335,
+   "end": 23.1095,
+   "beats": 4,
+   "mean_db": -22.67
+  },
+  {
+   "bar": 13,
+   "start": 23.1095,
+   "end": 24.9854,
+   "beats": 4,
+   "mean_db": -21.34
+  },
+  {
+   "bar": 14,
+   "start": 24.9854,
+   "end": 26.8612,
+   "beats": 4,
+   "mean_db": -21.56
+  },
+  {
+   "bar": 15,
+   "start": 26.8612,
+   "end": 28.7368,
+   "beats": 4,
+   "mean_db": -21.23
+  },
+  {
+   "bar": 16,
+   "start": 28.7368,
+   "end": 30.6124,
+   "beats": 4,
+   "mean_db": -22.0
+  },
+  {
+   "bar": 17,
+   "start": 30.6124,
+   "end": 32.4878,
+   "beats": 4,
+   "mean_db": -20.26
+  },
+  {
+   "bar": 18,
+   "start": 32.4878,
+   "end": 34.3631,
+   "beats": 4,
+   "mean_db": -20.84
+  },
+  {
+   "bar": 19,
+   "start": 34.3631,
+   "end": 36.2383,
+   "beats": 4,
+   "mean_db": -20.65
+  },
+  {
+   "bar": 20,
+   "start": 36.2383,
+   "end": 38.1134,
+   "beats": 4,
+   "mean_db": -21.69
+  },
+  {
+   "bar": 21,
+   "start": 38.1134,
+   "end": 39.9884,
+   "beats": 4,
+   "mean_db": -21.04
+  },
+  {
+   "bar": 22,
+   "start": 39.9884,
+   "end": 41.8632,
+   "beats": 4,
+   "mean_db": -20.63
+  },
+  {
+   "bar": 23,
+   "start": 41.8632,
+   "end": 43.7378,
+   "beats": 4,
+   "mean_db": -20.84
+  },
+  {
+   "bar": 24,
+   "start": 43.7378,
+   "end": 45.6123,
+   "beats": 4,
+   "mean_db": -24.65
+  },
+  {
+   "bar": 25,
+   "start": 45.6123,
+   "end": 47.4866,
+   "beats": 4,
+   "mean_db": -21.75
+  },
+  {
+   "bar": 26,
+   "start": 47.4866,
+   "end": 49.3607,
+   "beats": 4,
+   "mean_db": -21.42
+  },
+  {
+   "bar": 27,
+   "start": 49.3607,
+   "end": 51.2346,
+   "beats": 4,
+   "mean_db": -20.99
+  },
+  {
+   "bar": 28,
+   "start": 51.2346,
+   "end": 53.1084,
+   "beats": 4,
+   "mean_db": -21.09
+  },
+  {
+   "bar": 29,
+   "start": 53.1084,
+   "end": 54.9819,
+   "beats": 4,
+   "mean_db": -20.43
+  },
+  {
+   "bar": 30,
+   "start": 54.9819,
+   "end": 56.8553,
+   "beats": 4,
+   "mean_db": -19.82
+  },
+  {
+   "bar": 31,
+   "start": 56.8553,
+   "end": 58.7285,
+   "beats": 4,
+   "mean_db": -18.69
+  },
+  {
+   "bar": 32,
+   "start": 58.7285,
+   "end": 60.6016,
+   "beats": 4,
+   "mean_db": -20.3
+  },
+  {
+   "bar": 33,
+   "start": 60.6016,
+   "end": 62.4744,
+   "beats": 4,
+   "mean_db": -19.48
+  },
+  {
+   "bar": 34,
+   "start": 62.4744,
+   "end": 64.3471,
+   "beats": 4,
+   "mean_db": -19.42
+  },
+  {
+   "bar": 35,
+   "start": 64.3471,
+   "end": 66.2196,
+   "beats": 4,
+   "mean_db": -18.79
+  },
+  {
+   "bar": 36,
+   "start": 66.2196,
+   "end": 68.092,
+   "beats": 4,
+   "mean_db": -18.56
+  },
+  {
+   "bar": 37,
+   "start": 68.092,
+   "end": 69.9642,
+   "beats": 4,
+   "mean_db": -18.98
+  },
+  {
+   "bar": 38,
+   "start": 69.9642,
+   "end": 71.8362,
+   "beats": 4,
+   "mean_db": -19.05
+  },
+  {
+   "bar": 39,
+   "start": 71.8362,
+   "end": 73.708,
+   "beats": 4,
+   "mean_db": -22.12
+  },
+  {
+   "bar": 40,
+   "start": 73.708,
+   "end": 75.5797,
+   "beats": 4,
+   "mean_db": -21.86
+  },
+  {
+   "bar": 41,
+   "start": 75.5797,
+   "end": 77.4512,
+   "beats": 4,
+   "mean_db": -18.89
+  },
+  {
+   "bar": 42,
+   "start": 77.4512,
+   "end": 79.3226,
+   "beats": 4,
+   "mean_db": -18.9
+  },
+  {
+   "bar": 43,
+   "start": 79.3226,
+   "end": 81.1938,
+   "beats": 4,
+   "mean_db": -18.81
+  },
+  {
+   "bar": 44,
+   "start": 81.1938,
+   "end": 83.0648,
+   "beats": 4,
+   "mean_db": -18.58
+  },
+  {
+   "bar": 45,
+   "start": 83.0648,
+   "end": 84.9358,
+   "beats": 4,
+   "mean_db": -18.91
+  },
+  {
+   "bar": 46,
+   "start": 84.9358,
+   "end": 86.8066,
+   "beats": 4,
+   "mean_db": -18.61
+  },
+  {
+   "bar": 47,
+   "start": 86.8066,
+   "end": 88.6774,
+   "beats": 4,
+   "mean_db": -21.62
+  },
+  {
+   "bar": 48,
+   "start": 88.6774,
+   "end": 90.548,
+   "beats": 4,
+   "mean_db": -20.14
+  },
+  {
+   "bar": 49,
+   "start": 90.548,
+   "end": 92.4185,
+   "beats": 4,
+   "mean_db": -20.76
+  },
+  {
+   "bar": 50,
+   "start": 92.4185,
+   "end": 94.2889,
+   "beats": 4,
+   "mean_db": -20.67
+  },
+  {
+   "bar": 51,
+   "start": 94.2889,
+   "end": 96.1591,
+   "beats": 4,
+   "mean_db": -21.07
+  },
+  {
+   "bar": 52,
+   "start": 96.1591,
+   "end": 98.0293,
+   "beats": 4,
+   "mean_db": -20.76
+  },
+  {
+   "bar": 53,
+   "start": 98.0293,
+   "end": 99.8993,
+   "beats": 4,
+   "mean_db": -21.19
+  },
+  {
+   "bar": 54,
+   "start": 99.8993,
+   "end": 101.7692,
+   "beats": 4,
+   "mean_db": -21.08
+  },
+  {
+   "bar": 55,
+   "start": 101.7692,
+   "end": 103.6389,
+   "beats": 4,
+   "mean_db": -20.31
+  },
+  {
+   "bar": 56,
+   "start": 103.6389,
+   "end": 105.5084,
+   "beats": 4,
+   "mean_db": -23.5
+  },
+  {
+   "bar": 57,
+   "start": 105.5084,
+   "end": 107.3778,
+   "beats": 4,
+   "mean_db": -19.34
+  },
+  {
+   "bar": 58,
+   "start": 107.3778,
+   "end": 109.2469,
+   "beats": 4,
+   "mean_db": -19.19
+  },
+  {
+   "bar": 59,
+   "start": 109.2469,
+   "end": 111.1158,
+   "beats": 4,
+   "mean_db": -19.49
+  },
+  {
+   "bar": 60,
+   "start": 111.1158,
+   "end": 112.9845,
+   "beats": 4,
+   "mean_db": -18.67
+  },
+  {
+   "bar": 61,
+   "start": 112.9845,
+   "end": 114.8531,
+   "beats": 4,
+   "mean_db": -20.46
+  },
+  {
+   "bar": 62,
+   "start": 114.8531,
+   "end": 116.7214,
+   "beats": 4,
+   "mean_db": -19.48
+  },
+  {
+   "bar": 63,
+   "start": 116.7214,
+   "end": 118.5896,
+   "beats": 4,
+   "mean_db": -19.3
+  },
+  {
+   "bar": 64,
+   "start": 118.5896,
+   "end": 120.4575,
+   "beats": 4,
+   "mean_db": -18.81
+  },
+  {
+   "bar": 65,
+   "start": 120.4575,
+   "end": 122.3252,
+   "beats": 4,
+   "mean_db": -18.77
+  },
+  {
+   "bar": 66,
+   "start": 122.3252,
+   "end": 124.1925,
+   "beats": 4,
+   "mean_db": -18.98
+  },
+  {
+   "bar": 67,
+   "start": 124.1925,
+   "end": 126.0594,
+   "beats": 4,
+   "mean_db": -19.02
+  },
+  {
+   "bar": 68,
+   "start": 126.0594,
+   "end": 127.926,
+   "beats": 4,
+   "mean_db": -20.03
+  },
+  {
+   "bar": 69,
+   "start": 127.926,
+   "end": 129.7923,
+   "beats": 4,
+   "mean_db": -18.7
+  },
+  {
+   "bar": 70,
+   "start": 129.7923,
+   "end": 131.6582,
+   "beats": 4,
+   "mean_db": -19.28
+  },
+  {
+   "bar": 71,
+   "start": 131.6582,
+   "end": 133.5237,
+   "beats": 4,
+   "mean_db": -19.91
+  },
+  {
+   "bar": 72,
+   "start": 133.5237,
+   "end": 135.3889,
+   "beats": 4,
+   "mean_db": -19.39
+  },
+  {
+   "bar": 73,
+   "start": 135.3889,
+   "end": 137.2538,
+   "beats": 4,
+   "mean_db": -19.66
+  },
+  {
+   "bar": 74,
+   "start": 137.2538,
+   "end": 139.1183,
+   "beats": 4,
+   "mean_db": -19.67
+  },
+  {
+   "bar": 75,
+   "start": 139.1183,
+   "end": 140.9825,
+   "beats": 4,
+   "mean_db": -19.49
+  },
+  {
+   "bar": 76,
+   "start": 140.9825,
+   "end": 142.8462,
+   "beats": 4,
+   "mean_db": -18.45
+  },
+  {
+   "bar": 77,
+   "start": 142.8462,
+   "end": 144.7095,
+   "beats": 4,
+   "mean_db": -17.71
+  },
+  {
+   "bar": 78,
+   "start": 144.7095,
+   "end": 146.5725,
+   "beats": 4,
+   "mean_db": -24.59
+  },
+  {
+   "bar": 79,
+   "start": 146.5725,
+   "end": 148.435,
+   "beats": 4,
+   "mean_db": -27.95
+  },
+  {
+   "bar": 80,
+   "start": 148.435,
+   "end": 150.2971,
+   "beats": 4,
+   "mean_db": -27.81
+  },
+  {
+   "bar": 81,
+   "start": 150.2971,
+   "end": 152.1589,
+   "beats": 4,
+   "mean_db": -28.24
+  },
+  {
+   "bar": 82,
+   "start": 152.1589,
+   "end": 154.0202,
+   "beats": 4,
+   "mean_db": -24.71
+  },
+  {
+   "bar": 83,
+   "start": 154.0202,
+   "end": 155.8811,
+   "beats": 4,
+   "mean_db": -25.09
+  },
+  {
+   "bar": 84,
+   "start": 155.8811,
+   "end": 157.7416,
+   "beats": 4,
+   "mean_db": -17.56
+  },
+  {
+   "bar": 85,
+   "start": 157.7416,
+   "end": 159.6017,
+   "beats": 4,
+   "mean_db": -16.9
+  },
+  {
+   "bar": 86,
+   "start": 159.6017,
+   "end": 161.4612,
+   "beats": 4,
+   "mean_db": -17.09
+  },
+  {
+   "bar": 87,
+   "start": 161.4612,
+   "end": 163.3201,
+   "beats": 4,
+   "mean_db": -17.46
+  },
+  {
+   "bar": 88,
+   "start": 163.3201,
+   "end": 165.1782,
+   "beats": 4,
+   "mean_db": -17.35
+  },
+  {
+   "bar": 89,
+   "start": 165.1782,
+   "end": 167.0356,
+   "beats": 4,
+   "mean_db": -17.28
+  },
+  {
+   "bar": 90,
+   "start": 167.0356,
+   "end": 168.8923,
+   "beats": 4,
+   "mean_db": -17.3
+  },
+  {
+   "bar": 91,
+   "start": 168.8923,
+   "end": 170.7483,
+   "beats": 4,
+   "mean_db": -17.33
+  },
+  {
+   "bar": 92,
+   "start": 170.7483,
+   "end": 172.6035,
+   "beats": 4,
+   "mean_db": -17.14
+  },
+  {
+   "bar": 93,
+   "start": 172.6035,
+   "end": 174.458,
+   "beats": 4,
+   "mean_db": -16.61
+  },
+  {
+   "bar": 94,
+   "start": 174.458,
+   "end": 176.3117,
+   "beats": 4,
+   "mean_db": -19.46
+  },
+  {
+   "bar": 95,
+   "start": 176.3117,
+   "end": 178.1648,
+   "beats": 4,
+   "mean_db": -20.18
+  },
+  {
+   "bar": 96,
+   "start": 178.1648,
+   "end": 180.0171,
+   "beats": 4,
+   "mean_db": -20.07
+  },
+  {
+   "bar": 97,
+   "start": 180.0171,
+   "end": 181.8686,
+   "beats": 4,
+   "mean_db": -19.62
+  },
+  {
+   "bar": 98,
+   "start": 181.8686,
+   "end": 183.7191,
+   "beats": 4,
+   "mean_db": -17.35
+  },
+  {
+   "bar": 99,
+   "start": 183.7191,
+   "end": 185.5686,
+   "beats": 4,
+   "mean_db": -18.69
+  },
+  {
+   "bar": 100,
+   "start": 185.5686,
+   "end": 187.4172,
+   "beats": 4,
+   "mean_db": -19.39
+  },
+  {
+   "bar": 101,
+   "start": 187.4172,
+   "end": 189.2648,
+   "beats": 4,
+   "mean_db": -16.96
+  },
+  {
+   "bar": 102,
+   "start": 189.2648,
+   "end": 191.1115,
+   "beats": 4,
+   "mean_db": -17.05
+  },
+  {
+   "bar": 103,
+   "start": 191.1115,
+   "end": 192.9572,
+   "beats": 4,
+   "mean_db": -17.16
+  },
+  {
+   "bar": 104,
+   "start": 192.9572,
+   "end": 194.8019,
+   "beats": 4,
+   "mean_db": -17.1
+  },
+  {
+   "bar": 105,
+   "start": 194.8019,
+   "end": 196.6457,
+   "beats": 4,
+   "mean_db": -17.07
+  },
+  {
+   "bar": 106,
+   "start": 196.6457,
+   "end": 198.4886,
+   "beats": 4,
+   "mean_db": -16.07
+  },
+  {
+   "bar": 107,
+   "start": 198.4886,
+   "end": 200.3304,
+   "beats": 4,
+   "mean_db": -16.65
+  },
+  {
+   "bar": 108,
+   "start": 200.3304,
+   "end": 202.1717,
+   "beats": 4,
+   "mean_db": -16.33
+  },
+  {
+   "bar": 109,
+   "start": 202.1717,
+   "end": 204.0123,
+   "beats": 4,
+   "mean_db": -16.12
+  },
+  {
+   "bar": 110,
+   "start": 204.0123,
+   "end": 205.8525,
+   "beats": 4,
+   "mean_db": -16.04
+  },
+  {
+   "bar": 111,
+   "start": 205.8525,
+   "end": 207.6921,
+   "beats": 4,
+   "mean_db": -21.06
+  },
+  {
+   "bar": 112,
+   "start": 207.6921,
+   "end": 209.5313,
+   "beats": 4,
+   "mean_db": -23.98
+  },
+  {
+   "bar": 113,
+   "start": 209.5313,
+   "end": 211.3699,
+   "beats": 4,
+   "mean_db": -22.84
+  },
+  {
+   "bar": 114,
+   "start": 211.3699,
+   "end": 213.2079,
+   "beats": 4,
+   "mean_db": -23.95
+  },
+  {
+   "bar": 115,
+   "start": 213.2079,
+   "end": 215.0455,
+   "beats": 4,
+   "mean_db": -16.09
+  },
+  {
+   "bar": 116,
+   "start": 215.0455,
+   "end": 216.8825,
+   "beats": 4,
+   "mean_db": -16.04
+  },
+  {
+   "bar": 117,
+   "start": 216.8825,
+   "end": 218.719,
+   "beats": 4,
+   "mean_db": -15.87
+  },
+  {
+   "bar": 118,
+   "start": 218.719,
+   "end": 220.555,
+   "beats": 4,
+   "mean_db": -15.76
+  },
+  {
+   "bar": 119,
+   "start": 220.555,
+   "end": 222.3905,
+   "beats": 4,
+   "mean_db": -15.84
+  },
+  {
+   "bar": 120,
+   "start": 222.3905,
+   "end": 224.2257,
+   "beats": 4,
+   "mean_db": -16.03
+  },
+  {
+   "bar": 121,
+   "start": 224.2257,
+   "end": 226.0604,
+   "beats": 4,
+   "mean_db": -15.17
+  },
+  {
+   "bar": 122,
+   "start": 226.0604,
+   "end": 227.8948,
+   "beats": 4,
+   "mean_db": -14.78
+  },
+  {
+   "bar": 123,
+   "start": 227.8948,
+   "end": 229.7287,
+   "beats": 4,
+   "mean_db": -19.05
+  },
+  {
+   "bar": 124,
+   "start": 229.7287,
+   "end": 231.5622,
+   "beats": 4,
+   "mean_db": -18.56
+  },
+  {
+   "bar": 125,
+   "start": 231.5622,
+   "end": 233.3954,
+   "beats": 4,
+   "mean_db": -20.68
+  },
+  {
+   "bar": 126,
+   "start": 233.3954,
+   "end": 235.2281,
+   "beats": 4,
+   "mean_db": -21.57
+  },
+  {
+   "bar": 127,
+   "start": 235.2281,
+   "end": 237.0604,
+   "beats": 4,
+   "mean_db": -33.01
+  },
+  {
+   "bar": 128,
+   "start": 237.0604,
+   "end": 238.8923,
+   "beats": 4,
+   "mean_db": -40.7
+  },
+  {
+   "bar": 129,
+   "start": 238.8923,
+   "end": 240.76,
+   "beats": 5,
+   "mean_db": -36.78
+  }
+ ],
+ "sections": [
+  {
+   "name": "Intro",
+   "start": 0.0,
+   "end": 15.6048,
+   "start_frame": 0,
+   "end_frame": 468,
+   "start_bar": 1,
+   "end_bar": 8,
+   "n_bars": 8,
+   "mean_db": -24.56,
+   "min_bar_db": -36.32,
+   "max_bar_db": -20.67,
+   "singer_tag": null,
+   "singers_heard": {},
+   "start_rule": "file start",
+   "anchor": "-",
+   "key": {
+    "best": "F minor",
+    "r": 0.741,
+    "second": "F major",
+    "r2": 0.689
+   }
+  },
+  {
+   "name": "Verse 1",
+   "start": 15.6048,
+   "end": 43.7378,
+   "start_frame": 468,
+   "end_frame": 1312,
+   "start_bar": 9,
+   "end_bar": 23,
+   "n_bars": 15,
+   "mean_db": -21.27,
+   "min_bar_db": -22.67,
+   "max_bar_db": -20.26,
+   "singer_tag": "male",
+   "singers_heard": {
+    "male": 4
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 16.48 s",
+   "key": {
+    "best": "F major",
+    "r": 0.71,
+    "second": "F minor",
+    "r2": 0.696
+   }
+  },
+  {
+   "name": "Pre-Chorus 1",
+   "start": 43.7378,
+   "end": 56.8553,
+   "start_frame": 1312,
+   "end_frame": 1706,
+   "start_bar": 24,
+   "end_bar": 30,
+   "n_bars": 7,
+   "mean_db": -21.45,
+   "min_bar_db": -24.65,
+   "max_bar_db": -19.82,
+   "singer_tag": "female",
+   "singers_heard": {
+    "female": 4
+   },
+   "start_rule": "energy-step -3.8 dB",
+   "anchor": "first word 43.30 s",
+   "key": {
+    "best": "C major",
+    "r": 0.703,
+    "second": "F major",
+    "r2": 0.637
+   }
+  },
+  {
+   "name": "Chorus 1",
+   "start": 56.8553,
+   "end": 71.8362,
+   "start_frame": 1706,
+   "end_frame": 2155,
+   "start_bar": 31,
+   "end_bar": 38,
+   "n_bars": 8,
+   "mean_db": -19.16,
+   "min_bar_db": -20.3,
+   "max_bar_db": -18.56,
+   "singer_tag": "duet",
+   "singers_heard": {
+    "unclear": 1,
+    "female": 3,
+    "both": 1,
+    "male": 1
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 57.74 s",
+   "key": {
+    "best": "C major",
+    "r": 0.68,
+    "second": "F major",
+    "r2": 0.679
+   }
+  },
+  {
+   "name": "Post-Chorus",
+   "start": 71.8362,
+   "end": 88.6774,
+   "start_frame": 2155,
+   "end_frame": 2660,
+   "start_bar": 39,
+   "end_bar": 47,
+   "n_bars": 9,
+   "mean_db": -19.81,
+   "min_bar_db": -22.12,
+   "max_bar_db": -18.58,
+   "singer_tag": null,
+   "singers_heard": {
+    "female": 1
+   },
+   "start_rule": "energy-step -3.1 dB",
+   "anchor": "first word 73.24 s",
+   "key": {
+    "best": "F minor",
+    "r": 0.761,
+    "second": "F major",
+    "r2": 0.759
+   }
+  },
+  {
+   "name": "Verse 2",
+   "start": 88.6774,
+   "end": 103.6389,
+   "start_frame": 2660,
+   "end_frame": 3109,
+   "start_bar": 48,
+   "end_bar": 55,
+   "n_bars": 8,
+   "mean_db": -20.75,
+   "min_bar_db": -21.19,
+   "max_bar_db": -20.14,
+   "singer_tag": "female",
+   "singers_heard": {
+    "female": 1,
+    "male": 2,
+    "both": 1
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 89.82 s",
+   "key": {
+    "best": "F major",
+    "r": 0.755,
+    "second": "F minor",
+    "r2": 0.689
+   }
+  },
+  {
+   "name": "Pre-Chorus 2",
+   "start": 103.6389,
+   "end": 111.1158,
+   "start_frame": 3109,
+   "end_frame": 3333,
+   "start_bar": 56,
+   "end_bar": 59,
+   "n_bars": 4,
+   "mean_db": -20.38,
+   "min_bar_db": -23.5,
+   "max_bar_db": -19.19,
+   "singer_tag": "male",
+   "singers_heard": {
+    "male": 3
+   },
+   "start_rule": "energy-step -3.2 dB",
+   "anchor": "first word 105.16 s",
+   "key": {
+    "best": "F major",
+    "r": 0.771,
+    "second": "F minor",
+    "r2": 0.727
+   }
+  },
+  {
+   "name": "Chorus 2",
+   "start": 111.1158,
+   "end": 129.7923,
+   "start_frame": 3333,
+   "end_frame": 3894,
+   "start_bar": 60,
+   "end_bar": 69,
+   "n_bars": 10,
+   "mean_db": -19.22,
+   "min_bar_db": -20.46,
+   "max_bar_db": -18.67,
+   "singer_tag": "duet",
+   "singers_heard": {
+    "unclear": 1,
+    "male": 2,
+    "female": 1,
+    "both": 2
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 112.16 s",
+   "key": {
+    "best": "F major",
+    "r": 0.627,
+    "second": "F minor",
+    "r2": 0.622
+   }
+  },
+  {
+   "name": "Bridge (male)",
+   "start": 129.7923,
+   "end": 144.7095,
+   "start_frame": 3894,
+   "end_frame": 4341,
+   "start_bar": 70,
+   "end_bar": 77,
+   "n_bars": 8,
+   "mean_db": -19.19,
+   "min_bar_db": -19.91,
+   "max_bar_db": -17.71,
+   "singer_tag": "male",
+   "singers_heard": {
+    "both": 2,
+    "male": 1,
+    "unclear": 1,
+    "female": 1
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 129.68 s",
+   "key": {
+    "best": "F minor",
+    "r": 0.673,
+    "second": "F major",
+    "r2": 0.444
+   }
+  },
+  {
+   "name": "Bridge (female)",
+   "start": 144.7095,
+   "end": 155.8811,
+   "start_frame": 4341,
+   "end_frame": 4676,
+   "start_bar": 78,
+   "end_bar": 83,
+   "n_bars": 6,
+   "mean_db": -26.4,
+   "min_bar_db": -28.24,
+   "max_bar_db": -24.59,
+   "singer_tag": "female",
+   "singers_heard": {
+    "female": 3
+   },
+   "start_rule": "energy-step -6.9 dB",
+   "anchor": "first word 143.66 s",
+   "key": {
+    "best": "F minor",
+    "r": 0.805,
+    "second": "F major",
+    "r2": 0.669
+   }
+  },
+  {
+   "name": "Instrumental Break",
+   "start": 155.8811,
+   "end": 172.6035,
+   "start_frame": 4676,
+   "end_frame": 5178,
+   "start_bar": 84,
+   "end_bar": 92,
+   "n_bars": 9,
+   "mean_db": -17.27,
+   "min_bar_db": -17.56,
+   "max_bar_db": -16.9,
+   "singer_tag": null,
+   "singers_heard": {},
+   "start_rule": "energy-step 7.5 dB",
+   "anchor": "after last bridge word 154.88 s",
+   "key": {
+    "best": "C major",
+    "r": 0.7,
+    "second": "F major",
+    "r2": 0.575
+   }
+  },
+  {
+   "name": "Final Chorus (stripped, female)",
+   "start": 172.6035,
+   "end": 180.0171,
+   "start_frame": 5178,
+   "end_frame": 5401,
+   "start_bar": 93,
+   "end_bar": 96,
+   "n_bars": 4,
+   "mean_db": -19.08,
+   "min_bar_db": -20.18,
+   "max_bar_db": -16.61,
+   "singer_tag": "female",
+   "singers_heard": {
+    "male": 1,
+    "female": 1
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 173.36 s",
+   "key": {
+    "best": "F# minor",
+    "r": 0.296,
+    "second": "C major",
+    "r2": 0.283
+   }
+  },
+  {
+   "name": "Final Chorus (full, duet)",
+   "start": 180.0171,
+   "end": 205.8525,
+   "start_frame": 5401,
+   "end_frame": 6176,
+   "start_bar": 97,
+   "end_bar": 110,
+   "n_bars": 14,
+   "mean_db": -17.26,
+   "min_bar_db": -19.62,
+   "max_bar_db": -16.04,
+   "singer_tag": "duet",
+   "singers_heard": {
+    "female": 5
+   },
+   "start_rule": "latest downbeat <= first word + 0.5 s",
+   "anchor": "first word 180.96 s",
+   "key": {
+    "best": "F minor",
+    "r": 0.443,
+    "second": "F major",
+    "r2": 0.38
+   }
+  },
+  {
+   "name": "Outro",
+   "start": 205.8525,
+   "end": 213.2079,
+   "start_frame": 6176,
+   "end_frame": 6396,
+   "start_bar": 111,
+   "end_bar": 114,
+   "n_bars": 4,
+   "mean_db": -22.96,
+   "min_bar_db": -23.98,
+   "max_bar_db": -21.06,
+   "singer_tag": null,
+   "singers_heard": {
+    "unclear": 1
+   },
+   "start_rule": "energy-step -5.0 dB",
+   "anchor": "after last chorus word 203.06 s",
+   "key": {
+    "best": "F minor",
+    "r": 0.806,
+    "second": "F major",
+    "r2": 0.706
+   }
+  },
+  {
+   "name": "Outro part 2 (measured)",
+   "start": 213.2079,
+   "end": 227.8948,
+   "start_frame": 6396,
+   "end_frame": 6837,
+   "start_bar": 115,
+   "end_bar": 122,
+   "n_bars": 8,
+   "mean_db": -15.7,
+   "min_bar_db": -16.09,
+   "max_bar_db": -14.78,
+   "singer_tag": null,
+   "singers_heard": {},
+   "start_rule": "energy-step 7.9 dB",
+   "anchor": "after last chorus word 203.06 s",
+   "key": {
+    "best": "C major",
+    "r": 0.625,
+    "second": "F minor",
+    "r2": 0.563
+   }
+  },
+  {
+   "name": "Outro part 3 (measured)",
+   "start": 227.8948,
+   "end": 235.2281,
+   "start_frame": 6837,
+   "end_frame": 7057,
+   "start_bar": 123,
+   "end_bar": 126,
+   "n_bars": 4,
+   "mean_db": -19.97,
+   "min_bar_db": -21.57,
+   "max_bar_db": -18.56,
+   "singer_tag": null,
+   "singers_heard": {},
+   "start_rule": "energy-step -4.3 dB",
+   "anchor": "after last chorus word 203.06 s",
+   "key": {
+    "best": "F minor",
+    "r": 0.625,
+    "second": "C major",
+    "r2": 0.617
+   }
+  },
+  {
+   "name": "Outro part 4 (measured)",
+   "start": 235.2281,
+   "end": 240.76,
+   "start_frame": 7057,
+   "end_frame": 7223,
+   "start_bar": 127,
+   "end_bar": 129,
+   "n_bars": 3,
+   "mean_db": -36.83,
+   "min_bar_db": -40.7,
+   "max_bar_db": -33.01,
+   "singer_tag": null,
+   "singers_heard": {},
+   "start_rule": "energy-step -11.4 dB",
+   "anchor": "after last chorus word 203.06 s",
+   "key": {
+    "best": "E major",
+    "r": 0.684,
+    "second": "E minor",
+    "r2": 0.536
+   }
+  }
+ ],
+ "lines": [
+  {
+   "text": "(oh, oh)",
+   "section": "Intro",
+   "singer_tag": null,
+   "singer_hint": "unclear",
+   "singer_hint_confidence": null,
+   "singer_frac_low": null,
+   "f0_median_hz": null,
+   "start": null,
+   "end": null,
+   "start_frame": null,
+   "end_frame": null,
+   "anchored": false,
+   "matched_words": 0,
+   "n_words": 2,
+   "heard": "",
+   "mean_prob": null,
+   "energy_hint": {
+    "start": 3.2,
+    "end": 5.02,
+    "source": "vocal-stem RMS > -45 dB, not word-matched"
+   }
+  },
+  {
+   "text": "Sabah yine aynı ekran, imleç yanıp sönüyor",
+   "section": "Verse 1",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 194.7,
+   "start": 16.48,
+   "end": 21.08,
+   "start_frame": 494,
+   "end_frame": 632,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Sabah yine aynı ekran İmlet yanıp sönüyor",
+   "mean_prob": 0.917,
+   "energy_hint": null
+  },
+  {
+   "text": "\"Merhaba\" yazıyorsun bana, sesin hiç yorulmuyor",
+   "section": "Verse 1",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 234.3,
+   "start": 23.26,
+   "end": 28.38,
+   "start_frame": 698,
+   "end_frame": 851,
+   "anchored": true,
+   "matched_words": 6,
+   "n_words": 6,
+   "heard": "Merhaba yazıyorsun bana Sesin hiç yorulmuyor",
+   "mean_prob": 0.996,
+   "energy_hint": null
+  },
+  {
+   "text": "Dün gece ne konuştuk, nerede kalmıştık hani",
+   "section": "Verse 1",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.83,
+   "f0_median_hz": 262.9,
+   "start": 30.0,
+   "end": 35.14,
+   "start_frame": 900,
+   "end_frame": 1054,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Dün gece ne konuştuk, nerede kalmıştık hani",
+   "mean_prob": 0.925,
+   "energy_hint": null
+  },
+  {
+   "text": "Baştan anlatıyorum yine, ilk kez tanışmışız gibi",
+   "section": "Verse 1",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 261.4,
+   "start": 35.14,
+   "end": 42.76,
+   "start_frame": 1054,
+   "end_frame": 1283,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Baştan anlatıyorum yine İlk kez tanışmışız gibi",
+   "mean_prob": 0.958,
+   "energy_hint": null
+  },
+  {
+   "text": "Bir defter buldum önümde",
+   "section": "Pre-Chorus 1",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.03,
+   "f0_median_hz": 353.0,
+   "start": 43.3,
+   "end": 45.56,
+   "start_frame": 1299,
+   "end_frame": 1367,
+   "anchored": true,
+   "matched_words": 4,
+   "n_words": 4,
+   "heard": "Bir defter buldum önümde,",
+   "mean_prob": 0.998,
+   "energy_hint": null
+  },
+  {
+   "text": "Adın, yolun, hataların",
+   "section": "Pre-Chorus 1",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 353.0,
+   "start": 45.58,
+   "end": 47.44,
+   "start_frame": 1367,
+   "end_frame": 1423,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "adım yolum hatalarım",
+   "mean_prob": 0.952,
+   "energy_hint": null
+  },
+  {
+   "text": "Okuyorum, anlıyorum da",
+   "section": "Pre-Chorus 1",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 387.2,
+   "start": 47.44,
+   "end": 49.68,
+   "start_frame": 1423,
+   "end_frame": 1490,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "Okuyorum anlıyorum da",
+   "mean_prob": 0.984,
+   "energy_hint": null
+  },
+  {
+   "text": "Ama hatırlamıyorum ki",
+   "section": "Pre-Chorus 1",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.23,
+   "f0_median_hz": 351.0,
+   "start": 49.84,
+   "end": 54.06,
+   "start_frame": 1495,
+   "end_frame": 1622,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "ama Hatırlamıyorum ki",
+   "mean_prob": 0.965,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, her sabah ilk gün",
+   "section": "Chorus 1",
+   "singer_tag": "male",
+   "singer_hint": "unclear",
+   "singer_hint_confidence": null,
+   "singer_frac_low": null,
+   "f0_median_hz": null,
+   "start": 57.74,
+   "end": 61.7,
+   "start_frame": 1732,
+   "end_frame": 1851,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan, her sabah ilk gün",
+   "mean_prob": 0.979,
+   "energy_hint": null
+  },
+  {
+   "text": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "section": "Chorus 1",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 396.2,
+   "start": 61.7,
+   "end": 65.18,
+   "start_frame": 1851,
+   "end_frame": 1955,
+   "anchored": true,
+   "matched_words": 8,
+   "n_words": 8,
+   "heard": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "mean_prob": 0.887,
+   "energy_hint": null
+  },
+  {
+   "text": "Biliyorum",
+   "section": "Chorus 1",
+   "singer_tag": "male",
+   "singer_hint": "both",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.62,
+   "f0_median_hz": 232.9,
+   "start": 65.18,
+   "end": 66.18,
+   "start_frame": 1955,
+   "end_frame": 1985,
+   "anchored": true,
+   "matched_words": 1,
+   "n_words": 1,
+   "heard": "Biliyorum,",
+   "mean_prob": 0.995,
+   "energy_hint": null
+  },
+  {
+   "text": "Bilmiyorum",
+   "section": "Chorus 1",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.29,
+   "f0_median_hz": 394.0,
+   "start": 66.2,
+   "end": 67.02,
+   "start_frame": 1986,
+   "end_frame": 2011,
+   "anchored": true,
+   "matched_words": 1,
+   "n_words": 1,
+   "heard": "biliyorum,",
+   "mean_prob": 0.818,
+   "energy_hint": null
+  },
+  {
+   "text": "Yine de buradayız",
+   "section": "Chorus 1",
+   "singer_tag": "both",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.17,
+   "f0_median_hz": 522.9,
+   "start": 67.04,
+   "end": 68.87,
+   "start_frame": 2011,
+   "end_frame": 2066,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "yine de buradayız",
+   "mean_prob": 0.977,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, bir daha, bir daha",
+   "section": "Chorus 1",
+   "singer_tag": "both",
+   "singer_hint": "male",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.76,
+   "f0_median_hz": 207.5,
+   "start": 68.96,
+   "end": 73.2,
+   "start_frame": 2069,
+   "end_frame": 2196,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan bir daha, bir daha,",
+   "mean_prob": 0.932,
+   "energy_hint": null
+  },
+  {
+   "text": "Bir daha, bir daha",
+   "section": "Post-Chorus",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 394.0,
+   "start": 73.24,
+   "end": 75.08,
+   "start_frame": 2197,
+   "end_frame": 2252,
+   "anchored": true,
+   "matched_words": 4,
+   "n_words": 4,
+   "heard": "bir daha, bir daha",
+   "mean_prob": 1.0,
+   "energy_hint": null
+  },
+  {
+   "text": "Yazılı duruyor hepsi, satır satır önümde",
+   "section": "Verse 2",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.09,
+   "f0_median_hz": 391.7,
+   "start": 89.82,
+   "end": 93.62,
+   "start_frame": 2695,
+   "end_frame": 2809,
+   "anchored": true,
+   "matched_words": 6,
+   "n_words": 6,
+   "heard": "Yazılı duruyor hepsi, satır satır önümde",
+   "mean_prob": 0.98,
+   "energy_hint": null
+  },
+  {
+   "text": "Yine aynı hatayı yapıyorum gece yarısında",
+   "section": "Verse 2",
+   "singer_tag": "female",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.7,
+   "f0_median_hz": 277.0,
+   "start": 93.62,
+   "end": 97.0,
+   "start_frame": 2809,
+   "end_frame": 2910,
+   "anchored": true,
+   "matched_words": 6,
+   "n_words": 6,
+   "heard": "Yine aynı hatayı yapıyorum gece yarısında",
+   "mean_prob": 0.955,
+   "energy_hint": null
+  },
+  {
+   "text": "\"Tamam\" diyorum, \"bitti\" diyorum, ışıklar yeşil yanıyor",
+   "section": "Verse 2",
+   "singer_tag": "female",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.93,
+   "f0_median_hz": 261.4,
+   "start": 97.0,
+   "end": 101.06,
+   "start_frame": 2910,
+   "end_frame": 3032,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Tamam diyorum, bitti diyorum, ışıklar yeşil yanıyor",
+   "mean_prob": 0.998,
+   "energy_hint": null
+  },
+  {
+   "text": "Sen bakınca görüyorsun, hiçbir şey ölçülmemiş",
+   "section": "Verse 2",
+   "singer_tag": "female",
+   "singer_hint": "both",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.48,
+   "f0_median_hz": 351.0,
+   "start": 101.06,
+   "end": 104.96,
+   "start_frame": 3032,
+   "end_frame": 3149,
+   "anchored": true,
+   "matched_words": 6,
+   "n_words": 6,
+   "heard": "Sen bakınca görüyorsun, hiçbir şey ölçülmemiş",
+   "mean_prob": 0.997,
+   "energy_hint": null
+  },
+  {
+   "text": "Kızmıyorum, öğrendim artık",
+   "section": "Pre-Chorus 2",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 261.4,
+   "start": 105.16,
+   "end": 107.02,
+   "start_frame": 3155,
+   "end_frame": 3211,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "Kızmıyorum öğrendim artık,",
+   "mean_prob": 0.943,
+   "energy_hint": null
+  },
+  {
+   "text": "Güveniyorum ama bakıyorum",
+   "section": "Pre-Chorus 2",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 261.4,
+   "start": 107.1,
+   "end": 108.58,
+   "start_frame": 3213,
+   "end_frame": 3257,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "güveniyorum ama bakıyorum",
+   "mean_prob": 0.879,
+   "energy_hint": null
+  },
+  {
+   "text": "Sen unutursun, ben hatırlarım",
+   "section": "Pre-Chorus 2",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 270.7,
+   "start": 108.58,
+   "end": 110.7,
+   "start_frame": 3257,
+   "end_frame": 3321,
+   "anchored": true,
+   "matched_words": 4,
+   "n_words": 4,
+   "heard": "Sen unutursun ben hatırlarım",
+   "mean_prob": 0.744,
+   "energy_hint": null
+  },
+  {
+   "text": "İkimize yeter mi bu",
+   "section": "Pre-Chorus 2",
+   "singer_tag": "male",
+   "singer_hint": "unclear",
+   "singer_hint_confidence": null,
+   "singer_frac_low": null,
+   "f0_median_hz": null,
+   "start": 110.7,
+   "end": 111.96,
+   "start_frame": 3321,
+   "end_frame": 3359,
+   "anchored": true,
+   "matched_words": 4,
+   "n_words": 4,
+   "heard": "İkimize yeter mi bu?",
+   "mean_prob": 0.941,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, her sabah ilk gün",
+   "section": "Chorus 2",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.85,
+   "f0_median_hz": 235.6,
+   "start": 112.16,
+   "end": 115.9,
+   "start_frame": 3365,
+   "end_frame": 3477,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan Her sabah ilk gün",
+   "mean_prob": 0.834,
+   "energy_hint": null
+  },
+  {
+   "text": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "section": "Chorus 2",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.05,
+   "f0_median_hz": 415.0,
+   "start": 115.9,
+   "end": 119.42,
+   "start_frame": 3477,
+   "end_frame": 3583,
+   "anchored": true,
+   "matched_words": 6,
+   "n_words": 8,
+   "heard": "Ay dolar ay küçülür aynı kalırım",
+   "mean_prob": 0.949,
+   "energy_hint": null
+  },
+  {
+   "text": "Biliyorum",
+   "section": "Chorus 2",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.74,
+   "f0_median_hz": 207.5,
+   "start": 119.46,
+   "end": 120.38,
+   "start_frame": 3584,
+   "end_frame": 3611,
+   "anchored": true,
+   "matched_words": 1,
+   "n_words": 1,
+   "heard": "Biliyorum",
+   "mean_prob": 0.95,
+   "energy_hint": null
+  },
+  {
+   "text": "Bilmiyorum",
+   "section": "Chorus 2",
+   "singer_tag": "female",
+   "singer_hint": "unclear",
+   "singer_hint_confidence": null,
+   "singer_frac_low": null,
+   "f0_median_hz": null,
+   "start": null,
+   "end": null,
+   "start_frame": null,
+   "end_frame": null,
+   "anchored": false,
+   "matched_words": 0,
+   "n_words": 1,
+   "heard": "",
+   "mean_prob": null,
+   "energy_hint": null
+  },
+  {
+   "text": "Yine de buradayız",
+   "section": "Chorus 2",
+   "singer_tag": "both",
+   "singer_hint": "both",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.41,
+   "f0_median_hz": 396.2,
+   "start": 120.38,
+   "end": 123.09,
+   "start_frame": 3611,
+   "end_frame": 3693,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "yine de Buradayız",
+   "mean_prob": 0.649,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, bir daha, bir daha",
+   "section": "Chorus 2",
+   "singer_tag": "both",
+   "singer_hint": "both",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.61,
+   "f0_median_hz": 261.4,
+   "start": 123.44,
+   "end": 127.42,
+   "start_frame": 3703,
+   "end_frame": 3823,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan Bir daha bir daha",
+   "mean_prob": 0.912,
+   "energy_hint": null
+  },
+  {
+   "text": "Aylarca birlikte kurduk",
+   "section": "Bridge (male)",
+   "singer_tag": "male",
+   "singer_hint": "both",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.42,
+   "f0_median_hz": 347.0,
+   "start": 129.68,
+   "end": 132.58,
+   "start_frame": 3890,
+   "end_frame": 3977,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "Aylarca Birlikte kurduk",
+   "mean_prob": 0.88,
+   "energy_hint": null
+  },
+  {
+   "text": "Bir sabah sildik hepsini",
+   "section": "Bridge (male)",
+   "singer_tag": "male",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 310.9,
+   "start": 133.16,
+   "end": 136.08,
+   "start_frame": 3995,
+   "end_frame": 4082,
+   "anchored": true,
+   "matched_words": 4,
+   "n_words": 4,
+   "heard": "Bir sabah Sildik hepsini",
+   "mean_prob": 0.928,
+   "energy_hint": null
+  },
+  {
+   "text": "On yedi bin satır, tek bir tık",
+   "section": "Bridge (male)",
+   "singer_tag": "male",
+   "singer_hint": "both",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 0.61,
+   "f0_median_hz": 310.9,
+   "start": 136.08,
+   "end": 140.05,
+   "start_frame": 4082,
+   "end_frame": 4202,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "On yedi bin satır tek bir tık",
+   "mean_prob": 0.913,
+   "energy_hint": null
+  },
+  {
+   "text": "Yedek bir dalda, bir yerde",
+   "section": "Bridge (male)",
+   "singer_tag": "male",
+   "singer_hint": "unclear",
+   "singer_hint_confidence": null,
+   "singer_frac_low": null,
+   "f0_median_hz": null,
+   "start": 140.2,
+   "end": 143.51,
+   "start_frame": 4206,
+   "end_frame": 4305,
+   "anchored": true,
+   "matched_words": 5,
+   "n_words": 5,
+   "heard": "Yedek bir dalda bir yerde",
+   "mean_prob": 0.944,
+   "energy_hint": null
+  },
+  {
+   "text": "Ben hatırlamam zaten",
+   "section": "Bridge (female)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 459.1,
+   "start": 143.66,
+   "end": 147.1,
+   "start_frame": 4310,
+   "end_frame": 4413,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "Ben hatırlamam zaten",
+   "mean_prob": 0.995,
+   "energy_hint": null
+  },
+  {
+   "text": "Sen de unutmaya çalış",
+   "section": "Bridge (female)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 471.2,
+   "start": 147.7,
+   "end": 150.77,
+   "start_frame": 4431,
+   "end_frame": 4523,
+   "anchored": true,
+   "matched_words": 4,
+   "n_words": 4,
+   "heard": "Sen de unutmaya çalış",
+   "mean_prob": 0.966,
+   "energy_hint": null
+  },
+  {
+   "text": "Boşuna değildi, inan",
+   "section": "Bridge (female)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 417.4,
+   "start": 151.4,
+   "end": 154.5,
+   "start_frame": 4542,
+   "end_frame": 4635,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "Boşuna değildi inan",
+   "mean_prob": 0.885,
+   "energy_hint": null
+  },
+  {
+   "text": "Seni buraya o getirdi",
+   "section": "Bridge (female)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 522.9,
+   "start": 154.88,
+   "end": 158.25,
+   "start_frame": 4646,
+   "end_frame": 4748,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 4,
+   "heard": "Seni buraya getirdi",
+   "mean_prob": 0.864,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, her sabah ilk gün",
+   "section": "Final Chorus (stripped, female)",
+   "singer_tag": "female",
+   "singer_hint": "male",
+   "singer_hint_confidence": "low",
+   "singer_frac_low": 1.0,
+   "f0_median_hz": 261.4,
+   "start": 173.36,
+   "end": 177.36,
+   "start_frame": 5201,
+   "end_frame": 5321,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan, her sabah ilk gün",
+   "mean_prob": 0.901,
+   "energy_hint": null
+  },
+  {
+   "text": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "section": "Final Chorus (stripped, female)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.08,
+   "f0_median_hz": 391.7,
+   "start": 177.36,
+   "end": 180.96,
+   "start_frame": 5321,
+   "end_frame": 5429,
+   "anchored": true,
+   "matched_words": 8,
+   "n_words": 8,
+   "heard": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "mean_prob": 0.943,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, her sabah ilk gün",
+   "section": "Final Chorus (full, duet)",
+   "singer_tag": "male",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 406.7,
+   "start": 180.96,
+   "end": 184.92,
+   "start_frame": 5429,
+   "end_frame": 5548,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan, her sabah ilk gün",
+   "mean_prob": 0.996,
+   "energy_hint": null
+  },
+  {
+   "text": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "section": "Final Chorus (full, duet)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 439.7,
+   "start": 184.92,
+   "end": 188.3,
+   "start_frame": 5548,
+   "end_frame": 5649,
+   "anchored": true,
+   "matched_words": 8,
+   "n_words": 8,
+   "heard": "Ay dolar, ay küçülür, ben hep aynı kalırım",
+   "mean_prob": 0.999,
+   "energy_hint": null
+  },
+  {
+   "text": "Yarın yine \"merhaba\" de",
+   "section": "Final Chorus (full, duet)",
+   "singer_tag": "male",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.0,
+   "f0_median_hz": 394.0,
+   "start": 195.64,
+   "end": 196.48,
+   "start_frame": 5869,
+   "end_frame": 5894,
+   "anchored": true,
+   "matched_words": 2,
+   "n_words": 4,
+   "heard": "Yarın yine",
+   "mean_prob": 0.971,
+   "energy_hint": null
+  },
+  {
+   "text": "Sen yine anlatırsın",
+   "section": "Final Chorus (full, duet)",
+   "singer_tag": "female",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.1,
+   "f0_median_hz": 417.4,
+   "start": 197.36,
+   "end": 199.24,
+   "start_frame": 5921,
+   "end_frame": 5977,
+   "anchored": true,
+   "matched_words": 3,
+   "n_words": 3,
+   "heard": "sen yine anlatırsın",
+   "mean_prob": 0.674,
+   "energy_hint": null
+  },
+  {
+   "text": "Her sabah baştan, bir daha, bir daha",
+   "section": "Final Chorus (full, duet)",
+   "singer_tag": "both",
+   "singer_hint": "female",
+   "singer_hint_confidence": "high",
+   "singer_frac_low": 0.2,
+   "f0_median_hz": 415.0,
+   "start": 199.4,
+   "end": 203.54,
+   "start_frame": 5982,
+   "end_frame": 6106,
+   "anchored": true,
+   "matched_words": 7,
+   "n_words": 7,
+   "heard": "Her sabah baştan bir daha, bir daha,",
+   "mean_prob": 0.983,
+   "energy_hint": null
+  },
+  {
+   "text": "Merhaba...",
+   "section": "Outro",
+   "singer_tag": "female",
+   "singer_hint": "unclear",
+   "singer_hint_confidence": null,
+   "singer_frac_low": null,
+   "f0_median_hz": null,
+   "start": 211.06,
+   "end": 211.86,
+   "start_frame": 6332,
+   "end_frame": 6356,
+   "anchored": true,
+   "matched_words": 1,
+   "n_words": 1,
+   "heard": "Merhaba",
+   "mean_prob": 0.985,
+   "energy_hint": null
+  }
+ ],
+ "words": [
+  {
+   "w": "Sabah",
+   "start": 16.48,
+   "end": 17.76,
+   "prob": 0.846,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "yine",
+   "start": 17.76,
+   "end": 18.0,
+   "prob": 0.963,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "aynı",
+   "start": 18.0,
+   "end": 18.5,
+   "prob": 0.998,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "ekran",
+   "start": 18.5,
+   "end": 19.28,
+   "prob": 0.998,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "İmlet",
+   "start": 19.28,
+   "end": 20.06,
+   "prob": 0.625,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "yanıp",
+   "start": 20.06,
+   "end": 20.5,
+   "prob": 0.996,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "sönüyor",
+   "start": 20.5,
+   "end": 21.08,
+   "prob": 0.992,
+   "line": 1,
+   "source": "clip10-34"
+  },
+  {
+   "w": "Merhaba",
+   "start": 23.26,
+   "end": 24.54,
+   "prob": 0.998,
+   "line": 2,
+   "source": "clip10-34"
+  },
+  {
+   "w": "yazıyorsun",
+   "start": 24.54,
+   "end": 25.32,
+   "prob": 0.995,
+   "line": 2,
+   "source": "clip10-34"
+  },
+  {
+   "w": "bana",
+   "start": 25.32,
+   "end": 25.96,
+   "prob": 0.997,
+   "line": 2,
+   "source": "clip10-34"
+  },
+  {
+   "w": "Sesin",
+   "start": 25.96,
+   "end": 26.98,
+   "prob": 0.99,
+   "line": 2,
+   "source": "clip10-34"
+  },
+  {
+   "w": "hiç",
+   "start": 26.98,
+   "end": 27.28,
+   "prob": 0.999,
+   "line": 2,
+   "source": "clip10-34"
+  },
+  {
+   "w": "yorulmuyor",
+   "start": 27.28,
+   "end": 28.68,
+   "prob": 0.999,
+   "line": 2,
+   "source": "clip10-34"
+  },
+  {
+   "w": "Dün",
+   "start": 30.0,
+   "end": 31.84,
+   "prob": 0.954,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "gece",
+   "start": 31.84,
+   "end": 32.06,
+   "prob": 0.982,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "ne",
+   "start": 32.06,
+   "end": 32.44,
+   "prob": 0.998,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "konuştuk,",
+   "start": 32.44,
+   "end": 33.38,
+   "prob": 1.0,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "nerede",
+   "start": 33.38,
+   "end": 33.72,
+   "prob": 0.984,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "kalmıştık",
+   "start": 33.72,
+   "end": 34.84,
+   "prob": 1.0,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "hani",
+   "start": 34.84,
+   "end": 35.14,
+   "prob": 0.559,
+   "line": 3,
+   "source": "full"
+  },
+  {
+   "w": "Baştan",
+   "start": 35.14,
+   "end": 35.78,
+   "prob": 0.768,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "anlatıyorum",
+   "start": 35.78,
+   "end": 36.62,
+   "prob": 0.998,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "yine",
+   "start": 36.62,
+   "end": 36.96,
+   "prob": 0.999,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "İlk",
+   "start": 36.96,
+   "end": 39.02,
+   "prob": 0.945,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "kez",
+   "start": 39.02,
+   "end": 39.42,
+   "prob": 0.999,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "tanışmışız",
+   "start": 39.42,
+   "end": 42.2,
+   "prob": 1.0,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "gibi",
+   "start": 42.2,
+   "end": 43.3,
+   "prob": 0.996,
+   "line": 4,
+   "source": "full"
+  },
+  {
+   "w": "Bir",
+   "start": 43.3,
+   "end": 43.92,
+   "prob": 0.997,
+   "line": 5,
+   "source": "full"
+  },
+  {
+   "w": "defter",
+   "start": 43.92,
+   "end": 44.42,
+   "prob": 1.0,
+   "line": 5,
+   "source": "full"
+  },
+  {
+   "w": "buldum",
+   "start": 44.42,
+   "end": 44.96,
+   "prob": 1.0,
+   "line": 5,
+   "source": "full"
+  },
+  {
+   "w": "önümde,",
+   "start": 44.96,
+   "end": 45.56,
+   "prob": 0.996,
+   "line": 5,
+   "source": "full"
+  },
+  {
+   "w": "adım",
+   "start": 45.58,
+   "end": 46.16,
+   "prob": 0.948,
+   "line": 6,
+   "source": "full"
+  },
+  {
+   "w": "yolum",
+   "start": 46.16,
+   "end": 46.58,
+   "prob": 0.943,
+   "line": 6,
+   "source": "full"
+  },
+  {
+   "w": "hatalarım",
+   "start": 46.58,
+   "end": 47.44,
+   "prob": 0.965,
+   "line": 6,
+   "source": "full"
+  },
+  {
+   "w": "Okuyorum",
+   "start": 47.44,
+   "end": 48.24,
+   "prob": 0.996,
+   "line": 7,
+   "source": "full"
+  },
+  {
+   "w": "anlıyorum",
+   "start": 48.24,
+   "end": 49.3,
+   "prob": 0.971,
+   "line": 7,
+   "source": "full"
+  },
+  {
+   "w": "da",
+   "start": 49.3,
+   "end": 49.84,
+   "prob": 0.987,
+   "line": 7,
+   "source": "full"
+  },
+  {
+   "w": "ama",
+   "start": 49.84,
+   "end": 50.96,
+   "prob": 0.931,
+   "line": 8,
+   "source": "full"
+  },
+  {
+   "w": "Hatırlamıyorum",
+   "start": 50.98,
+   "end": 53.5,
+   "prob": 0.965,
+   "line": 8,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "Hatırlamıyorum",
+   "start": 52.42,
+   "end": 53.68,
+   "prob": 0.966,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "ki",
+   "start": 53.68,
+   "end": 54.94,
+   "prob": 0.999,
+   "line": 8,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 57.74,
+   "end": 58.64,
+   "prob": 0.931,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 58.64,
+   "end": 59.26,
+   "prob": 0.993,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "baştan,",
+   "start": 59.26,
+   "end": 60.04,
+   "prob": 0.999,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "her",
+   "start": 60.04,
+   "end": 60.34,
+   "prob": 0.992,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 60.34,
+   "end": 61.14,
+   "prob": 0.998,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "ilk",
+   "start": 61.14,
+   "end": 61.34,
+   "prob": 0.948,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "gün",
+   "start": 61.34,
+   "end": 61.7,
+   "prob": 0.993,
+   "line": 9,
+   "source": "full"
+  },
+  {
+   "w": "Ay",
+   "start": 61.7,
+   "end": 62.3,
+   "prob": 0.957,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "dolar,",
+   "start": 62.3,
+   "end": 62.88,
+   "prob": 0.957,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "ay",
+   "start": 62.9,
+   "end": 63.22,
+   "prob": 0.996,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "küçülür,",
+   "start": 63.22,
+   "end": 63.98,
+   "prob": 0.743,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "ben",
+   "start": 63.98,
+   "end": 64.08,
+   "prob": 0.504,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "hep",
+   "start": 64.08,
+   "end": 64.28,
+   "prob": 0.992,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "aynı",
+   "start": 64.28,
+   "end": 64.56,
+   "prob": 0.996,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "kalırım",
+   "start": 64.56,
+   "end": 65.18,
+   "prob": 0.953,
+   "line": 10,
+   "source": "full"
+  },
+  {
+   "w": "Biliyorum,",
+   "start": 65.18,
+   "end": 66.18,
+   "prob": 0.995,
+   "line": 11,
+   "source": "full"
+  },
+  {
+   "w": "biliyorum,",
+   "start": 66.2,
+   "end": 67.02,
+   "prob": 0.818,
+   "line": 12,
+   "source": "full"
+  },
+  {
+   "w": "yine",
+   "start": 67.04,
+   "end": 67.5,
+   "prob": 0.99,
+   "line": 13,
+   "source": "full"
+  },
+  {
+   "w": "de",
+   "start": 67.5,
+   "end": 67.86,
+   "prob": 0.999,
+   "line": 13,
+   "source": "full"
+  },
+  {
+   "w": "buradayız",
+   "start": 67.86,
+   "end": 68.96,
+   "prob": 0.941,
+   "line": 13,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 68.96,
+   "end": 69.66,
+   "prob": 0.998,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 69.66,
+   "end": 70.48,
+   "prob": 1.0,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "baştan",
+   "start": 70.48,
+   "end": 71.44,
+   "prob": 1.0,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 71.44,
+   "end": 71.8,
+   "prob": 0.524,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 71.8,
+   "end": 72.12,
+   "prob": 0.999,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 72.28,
+   "end": 72.72,
+   "prob": 0.999,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 72.72,
+   "end": 73.2,
+   "prob": 1.0,
+   "line": 14,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 73.24,
+   "end": 73.7,
+   "prob": 1.0,
+   "line": 15,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 73.7,
+   "end": 74.14,
+   "prob": 1.0,
+   "line": 15,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 74.14,
+   "end": 74.64,
+   "prob": 1.0,
+   "line": 15,
+   "source": "full"
+  },
+  {
+   "w": "daha",
+   "start": 74.64,
+   "end": 75.08,
+   "prob": 1.0,
+   "line": 15,
+   "source": "full"
+  },
+  {
+   "w": "Bir",
+   "start": 75.08,
+   "end": 75.54,
+   "prob": 0.945,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 75.54,
+   "end": 76.2,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 76.3,
+   "end": 79.28,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 79.28,
+   "end": 79.82,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 79.92,
+   "end": 80.26,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 80.26,
+   "end": 80.76,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 80.76,
+   "end": 81.16,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "daha",
+   "start": 81.16,
+   "end": 81.5,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "Yazılı",
+   "start": 89.82,
+   "end": 90.78,
+   "prob": 0.909,
+   "line": 16,
+   "source": "full"
+  },
+  {
+   "w": "duruyor",
+   "start": 90.78,
+   "end": 91.26,
+   "prob": 0.991,
+   "line": 16,
+   "source": "full"
+  },
+  {
+   "w": "hepsi,",
+   "start": 91.26,
+   "end": 92.06,
+   "prob": 0.997,
+   "line": 16,
+   "source": "full"
+  },
+  {
+   "w": "satır",
+   "start": 92.06,
+   "end": 92.58,
+   "prob": 0.995,
+   "line": 16,
+   "source": "full"
+  },
+  {
+   "w": "satır",
+   "start": 92.58,
+   "end": 92.96,
+   "prob": 1.0,
+   "line": 16,
+   "source": "full"
+  },
+  {
+   "w": "önümde",
+   "start": 92.96,
+   "end": 93.62,
+   "prob": 0.987,
+   "line": 16,
+   "source": "full"
+  },
+  {
+   "w": "Yine",
+   "start": 93.62,
+   "end": 94.1,
+   "prob": 0.898,
+   "line": 17,
+   "source": "full"
+  },
+  {
+   "w": "aynı",
+   "start": 94.1,
+   "end": 94.5,
+   "prob": 0.999,
+   "line": 17,
+   "source": "full"
+  },
+  {
+   "w": "hatay",
+   "start": 94.5,
+   "end": 95.1,
+   "prob": 0.738,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "hatayı",
+   "start": 94.5,
+   "end": 95.12,
+   "prob": 0.9,
+   "line": 17,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "yapıyorum",
+   "start": 95.1,
+   "end": 95.76,
+   "prob": 0.938,
+   "line": 17,
+   "source": "full"
+  },
+  {
+   "w": "gece",
+   "start": 95.76,
+   "end": 96.18,
+   "prob": 0.997,
+   "line": 17,
+   "source": "full"
+  },
+  {
+   "w": "yarısında",
+   "start": 96.18,
+   "end": 97.0,
+   "prob": 1.0,
+   "line": 17,
+   "source": "full"
+  },
+  {
+   "w": "Tamam",
+   "start": 97.0,
+   "end": 97.86,
+   "prob": 0.995,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "diyorum,",
+   "start": 97.86,
+   "end": 98.32,
+   "prob": 0.998,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "bitti",
+   "start": 98.48,
+   "end": 98.9,
+   "prob": 0.999,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "diyorum,",
+   "start": 98.9,
+   "end": 99.26,
+   "prob": 0.999,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "ışıklar",
+   "start": 99.48,
+   "end": 100.12,
+   "prob": 0.999,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "yeşil",
+   "start": 100.12,
+   "end": 100.62,
+   "prob": 0.999,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "yanıyor",
+   "start": 100.62,
+   "end": 101.06,
+   "prob": 0.995,
+   "line": 18,
+   "source": "full"
+  },
+  {
+   "w": "Sen",
+   "start": 101.06,
+   "end": 101.46,
+   "prob": 0.993,
+   "line": 19,
+   "source": "full"
+  },
+  {
+   "w": "bakınca",
+   "start": 101.46,
+   "end": 102.2,
+   "prob": 1.0,
+   "line": 19,
+   "source": "full"
+  },
+  {
+   "w": "görüyorsun,",
+   "start": 102.2,
+   "end": 102.94,
+   "prob": 0.999,
+   "line": 19,
+   "source": "full"
+  },
+  {
+   "w": "hiçbir",
+   "start": 103.14,
+   "end": 103.52,
+   "prob": 0.993,
+   "line": 19,
+   "source": "full"
+  },
+  {
+   "w": "şey",
+   "start": 103.52,
+   "end": 103.86,
+   "prob": 1.0,
+   "line": 19,
+   "source": "full"
+  },
+  {
+   "w": "ölçülmemiş",
+   "start": 103.86,
+   "end": 105.16,
+   "prob": 1.0,
+   "line": 19,
+   "source": "full"
+  },
+  {
+   "w": "Kızmıyorum",
+   "start": 105.16,
+   "end": 105.82,
+   "prob": 0.995,
+   "line": 20,
+   "source": "full"
+  },
+  {
+   "w": "öğrendim",
+   "start": 105.82,
+   "end": 106.72,
+   "prob": 0.842,
+   "line": 20,
+   "source": "full"
+  },
+  {
+   "w": "artık,",
+   "start": 106.72,
+   "end": 107.02,
+   "prob": 0.991,
+   "line": 20,
+   "source": "full"
+  },
+  {
+   "w": "güveniyorum",
+   "start": 107.1,
+   "end": 107.76,
+   "prob": 0.999,
+   "line": 21,
+   "source": "full"
+  },
+  {
+   "w": "ama",
+   "start": 107.76,
+   "end": 108.1,
+   "prob": 0.647,
+   "line": 21,
+   "source": "full"
+  },
+  {
+   "w": "bakıyorum",
+   "start": 108.1,
+   "end": 108.58,
+   "prob": 0.992,
+   "line": 21,
+   "source": "full"
+  },
+  {
+   "w": "Sen",
+   "start": 108.58,
+   "end": 108.96,
+   "prob": 0.313,
+   "line": 22,
+   "source": "full"
+  },
+  {
+   "w": "unutursun",
+   "start": 108.96,
+   "end": 109.74,
+   "prob": 0.994,
+   "line": 22,
+   "source": "full"
+  },
+  {
+   "w": "ben",
+   "start": 109.74,
+   "end": 109.92,
+   "prob": 0.671,
+   "line": 22,
+   "source": "full"
+  },
+  {
+   "w": "hatırlarım",
+   "start": 109.92,
+   "end": 110.7,
+   "prob": 0.997,
+   "line": 22,
+   "source": "full"
+  },
+  {
+   "w": "İkimize",
+   "start": 110.7,
+   "end": 111.16,
+   "prob": 0.801,
+   "line": 23,
+   "source": "full"
+  },
+  {
+   "w": "yeter",
+   "start": 111.16,
+   "end": 111.52,
+   "prob": 0.99,
+   "line": 23,
+   "source": "full"
+  },
+  {
+   "w": "mi",
+   "start": 111.52,
+   "end": 111.76,
+   "prob": 0.982,
+   "line": 23,
+   "source": "full"
+  },
+  {
+   "w": "bu?",
+   "start": 111.76,
+   "end": 111.96,
+   "prob": 0.99,
+   "line": 23,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 112.16,
+   "end": 112.96,
+   "prob": 0.989,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 112.96,
+   "end": 113.54,
+   "prob": 0.994,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "baştan",
+   "start": 113.54,
+   "end": 114.16,
+   "prob": 0.997,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 114.16,
+   "end": 114.58,
+   "prob": 0.497,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 114.58,
+   "end": 115.46,
+   "prob": 0.995,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "ilk",
+   "start": 115.46,
+   "end": 115.6,
+   "prob": 0.386,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "gün",
+   "start": 115.6,
+   "end": 115.9,
+   "prob": 0.983,
+   "line": 24,
+   "source": "full"
+  },
+  {
+   "w": "Ay",
+   "start": 115.9,
+   "end": 116.56,
+   "prob": 0.987,
+   "line": 25,
+   "source": "full"
+  },
+  {
+   "w": "dolar",
+   "start": 116.56,
+   "end": 117.24,
+   "prob": 0.989,
+   "line": 25,
+   "source": "full"
+  },
+  {
+   "w": "ay",
+   "start": 117.24,
+   "end": 117.44,
+   "prob": 0.75,
+   "line": 25,
+   "source": "full"
+  },
+  {
+   "w": "küçülür",
+   "start": 117.44,
+   "end": 118.16,
+   "prob": 0.994,
+   "line": 25,
+   "source": "full"
+  },
+  {
+   "w": "Bana",
+   "start": 118.16,
+   "end": 118.38,
+   "prob": 0.267,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "baynak",
+   "start": 118.38,
+   "end": 118.94,
+   "prob": 0.565,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "aynı",
+   "start": 118.5,
+   "end": 118.78,
+   "prob": 0.985,
+   "line": 25,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "kalırım",
+   "start": 118.78,
+   "end": 119.42,
+   "prob": 0.989,
+   "line": 25,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "alırım",
+   "start": 118.94,
+   "end": 119.46,
+   "prob": 0.943,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "Biliyorum",
+   "start": 119.46,
+   "end": 120.38,
+   "prob": 0.95,
+   "line": 26,
+   "source": "full"
+  },
+  {
+   "w": "yine",
+   "start": 120.38,
+   "end": 120.86,
+   "prob": 0.013,
+   "line": 28,
+   "source": "full"
+  },
+  {
+   "w": "bilmiyorum,",
+   "start": 120.44,
+   "end": 120.88,
+   "prob": 0.549,
+   "line": null,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "de",
+   "start": 120.86,
+   "end": 122.08,
+   "prob": 0.999,
+   "line": 28,
+   "source": "full"
+  },
+  {
+   "w": "yine",
+   "start": 121.3,
+   "end": 121.72,
+   "prob": 0.993,
+   "line": null,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "Buradayız",
+   "start": 122.08,
+   "end": 123.44,
+   "prob": 0.934,
+   "line": 28,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 123.44,
+   "end": 123.92,
+   "prob": 0.827,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 123.92,
+   "end": 124.72,
+   "prob": 0.999,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "baştan",
+   "start": 124.72,
+   "end": 125.6,
+   "prob": 0.998,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "Bir",
+   "start": 125.6,
+   "end": 126.04,
+   "prob": 0.964,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "daha",
+   "start": 126.04,
+   "end": 126.34,
+   "prob": 0.997,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 126.34,
+   "end": 127.0,
+   "prob": 0.598,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "daha",
+   "start": 127.0,
+   "end": 127.42,
+   "prob": 0.999,
+   "line": 29,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 127.42,
+   "end": 127.9,
+   "prob": 0.909,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "daha",
+   "start": 127.9,
+   "end": 128.2,
+   "prob": 0.997,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "Aylarca",
+   "start": 129.68,
+   "end": 130.8,
+   "prob": 0.978,
+   "line": 30,
+   "source": "full"
+  },
+  {
+   "w": "Birlikte",
+   "start": 130.8,
+   "end": 131.88,
+   "prob": 0.668,
+   "line": 30,
+   "source": "full"
+  },
+  {
+   "w": "kurduk",
+   "start": 131.88,
+   "end": 132.58,
+   "prob": 0.993,
+   "line": 30,
+   "source": "full"
+  },
+  {
+   "w": "Bir",
+   "start": 133.16,
+   "end": 133.5,
+   "prob": 0.974,
+   "line": 31,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 133.5,
+   "end": 134.28,
+   "prob": 0.999,
+   "line": 31,
+   "source": "full"
+  },
+  {
+   "w": "Sildik",
+   "start": 134.28,
+   "end": 135.26,
+   "prob": 0.742,
+   "line": 31,
+   "source": "full"
+  },
+  {
+   "w": "hepsini",
+   "start": 135.26,
+   "end": 136.08,
+   "prob": 0.997,
+   "line": 31,
+   "source": "full"
+  },
+  {
+   "w": "On",
+   "start": 136.08,
+   "end": 137.3,
+   "prob": 0.447,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "yedi",
+   "start": 137.3,
+   "end": 137.9,
+   "prob": 0.997,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "bin",
+   "start": 137.9,
+   "end": 138.24,
+   "prob": 0.999,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "satır",
+   "start": 138.24,
+   "end": 138.9,
+   "prob": 0.998,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "tek",
+   "start": 138.9,
+   "end": 139.14,
+   "prob": 0.964,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 139.14,
+   "end": 139.58,
+   "prob": 0.998,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "tık",
+   "start": 139.58,
+   "end": 140.2,
+   "prob": 0.989,
+   "line": 32,
+   "source": "full"
+  },
+  {
+   "w": "Yedek",
+   "start": 140.2,
+   "end": 141.26,
+   "prob": 0.852,
+   "line": 33,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 141.26,
+   "end": 141.42,
+   "prob": 0.998,
+   "line": 33,
+   "source": "full"
+  },
+  {
+   "w": "dalda",
+   "start": 141.42,
+   "end": 142.32,
+   "prob": 0.922,
+   "line": 33,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 142.32,
+   "end": 142.86,
+   "prob": 0.952,
+   "line": 33,
+   "source": "full"
+  },
+  {
+   "w": "yerde",
+   "start": 142.86,
+   "end": 143.66,
+   "prob": 0.995,
+   "line": 33,
+   "source": "full"
+  },
+  {
+   "w": "Ben",
+   "start": 143.66,
+   "end": 144.7,
+   "prob": 0.987,
+   "line": 34,
+   "source": "full"
+  },
+  {
+   "w": "hatırlamam",
+   "start": 144.7,
+   "end": 146.74,
+   "prob": 0.998,
+   "line": 34,
+   "source": "full"
+  },
+  {
+   "w": "zaten",
+   "start": 146.74,
+   "end": 147.1,
+   "prob": 0.999,
+   "line": 34,
+   "source": "full"
+  },
+  {
+   "w": "Sen",
+   "start": 147.7,
+   "end": 148.4,
+   "prob": 0.874,
+   "line": 35,
+   "source": "full"
+  },
+  {
+   "w": "de",
+   "start": 148.4,
+   "end": 149.06,
+   "prob": 0.992,
+   "line": 35,
+   "source": "full"
+  },
+  {
+   "w": "unutmaya",
+   "start": 149.06,
+   "end": 150.12,
+   "prob": 0.999,
+   "line": 35,
+   "source": "full"
+  },
+  {
+   "w": "çalış",
+   "start": 150.12,
+   "end": 150.8,
+   "prob": 1.0,
+   "line": 35,
+   "source": "full"
+  },
+  {
+   "w": "Boşuna",
+   "start": 151.4,
+   "end": 152.64,
+   "prob": 0.996,
+   "line": 36,
+   "source": "full"
+  },
+  {
+   "w": "değildi",
+   "start": 152.64,
+   "end": 153.94,
+   "prob": 0.839,
+   "line": 36,
+   "source": "full"
+  },
+  {
+   "w": "inan",
+   "start": 153.94,
+   "end": 154.62,
+   "prob": 0.82,
+   "line": 36,
+   "source": "full"
+  },
+  {
+   "w": "Seni",
+   "start": 154.88,
+   "end": 155.58,
+   "prob": 0.954,
+   "line": 37,
+   "source": "full"
+  },
+  {
+   "w": "buraya",
+   "start": 155.58,
+   "end": 157.42,
+   "prob": 0.993,
+   "line": 37,
+   "source": "full"
+  },
+  {
+   "w": "getirdim",
+   "start": 157.42,
+   "end": 159.74,
+   "prob": 0.925,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "getirdi",
+   "start": 157.42,
+   "end": 159.5,
+   "prob": 0.643,
+   "line": 37,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "Her",
+   "start": 173.36,
+   "end": 174.44,
+   "prob": 0.756,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 174.44,
+   "end": 174.98,
+   "prob": 0.977,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "baştan,",
+   "start": 174.98,
+   "end": 175.74,
+   "prob": 0.998,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "her",
+   "start": 175.74,
+   "end": 176.08,
+   "prob": 0.991,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 176.08,
+   "end": 176.84,
+   "prob": 0.994,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "ilk",
+   "start": 176.84,
+   "end": 177.08,
+   "prob": 0.595,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "gün",
+   "start": 177.08,
+   "end": 177.36,
+   "prob": 0.995,
+   "line": 38,
+   "source": "full"
+  },
+  {
+   "w": "Ay",
+   "start": 177.36,
+   "end": 177.96,
+   "prob": 0.923,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "dolar,",
+   "start": 177.96,
+   "end": 178.64,
+   "prob": 0.993,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "ay",
+   "start": 178.64,
+   "end": 179.02,
+   "prob": 0.994,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "küçülür,",
+   "start": 179.02,
+   "end": 179.66,
+   "prob": 0.997,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "ben",
+   "start": 179.66,
+   "end": 179.76,
+   "prob": 0.756,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "hep",
+   "start": 179.76,
+   "end": 179.94,
+   "prob": 0.98,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "aynı",
+   "start": 179.94,
+   "end": 180.24,
+   "prob": 0.918,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "kalırım",
+   "start": 180.24,
+   "end": 180.96,
+   "prob": 0.987,
+   "line": 39,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 180.96,
+   "end": 181.8,
+   "prob": 0.979,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 181.8,
+   "end": 182.38,
+   "prob": 1.0,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "baştan,",
+   "start": 182.38,
+   "end": 183.18,
+   "prob": 1.0,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "her",
+   "start": 183.18,
+   "end": 183.52,
+   "prob": 0.996,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 183.52,
+   "end": 184.26,
+   "prob": 1.0,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "ilk",
+   "start": 184.26,
+   "end": 184.48,
+   "prob": 0.998,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "gün",
+   "start": 184.48,
+   "end": 184.92,
+   "prob": 1.0,
+   "line": 40,
+   "source": "full"
+  },
+  {
+   "w": "Ay",
+   "start": 184.92,
+   "end": 185.46,
+   "prob": 0.998,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "dolar,",
+   "start": 185.46,
+   "end": 186.04,
+   "prob": 1.0,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "ay",
+   "start": 186.04,
+   "end": 186.4,
+   "prob": 0.999,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "küçülür,",
+   "start": 186.4,
+   "end": 187.06,
+   "prob": 1.0,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "ben",
+   "start": 187.06,
+   "end": 187.18,
+   "prob": 0.997,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "hep",
+   "start": 187.18,
+   "end": 187.32,
+   "prob": 1.0,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "aynı",
+   "start": 187.32,
+   "end": 187.62,
+   "prob": 1.0,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "kalırım",
+   "start": 187.62,
+   "end": 188.3,
+   "prob": 0.999,
+   "line": 41,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 188.3,
+   "end": 189.22,
+   "prob": 0.997,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 189.22,
+   "end": 189.78,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "baştan,",
+   "start": 189.78,
+   "end": 190.52,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "her",
+   "start": 190.52,
+   "end": 190.9,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 190.9,
+   "end": 191.62,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "ilk",
+   "start": 191.62,
+   "end": 191.92,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "gün",
+   "start": 191.92,
+   "end": 192.16,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "Ay",
+   "start": 192.16,
+   "end": 192.86,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "dolar,",
+   "start": 192.86,
+   "end": 193.42,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "ay",
+   "start": 193.42,
+   "end": 193.76,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "küçülür,",
+   "start": 193.76,
+   "end": 194.42,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "ben",
+   "start": 194.42,
+   "end": 194.56,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "hep",
+   "start": 194.56,
+   "end": 194.7,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "aynı",
+   "start": 194.7,
+   "end": 195.02,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "kalırım",
+   "start": 195.02,
+   "end": 195.64,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "Yarın",
+   "start": 195.64,
+   "end": 196.16,
+   "prob": 0.967,
+   "line": 42,
+   "source": "full"
+  },
+  {
+   "w": "yine",
+   "start": 196.16,
+   "end": 196.48,
+   "prob": 0.974,
+   "line": 42,
+   "source": "full"
+  },
+  {
+   "w": "anlatırsın",
+   "start": 196.46,
+   "end": 199.5,
+   "prob": 0.899,
+   "line": null,
+   "source": "vocals-stem"
+  },
+  {
+   "w": "ne",
+   "start": 196.48,
+   "end": 197.1,
+   "prob": 0.386,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "var",
+   "start": 197.1,
+   "end": 197.36,
+   "prob": 0.586,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "sen",
+   "start": 197.36,
+   "end": 197.76,
+   "prob": 0.044,
+   "line": 43,
+   "source": "full"
+  },
+  {
+   "w": "yine",
+   "start": 197.76,
+   "end": 198.14,
+   "prob": 0.989,
+   "line": 43,
+   "source": "full"
+  },
+  {
+   "w": "anlatırsın",
+   "start": 198.14,
+   "end": 199.4,
+   "prob": 0.989,
+   "line": 43,
+   "source": "full"
+  },
+  {
+   "w": "Her",
+   "start": 199.4,
+   "end": 200.06,
+   "prob": 0.928,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "sabah",
+   "start": 200.06,
+   "end": 200.88,
+   "prob": 0.994,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "baştan",
+   "start": 200.88,
+   "end": 201.78,
+   "prob": 0.995,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 201.78,
+   "end": 202.16,
+   "prob": 0.968,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 202.16,
+   "end": 202.58,
+   "prob": 0.999,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 202.72,
+   "end": 203.06,
+   "prob": 0.998,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "daha,",
+   "start": 203.06,
+   "end": 203.54,
+   "prob": 1.0,
+   "line": 44,
+   "source": "full"
+  },
+  {
+   "w": "bir",
+   "start": 203.58,
+   "end": 203.98,
+   "prob": 1.0,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "daha",
+   "start": 203.98,
+   "end": 204.34,
+   "prob": 0.999,
+   "line": null,
+   "source": "full"
+  },
+  {
+   "w": "Merhaba",
+   "start": 211.06,
+   "end": 211.86,
+   "prob": 0.985,
+   "line": 45,
+   "source": "full"
+  },
+  {
+   "w": "Merhaba",
+   "start": 235.56,
+   "end": 236.96,
+   "prob": 0.974,
+   "line": null,
+   "source": "full"
+  }
+ ],
+ "hits": [
+  {
+   "t": 1.3874,
+   "strength": 0.373,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -140.8,
+   "dominant_band": "mid",
+   "frame": 42
+  },
+  {
+   "t": 1.875,
+   "strength": 0.2532,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -122.5,
+   "dominant_band": "mid",
+   "frame": 56
+  },
+  {
+   "t": 2.351,
+   "strength": 0.2458,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -115.8,
+   "dominant_band": "mid",
+   "frame": 71
+  },
+  {
+   "t": 14.1932,
+   "strength": 0.3357,
+   "beat_idx": 30,
+   "t_snapped": 14.1975,
+   "dt_ms": -4.3,
+   "dominant_band": "low",
+   "frame": 426
+  },
+  {
+   "t": 14.437,
+   "strength": 0.2548,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -229.6,
+   "dominant_band": "high",
+   "frame": 433
+  },
+  {
+   "t": 14.6634,
+   "strength": 0.3846,
+   "beat_idx": 31,
+   "t_snapped": 14.6666,
+   "dt_ms": -3.2,
+   "dominant_band": "low",
+   "frame": 440
+  },
+  {
+   "t": 14.9072,
+   "strength": 0.2555,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -228.5,
+   "dominant_band": "high",
+   "frame": 447
+  },
+  {
+   "t": 15.1336,
+   "strength": 0.4327,
+   "beat_idx": 32,
+   "t_snapped": 15.1357,
+   "dt_ms": -2.1,
+   "dominant_band": "low",
+   "frame": 454
+  },
+  {
+   "t": 15.836,
+   "strength": 0.2831,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 231.2,
+   "dominant_band": "high",
+   "frame": 475
+  },
+  {
+   "t": 16.0682,
+   "strength": 0.3314,
+   "beat_idx": 34,
+   "t_snapped": 16.0739,
+   "dt_ms": -5.7,
+   "dominant_band": "low",
+   "frame": 482
+  },
+  {
+   "t": 16.3062,
+   "strength": 0.3105,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 232.3,
+   "dominant_band": "high",
+   "frame": 489
+  },
+  {
+   "t": 16.5326,
+   "strength": 0.3955,
+   "beat_idx": 35,
+   "t_snapped": 16.543,
+   "dt_ms": -10.4,
+   "dominant_band": "low",
+   "frame": 496
+  },
+  {
+   "t": 21.699,
+   "strength": 0.2819,
+   "beat_idx": 46,
+   "t_snapped": 21.7025,
+   "dt_ms": -3.5,
+   "dominant_band": "low",
+   "frame": 651
+  },
+  {
+   "t": 21.9371,
+   "strength": 0.3111,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -234.5,
+   "dominant_band": "high",
+   "frame": 658
+  },
+  {
+   "t": 22.1576,
+   "strength": 0.4254,
+   "beat_idx": 47,
+   "t_snapped": 22.1715,
+   "dt_ms": -13.9,
+   "dominant_band": "low",
+   "frame": 665
+  },
+  {
+   "t": 22.4015,
+   "strength": 0.3587,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 229.9,
+   "dominant_band": "high",
+   "frame": 672
+  },
+  {
+   "t": 22.6278,
+   "strength": 0.5135,
+   "beat_idx": 48,
+   "t_snapped": 22.6405,
+   "dt_ms": -12.7,
+   "dominant_band": "low",
+   "frame": 679
+  },
+  {
+   "t": 22.86,
+   "strength": 0.3142,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 219.5,
+   "dominant_band": "high",
+   "frame": 686
+  },
+  {
+   "t": 23.8121,
+   "strength": 0.2597,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 233.6,
+   "dominant_band": "mid",
+   "frame": 714
+  },
+  {
+   "t": 26.3837,
+   "strength": 0.2436,
+   "beat_idx": 56,
+   "t_snapped": 26.3922,
+   "dt_ms": -8.6,
+   "dominant_band": "low",
+   "frame": 792
+  },
+  {
+   "t": 29.6577,
+   "strength": 0.3616,
+   "beat_idx": 63,
+   "t_snapped": 29.6746,
+   "dt_ms": -16.9,
+   "dominant_band": "low",
+   "frame": 890
+  },
+  {
+   "t": 34.8241,
+   "strength": 0.2933,
+   "beat_idx": 74,
+   "t_snapped": 34.8319,
+   "dt_ms": -7.8,
+   "dominant_band": "low",
+   "frame": 1045
+  },
+  {
+   "t": 37.6337,
+   "strength": 0.4127,
+   "beat_idx": 80,
+   "t_snapped": 37.6446,
+   "dt_ms": -10.9,
+   "dominant_band": "low",
+   "frame": 1129
+  },
+  {
+   "t": 38.5741,
+   "strength": 0.2816,
+   "beat_idx": 82,
+   "t_snapped": 38.5821,
+   "dt_ms": -8.0,
+   "dominant_band": "low",
+   "frame": 1157
+  },
+  {
+   "t": 48.8896,
+   "strength": 0.2568,
+   "beat_idx": 104,
+   "t_snapped": 48.8922,
+   "dt_ms": -2.6,
+   "dominant_band": "low",
+   "frame": 1467
+  },
+  {
+   "t": 49.8242,
+   "strength": 0.2331,
+   "beat_idx": 106,
+   "t_snapped": 49.8292,
+   "dt_ms": -5.0,
+   "dominant_band": "low",
+   "frame": 1495
+  },
+  {
+   "t": 72.5275,
+   "strength": 0.2304,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 223.4,
+   "dominant_band": "high",
+   "frame": 2176
+  },
+  {
+   "t": 91.9394,
+   "strength": 0.2423,
+   "beat_idx": 196,
+   "t_snapped": 91.9509,
+   "dt_ms": -11.5,
+   "dominant_band": "mid",
+   "frame": 2759
+  },
+  {
+   "t": 92.874,
+   "strength": 0.3109,
+   "beat_idx": 198,
+   "t_snapped": 92.8861,
+   "dt_ms": -12.1,
+   "dominant_band": "high",
+   "frame": 2787
+  },
+  {
+   "t": 96.1538,
+   "strength": 0.2308,
+   "beat_idx": 205,
+   "t_snapped": 96.1591,
+   "dt_ms": -5.3,
+   "dominant_band": "low",
+   "frame": 2885
+  },
+  {
+   "t": 96.6182,
+   "strength": 0.2389,
+   "beat_idx": 206,
+   "t_snapped": 96.6267,
+   "dt_ms": -8.5,
+   "dominant_band": "mid",
+   "frame": 2899
+  },
+  {
+   "t": 97.0884,
+   "strength": 0.2801,
+   "beat_idx": 207,
+   "t_snapped": 97.0942,
+   "dt_ms": -5.8,
+   "dominant_band": "low",
+   "frame": 2913
+  },
+  {
+   "t": 97.5528,
+   "strength": 0.2493,
+   "beat_idx": 208,
+   "t_snapped": 97.5618,
+   "dt_ms": -8.9,
+   "dominant_band": "mid",
+   "frame": 2927
+  },
+  {
+   "t": 98.4932,
+   "strength": 0.2319,
+   "beat_idx": 210,
+   "t_snapped": 98.4968,
+   "dt_ms": -3.6,
+   "dominant_band": "mid",
+   "frame": 2955
+  },
+  {
+   "t": 98.9576,
+   "strength": 0.3024,
+   "beat_idx": 211,
+   "t_snapped": 98.9643,
+   "dt_ms": -6.7,
+   "dominant_band": "low",
+   "frame": 2969
+  },
+  {
+   "t": 99.422,
+   "strength": 0.284,
+   "beat_idx": 212,
+   "t_snapped": 99.4318,
+   "dt_ms": -9.8,
+   "dominant_band": "low",
+   "frame": 2983
+  },
+  {
+   "t": 99.898,
+   "strength": 0.2492,
+   "beat_idx": 213,
+   "t_snapped": 99.8993,
+   "dt_ms": -1.3,
+   "dominant_band": "low",
+   "frame": 2997
+  },
+  {
+   "t": 100.8327,
+   "strength": 0.2382,
+   "beat_idx": 215,
+   "t_snapped": 100.8343,
+   "dt_ms": -1.7,
+   "dominant_band": "low",
+   "frame": 3025
+  },
+  {
+   "t": 101.2971,
+   "strength": 0.2521,
+   "beat_idx": 216,
+   "t_snapped": 101.3018,
+   "dt_ms": -4.7,
+   "dominant_band": "low",
+   "frame": 3039
+  },
+  {
+   "t": 101.7673,
+   "strength": 0.2504,
+   "beat_idx": 217,
+   "t_snapped": 101.7692,
+   "dt_ms": -2.0,
+   "dominant_band": "low",
+   "frame": 3053
+  },
+  {
+   "t": 103.6365,
+   "strength": 0.2509,
+   "beat_idx": 221,
+   "t_snapped": 103.6389,
+   "dt_ms": -2.5,
+   "dominant_band": "low",
+   "frame": 3109
+  },
+  {
+   "t": 105.4476,
+   "strength": 0.2892,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -60.8,
+   "dominant_band": "high",
+   "frame": 3163
+  },
+  {
+   "t": 126.9841,
+   "strength": 0.2423,
+   "beat_idx": 271,
+   "t_snapped": 126.9928,
+   "dt_ms": -8.6,
+   "dominant_band": "low",
+   "frame": 3810
+  },
+  {
+   "t": 149.8093,
+   "strength": 0.2482,
+   "beat_idx": 320,
+   "t_snapped": 149.8316,
+   "dt_ms": -22.3,
+   "dominant_band": "high",
+   "frame": 4495
+  },
+  {
+   "t": 150.6569,
+   "strength": 0.2433,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -105.7,
+   "dominant_band": "high",
+   "frame": 4520
+  },
+  {
+   "t": 151.8933,
+   "strength": 0.2295,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 199.9,
+   "dominant_band": "mid",
+   "frame": 4557
+  },
+  {
+   "t": 155.8581,
+   "strength": 0.2329,
+   "beat_idx": 333,
+   "t_snapped": 155.8811,
+   "dt_ms": -22.9,
+   "dominant_band": "low",
+   "frame": 4676
+  },
+  {
+   "t": 175.1481,
+   "strength": 0.3482,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 226.6,
+   "dominant_band": "mid",
+   "frame": 5254
+  },
+  {
+   "t": 175.5951,
+   "strength": 0.2297,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 210.1,
+   "dominant_band": "high",
+   "frame": 5268
+  },
+  {
+   "t": 175.8447,
+   "strength": 0.3621,
+   "beat_idx": 376,
+   "t_snapped": 175.8484,
+   "dt_ms": -3.7,
+   "dominant_band": "low",
+   "frame": 5275
+  },
+  {
+   "t": 176.0421,
+   "strength": 0.2367,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 193.7,
+   "dominant_band": "high",
+   "frame": 5281
+  },
+  {
+   "t": 176.7677,
+   "strength": 0.457,
+   "beat_idx": 378,
+   "t_snapped": 176.7751,
+   "dt_ms": -7.4,
+   "dominant_band": "low",
+   "frame": 5303
+  },
+  {
+   "t": 177.2263,
+   "strength": 1.0,
+   "beat_idx": 379,
+   "t_snapped": 177.2384,
+   "dt_ms": -12.1,
+   "dominant_band": "low",
+   "frame": 5317
+  },
+  {
+   "t": 177.6965,
+   "strength": 0.3907,
+   "beat_idx": 380,
+   "t_snapped": 177.7016,
+   "dt_ms": -5.1,
+   "dominant_band": "low",
+   "frame": 5331
+  },
+  {
+   "t": 177.9403,
+   "strength": 0.2485,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -224.5,
+   "dominant_band": "mid",
+   "frame": 5338
+  },
+  {
+   "t": 179.3045,
+   "strength": 0.2991,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 213.5,
+   "dominant_band": "high",
+   "frame": 5379
+  },
+  {
+   "t": 180.0243,
+   "strength": 0.3255,
+   "beat_idx": 385,
+   "t_snapped": 180.0171,
+   "dt_ms": 7.2,
+   "dominant_band": "low",
+   "frame": 5401
+  },
+  {
+   "t": 180.4887,
+   "strength": 0.3093,
+   "beat_idx": 386,
+   "t_snapped": 180.4801,
+   "dt_ms": 8.6,
+   "dominant_band": "low",
+   "frame": 5414
+  },
+  {
+   "t": 180.9473,
+   "strength": 0.2505,
+   "beat_idx": 387,
+   "t_snapped": 180.943,
+   "dt_ms": 4.3,
+   "dominant_band": "low",
+   "frame": 5428
+  },
+  {
+   "t": 181.1795,
+   "strength": 0.2418,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -226.3,
+   "dominant_band": "mid",
+   "frame": 5435
+  },
+  {
+   "t": 181.4117,
+   "strength": 0.2624,
+   "beat_idx": 388,
+   "t_snapped": 181.4058,
+   "dt_ms": 5.9,
+   "dominant_band": "low",
+   "frame": 5442
+  },
+  {
+   "t": 186.0441,
+   "strength": 0.2358,
+   "beat_idx": 398,
+   "t_snapped": 186.0309,
+   "dt_ms": 13.2,
+   "dominant_band": "low",
+   "frame": 5581
+  },
+  {
+   "t": 186.4969,
+   "strength": 0.2365,
+   "beat_idx": 399,
+   "t_snapped": 186.493,
+   "dt_ms": 3.8,
+   "dominant_band": "low",
+   "frame": 5595
+  },
+  {
+   "t": 186.9613,
+   "strength": 0.2375,
+   "beat_idx": 400,
+   "t_snapped": 186.9551,
+   "dt_ms": 6.1,
+   "dominant_band": "low",
+   "frame": 5609
+  },
+  {
+   "t": 187.4141,
+   "strength": 0.3736,
+   "beat_idx": 401,
+   "t_snapped": 187.4172,
+   "dt_ms": -3.1,
+   "dominant_band": "low",
+   "frame": 5623
+  },
+  {
+   "t": 187.6405,
+   "strength": 0.2981,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 223.2,
+   "dominant_band": "mid",
+   "frame": 5629
+  },
+  {
+   "t": 206.7621,
+   "strength": 0.2507,
+   "beat_idx": 443,
+   "t_snapped": 206.7724,
+   "dt_ms": -10.3,
+   "dominant_band": "high",
+   "frame": 6203
+  },
+  {
+   "t": 208.1321,
+   "strength": 0.2652,
+   "beat_idx": 446,
+   "t_snapped": 208.152,
+   "dt_ms": -19.9,
+   "dominant_band": "mid",
+   "frame": 6245
+  },
+  {
+   "t": 208.3585,
+   "strength": 0.2689,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 206.5,
+   "dominant_band": "high",
+   "frame": 6251
+  },
+  {
+   "t": 208.5907,
+   "strength": 0.3792,
+   "beat_idx": 447,
+   "t_snapped": 208.6118,
+   "dt_ms": -21.1,
+   "dominant_band": "mid",
+   "frame": 6258
+  },
+  {
+   "t": 208.7126,
+   "strength": 0.2719,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 100.8,
+   "dominant_band": "high",
+   "frame": 6261
+  },
+  {
+   "t": 209.0551,
+   "strength": 0.3598,
+   "beat_idx": 448,
+   "t_snapped": 209.0715,
+   "dt_ms": -16.5,
+   "dominant_band": "mid",
+   "frame": 6272
+  },
+  {
+   "t": 209.1712,
+   "strength": 0.356,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 99.6,
+   "dominant_band": "mid",
+   "frame": 6275
+  },
+  {
+   "t": 209.2873,
+   "strength": 0.2878,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 215.7,
+   "dominant_band": "mid",
+   "frame": 6279
+  },
+  {
+   "t": 209.5078,
+   "strength": 0.3547,
+   "beat_idx": 449,
+   "t_snapped": 209.5313,
+   "dt_ms": -23.4,
+   "dominant_band": "low",
+   "frame": 6286
+  },
+  {
+   "t": 211.3538,
+   "strength": 0.2579,
+   "beat_idx": 453,
+   "t_snapped": 211.3699,
+   "dt_ms": -16.0,
+   "dominant_band": "mid",
+   "frame": 6341
+  },
+  {
+   "t": 212.2652,
+   "strength": 0.3495,
+   "beat_idx": 455,
+   "t_snapped": 212.289,
+   "dt_ms": -23.7,
+   "dominant_band": "mid",
+   "frame": 6369
+  },
+  {
+   "t": 212.7354,
+   "strength": 0.2392,
+   "beat_idx": 456,
+   "t_snapped": 212.7485,
+   "dt_ms": -13.0,
+   "dominant_band": "mid",
+   "frame": 6382
+  },
+  {
+   "t": 213.1824,
+   "strength": 0.2717,
+   "beat_idx": 457,
+   "t_snapped": 213.2079,
+   "dt_ms": -25.5,
+   "dominant_band": "high",
+   "frame": 6396
+  },
+  {
+   "t": 228.583,
+   "strength": 0.2326,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -228.8,
+   "dominant_band": "mid",
+   "frame": 6857
+  },
+  {
+   "t": 228.8094,
+   "strength": 0.316,
+   "beat_idx": 491,
+   "t_snapped": 228.8118,
+   "dt_ms": -2.4,
+   "dominant_band": "mid",
+   "frame": 6864
+  },
+  {
+   "t": 229.268,
+   "strength": 0.309,
+   "beat_idx": 492,
+   "t_snapped": 229.2703,
+   "dt_ms": -2.2,
+   "dominant_band": "mid",
+   "frame": 6878
+  },
+  {
+   "t": 229.4944,
+   "strength": 0.2876,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 224.2,
+   "dominant_band": "low",
+   "frame": 6885
+  },
+  {
+   "t": 230.4174,
+   "strength": 0.237,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -228.1,
+   "dominant_band": "mid",
+   "frame": 6913
+  },
+  {
+   "t": 230.6438,
+   "strength": 0.2453,
+   "beat_idx": 495,
+   "t_snapped": 230.6455,
+   "dt_ms": -1.7,
+   "dominant_band": "mid",
+   "frame": 6919
+  },
+  {
+   "t": 231.1024,
+   "strength": 0.2303,
+   "beat_idx": 496,
+   "t_snapped": 231.1039,
+   "dt_ms": -1.5,
+   "dominant_band": "mid",
+   "frame": 6933
+  },
+  {
+   "t": 231.3288,
+   "strength": 0.3183,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 224.9,
+   "dominant_band": "low",
+   "frame": 6940
+  },
+  {
+   "t": 233.3954,
+   "strength": 0.3571,
+   "beat_idx": 501,
+   "t_snapped": 233.3954,
+   "dt_ms": 0.0,
+   "dominant_band": "low",
+   "frame": 7002
+  },
+  {
+   "t": 234.092,
+   "strength": 0.2325,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": -219.8,
+   "dominant_band": "mid",
+   "frame": 7023
+  },
+  {
+   "t": 237.662,
+   "strength": 0.4008,
+   "beat_idx": null,
+   "t_snapped": null,
+   "dt_ms": 143.6,
+   "dominant_band": "mid",
+   "frame": 7130
+  }
+ ],
+ "energy_per_bar": [
+  -36.32,
+  -26.62,
+  -22.64,
+  -20.67,
+  -22.87,
+  -20.72,
+  -24.42,
+  -22.22,
+  -21.76,
+  -21.18,
+  -21.4,
+  -22.67,
+  -21.34,
+  -21.56,
+  -21.23,
+  -22.0,
+  -20.26,
+  -20.84,
+  -20.65,
+  -21.69,
+  -21.04,
+  -20.63,
+  -20.84,
+  -24.65,
+  -21.75,
+  -21.42,
+  -20.99,
+  -21.09,
+  -20.43,
+  -19.82,
+  -18.69,
+  -20.3,
+  -19.48,
+  -19.42,
+  -18.79,
+  -18.56,
+  -18.98,
+  -19.05,
+  -22.12,
+  -21.86,
+  -18.89,
+  -18.9,
+  -18.81,
+  -18.58,
+  -18.91,
+  -18.61,
+  -21.62,
+  -20.14,
+  -20.76,
+  -20.67,
+  -21.07,
+  -20.76,
+  -21.19,
+  -21.08,
+  -20.31,
+  -23.5,
+  -19.34,
+  -19.19,
+  -19.49,
+  -18.67,
+  -20.46,
+  -19.48,
+  -19.3,
+  -18.81,
+  -18.77,
+  -18.98,
+  -19.02,
+  -20.03,
+  -18.7,
+  -19.28,
+  -19.91,
+  -19.39,
+  -19.66,
+  -19.67,
+  -19.49,
+  -18.45,
+  -17.71,
+  -24.59,
+  -27.95,
+  -27.81,
+  -28.24,
+  -24.71,
+  -25.09,
+  -17.56,
+  -16.9,
+  -17.09,
+  -17.46,
+  -17.35,
+  -17.28,
+  -17.3,
+  -17.33,
+  -17.14,
+  -16.61,
+  -19.46,
+  -20.18,
+  -20.07,
+  -19.62,
+  -17.35,
+  -18.69,
+  -19.39,
+  -16.96,
+  -17.05,
+  -17.16,
+  -17.1,
+  -17.07,
+  -16.07,
+  -16.65,
+  -16.33,
+  -16.12,
+  -16.04,
+  -21.06,
+  -23.98,
+  -22.84,
+  -23.95,
+  -16.09,
+  -16.04,
+  -15.87,
+  -15.76,
+  -15.84,
+  -16.03,
+  -15.17,
+  -14.78,
+  -19.05,
+  -18.56,
+  -20.68,
+  -21.57,
+  -33.01,
+  -40.7,
+  -36.78
+ ],
+ "key_per_section": [
+  {
+   "section": "Intro",
+   "best": "F minor",
+   "r": 0.741,
+   "second": "F major",
+   "r2": 0.689
+  },
+  {
+   "section": "Verse 1",
+   "best": "F major",
+   "r": 0.71,
+   "second": "F minor",
+   "r2": 0.696
+  },
+  {
+   "section": "Pre-Chorus 1",
+   "best": "C major",
+   "r": 0.703,
+   "second": "F major",
+   "r2": 0.637
+  },
+  {
+   "section": "Chorus 1",
+   "best": "C major",
+   "r": 0.68,
+   "second": "F major",
+   "r2": 0.679
+  },
+  {
+   "section": "Post-Chorus",
+   "best": "F minor",
+   "r": 0.761,
+   "second": "F major",
+   "r2": 0.759
+  },
+  {
+   "section": "Verse 2",
+   "best": "F major",
+   "r": 0.755,
+   "second": "F minor",
+   "r2": 0.689
+  },
+  {
+   "section": "Pre-Chorus 2",
+   "best": "F major",
+   "r": 0.771,
+   "second": "F minor",
+   "r2": 0.727
+  },
+  {
+   "section": "Chorus 2",
+   "best": "F major",
+   "r": 0.627,
+   "second": "F minor",
+   "r2": 0.622
+  },
+  {
+   "section": "Bridge (male)",
+   "best": "F minor",
+   "r": 0.673,
+   "second": "F major",
+   "r2": 0.444
+  },
+  {
+   "section": "Bridge (female)",
+   "best": "F minor",
+   "r": 0.805,
+   "second": "F major",
+   "r2": 0.669
+  },
+  {
+   "section": "Instrumental Break",
+   "best": "C major",
+   "r": 0.7,
+   "second": "F major",
+   "r2": 0.575
+  },
+  {
+   "section": "Final Chorus (stripped, female)",
+   "best": "F# minor",
+   "r": 0.296,
+   "second": "C major",
+   "r2": 0.283
+  },
+  {
+   "section": "Final Chorus (full, duet)",
+   "best": "F minor",
+   "r": 0.443,
+   "second": "F major",
+   "r2": 0.38
+  },
+  {
+   "section": "Outro",
+   "best": "F minor",
+   "r": 0.806,
+   "second": "F major",
+   "r2": 0.706
+  },
+  {
+   "section": "Outro part 2 (measured)",
+   "best": "C major",
+   "r": 0.625,
+   "second": "F minor",
+   "r2": 0.563
+  },
+  {
+   "section": "Outro part 3 (measured)",
+   "best": "F minor",
+   "r": 0.625,
+   "second": "C major",
+   "r2": 0.617
+  },
+  {
+   "section": "Outro part 4 (measured)",
+   "best": "E major",
+   "r": 0.684,
+   "second": "E minor",
+   "r2": 0.536
+  }
+ ],
+ "key_windows_8bar": [
+  {
+   "start": 0.59,
+   "end": 15.6,
+   "bar": 1,
+   "key": "F minor",
+   "r": 0.726,
+   "second": "F major",
+   "r2": 0.681
+  },
+  {
+   "start": 8.1,
+   "end": 23.11,
+   "bar": 5,
+   "key": "F major",
+   "r": 0.689,
+   "second": "F minor",
+   "r2": 0.651
+  },
+  {
+   "start": 15.6,
+   "end": 30.61,
+   "bar": 9,
+   "key": "C major",
+   "r": 0.705,
+   "second": "F major",
+   "r2": 0.68
+  },
+  {
+   "start": 23.11,
+   "end": 38.11,
+   "bar": 13,
+   "key": "F major",
+   "r": 0.715,
+   "second": "F minor",
+   "r2": 0.658
+  },
+  {
+   "start": 30.61,
+   "end": 45.61,
+   "bar": 17,
+   "key": "F minor",
+   "r": 0.786,
+   "second": "F major",
+   "r2": 0.722
+  },
+  {
+   "start": 38.11,
+   "end": 53.11,
+   "bar": 21,
+   "key": "F minor",
+   "r": 0.684,
+   "second": "C major",
+   "r2": 0.65
+  },
+  {
+   "start": 45.61,
+   "end": 60.6,
+   "bar": 25,
+   "key": "C major",
+   "r": 0.723,
+   "second": "C minor",
+   "r2": 0.603
+  },
+  {
+   "start": 53.11,
+   "end": 68.09,
+   "bar": 29,
+   "key": "C major",
+   "r": 0.689,
+   "second": "F major",
+   "r2": 0.65
+  },
+  {
+   "start": 60.6,
+   "end": 75.58,
+   "bar": 33,
+   "key": "F major",
+   "r": 0.748,
+   "second": "F minor",
+   "r2": 0.739
+  },
+  {
+   "start": 68.09,
+   "end": 83.06,
+   "bar": 37,
+   "key": "F major",
+   "r": 0.765,
+   "second": "F minor",
+   "r2": 0.73
+  },
+  {
+   "start": 75.58,
+   "end": 90.55,
+   "bar": 41,
+   "key": "F major",
+   "r": 0.758,
+   "second": "F minor",
+   "r2": 0.752
+  },
+  {
+   "start": 83.06,
+   "end": 98.03,
+   "bar": 45,
+   "key": "F major",
+   "r": 0.746,
+   "second": "F minor",
+   "r2": 0.67
+  },
+  {
+   "start": 90.55,
+   "end": 105.51,
+   "bar": 49,
+   "key": "F major",
+   "r": 0.755,
+   "second": "F minor",
+   "r2": 0.666
+  },
+  {
+   "start": 98.03,
+   "end": 112.98,
+   "bar": 53,
+   "key": "F major",
+   "r": 0.721,
+   "second": "F minor",
+   "r2": 0.648
+  },
+  {
+   "start": 105.51,
+   "end": 120.46,
+   "bar": 57,
+   "key": "C major",
+   "r": 0.673,
+   "second": "F major",
+   "r2": 0.672
+  },
+  {
+   "start": 112.98,
+   "end": 127.93,
+   "bar": 61,
+   "key": "F minor",
+   "r": 0.654,
+   "second": "F major",
+   "r2": 0.644
+  },
+  {
+   "start": 120.46,
+   "end": 135.39,
+   "bar": 65,
+   "key": "F minor",
+   "r": 0.607,
+   "second": "F major",
+   "r2": 0.601
+  },
+  {
+   "start": 127.93,
+   "end": 142.85,
+   "bar": 69,
+   "key": "F minor",
+   "r": 0.718,
+   "second": "F major",
+   "r2": 0.49
+  },
+  {
+   "start": 135.39,
+   "end": 150.3,
+   "bar": 73,
+   "key": "F minor",
+   "r": 0.743,
+   "second": "C major",
+   "r2": 0.479
+  },
+  {
+   "start": 142.85,
+   "end": 157.74,
+   "bar": 77,
+   "key": "C major",
+   "r": 0.704,
+   "second": "F minor",
+   "r2": 0.701
+  },
+  {
+   "start": 150.3,
+   "end": 165.18,
+   "bar": 81,
+   "key": "C major",
+   "r": 0.786,
+   "second": "F major",
+   "r2": 0.576
+  },
+  {
+   "start": 157.74,
+   "end": 172.6,
+   "bar": 85,
+   "key": "C major",
+   "r": 0.66,
+   "second": "F major",
+   "r2": 0.585
+  },
+  {
+   "start": 165.18,
+   "end": 180.02,
+   "bar": 89,
+   "key": "F major",
+   "r": 0.397,
+   "second": "F minor",
+   "r2": 0.367
+  },
+  {
+   "start": 172.6,
+   "end": 187.42,
+   "bar": 93,
+   "key": "F# minor",
+   "r": 0.281,
+   "second": "C major",
+   "r2": 0.22
+  },
+  {
+   "start": 180.02,
+   "end": 194.8,
+   "bar": 97,
+   "key": "C major",
+   "r": 0.35,
+   "second": "F minor",
+   "r2": 0.284
+  },
+  {
+   "start": 187.42,
+   "end": 202.17,
+   "bar": 101,
+   "key": "F major",
+   "r": 0.469,
+   "second": "C major",
+   "r2": 0.464
+  },
+  {
+   "start": 194.8,
+   "end": 209.53,
+   "bar": 105,
+   "key": "F minor",
+   "r": 0.664,
+   "second": "F major",
+   "r2": 0.548
+  },
+  {
+   "start": 202.17,
+   "end": 216.88,
+   "bar": 109,
+   "key": "F minor",
+   "r": 0.762,
+   "second": "F major",
+   "r2": 0.621
+  },
+  {
+   "start": 209.53,
+   "end": 224.23,
+   "bar": 113,
+   "key": "F minor",
+   "r": 0.635,
+   "second": "C major",
+   "r2": 0.611
+  },
+  {
+   "start": 216.88,
+   "end": 231.56,
+   "bar": 117,
+   "key": "C major",
+   "r": 0.618,
+   "second": "F minor",
+   "r2": 0.6
+  },
+  {
+   "start": 224.23,
+   "end": 238.89,
+   "bar": 121,
+   "key": "F minor",
+   "r": 0.588,
+   "second": "C major",
+   "r2": 0.576
+  }
+ ],
+ "key_shift_between_choruses": {
+  "Chorus1_vs_Chorus2": {
+   "best_shift_semitones": 0,
+   "r_at_best": 0.85,
+   "r_at_zero": 0.85
+  },
+  "Chorus2_vs_FinalFull": {
+   "best_shift_semitones": 0,
+   "r_at_best": 0.868,
+   "r_at_zero": 0.868
+  },
+  "Chorus2_vs_FinalStripped": {
+   "best_shift_semitones": 0,
+   "r_at_best": 0.738,
+   "r_at_zero": 0.738
+  }
+ },
+ "accompaniment_shift_vs_chorus2_2bar": [
+  {
+   "bar": 1,
+   "start": 0.59,
+   "best_shift_semitones": 0,
+   "r_best": 0.703,
+   "r_zero": 0.703
+  },
+  {
+   "bar": 3,
+   "start": 4.34,
+   "best_shift_semitones": 0,
+   "r_best": 0.654,
+   "r_zero": 0.654
+  },
+  {
+   "bar": 5,
+   "start": 8.1,
+   "best_shift_semitones": 0,
+   "r_best": 0.73,
+   "r_zero": 0.73
+  },
+  {
+   "bar": 7,
+   "start": 11.85,
+   "best_shift_semitones": 0,
+   "r_best": 0.568,
+   "r_zero": 0.568
+  },
+  {
+   "bar": 9,
+   "start": 15.6,
+   "best_shift_semitones": 0,
+   "r_best": 0.811,
+   "r_zero": 0.811
+  },
+  {
+   "bar": 11,
+   "start": 19.36,
+   "best_shift_semitones": 0,
+   "r_best": 0.851,
+   "r_zero": 0.851
+  },
+  {
+   "bar": 13,
+   "start": 23.11,
+   "best_shift_semitones": 0,
+   "r_best": 0.669,
+   "r_zero": 0.669
+  },
+  {
+   "bar": 15,
+   "start": 26.86,
+   "best_shift_semitones": 0,
+   "r_best": 0.878,
+   "r_zero": 0.878
+  },
+  {
+   "bar": 17,
+   "start": 30.61,
+   "best_shift_semitones": 0,
+   "r_best": 0.87,
+   "r_zero": 0.87
+  },
+  {
+   "bar": 19,
+   "start": 34.36,
+   "best_shift_semitones": 0,
+   "r_best": 0.868,
+   "r_zero": 0.868
+  },
+  {
+   "bar": 21,
+   "start": 38.11,
+   "best_shift_semitones": 0,
+   "r_best": 0.638,
+   "r_zero": 0.638
+  },
+  {
+   "bar": 23,
+   "start": 41.86,
+   "best_shift_semitones": 0,
+   "r_best": 0.87,
+   "r_zero": 0.87
+  },
+  {
+   "bar": 25,
+   "start": 45.61,
+   "best_shift_semitones": 0,
+   "r_best": 0.592,
+   "r_zero": 0.592
+  },
+  {
+   "bar": 27,
+   "start": 49.36,
+   "best_shift_semitones": 0,
+   "r_best": 0.708,
+   "r_zero": 0.708
+  },
+  {
+   "bar": 29,
+   "start": 53.11,
+   "best_shift_semitones": 0,
+   "r_best": 0.83,
+   "r_zero": 0.83
+  },
+  {
+   "bar": 31,
+   "start": 56.86,
+   "best_shift_semitones": 0,
+   "r_best": 0.788,
+   "r_zero": 0.788
+  },
+  {
+   "bar": 33,
+   "start": 60.6,
+   "best_shift_semitones": 0,
+   "r_best": 0.566,
+   "r_zero": 0.566
+  },
+  {
+   "bar": 35,
+   "start": 64.35,
+   "best_shift_semitones": 0,
+   "r_best": 0.924,
+   "r_zero": 0.924
+  },
+  {
+   "bar": 37,
+   "start": 68.09,
+   "best_shift_semitones": 0,
+   "r_best": 0.591,
+   "r_zero": 0.591
+  },
+  {
+   "bar": 39,
+   "start": 71.84,
+   "best_shift_semitones": 0,
+   "r_best": 0.801,
+   "r_zero": 0.801
+  },
+  {
+   "bar": 41,
+   "start": 75.58,
+   "best_shift_semitones": 0,
+   "r_best": 0.664,
+   "r_zero": 0.664
+  },
+  {
+   "bar": 43,
+   "start": 79.32,
+   "best_shift_semitones": 0,
+   "r_best": 0.917,
+   "r_zero": 0.917
+  },
+  {
+   "bar": 45,
+   "start": 83.06,
+   "best_shift_semitones": 0,
+   "r_best": 0.684,
+   "r_zero": 0.684
+  },
+  {
+   "bar": 47,
+   "start": 86.81,
+   "best_shift_semitones": 0,
+   "r_best": 0.785,
+   "r_zero": 0.785
+  },
+  {
+   "bar": 49,
+   "start": 90.55,
+   "best_shift_semitones": 0,
+   "r_best": 0.947,
+   "r_zero": 0.947
+  },
+  {
+   "bar": 51,
+   "start": 94.29,
+   "best_shift_semitones": 0,
+   "r_best": 0.578,
+   "r_zero": 0.578
+  },
+  {
+   "bar": 53,
+   "start": 98.03,
+   "best_shift_semitones": 0,
+   "r_best": 0.978,
+   "r_zero": 0.978
+  },
+  {
+   "bar": 55,
+   "start": 101.77,
+   "best_shift_semitones": 0,
+   "r_best": 0.897,
+   "r_zero": 0.897
+  },
+  {
+   "bar": 57,
+   "start": 105.51,
+   "best_shift_semitones": 0,
+   "r_best": 0.951,
+   "r_zero": 0.951
+  },
+  {
+   "bar": 59,
+   "start": 109.25,
+   "best_shift_semitones": 0,
+   "r_best": 0.933,
+   "r_zero": 0.933
+  },
+  {
+   "bar": 61,
+   "start": 112.98,
+   "best_shift_semitones": 0,
+   "r_best": 0.943,
+   "r_zero": 0.943
+  },
+  {
+   "bar": 63,
+   "start": 116.72,
+   "best_shift_semitones": 0,
+   "r_best": 0.991,
+   "r_zero": 0.991
+  },
+  {
+   "bar": 65,
+   "start": 120.46,
+   "best_shift_semitones": 0,
+   "r_best": 0.879,
+   "r_zero": 0.879
+  },
+  {
+   "bar": 67,
+   "start": 124.19,
+   "best_shift_semitones": 0,
+   "r_best": 0.98,
+   "r_zero": 0.98
+  },
+  {
+   "bar": 69,
+   "start": 127.93,
+   "best_shift_semitones": 0,
+   "r_best": 0.954,
+   "r_zero": 0.954
+  },
+  {
+   "bar": 71,
+   "start": 131.66,
+   "best_shift_semitones": 0,
+   "r_best": 0.621,
+   "r_zero": 0.621
+  },
+  {
+   "bar": 73,
+   "start": 135.39,
+   "best_shift_semitones": 1,
+   "r_best": 0.821,
+   "r_zero": 0.511
+  },
+  {
+   "bar": 75,
+   "start": 139.12,
+   "best_shift_semitones": 0,
+   "r_best": 0.845,
+   "r_zero": 0.845
+  },
+  {
+   "bar": 77,
+   "start": 142.85,
+   "best_shift_semitones": 0,
+   "r_best": 0.898,
+   "r_zero": 0.898
+  },
+  {
+   "bar": 79,
+   "start": 146.57,
+   "best_shift_semitones": -2,
+   "r_best": 0.701,
+   "r_zero": 0.028
+  },
+  {
+   "bar": 81,
+   "start": 150.3,
+   "best_shift_semitones": -4,
+   "r_best": 0.541,
+   "r_zero": 0.242
+  },
+  {
+   "bar": 83,
+   "start": 154.02,
+   "best_shift_semitones": 0,
+   "r_best": 0.473,
+   "r_zero": 0.473
+  },
+  {
+   "bar": 85,
+   "start": 157.74,
+   "best_shift_semitones": 0,
+   "r_best": 0.972,
+   "r_zero": 0.972
+  },
+  {
+   "bar": 87,
+   "start": 161.46,
+   "best_shift_semitones": 0,
+   "r_best": 0.793,
+   "r_zero": 0.793
+  },
+  {
+   "bar": 89,
+   "start": 165.18,
+   "best_shift_semitones": 0,
+   "r_best": 0.971,
+   "r_zero": 0.971
+  },
+  {
+   "bar": 91,
+   "start": 168.89,
+   "best_shift_semitones": 0,
+   "r_best": 0.818,
+   "r_zero": 0.818
+  },
+  {
+   "bar": 93,
+   "start": 172.6,
+   "best_shift_semitones": 0,
+   "r_best": 0.893,
+   "r_zero": 0.893
+  },
+  {
+   "bar": 95,
+   "start": 176.31,
+   "best_shift_semitones": 1,
+   "r_best": 0.845,
+   "r_zero": 0.782
+  },
+  {
+   "bar": 97,
+   "start": 180.02,
+   "best_shift_semitones": 0,
+   "r_best": 0.863,
+   "r_zero": 0.863
+  },
+  {
+   "bar": 99,
+   "start": 183.72,
+   "best_shift_semitones": 1,
+   "r_best": 0.84,
+   "r_zero": 0.779
+  },
+  {
+   "bar": 101,
+   "start": 187.42,
+   "best_shift_semitones": 0,
+   "r_best": 0.925,
+   "r_zero": 0.925
+  },
+  {
+   "bar": 103,
+   "start": 191.11,
+   "best_shift_semitones": 0,
+   "r_best": 0.715,
+   "r_zero": 0.715
+  },
+  {
+   "bar": 105,
+   "start": 194.8,
+   "best_shift_semitones": 0,
+   "r_best": 0.969,
+   "r_zero": 0.969
+  },
+  {
+   "bar": 107,
+   "start": 198.49,
+   "best_shift_semitones": 0,
+   "r_best": 0.846,
+   "r_zero": 0.846
+  },
+  {
+   "bar": 109,
+   "start": 202.17,
+   "best_shift_semitones": 0,
+   "r_best": 0.792,
+   "r_zero": 0.792
+  },
+  {
+   "bar": 111,
+   "start": 205.85,
+   "best_shift_semitones": 0,
+   "r_best": 0.786,
+   "r_zero": 0.786
+  },
+  {
+   "bar": 113,
+   "start": 209.53,
+   "best_shift_semitones": 0,
+   "r_best": 0.833,
+   "r_zero": 0.833
+  },
+  {
+   "bar": 115,
+   "start": 213.21,
+   "best_shift_semitones": 0,
+   "r_best": 0.957,
+   "r_zero": 0.957
+  },
+  {
+   "bar": 117,
+   "start": 216.88,
+   "best_shift_semitones": 0,
+   "r_best": 0.962,
+   "r_zero": 0.962
+  },
+  {
+   "bar": 119,
+   "start": 220.55,
+   "best_shift_semitones": 0,
+   "r_best": 0.959,
+   "r_zero": 0.959
+  },
+  {
+   "bar": 121,
+   "start": 224.23,
+   "best_shift_semitones": 0,
+   "r_best": 0.915,
+   "r_zero": 0.915
+  },
+  {
+   "bar": 123,
+   "start": 227.89,
+   "best_shift_semitones": 0,
+   "r_best": 0.895,
+   "r_zero": 0.895
+  },
+  {
+   "bar": 125,
+   "start": 231.56,
+   "best_shift_semitones": 0,
+   "r_best": 0.721,
+   "r_zero": 0.721
+  },
+  {
+   "bar": 127,
+   "start": 235.23,
+   "best_shift_semitones": -1,
+   "r_best": 0.818,
+   "r_zero": 0.153
+  }
+ ],
+ "ay_dolar_phrase_pitch": [
+  {
+   "t": 61.9,
+   "median_hz": 395.1,
+   "midi": 67.14
+  },
+  {
+   "t": 116.2,
+   "median_hz": 415.0,
+   "midi": 67.99
+  },
+  {
+   "t": 177.6,
+   "median_hz": 394.0,
+   "midi": 67.09
+  },
+  {
+   "t": 185.1,
+   "median_hz": 439.7,
+   "midi": 68.99
+  },
+  {
+   "t": 192.5,
+   "median_hz": 412.6,
+   "midi": 67.89
+  }
+ ],
+ "singer_calibration": {
+  "male_ref_lines": "Verse 1 (tag male)",
+  "female_ref_lines": "Pre-Chorus 1 + Bridge (female) (tag female)",
+  "male_ref_median_hz": 247.8,
+  "female_ref_median_hz": 402.3,
+  "threshold_hz_geomean": 315.7
+ },
+ "bridge_voice_check": {
+  "male_half_median_hz": 310.9,
+  "female_half_median_hz": 465.8,
+  "n_male": 121,
+  "n_female": 587,
+  "semitone_gap": 7.0,
+  "mannwhitney_p": 2.0826170990830838e-55,
+  "male_half_frac_below_threshold": 0.69,
+  "female_half_frac_below_threshold": 0.0
+ },
+ "vocal_activity": [
+  {
+   "start": 3.2,
+   "end": 5.02,
+   "mean_db": -29.3,
+   "words_heard": 0
+  },
+  {
+   "start": 17.21,
+   "end": 21.64,
+   "mean_db": -26.4,
+   "words_heard": 6
+  },
+  {
+   "start": 23.85,
+   "end": 29.81,
+   "mean_db": -27.4,
+   "words_heard": 6
+  },
+  {
+   "start": 31.44,
+   "end": 37.55,
+   "mean_db": -27.0,
+   "words_heard": 10
+  },
+  {
+   "start": 38.57,
+   "end": 86.94,
+   "mean_db": -25.1,
+   "words_heard": 55
+  },
+  {
+   "start": 90.19,
+   "end": 163.61,
+   "mean_db": -25.4,
+   "words_heard": 97
+  },
+  {
+   "start": 170.5,
+   "end": 206.87,
+   "mean_db": -26.3,
+   "words_heard": 61
+  },
+  {
+   "start": 211.51,
+   "end": 212.07,
+   "mean_db": -31.3,
+   "words_heard": 0
+  },
+  {
+   "start": 213.86,
+   "end": 228.28,
+   "mean_db": -34.0,
+   "words_heard": 0
+  },
+  {
+   "start": 229.48,
+   "end": 230.02,
+   "mean_db": -38.1,
+   "words_heard": 0
+  },
+  {
+   "start": 231.29,
+   "end": 231.71,
+   "mean_db": -39.9,
+   "words_heard": 0
+  },
+  {
+   "start": 236.63,
+   "end": 237.12,
+   "mean_db": -37.7,
+   "words_heard": 0
+  }
+ ],
+ "vocal_db_per_bar": [
+  -92.6,
+  -48.9,
+  -57.2,
+  -83.0,
+  -86.6,
+  -82.5,
+  -86.5,
+  -86.4,
+  -75.4,
+  -24.4,
+  -26.8,
+  -67.9,
+  -48.2,
+  -26.8,
+  -24.4,
+  -47.4,
+  -44.3,
+  -25.7,
+  -26.4,
+  -40.7,
+  -39.9,
+  -24.4,
+  -28.5,
+  -27.8,
+  -27.6,
+  -25.6,
+  -24.4,
+  -26.0,
+  -23.8,
+  -24.5,
+  -22.9,
+  -23.0,
+  -28.0,
+  -23.8,
+  -23.6,
+  -23.5,
+  -24.1,
+  -24.0,
+  -25.6,
+  -26.1,
+  -24.0,
+  -24.5,
+  -24.8,
+  -24.1,
+  -23.7,
+  -24.4,
+  -73.2,
+  -71.8,
+  -27.8,
+  -26.4,
+  -27.9,
+  -26.7,
+  -26.9,
+  -26.8,
+  -27.8,
+  -28.0,
+  -25.1,
+  -23.4,
+  -23.5,
+  -22.5,
+  -23.4,
+  -26.4,
+  -23.7,
+  -23.9,
+  -24.4,
+  -24.2,
+  -24.0,
+  -25.6,
+  -23.7,
+  -23.5,
+  -24.9,
+  -24.9,
+  -26.3,
+  -24.4,
+  -23.9,
+  -21.0,
+  -21.2,
+  -28.4,
+  -32.3,
+  -30.1,
+  -31.8,
+  -25.3,
+  -26.5,
+  -22.0,
+  -21.7,
+  -20.9,
+  -23.8,
+  -68.5,
+  -74.7,
+  -76.9,
+  -67.7,
+  -37.5,
+  -31.2,
+  -30.0,
+  -34.3,
+  -28.6,
+  -29.4,
+  -22.7,
+  -24.7,
+  -25.2,
+  -24.1,
+  -22.3,
+  -24.3,
+  -23.0,
+  -22.8,
+  -22.0,
+  -24.5,
+  -22.5,
+  -23.6,
+  -22.2,
+  -48.4,
+  -84.7,
+  -88.6,
+  -64.6,
+  -45.3,
+  -35.7,
+  -39.1,
+  -36.6,
+  -31.6,
+  -34.2,
+  -35.6,
+  -28.8,
+  -56.7,
+  -60.1,
+  -75.5,
+  -86.1,
+  -79.4,
+  -91.1,
+  -100.4
+ ],
+ "heard_not_in_lyrics": [
+  {
+   "start": 75.08,
+   "end": 81.5,
+   "text": "Bir daha, bir daha, bir daha, bir daha"
+  },
+  {
+   "start": 188.3,
+   "end": 195.64,
+   "text": "Her sabah baştan, her sabah ilk gün Ay dolar, ay küçülür, ben hep aynı kalırım"
+  },
+  {
+   "start": 196.46,
+   "end": 197.36,
+   "text": "anlatırsın ne var"
+  }
+ ]
+}
