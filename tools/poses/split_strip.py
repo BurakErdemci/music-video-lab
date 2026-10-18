@@ -53,17 +53,64 @@ def segments(alpha):
     return segs
 
 
+def valley_segments(alpha):
+    """Fallback when poses touch (an arm reaching the next figure's foot, seen on
+    the hand-holding walks): cut at the emptiest column near each quarter line."""
+    w, h = alpha.size
+    px = alpha.load()
+    fill = [sum(1 for y in range(0, h, 2) if px[x, y]) for x in range(w)]
+    cuts = []
+    for k in range(1, FRAMES):
+        c = w * k // FRAMES
+        lo, hi = c - w // 10, c + w // 10
+        cuts.append(min(range(lo, hi), key=lambda x: fill[x]))
+    edges = [0] + cuts + [w]
+    return [[edges[i], edges[i + 1]] for i in range(FRAMES)]
+
+
+def drop_edge_crumbs(f, max_share=0.08):
+    """After a valley cut, a toe or fingertip of the neighbouring pose can be left
+    at the frame edge. Remove opaque blobs that touch the left/right edge and are
+    small compared with the frame's total ink."""
+    a = f.split()[3]
+    w, h = a.size
+    px = a.load()
+    total = sum(1 for y in range(h) for x in range(w) if px[x, y])
+    seen = set()
+    for sx in (0, w - 1):
+        for sy in range(h):
+            if not px[sx, sy] or (sx, sy) in seen:
+                continue
+            blob, stack = [], [(sx, sy)]
+            seen.add((sx, sy))
+            while stack:
+                x, y = stack.pop()
+                blob.append((x, y))
+                for nx, ny in ((x + 1, y), (x - 1, y), (x, y + 1), (x, y - 1)):
+                    if 0 <= nx < w and 0 <= ny < h and px[nx, ny] and (nx, ny) not in seen:
+                        seen.add((nx, ny))
+                        stack.append((nx, ny))
+            if len(blob) < total * max_share:
+                fp = f.load()
+                for x, y in blob:
+                    fp[x, y] = (0, 0, 0, 0)
+    return f
+
+
 def split(path, dst):
     im = cut(path)  # trimmed to the union bbox, background transparent
     alpha = im.split()[3]
     segs = segments(alpha)
+    if len(segs) < FRAMES:
+        print(f"{os.path.basename(path)}: poses touch, cutting at column valleys")
+        segs = valley_segments(alpha)
     name = os.path.splitext(os.path.basename(path))[0]
     if len(segs) != FRAMES:
         print(f"{name}: found {len(segs)} poses, expected {FRAMES} - SKIPPED")
         return None
     frames = []
     for i, (x0, x1) in enumerate(segs, 1):
-        f = im.crop((x0, 0, x1, im.height))  # full strip height = shared baseline
+        f = drop_edge_crumbs(im.crop((x0, 0, x1, im.height)))  # full height = shared baseline
         f.save(os.path.join(dst, f"{name}-{i}.png"))
         invert(f).save(os.path.join(dst, f"{name}-{i}-ters.png"))
         frames.append(f)

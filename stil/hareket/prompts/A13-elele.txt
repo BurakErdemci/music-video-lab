@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the AI character (silk-screen style). Draw the SAME character, identical design and proportions (smooth genderless slender body, solid cream-white #F3EFE4 fill, thin midnight navy #18203A outline, small round bald head about 1/7.5 of the height, NO face except ONE short vertical navy cursor line) BUT now 7-9 small moon-yellow (#F0D35A) sticky notes are stuck on its shoulders, chest and back, like the human used to have. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (four key poses): Draw EXACTLY FOUR separate figures in one row, clearly apart. walking slowly in profile facing RIGHT (NOTE: facing RIGHT this time) with the RIGHT arm extended slightly forward and down as if holding the hand of someone walking just ahead of them (that other person is NOT drawn): a gentle 4-pose walk cycle 1) contact; 2) down; 3) passing; 4) up — the holding arm stays in the same place in all four.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale, feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.
