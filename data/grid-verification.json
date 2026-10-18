@@ -1,0 +1,552 @@
+{
+ "equation": {
+  "bars": 129,
+  "beats_per_bar": 4,
+  "mean_beat_period": 0.46538,
+  "bars_x4_x_period": 240.138,
+  "span_first_downbeat_to_last_beat_s": 240.134,
+  "first_downbeat": 0.59,
+  "audio_end": 240.76
+ },
+ "energy_steps": [
+  {
+   "t": 0.27,
+   "step_db": 28.5,
+   "dt_to_downbeat_ms": -315.0,
+   "dt_to_beat_ms": 155.0
+  },
+  {
+   "t": 3.15,
+   "step_db": 7.7,
+   "dt_to_downbeat_ms": 682.0,
+   "dt_to_beat_ms": 212.0
+  },
+  {
+   "t": 6.0,
+   "step_db": 6.0,
+   "dt_to_downbeat_ms": -224.0,
+   "dt_to_beat_ms": -224.0
+  },
+  {
+   "t": 15.09,
+   "step_db": 6.1,
+   "dt_to_downbeat_ms": -512.0,
+   "dt_to_beat_ms": -43.0
+  },
+  {
+   "t": 16.49,
+   "step_db": 6.9,
+   "dt_to_downbeat_ms": 888.0,
+   "dt_to_beat_ms": -50.0
+  },
+  {
+   "t": 22.11,
+   "step_db": 9.0,
+   "dt_to_downbeat_ms": 881.0,
+   "dt_to_beat_ms": -57.0
+  },
+  {
+   "t": 23.99,
+   "step_db": 6.0,
+   "dt_to_downbeat_ms": 880.0,
+   "dt_to_beat_ms": -58.0
+  },
+  {
+   "t": 29.34,
+   "step_db": -7.6,
+   "dt_to_downbeat_ms": 600.0,
+   "dt_to_beat_ms": 131.0
+  },
+  {
+   "t": 37.31,
+   "step_db": -10.2,
+   "dt_to_downbeat_ms": -805.0,
+   "dt_to_beat_ms": 132.0
+  },
+  {
+   "t": 38.53,
+   "step_db": 9.7,
+   "dt_to_downbeat_ms": 419.0,
+   "dt_to_beat_ms": -50.0
+  },
+  {
+   "t": 44.13,
+   "step_db": -6.2,
+   "dt_to_downbeat_ms": 392.0,
+   "dt_to_beat_ms": -77.0
+  },
+  {
+   "t": 45.5,
+   "step_db": 6.5,
+   "dt_to_downbeat_ms": -108.0,
+   "dt_to_beat_ms": -108.0
+  },
+  {
+   "t": 98.66,
+   "step_db": -8.4,
+   "dt_to_downbeat_ms": 626.0,
+   "dt_to_beat_ms": 158.0
+  },
+  {
+   "t": 99.85,
+   "step_db": 6.5,
+   "dt_to_downbeat_ms": -45.0,
+   "dt_to_beat_ms": -45.0
+  },
+  {
+   "t": 105.43,
+   "step_db": 8.4,
+   "dt_to_downbeat_ms": -81.0,
+   "dt_to_beat_ms": -81.0
+  },
+  {
+   "t": 144.96,
+   "step_db": -10.6,
+   "dt_to_downbeat_ms": 250.0,
+   "dt_to_beat_ms": -216.0
+  },
+  {
+   "t": 148.26,
+   "step_db": 6.8,
+   "dt_to_downbeat_ms": -177.0,
+   "dt_to_beat_ms": -177.0
+  },
+  {
+   "t": 149.51,
+   "step_db": -7.7,
+   "dt_to_downbeat_ms": -790.0,
+   "dt_to_beat_ms": 141.0
+  },
+  {
+   "t": 150.66,
+   "step_db": 10.4,
+   "dt_to_downbeat_ms": 360.0,
+   "dt_to_beat_ms": -106.0
+  },
+  {
+   "t": 175.35,
+   "step_db": 7.6,
+   "dt_to_downbeat_ms": 887.0,
+   "dt_to_beat_ms": -40.0
+  },
+  {
+   "t": 176.47,
+   "step_db": -8.7,
+   "dt_to_downbeat_ms": 158.0,
+   "dt_to_beat_ms": 158.0
+  },
+  {
+   "t": 177.67,
+   "step_db": 16.7,
+   "dt_to_downbeat_ms": -495.0,
+   "dt_to_beat_ms": -32.0
+  },
+  {
+   "t": 179.27,
+   "step_db": -6.2,
+   "dt_to_downbeat_ms": -748.0,
+   "dt_to_beat_ms": 178.0
+  },
+  {
+   "t": 180.44,
+   "step_db": 7.4,
+   "dt_to_downbeat_ms": 426.0,
+   "dt_to_beat_ms": -37.0
+  },
+  {
+   "t": 184.62,
+   "step_db": 9.0,
+   "dt_to_downbeat_ms": 897.0,
+   "dt_to_beat_ms": -28.0
+  },
+  {
+   "t": 186.92,
+   "step_db": 7.3,
+   "dt_to_downbeat_ms": -502.0,
+   "dt_to_beat_ms": -40.0
+  },
+  {
+   "t": 209.45,
+   "step_db": 7.2,
+   "dt_to_downbeat_ms": -76.0,
+   "dt_to_beat_ms": -76.0
+  },
+  {
+   "t": 212.23,
+   "step_db": 18.0,
+   "dt_to_downbeat_ms": 859.0,
+   "dt_to_beat_ms": -60.0
+  },
+  {
+   "t": 231.89,
+   "step_db": -9.0,
+   "dt_to_downbeat_ms": 333.0,
+   "dt_to_beat_ms": -126.0
+  },
+  {
+   "t": 233.34,
+   "step_db": 7.1,
+   "dt_to_downbeat_ms": -51.0,
+   "dt_to_beat_ms": -51.0
+  },
+  {
+   "t": 237.62,
+   "step_db": 15.6,
+   "dt_to_downbeat_ms": 557.0,
+   "dt_to_beat_ms": 99.0
+  },
+  {
+   "t": 238.89,
+   "step_db": 17.2,
+   "dt_to_downbeat_ms": -1.0,
+   "dt_to_beat_ms": -1.0
+  }
+ ],
+ "energy_steps_within_150ms_of_downbeat": "6/32",
+ "kick_vs_beat_per_30s": [
+  {
+   "window": "0-30",
+   "n": 41,
+   "median_ms": -18.7,
+   "p90_abs_ms": 28.0
+  },
+  {
+   "window": "30-60",
+   "n": 60,
+   "median_ms": -15.9,
+   "p90_abs_ms": 20.9
+  },
+  {
+   "window": "60-90",
+   "n": 45,
+   "median_ms": -11.0,
+   "p90_abs_ms": 21.0
+  },
+  {
+   "window": "90-120",
+   "n": 49,
+   "median_ms": -14.5,
+   "p90_abs_ms": 20.2
+  },
+  {
+   "window": "120-150",
+   "n": 48,
+   "median_ms": -8.3,
+   "p90_abs_ms": 13.7
+  },
+  {
+   "window": "150-180",
+   "n": 37,
+   "median_ms": -17.8,
+   "p90_abs_ms": 32.9
+  },
+  {
+   "window": "180-210",
+   "n": 47,
+   "median_ms": 0.5,
+   "p90_abs_ms": 57.2
+  },
+  {
+   "window": "210-240",
+   "n": 25,
+   "median_ms": -9.0,
+   "p90_abs_ms": 28.3
+  }
+ ],
+ "max_abs_window_median_ms": 18.7,
+ "downbeat_phase_by_section": [
+  {
+   "section": "Intro",
+   "bars": 8,
+   "chord_change_by_phase": [
+    0.071,
+    0.092,
+    0.088,
+    0.089
+   ],
+   "best_phase_chord": 1,
+   "kick_by_phase": [
+    17.6,
+    15.1,
+    12.6,
+    12.7
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Verse 1",
+   "bars": 15,
+   "chord_change_by_phase": [
+    0.032,
+    0.011,
+    0.007,
+    0.02
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    51.4,
+    46.4,
+    54.0,
+    43.2
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Pre-Chorus 1",
+   "bars": 7,
+   "chord_change_by_phase": [
+    0.031,
+    0.011,
+    0.01,
+    0.016
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    49.6,
+    44.4,
+    41.2,
+    40.6
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Chorus 1",
+   "bars": 8,
+   "chord_change_by_phase": [
+    0.068,
+    0.025,
+    0.035,
+    0.09
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    33.0,
+    24.8,
+    33.0,
+    26.5
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Post-Chorus",
+   "bars": 9,
+   "chord_change_by_phase": [
+    0.074,
+    0.071,
+    0.089,
+    0.088
+   ],
+   "best_phase_chord": 2,
+   "kick_by_phase": [
+    31.8,
+    19.2,
+    28.3,
+    17.3
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Verse 2",
+   "bars": 8,
+   "chord_change_by_phase": [
+    0.131,
+    0.068,
+    0.034,
+    0.02
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    35.3,
+    17.6,
+    41.0,
+    21.9
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Pre-Chorus 2",
+   "bars": 4,
+   "chord_change_by_phase": [
+    0.032,
+    0.02,
+    0.06,
+    0.055
+   ],
+   "best_phase_chord": 2,
+   "kick_by_phase": [
+    42.0,
+    18.8,
+    29.9,
+    16.5
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Chorus 2",
+   "bars": 10,
+   "chord_change_by_phase": [
+    0.047,
+    0.018,
+    0.014,
+    0.024
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    28.3,
+    17.0,
+    31.8,
+    20.4
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Bridge (male)",
+   "bars": 8,
+   "chord_change_by_phase": [
+    0.07,
+    0.005,
+    0.01,
+    0.038
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    24.6,
+    38.6,
+    29.6,
+    32.4
+   ],
+   "best_phase_kick": 1
+  },
+  {
+   "section": "Bridge (female)",
+   "bars": 6,
+   "chord_change_by_phase": [
+    0.218,
+    0.071,
+    0.07,
+    0.057
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    4.2,
+    0.1,
+    0.0,
+    0.0
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Instrumental Break",
+   "bars": 9,
+   "chord_change_by_phase": [
+    0.047,
+    0.004,
+    0.003,
+    0.005
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    30.5,
+    19.8,
+    28.8,
+    18.5
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Final Chorus (stripped, female)",
+   "bars": 4,
+   "chord_change_by_phase": [
+    0.011,
+    0.004,
+    0.001,
+    0.006
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    48.3,
+    59.1,
+    57.3,
+    59.6
+   ],
+   "best_phase_kick": 3
+  },
+  {
+   "section": "Final Chorus (full, duet)",
+   "bars": 14,
+   "chord_change_by_phase": [
+    0.032,
+    0.007,
+    0.006,
+    0.005
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    43.5,
+    33.0,
+    44.9,
+    31.5
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Outro",
+   "bars": 4,
+   "chord_change_by_phase": [
+    0.047,
+    0.026,
+    0.089,
+    0.112
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    12.5,
+    0.7,
+    0.6,
+    0.7
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Outro part 2 (measured)",
+   "bars": 8,
+   "chord_change_by_phase": [
+    0.043,
+    0.009,
+    0.002,
+    0.004
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    32.9,
+    18.8,
+    35.6,
+    16.8
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Outro part 3 (measured)",
+   "bars": 4,
+   "chord_change_by_phase": [
+    0.059,
+    0.223,
+    0.235,
+    0.335
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    29.7,
+    1.0,
+    0.7,
+    1.2
+   ],
+   "best_phase_kick": 0
+  }
+ ],
+ "phase0_wins": {
+  "sections": 16,
+  "chord_change": 10,
+  "kick": 9
+ }
+}

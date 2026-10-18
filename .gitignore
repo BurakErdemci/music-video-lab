@@ -1,0 +1,6 @@
+node_modules/
+out/
+sarki/*.wav
+stil/*/logs/
+sfx/candidates/*.wav
+*.log

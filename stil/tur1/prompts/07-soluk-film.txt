@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image only, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./07-soluk-film.png
+
+Subject: a small bedroom-office at dawn. The frame is split exactly down the vertical centre into two mirrored halves of the SAME room. LEFT half (the human): a lone faceless young person seen from behind/side, sitting hunched at a desk facing a monitor; the desk and wall are crowded with handwritten notes, sticky notes, a cold coffee cup, a notebook, the traces of many days. RIGHT half (the machine): the identical room mirrored, but completely empty, clean and untouched, nobody there, only the monitor glowing with a single blinking cursor. A pale moon is visible through one window that spans both halves.
+Composition: 16:9 landscape ~1536x864. Straight-on, symmetrical, the centre seam clearly readable. Generous negative space. Mood: quiet, lonely, melancholic, slightly depressive, early-morning stillness; bittersweet, not horror.
+
+Art direction:
+- Bleached, overexposed 35mm film still: washed-out highlights, lifted milky blacks, cold cyan-green colour cast, heavy film grain, light leaks at one edge, slight motion softness. Liminal-space emptiness. Stylised cinematic photograph, painterly not hyper-detailed.
+- No vivid colours, no HDR, no 3D render look.
+- ABSOLUTELY NO text, letters, numbers, logos, watermarks or readable UI. No faces with detail. No robots. No horror, no gore.
+
+After copying, print the output path and pixel size. Generate exactly one image, never more.

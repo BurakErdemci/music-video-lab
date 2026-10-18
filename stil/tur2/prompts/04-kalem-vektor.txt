@@ -1,0 +1,9 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files afterwards; just generate it and then print the word DONE.
+
+Subject: the key frame of a melancholic music video. The 16:9 frame is split exactly down the vertical centre by a thin pane of GLASS. LEFT: the human side, a small dark room at night overflowing with handwritten paper notes pinned and taped on every wall, a thick worn notebook on the desk. The human is a simple faceless silhouette character (no facial features at all), small paper sticky notes stuck all over their shoulders and back. RIGHT: the AI side, a completely empty, pure white room, nothing in it. The AI is a simple slender white figure with NO face: where the face would be there is only a single vertical cursor line (like a text cursor). The two characters stand facing each other on either side of the glass and press their palms against the same spot on the glass. A pale moon is visible high in the frame.
+Composition: 16:9 landscape. Flat, frontal, theatre-like staging, both characters full body standing on the same floor line, the glass seam in the exact centre. The two characters are clearly readable as designed characters, not generic people. Generous negative space on the AI side.
+Mood: quiet, lonely, tender, slightly depressive; bittersweet.
+
+Art direction:
+- The two halves are made of DIFFERENT MEDIA. Left (human) side: dense graphite pencil and ink drawing on cream paper, hatching, eraser smudges, the notes hand-drawn. Right (AI) side: crisp perfect flat vector shapes, pure white with cold blue-grey (#8FA3B8) lines only, zero texture. Where the palms meet on the glass, pencil and vector touch. A single pale yellow (#E9DC86) moon.
+- ABSOLUTELY NO text, letters, numbers, logos, watermarks. No anime girl, no realistic human faces, no robots, no sci-fi holograms, no cosy lo-fi bedroom wallpaper look.
