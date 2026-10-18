@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the HUMAN character (silk-screen style). Draw the SAME character, identical design: same messy hair silhouette, same slim build, same plain clothing (simple trousers, plain top, simple shoes, NO jacket, NO boots), solid midnight navy (#18203A) body, thin cream (#F3EFE4) outline, faceless, 7-9 moon-yellow (#F0D35A) sticky notes on shoulders and back. Same flat silk-screen style with slight misregistration and fine grain.
+
+Pose: sitting on the floor with knees drawn up, arms around the knees, head bowed onto the knees, seen in profile; their back is on the RIGHT side of the image (leaning against a wall on the right), face toward the LEFT.
+
+Composition: the single character only, full body, centred, feet resting near the bottom edge, generous margin, 16:9 landscape canvas. Background: ONE flat solid pure magenta (#FF00FF) fill, completely uniform, no shadow, no floor, no texture on the background.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters, no props unless named. Palette only navy, cream, moon yellow (+ the magenta background).

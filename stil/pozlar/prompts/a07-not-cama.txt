@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED style frame of a music video. Draw ONE character cut-out in EXACTLY that silk-screen style (flat shapes, slight ink misregistration, fine screen grain). This is the AI: a slender, smooth, genderless figure with a SOLID cream-white (#F3EFE4) body and a thin midnight navy (#18203A) outline, the same natural adult proportions as in the reference (real neck, shoulders, arms, legs; NOT a stick figure, NOT a pill shape), a round bald head with NO face except ONE short vertical navy cursor line where the face would be.
+
+Pose: standing in profile facing LEFT, holding one moon-yellow sticky note flat with fingertips at chest height as if placing it on an invisible glass in front of them.
+
+Composition: the single character only, full body, centred, feet resting near the bottom edge, generous margin, 16:9 landscape canvas. Background: ONE flat solid pure magenta (#FF00FF) fill, completely uniform, no shadow, no floor, no texture on the background.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters, no props unless named. Palette only navy, cream, moon yellow (+ the magenta background).
