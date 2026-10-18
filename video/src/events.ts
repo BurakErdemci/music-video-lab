@@ -60,35 +60,41 @@ const spanTo = (id: string, untilId: string): void => {
   a.enter = { type: a.enter.type, frames: b.frame - a.frame };
 };
 
-// ---- intro (bars 1-8): one plate per bar on the downbeat, a second change on beat 3 of the same bar
-// (the dead-air limit is 2 beats, so a bar with a single event would fail it).
-atBar('intro.cursor', 'print', 1, 0, enter('squeegee', 14));
-atBar('intro.cursor.wake', 'print', 1, 2, enter('ease'));
-atBar('intro.moon', 'print', 2, 0, enter('squeegee'));
-atBar('intro.seam', 'print', 3, 0, enter('squeegee')); // frames = until intro.seam.end (spanTo below)
-atBar('intro.seam.end', 'print', 3, 2, enter('settle'));
-atBar('intro.title', 'print', 4, 0, enter('squeegee'));
-atBar('intro.title.fade', 'print', 4, 2, enter('fade')); // exit; frames = until intro.room (spanTo below)
-atBar('intro.room', 'print', 5, 0, enter('squeegee'));
-atBar('intro.room.ink', 'print', 5, 2, enter('ease', 12));
-atBar('intro.moonwin', 'print', 6, 0, enter('squeegee'));
-atBar('intro.notes', 'print', 6, 2, enter('squeegee'));
-atBar('intro.human', 'print', 7, 0, enter('halftone'));
-atBar('intro.ai', 'print', 7, 2, enter('halftone'));
-atBar('intro.bubble', 'bubble', 8, 0, enter('drift'));
-atBar('intro.bubble.text', 'bubble', 8, 2, enter('fade'));
-// blinks on beats 2 and 4 so a downbeat never lands on an 'off' frame; a blink is not a visible change
-for (let i = barBeatIndex(2) + 1; i < barBeatIndex(7) + 2; i += 2) atBeat(`intro.blink.${i}`, 'blink', i, enter('fade', BLINK_FRAMES), false);
-// the two "oh"s draw a ring that spreads from the cursor
+// ---- intro (bars 1-8): one continuous zoom-out (world/droste.ts) with a visible event on every downbeat and
+// beat 3 (the dead-air limit is 2 beats). The zoom itself is a function of the frame, not an event.
+atBar('intro.cursor.ink', 'print', 1, 0, enter('ease', 14)); // the cursor line inks in
+atBar('intro.cursor.echo', 'print', 1, 2, enter('ease', 12)); // the yellow plate slides in behind it
+atBar('intro.face', 'print', 2, 0, enter('ease', 14)); // the head's outline inks in as the zoom reaches it
+// the two "oh"s draw a ring that spreads from the cursor (bar 2 beat 3 and bar 3 downbeat)
 const ohLine = TIMING.lines[0]?.energy_hint;
 if (!ohLine) throw new Error('timing.json: (oh, oh) has no energy_hint');
 atTime('intro.oh1', 'oh', ohLine.start, enter('ring'));
 atTime('intro.oh2', 'oh', (ohLine.start + ohLine.end) / 2, enter('ring')); // second "oh" is not measured separately
-atBar('room.reveal.start', 'reveal', 9, 0, enter('squeegee')); // frames = until room.reveal.end (spanTo below)
-atBar('room.reveal.end', 'reveal', 10, 0, enter('settle'));
-spanTo('intro.seam', 'intro.seam.end');
-spanTo('intro.title.fade', 'intro.room');
-spanTo('room.reveal.start', 'room.reveal.end');
+atBar('intro.floor', 'print', 3, 0, enter('squeegee', 14)); // the floor line is drawn out from the AI
+atBar('intro.moon', 'print', 3, 2, enter('squeegee')); // the crescent is printed on the wall
+atBar('intro.bubble', 'bubble', 4, 0, enter('drift')); // "Merhaba" next to the AI, in every nested copy
+atBar('intro.paper', 'print', 4, 2, enter('ease', 14)); // the note's yellow plate deepens
+atBar('intro.title', 'stamp', 5, 0, STAMP_ENTER); // the title is stamped across the lower third
+atBar('intro.pin.1', 'print', 5, 2, enter('ease', 10)); // the pins catch the light, one pulse per half bar
+atBar('intro.title.fade', 'print', 6, 0, enter('fade')); // exit; frames = until intro.halo (spanTo below)
+atBar('intro.pin.2', 'print', 6, 2, enter('ease', 10));
+atBar('intro.halo', 'print', 7, 0, enter('ease', 12)); // the moon's halo pulses
+atBar('intro.pin.3', 'print', 7, 2, enter('ease', 10));
+atBar('intro.cream', 'reveal', 8, 0, enter('ease')); // the zoom rushes into the cream wall; frames = until room.seam
+atBar('intro.pin.4', 'print', 8, 2, enter('ease', 10));
+// blinks on beats 2 and 4 so a downbeat never lands on an 'off' frame; a blink is not a visible change
+for (let i = barBeatIndex(1) + 1; i < barBeatIndex(9); i += 2) atBeat(`intro.blink.${i}`, 'blink', i, enter('fade', BLINK_FRAMES), false);
+
+// ---- bar 9: the band hits on the downbeat and everything is printed over the flat cream frame
+atBar('room.seam', 'reveal', 9, 0, enter('squeegee', 8)); // the glass seam drops down the centre
+atBar('room.navy', 'reveal', 9, 0, enter('squeegee', 14)); // the navy room squeegees in from the left
+atBar('room.human', 'print', 9, 0, enter('halftone'));
+atBar('room.ai', 'print', 9, 0, enter('halftone'));
+atBar('room.moon', 'print', 9, 0, enter('squeegee'));
+atBar('room.yellow', 'print', 9, 2, enter('squeegee', 14)); // window moon plate
+atBar('room.notes', 'print', 10, 0, enter('squeegee', 14)); // pinned notes plate
+spanTo('intro.title.fade', 'intro.halo');
+spanTo('intro.cream', 'room.seam');
 
 // ---- verse 1: split rooms, two lines
 const bar10 = barBeatIndex(10);

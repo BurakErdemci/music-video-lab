@@ -60,14 +60,14 @@ export const LineupScene = () => {
   const humans = ALL_POSES.filter((p) => poseWho(p) === 'human');
   const ais = ALL_POSES.filter((p) => poseWho(p) === 'ai');
   const K = 0.55;
-  const row = (ids: typeof ALL_POSES, bg: 'navy' | 'cream') => {
+  const row = (ids: typeof ALL_POSES) => {
     let x = 40;
     return ids.map((id) => {
       const m = POSES[id];
       const w = m.w * m.scale;
       const cx = x + w * m.anchorX;
       x += w + 24;
-      return <Figure key={id} pose={id} x={cx} y={0} bg={bg} />;
+      return <Figure key={id} pose={id} x={cx} y={0} />;
     });
   };
   const base = H / 2 - 20;
@@ -77,11 +77,11 @@ export const LineupScene = () => {
         <rect width={W} height={H / 2} fill={palette.navy} />
         <rect y={H / 2} width={W} height={H / 2} fill={palette.cream} />
         <g transform={`translate(0 ${base}) scale(${K})`}>
-          {row(humans, 'navy')}
+          {row(humans)}
           <line x1={0} x2={W / K} y1={-670} y2={-670} stroke="#f00" strokeWidth={2} />
         </g>
         <g transform={`translate(0 ${base + H / 2}) scale(${K})`}>
-          {row(ais, 'cream')}
+          {row(ais)}
           <line x1={0} x2={W / K} y1={-670} y2={-670} stroke="#f00" strokeWidth={2} />
         </g>
       </svg>

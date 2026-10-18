@@ -10,11 +10,11 @@ const Song = () => <Audio src={staticFile('her-sabah-bastan.wav')} />;
 
 // Scenes after 0:30 are not built yet: the full composition keeps the last test frame's
 // structure running (no events are scheduled past frame 900).
-const Video = () => {
+const Video = ({ lOverride }: { lOverride?: number }) => {
   const frame = useCurrentFrame();
   return (
     <AbsoluteFill>
-      <Test30Scene frame={frame} />
+      <Test30Scene frame={frame} lOverride={lOverride} />
       <Song />
     </AbsoluteFill>
   );

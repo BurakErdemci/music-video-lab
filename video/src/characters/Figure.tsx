@@ -37,17 +37,18 @@ const Img = ({ pose, ters, x, y, flip = false, zoom = 1, opacity = 1, blink = 0 
   );
 };
 
-/** A pose cut-out standing on (x, y), in the colouring of the room it stands in. */
-export const Figure = ({ bg, ...p }: FigProps & { bg?: Bg }) => {
-  const own: Bg = poseWho(p.pose) === 'human' ? 'navy' : 'cream';
-  return <Img {...p} ters={tersFor(p.pose, bg ?? own)} />;
-};
+/**
+ * A pose cut-out standing on (x, y) in its HOME colouring: `<pose>.png` for both worlds (human = navy body on the
+ * navy side, AI = cream body on the cream side). The inverted `-ters` art is reachable only through
+ * CrossingFigure, so a default figure can never come out inverted.
+ */
+export const Figure = (p: FigProps) => <Img {...p} ters={false} />;
 
 /**
  * A figure cut at a vertical line: the part left of `seamX` is drawn in the colouring for `leftBg`,
  * the part right of it for `rightBg`. Defaults: the glass seam, navy room left, cream room right,
  * so a human crossing right keeps a navy body on the left and turns cream past the glass.
- * The reveal wipe uses leftBg="cream", rightBg="navy" with a moving seamX.
+ * This (and PoseFigure's `crossing` prop) is the ONLY path to the inverted `-ters` art.
  */
 export const CrossingFigure = ({
   uid,
@@ -66,8 +67,8 @@ export const CrossingFigure = ({
     return (
       <g>
         <defs>
-          <WipeMask id={`${uid}-ml`} p={1} axis="x" from={from} to={from} soft={soft} invert />
-          <WipeMask id={`${uid}-mr`} p={1} axis="x" from={from} to={from} soft={soft} />
+          <WipeMask id={`${uid}-ml`} p={1} axis="x" from={from} to={from} soft={soft} />
+          <WipeMask id={`${uid}-mr`} p={1} axis="x" from={from} to={from} soft={soft} invert />
         </defs>
         <g mask={`url(#${uid}-ml)`}>
           <Img {...p} ters={lt} />
@@ -111,17 +112,20 @@ const takeOver = (k: number): number => k + (k % 2);
 /**
  * A figure whose pose changes over time. Poses stay on twos but never hard-cut: when the pose
  * switches, the old one dissolves into the new one over POSE_BLEND_FRAMES.
+ * Home colouring unless `crossing` is given (an explicit crossing moment).
  */
 export const PoseFigure = ({
   frame,
   keys,
   uid,
-  seamX,
-  leftBg,
-  rightBg,
-  soft,
+  crossing,
   ...p
-}: Omit<FigProps, 'pose'> & { frame: number; keys: readonly (readonly [number, PoseId])[]; uid: string; seamX?: number; leftBg?: Bg; rightBg?: Bg; soft?: number }) => {
+}: Omit<FigProps, 'pose'> & {
+  frame: number;
+  keys: readonly (readonly [number, PoseId])[];
+  uid: string;
+  crossing?: { seamX?: number; leftBg?: Bg; rightBg?: Bg; soft?: number };
+}) => {
   let cur = 0;
   keys.forEach((k, i) => {
     if (frame >= takeOver(k[0])) cur = i;
@@ -129,7 +133,8 @@ export const PoseFigure = ({
   const now = keys[cur] as readonly [number, PoseId];
   const t = cur === 0 ? 1 : Math.min(1, (frame - takeOver(now[0]) + 1) / POSE_BLEND_FRAMES);
   const base = p.opacity ?? 1;
-  const draw = (pose: PoseId, id: string, opacity: number) => <CrossingFigure key={id} uid={id} pose={pose} seamX={seamX} leftBg={leftBg} rightBg={rightBg} soft={soft} {...p} opacity={opacity} />;
+  const draw = (pose: PoseId, id: string, opacity: number) =>
+    crossing ? <CrossingFigure key={id} uid={id} pose={pose} {...crossing} {...p} opacity={opacity} /> : <Figure key={id} pose={pose} {...p} opacity={opacity} />;
   if (t >= 1) return draw(now[1], `${uid}-n`, base);
   const prev = keys[cur - 1] as readonly [number, PoseId];
   return (
