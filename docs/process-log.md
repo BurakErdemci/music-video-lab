@@ -101,3 +101,5 @@ Each entry is: what we did → what we measured → what a human saw → the les
 - Lesson: water is the hardest material to fake in code; the clip's own print language (plates, halftone, squeegee,
   ink, paper) is what code does well. New family: plate registration shift, halftone bloom, squeegee print, paper fold
   (back to true 3D), ink bleed, plus shape match cuts.
+- Burak watched the two kept transitions (ink bleed v2, paper fold v1): "ikisi de gayet iyi, bu tarz geçişler olabilir,
+  kodla nerede güçlüysek oraya oynayalım". Direction confirmed: play to code's strengths.
