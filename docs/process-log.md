@@ -111,3 +111,7 @@ Each entry is: what we did → what we measured → what a human saw → the les
   the profiles differ from the references by 0.51 % (human) and 0.34 % (AI) of pixels — the illustrated look survives,
   which the 3D bodies could not do. Rigid bend tests: no gaps; short inner crease lines at elbow/knee at 90–120°.
   The 3/4 and front views are drafts (boxy shoulders). Next: Blender 2D rig with mesh deformation.
+- Transition v4: only the two weak ones were redone (Burak: "hepsini tekrar yaptırma, zayıfları tekrar yaptır"); the
+  three good ones were locked and verified byte-identical by md5. The squeegee kept its motion and gained a visible
+  blade, ink bead, screen frame and starved print texture; the plate shift became full-frame colour separations that
+  peel like a sheet. Burak: "yeniler çok daha iyi". Five print-language transitions are now the clip's toolkit.
