@@ -11,7 +11,7 @@ import {
 } from './timing.ts';
 import { enter, ENTER_FRAMES, LYRIC_FRAMES, STAMP_ENTER, BLINK_FRAMES, type Enter } from './motion/entrances.ts';
 
-export type EventKind = 'blink' | 'oh' | 'bubble' | 'reveal' | 'line' | 'stamp' | 'note' | 'print' | 'wall' | 'wave' | 'moon' | 'tally' | 'pose';
+export type EventKind = 'blink' | 'oh' | 'bubble' | 'reveal' | 'line' | 'stamp' | 'note' | 'print' | 'wall' | 'wave' | 'moon' | 'tally' | 'pose' | 'lamp' | 'beam' | 'camera';
 
 export interface VideoEvent {
   id: string;
@@ -33,8 +33,8 @@ export interface VideoEvent {
   beatOffset?: number;
 }
 
-/** Test90 range: events at or after this frame are not scheduled (1:28.7, the end of the post-chorus). */
-export const CHECK_UNTIL_FRAME = 2661;
+/** Built range: events at or after this frame are not scheduled (2:09.8, the end of chorus 2; Test90 ends at 1:28.7). */
+export const CHECK_UNTIL_FRAME = 3894;
 
 const list: VideoEvent[] = [];
 const push = (e: VideoEvent): void => {
@@ -200,6 +200,81 @@ for (let i = lapseFrom; i <= lapseTo; i++) atBeat(`lapse.${i}`, 'wave', i, enter
 // the last bar: the human's yellow note lands on the glass BEFORE the AI's slow reset; the AI only tilts its head
 atBar('final.note', 'note', 47, 0, enter('drift'));
 atBar('final.reset', 'wave', 47, 1, enter('squeegee', 30));
+
+
+// ============================================================================================================
+// 1:28.7 -> 2:09.8: verse 2 (the AI sings), pre-chorus 2 (the human), chorus 2. Staging: sahne-haritasi.md
+// "Line moments"; what the characters do is scenes/acting.ts.
+// ============================================================================================================
+
+// ---- verse 2, line 16 "Yazili duruyor hepsi, satir satir": the notebook's lines slide across the AI side, one per beat
+for (const n of [16, 17, 18, 19]) lineShow(n);
+const satirFrom = beatOf(lineWordTime(16, 0));
+for (let i = satirFrom; i < satirFrom + 9; i++) atBeat(`satir.${i}`, 'print', i, enter('ease', 72));
+atTime('stamp.satir', 'stamp', lineWordTime(16, 3), STAMP_ENTER);
+// the crates the lamps will sit on are put down on the AI's floor (they stay until the first chorus-2 wave)
+atBar('crates.in', 'print', 50, 0, enter('halftone', 18));
+
+// ---- line 17 "Yine ayni hatayi": the same crossed-out note comes out of her writing hand three times, 2 beats apart
+atTime('stamp.aynihata', 'stamp', lineWordTime(17, 1), STAMP_ENTER);
+const hataFrom = beatOf(lineWordTime(17, 0)) + 3;
+for (const k of [0, 1, 2]) atBeat(`hata.${k + 1}`, 'print', hataFrom + 2 * k, enter('drift', 14));
+
+// ---- line 18 "Tamam diyorum, bitti diyorum, isiklar yesil yaniyor": the camera leans in on the crates' lamps; from
+// "bitti" one yellow-green lamp switches on per beat (six)
+atTime('stamp.bitti', 'stamp', lineWordTime(18, 2), STAMP_ENTER);
+atBeat('camera.in', 'camera', beatOf(lineWordTime(18, 0)) + 1, enter('ease', 40));
+const lampFrom = beatOf(lineWordTime(18, 2));
+for (let k = 0; k < 6; k++) atBeat(`lamp.${k + 1}`, 'lamp', lampFrom + k, enter('ease', 10));
+
+// ---- line 19 "Sen bakinca goruyorsun, hicbir sey olculmemis": the camera pulls back on "hicbir": the lamps sit on
+// EMPTY crates; the stamp lands as the pull-back settles
+// "goruyorsun": every lamp swells once, all together (she is proud of them; the beat before the pull-back)
+atTime('lamp.glow', 'lamp', lineWordTime(19, 2), enter('ease', 14));
+atTime('camera.out', 'camera', lineWordTime(19, 3), enter('ease', 36));
+atTime('stamp.olculmemis', 'stamp', lineWordTime(19, 5), STAMP_ENTER);
+
+// ---- pre-chorus 2 (the human, left): he sits down calmly; a torch beam through the glass; the beam swings onto his
+// own wall of notes; a held question
+for (const n of [20, 21, 22, 23]) lineShow(n);
+atTime('pose.sit2', 'pose', lineWordTime(20, 0), enter('settle'), false);
+atTime('stamp.bakiyorum', 'stamp', lineWordTime(21, 2), STAMP_ENTER);
+atTime('beam.on', 'beam', lineWordTime(21, 2), enter('ease', 10));
+atTime('stamp.hatirlarim', 'stamp', lineWordTime(22, 3), STAMP_ENTER);
+atTime('beam.wall', 'beam', lineWordTime(22, 3), enter('ease', 16));
+atTime('stamp.yetermi', 'stamp', lineWordTime(23, 1), STAMP_ENTER);
+
+// ---- chorus 2: like chorus 1 but bigger. One flood per bar from bar 61 (bar 60 holds "yeter mi" in silence); three
+// notes a bar fly through the glass; his room overflows (two notes a beat), hers is blank after every wave
+const C2 = [61, 62, 63, 64, 65, 66, 67, 68, 69] as const;
+atBar('beam.off', 'beam', 61, 0, enter('fade', 14));
+// bars 65-66 hold still around "buradayiz" (test2-v2): no notes leave his hands at the glass (they flew out of the very
+// spot where the palms pass through) and no flood in bar 66 while the hands are through
+const C2_HOLD = [65, 66];
+for (const b of C2) {
+  if (b !== 66) atBar(`wave.c${b}`, 'wave', b, 0, enter('squeegee', 30));
+  if (C2_HOLD.includes(b)) continue;
+  for (const k of [0, 1, 2]) {
+    atBar(`c2note.${b}.${k}.fly`, 'note', b, k, enter('drift'));
+    atBar(`c2note.${b}.${k}.land`, 'note', b, k + 1, enter('settle', ENTER_FRAMES.fade));
+  }
+}
+for (let i = barBeatIndex(60); i < barBeatIndex(70); i++) atBeat(`over.${i}`, 'wall', i, enter('drift'));
+for (const n of [24, 25, 26, 28, 29]) lineShow(n);
+atTime('stamp.bastan3', 'stamp', lineWordTime(24, 2), STAMP_ENTER);
+atTime('stamp.ay2', 'stamp', lineWordTime(25, 0), STAMP_ENTER);
+for (let i = beatOf(lineWordTime(25, 0)); i < beatOf(lineFrames(25).end); i++) atBeat(`moon2.${i}`, 'moon', i, enter('ease'));
+atTime('stamp.biliyorum2', 'stamp', lineWordTime(26, 0), STAMP_ENTER);
+// "Bilmiyorum" (line 27) has no measured line time; its word was heard on its own (120.44-120.88 s)
+const bilmiyorum2 = TIMING.words.find((w) => w.start > 120 && w.start < 121 && /bilmiyorum/i.test(w.w));
+if (!bilmiyorum2) throw new Error('timing.json: no second "bilmiyorum" word');
+atTime('stamp.bilmiyorum2', 'stamp', bilmiyorum2.start, STAMP_ENTER);
+atTime('bilmiyorum2.hide', 'line', bilmiyorum2.end + 0.5, enter('fade', LYRIC_FRAMES), false);
+// "buradayiz" (measured word 2:02.08; the line starts 2:00.4): palms meet on the glass and for one beat the hands
+// pass through it, the part past the seam in the other world's colours
+atTime('stamp.buradayiz2', 'stamp', lineWordTime(28, 2), STAMP_ENTER);
+atTime('cross.hands', 'pose', lineWordTime(28, 2), enter('ease', 10));
+atTime('stamp.birdaha2', 'stamp', lineWordTime(29, 3), STAMP_ENTER);
 
 export const EVENTS: readonly VideoEvent[] = list.slice().sort((a, b) => a.beatIdx - b.beatIdx || a.id.localeCompare(b.id));
 

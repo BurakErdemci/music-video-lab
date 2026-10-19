@@ -2384,6 +2384,72 @@ export const STRIPS: Record<string, StripMeta> = {
   ],
   "dir": "strips"
  },
+ "H30": {
+  "who": "human",
+  "scale": 0.7687,
+  "frames": [
+   {
+    "file": "H30-fener-1.png",
+    "w": 352,
+    "h": 483,
+    "ax": 191
+   },
+   {
+    "file": "H30-fener-2.png",
+    "w": 442,
+    "h": 483,
+    "ax": 194
+   },
+   {
+    "file": "H30-fener-3.png",
+    "w": 356,
+    "h": 483,
+    "ax": 203
+   },
+   {
+    "file": "H30-fener-4.png",
+    "w": 338,
+    "h": 483,
+    "ax": 185
+   }
+  ],
+  "dir": "strips"
+ },
+ "H31": {
+  "who": "human",
+  "scale": 0.7968,
+  "frames": [
+   {
+    "file": "H31-oturus-fener-1.png",
+    "w": 179,
+    "h": 738,
+    "ax": 82,
+    "k": 1.124
+   },
+   {
+    "file": "H31-oturus-fener-2.png",
+    "w": 322,
+    "h": 738,
+    "ax": 135,
+    "k": 1.08
+   },
+   {
+    "file": "H31-oturus-fener-3.png",
+    "w": 457,
+    "h": 738,
+    "ax": 240,
+    "k": 1.035
+   },
+   {
+    "file": "H31-oturus-fener-4.png",
+    "w": 328,
+    "h": 738,
+    "ax": 181,
+    "k": 1.0
+   }
+  ],
+  "dir": "strips"
+ },
  "H26": {
   "who": "human",
   "scale": 0.851,

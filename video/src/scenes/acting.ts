@@ -183,6 +183,61 @@ const edgeX = (strip: string, k: number, flip: boolean, edge: number): number =>
 /** A calm walk: frames each drawing of the step is held (four drawings a step). */
 const WALK_HOLD = 7;
 
+// ---- 1:28.7 -> 2:12 (verse 2, pre-chorus 2, chorus 2): every action start, frames. Chosen against the tempo rules
+// (<= 3 changes per 10 s, holds >= 1 s, actions 2-5 s; video/scripts/tempocheck.mjs --from 2661 --to 3894) and the
+// events they serve (events.ts): the lamps from 2955, the camera out 3095, the torch 3249, "hatirlarim" 3291, the
+// first chorus-2 flood 3390, "buradayiz" 3656.
+/** The end of Test2 (2:12): the last actions run to here. */
+export const TEST2_END = 3960;
+/** From here the human's "Merhaba" note on the glass is drawn UNDER the characters (his palm presses over it at
+ * "buradayiz"). It switches while he sits on the floor away from the glass (pre-chorus 2), so nothing visibly
+ * changes layer then; until 1:28.7 (Test90) the note stays over his pressing hand as before. */
+export const NOTE_UNDER_FROM = 3200;
+const V2 = {
+  pressEnd: 2740,
+  handDown: 2880,
+  look: 3010,
+  sit: 3130,
+  wall: 3286,
+  stand: 3420,
+  palms: 3600,
+  forehead2: 3740,
+  handDown2: 3880,
+  end: TEST2_END,
+};
+const V2A = {
+  lines: 2760,
+  write: 2845,
+  turn: 2935,
+  peer: 3085,
+  turnBack: 3215,
+  rock: 3380,
+  moon: 3500,
+  reach: 3600,
+  tilt: 3740,
+  rock2: 3870,
+  end: TEST2_END,
+};
+/** Sitting with the torch (H30, drawn like H06: cross-legged facing the glass), 48 px back from FLOOR_X so the lens
+ * of the outstretched torch (f2) stays ~30 px before the glass. */
+export const TORCH_X = FLOOR_X - 48;
+/** Chorus 2 "buradayiz": the AI's open palm (A07 f2, 119 px ahead of her anchor) 7 px behind the seam. */
+export const AI_PALM_X = 1086;
+/** Sitting down with the torch (H31 f1..f4): each drawing where it best overlaps the next (f4 on H30 f1 at TORCH_X;
+ * scratchpad overlap search), and where the note-writing drawing (H19 f2) best overlaps H31 f1 when he is up. */
+const TORCH_SIT: readonly (readonly [number, number])[] = [[1, 734], [2, 715], [3, 729], [4, 752]];
+const TORCH_SIT_UP = 732;
+/** Where the torch's lens is in the world (H30 f2 aimed at the glass, f3 over his shoulder at his wall; source px of
+ * the lens tip measured on video/public/strips/H30-fener-2/3.png), and the morph that swings it from one to the other
+ * (the transition into 'torchWall', TIN-centred on V2.wall). Test30Scene draws the beam from here. */
+const lensAt = (k: number, px: number, py: number): { x: number; y: number } => {
+  const sm = STRIP_TABLE.H30 as StripMeta;
+  const f = sm.frames[k - 1] as StripFrame;
+  const sc = frameScale(sm, f);
+  return { x: TORCH_X + (px - f.ax) * sc, y: HUMAN_FLOOR - (f.h - py) * sc };
+};
+export const TORCH_BEAM = { aim: lensAt(2, 438, 177), wall: lensAt(3, 16, 8), swing: { from: V2.wall - 8, frames: 16 } };
+
 // ---- the human ----------------------------------------------------------------------------------------------------
 
 /** Getting up from the desk: typing (H01 f1), the typing drawing whose chair stands where H17's does (H15 f3), then
@@ -261,7 +316,26 @@ const buildHuman = () => {
   const upFrames = up.reduce((t, d) => t + d[3], 0);
   up.push(['H12', 3, NOTE_X, note - 6 - (c.tl.t + upFrames)]);
   chain(c, 'getUp', up, 12);
-  act(c, 'press', 2700, STICK_X, [['H12', 4, 999]], { tin: 12 });
+  act(c, 'press', V2.pressEnd, STICK_X, [['H12', 4, 999]], { tin: 12 });
+  // ---- verse 2 (1:28.7, the AI sings): he stays at the glass, watching her side. "Ayni hata": forehead on the
+  // glass; the lamps: hand flat on it, head down; "sen bakinca goruyorsun": he lifts his head and looks
+  act(c, 'forehead', V2.handDown, edgeX('H25', 2, false, GLASS_FRONT), [['H25', 2, 999]], { tin: 18 });
+  act(c, 'handDown', V2.look, edgeX('H25', 3, false, GLASS_FRONT), [['H25', 3, 999]], { tin: 16 });
+  act(c, 'look', V2.sit, edgeX('H25', 1, false, GLASS_FRONT), [['H25', 1, 999]], { tin: 16 });
+  // ---- pre-chorus 2: "Kizmiyorum": he sits down calmly on the floor by the glass (H21, slow breakdowns); "bakiyorum":
+  // the torch shines through the glass (H30 f2, the beam is drawn by the scene); "hatirlarim": he turns it back over
+  // his shoulder onto his own wall of notes (H30 f3) and holds it there through "yeter mi"
+  // (H31: drawn with the torch in his hand; H21's first step doubled the body for ~5 frames, morphcheck G2)
+  chain(c, 'sit', TORCH_SIT.map(([k, x]) => ['H31', k, x, 12] as const), 18);
+  act(c, 'aim', V2.wall, TORCH_X, [['H30', 2, 999]], { tin: 16 });
+  act(c, 'torchWall', V2.stand, TORCH_X, [['H30', 3, 999]], { tin: 16 });
+  // ---- chorus 2: gets up, writes note after note (they fly through the glass, scenes/Test30Scene.tsx), palms on the
+  // glass for "buradayiz" (the hands pass through it for one beat), then the decline: forehead, hand down
+  chain(c, 'stand', [...TORCH_SIT].reverse().map(([k, x]) => ['H31', k, x, 11] as const), 16);
+  act(c, 'write', V2.palms, TORCH_SIT_UP, [['H19', 2, 40], ['H19', 3, 30], ['H19', 2, 34], ['H19', 3, 30]], { tin: 14, inner: 10 });
+  act(c, 'palms', V2.forehead2, LEAN_X, [['H07', 3, 999]], { tin: 18 });
+  act(c, 'forehead', V2.handDown2, edgeX('H25', 2, false, GLASS_FRONT), [['H25', 2, 999]], { tin: 18 });
+  act(c, 'handDown', V2.end, edgeX('H25', 3, false, GLASS_FRONT), [['H25', 3, 999]], { tin: 16 });
   return c.tl.acts;
 };
 export const HUMAN = buildHuman();
@@ -312,7 +386,30 @@ const buildAi = () => {
   act(c, 'rock', 2400, AI_HOME, ROCK);
   act(c, 'wave', 2540, AI_HOME, WAVE, { tin: 14, inner: 10 });
   act(c, 'behind', ev('final.reset').frame, AI_HOME, [['A05', 4, 999]]);
-  act(c, 'tiltNote', 2700, AI_HOME, [['A06', 2, 999]], { tin: 18 });
+  act(c, 'tiltNote', V2A.lines, AI_HOME, [['A06', 2, 999]], { tin: 18 });
+  // ---- verse 2 (she sings). "Yazili duruyor hepsi, satir satir": she looks up at the notebook's lines sliding past;
+  // "ayni hata": she writes, and the same crossed-out note comes out of her hand three times
+  act(c, 'lines', V2A.write, AI_HOME, [['A06', 3, 999]], { tin: 16 });
+  // (enters on A11 f3 and leaves from f1: A06 f3 -> A11 f2 and A11 f1 -> A10 f4 lost the pen and note in the morph,
+  // morphcheck G2)
+  act(c, 'write', V2A.turn, AI_HOME, [['A11', 3, 30], ['A11', 2, 30], ['A11', 1, 999]], { tin: 16, inner: 10 });
+  // "tamam / bitti": she turns to the crates (A10 played back: facing left -> right), hands on her hips while the
+  // lamps switch on; "hicbir sey olculmemis": she bends to look into the crates; then turns back to the glass and
+  // shades her eyes in the human's torch beam ("bakiyorum")
+  // (the turn skips A10 f4, her profile to the left: A10 f3 -> f4 lost the cursor line in the morph, G2)
+  chain(c, 'turn', [3, 2, 1].map((k) => ['A10', k, AI_HOME, 11] as const), 14);
+  act(c, 'proud', V2A.peer, AI_HOME, [['A05', 3, 999]], { flip: true, tin: 14 });
+  act(c, 'peer', V2A.turnBack, AI_HOME + 30, [['A06', 1, 999]], { flip: true, tin: 18 });
+  chain(c, 'turn', [1, 2, 3].map((k) => ['A10', k, AI_HOME, 12] as const), 14);
+  act(c, 'shade', V2A.rock, AI_HOME, [['A04', 2, 999]], { tin: 14 });
+  // ---- chorus 2: the same morning every bar. She rocks on her heels between the waves, looks up at the moon on "Ay
+  // dolar", reaches to the glass for "buradayiz" (her hand passes through it for one beat), tilts her head, rocks
+  act(c, 'rock', V2A.moon, AI_HOME, ROCK, { tin: 14 });
+  act(c, 'moon', V2A.reach, AI_HOME, [['A04', 1, 999]], { tin: 16 });
+  // (A07 f2: her open palm at the height of his (H07 f3 fingertips at y 422, hers 407), 7 px behind the seam)
+  act(c, 'palm', V2A.tilt, AI_PALM_X, [['A07', 2, 999]], { tin: 18 });
+  act(c, 'tilt', V2A.rock2, AI_HOME, [['A06', 2, 999]], { tin: 16 });
+  act(c, 'rock', V2A.end, AI_HOME, ROCK, { tin: 14 });
   return c.tl.acts;
 };
 export const AI = buildAi();

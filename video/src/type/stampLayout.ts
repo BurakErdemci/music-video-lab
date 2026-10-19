@@ -62,6 +62,10 @@ export interface StampAsk {
   /** Do not test the characters' boxes (the seam words: both characters stand at the glass then, and the only room
    * between the moon and their heads is checked by eye in the render instead). */
   ignoreActors?: boolean;
+  /** World boxes (props) to keep clear of, seen through `view` like the characters (test2: the crates, the cards). */
+  avoidWorld?: readonly Box[];
+  /** World -> screen at a frame (test2: the verse-2 camera zoom). The stamp is screen-space; the characters are not. */
+  view?: (b: Box, frame: number) => Box;
 }
 
 export interface StampSpot {
@@ -85,12 +89,14 @@ const BOTTOM = 990; // above the floor line
 
 export const placeStamp = (ask: StampAsk, actors: readonly (readonly Action[])[]): StampSpot => {
   const boxes: Box[] = [...(ask.avoid ?? [])];
+  const view = ask.view ?? ((b: Box) => b);
   for (let f = ask.from; f < (ask.ignoreActors ? ask.from : ask.to); f += 2) {
     for (const acts of actors) {
       const b = actorBox(acts, f);
-      if (b) boxes.push(b);
+      if (b) boxes.push(view(b, f));
     }
   }
+  for (let f = ask.from; f < ask.to; f += 2) for (const b of ask.avoidWorld ?? []) boxes.push(view(b, f));
   const [r0, r1] = ask.room;
   for (let size = ask.size; size >= ask.size * 0.55; size *= 0.94) {
     const w = stampWidth(ask.text, size);

@@ -118,6 +118,12 @@ STRIPS = {
     # against it. H25 f1 stands slightly bowed (813 px; upright ~830); H26 f1 stands upright; H27 is seated like H26 f4
     # (393 px vs 387 px), so it takes H26's scale
     'H25': (four('H25-cam-yasla'), 'feet', {'ref': 830}),
+    # verse 2 -> pre-chorus 2 (test2): sitting cross-legged with a torch, drawn like H06 (upright sitting 477 px vs H18 f2 466)
+    'H30': (four('H30-fener'), 'feet', {'ref': 878}),
+    # sitting down with the torch (test2; replaces H21 there: H21 f1 -> f2 doubled the body for ~5 frames). f4 matches
+    # H30 f1 (seated 460 px -> ref 847); its standing f1 is drawn short (738 px), so the frames grow back to the standing
+    # family (f1 661 px on screen, like H25 f1, also head bowed)
+    'H31': (four('H31-oturus-fener'), 'feet', {'ref': 847, 'ks': [1.124, 1.08, 1.035, 1.0]}),
     'H26': (four('H26-sirt-kay'), 'feet', {'ref': 793}),
     'H27': (four('H27-sirt-otur'), 'feet', {'ref': 800}),
     # one walking step in four drawings from ONE image (contact, down, passing, up), played in a fixed order at an
@@ -315,7 +321,7 @@ def main():
 
 def contact_sheet(data, out):
     """One frame per human strip at its on-screen size, feet on one baseline: the same-person check."""
-    pick = {'H01': 0, 'H02': 0, 'H03': 1, 'H04': 0, 'H05': 6, 'H06': 1, 'H07': 1, 'H09': 0, 'H10': 3, 'H11': 0, 'H12': 1, 'H15': 2, 'H16': 3, 'H25': 1, 'H26': 0, 'H27': 1, 'H28': 2}
+    pick = {'H01': 0, 'H02': 0, 'H03': 1, 'H04': 0, 'H05': 6, 'H06': 1, 'H07': 1, 'H09': 0, 'H10': 3, 'H11': 0, 'H12': 1, 'H15': 2, 'H16': 3, 'H25': 1, 'H26': 0, 'H27': 1, 'H28': 2, 'H30': 0, 'H31': 0}
     tiles = []
     for sid, k in pick.items():
         m = data[sid]

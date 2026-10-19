@@ -16,7 +16,7 @@
 // on twos) changes a lot every frame and is not a jump. A walk drawing that lurches the body further than
 // the +-32 px the shift can absorb shows up as a jump too.
 //
-//   node video/scripts/jumpcheck.mjs [--render] [--from 468] [--to 2661] [--threshold 0.15] [--spike 0.6]
+//   node video/scripts/jumpcheck.mjs [--render] [--comp CharMask2] [--from 468] [--to 2661] [--threshold 0.15] [--spike 0.6]
 //   node video/scripts/jumpcheck.mjs --pair <png> <scale> <ax> <png> <scale> <ax>   (a hard cut between two drawings)
 //
 // --render renders video/out/jump/<who>/ first (remotion, ~3 min each); without it the existing frames are used.
@@ -36,6 +36,8 @@ const FROM = Number(arg('--from', 468));
 const TO = Number(arg('--to', 2661));
 const THRESHOLD = Number(arg('--threshold', 0.15));
 const SPIKE = Number(arg('--spike', 0.6));
+// test2: CharMask2 runs to 2:12 (CharMask stops at Test90's end)
+const COMP = arg('--comp', 'CharMask');
 const Q = 4;
 
 // ---- minimal PNG decoder (8-bit, colour types 0/2/4/6, non-interlaced) ------------------------------------------
@@ -182,14 +184,14 @@ const main = () => {
   }
   let bad = 0;
   for (const who of ['human', 'ai']) {
-    const dir = path.join(VIDEO, 'out', 'jump', who);
+    const dir = path.join(VIDEO, 'out', COMP === 'CharMask' ? 'jump' : 'jump2', who);
     if (process.argv.includes('--render')) {
       fs.rmSync(dir, { recursive: true, force: true });
       // props through a file: Windows mangles the quotes of inline JSON
       const propsFile = path.join(VIDEO, 'out', 'jump', `${who}.json`);
       fs.mkdirSync(path.dirname(propsFile), { recursive: true });
       fs.writeFileSync(propsFile, JSON.stringify({ who }));
-      const r = spawnSync('npx', ['remotion', 'render', 'src/index.ts', 'CharMask', dir, '--sequence', '--scale=0.25', `--frames=${FROM}-${TO}`, '--image-format=png', '--concurrency=4', `--props=${propsFile}`], { cwd: VIDEO, stdio: 'inherit', shell: true });
+      const r = spawnSync('npx', ['remotion', 'render', 'src/index.ts', COMP, dir, '--sequence', '--scale=0.25', `--frames=${FROM}-${TO}`, '--image-format=png', '--concurrency=4', `--props=${propsFile}`], { cwd: VIDEO, stdio: 'inherit', shell: true });
       if (r.status !== 0) throw new Error(`render ${who} failed`);
     }
     const files = fs.readdirSync(dir).filter((f) => f.endsWith('.png')).sort();
