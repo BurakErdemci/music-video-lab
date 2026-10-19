@@ -115,3 +115,19 @@ Each entry is: what we did → what we measured → what a human saw → the les
   three good ones were locked and verified byte-identical by md5. The squeegee kept its motion and gained a visible
   blade, ink bead, screen frame and starved print texture; the plate shift became full-frame colour separations that
   peel like a sheet. Burak: "yeniler çok daha iyi". Five print-language transitions are now the clip's toolkit.
+
+## 2026-10-19 · 2D bone rig: anatomy clean, acting wrong → living illustration
+
+- The 2D cut-out rig in Blender (our drawings, mesh-deformed joints) measured perfectly: one silhouette per frame,
+  bone length deviation 0.0001 %, foot slip 0.13 px, 0 single-frame spikes. The architect called the desk routine fluid.
+- Burak's bug frames said otherwise: legs passing through the chair and desk, a ball-shaped cross-legged sit, an oddly
+  bending walk, a body collapsing sideways while kneeling, a stiff drink. Gemini at 24 fps ("stiff, robotic, puppet-like",
+  3/10) was right overall even though most of its timestamps were off.
+- Diagnosis: three techniques (morph, 3D, 2D rig) hit the same wall — performing everyday human acting in code. Every
+  error shows because everyone knows how a body moves. Gamachine's "PRESS START" looked great because it was motion
+  design (camera, shapes, type, transitions, a simple non-human mascot), not human acting.
+- Decision (Burak approved): "living illustration". Big actions are told, not animated: each beat is a complete drawn
+  pose, joined by print transitions, beat cuts and match cuts. Inside a pose only small life (breath, head, hair/notes,
+  steam, blink). The camera and the world carry the motion. Burak's pen idea becomes a motif: the AI is drawn, erased and
+  redrawn by an invisible pen ("her sabah baştan").
+- Lesson: measurements of geometry (bone length, silhouette, slip) say nothing about whether acting reads as human.
