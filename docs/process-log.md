@@ -89,3 +89,15 @@ Each entry is: what we did → what we measured → what a human saw → the les
   open-source release), Unity 2D Animation (good and free, but needs the editor open and is hard to drive headless).
   Blender is free, headless, deterministic, and the render/composite/check pipeline from the 3D test is reused.
 - Next: cut-out part sheets for both characters (`.claude/briefs/cutout-parts.md`).
+
+## 2026-10-19 · Water transitions in code → print-language transitions
+
+- Transition v2: G1 rebuilt as pure refraction (no drawn rings) still read as an expanding ink blob (Gemini 4/10);
+  G5 rewritten from CSS 3D to 2D canvas slices to fix dropped frames regressed from 8 to 5/10 ("horizontal stretching").
+  G2 ink bleed held at 7.5/10.
+- Veo 3.1 first/last-frame interpolation was tried through the Gemini API: the free tier returns 429 for all three
+  Veo models (no free tier; Standard $0.40/s, Fast $0.12/s, Lite $0.08/s at 1080p). Browser Veo adds a visible Gemini
+  watermark; removing it was declined (provenance mark, published clip).
+- Lesson: water is the hardest material to fake in code; the clip's own print language (plates, halftone, squeegee,
+  ink, paper) is what code does well. New family: plate registration shift, halftone bloom, squeegee print, paper fold
+  (back to true 3D), ink bleed, plus shape match cuts.
