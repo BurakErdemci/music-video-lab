@@ -55,3 +55,15 @@ Each entry is: what we did → what we measured → what a human saw → the les
   outside daydreaming the AI, the AI's model-upgrade sequence, single-colour floods, days passing, emotion icons, long
   meaningful actions, transitions that flow like water, every scene tied to its lyric line.
 - The morph-based bridge section is parked on branch `wip/bridge-morph`.
+
+## 2026-10-19 · Gemini at 24 fps; scene map v2
+
+- Gemini at 24 fps, high resolution, on v6 28–34 s found the doubled body standing up from the chair at 29.7–29.9 s
+  (missed at 10 fps) — but called it "an intentional smear effect" and the motion "fluid". The prompt must say there
+  are no smear effects in this clip and every doubled outline is a defect.
+- Scene map v2 (`.claude/briefs/sahne-haritasi-v2.md`, 24 style frames in `stil/tur4/`): the split screen becomes a
+  home base (about 82% → 43% of the runtime), with trips into the screen (the AI's model-upgrade path), the city (a
+  day street of shop-window reflections, a night bus) and time (a days-passing desk routine). Only two hard cuts, both
+  on musical hits; every other transition flows through an object (screen ripple, ink spreading, a note peeling into a
+  road, the torch circle becoming the sun, the street folding into the paper city, line-rain becoming bus-window rain).
+  Every lyric line carries a one-sentence "why this image serves these words".
