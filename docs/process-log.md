@@ -75,3 +75,17 @@ Each entry is: what we did → what we measured → what a human saw → the les
 - Gemini at 24 fps (told there are no intentional glitches): G1 4/10 ("rigid concentric rings, a cheap 2D preset",
   stretching while zooming), G2 7/10 (organic), G5 8/10 (creative, a small perspective pop). The architect's own
   full-rate sheets agreed. Lesson: drawn ripple rings read as a preset; water must show up as refraction of the image.
+
+## 2026-10-19 · 3D Blender bodies: anatomy fixed, look lost → 2D cut-out
+
+- The 3D Blender test (hand-built primitive bodies, keyframed IK rig, flat shading + inverted-hull outline) measured
+  clean: 540/540 frames with one connected silhouette per character, bone length deviation 0.002 %, max frame-to-frame
+  silhouette area change 4.1 %. Burak's four distortion types cannot occur.
+- But the look regressed: the human read as a cartoon mannequin, not the illustrated person; the AI as a shop dummy.
+  Burak: "3d'ye aslında ihtiyacımız yok, bizim video 2d … bize lazım olan akıcı 2d animasyon".
+- Tool decision (left to the architect): 2D skeletal cut-out with mesh deformation in Blender (our own drawings as
+  image planes, bones inside, joints bend). Rejected: After Effects (not installed, paid, its strength is hand polish in
+  the GUI; Higgsfield itself says AE-via-AI is weak at character rigs), Spine (paid, runtime licence conflicts with an
+  open-source release), Unity 2D Animation (good and free, but needs the editor open and is hard to drive headless).
+  Blender is free, headless, deterministic, and the render/composite/check pipeline from the 3D test is reused.
+- Next: cut-out part sheets for both characters (`.claude/briefs/cutout-parts.md`).
