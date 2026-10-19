@@ -1,0 +1,463 @@
+{
+ "character": "ai",
+ "view": "front",
+ "units": "pixels of the reference image (1 px = 1 px of the generated neutral drawing); angles in degrees, positive = clockwise on screen (y down)",
+ "reference": "reference.png",
+ "reference_crop": [
+  270,
+  0,
+  745,
+  1536
+ ],
+ "canvas": [
+  1024,
+  1536
+ ],
+ "near_far": "near = the limb on the screen-left, far = the limb on the screen-right",
+ "parts": {
+  "upper_arm_near": {
+   "file": "upper_arm_near.png",
+   "pivot": [
+    60,
+    21
+   ],
+   "parent": "chest",
+   "offset": [
+    28,
+    140
+   ],
+   "rotation": 0,
+   "z": 30,
+   "joint": "shoulder",
+   "range": [
+    -30,
+    100
+   ]
+  },
+  "forearm_near": {
+   "file": "forearm_near.png",
+   "pivot": [
+    58.493196961916055,
+    27.082199493652638
+   ],
+   "parent": "upper_arm_near",
+   "offset": [
+    34.493196961916055,
+    234.08219949365264
+   ],
+   "rotation": 0,
+   "z": 32,
+   "joint": "elbow",
+   "range": [
+    0,
+    120
+   ]
+  },
+  "hand_near_open": {
+   "file": "hand_near_open.png",
+   "pivot": [
+    34.0,
+    16.0
+   ],
+   "parent": "forearm_near",
+   "offset": [
+    23.0,
+    227.0
+   ],
+   "rotation": 0,
+   "z": 34,
+   "joint": "wrist",
+   "range": [
+    -45,
+    45
+   ]
+  },
+  "upper_arm_far": {
+   "file": "upper_arm_far.png",
+   "pivot": [
+    36,
+    21
+   ],
+   "parent": "chest",
+   "offset": [
+    286,
+    140
+   ],
+   "rotation": 0,
+   "z": 30,
+   "joint": "shoulder",
+   "range": [
+    -30,
+    100
+   ]
+  },
+  "forearm_far": {
+   "file": "forearm_far.png",
+   "pivot": [
+    34.0,
+    27.0
+   ],
+   "parent": "upper_arm_far",
+   "offset": [
+    62.0,
+    234.0
+   ],
+   "rotation": 0,
+   "z": 32,
+   "joint": "elbow",
+   "range": [
+    0,
+    120
+   ]
+  },
+  "hand_far_open": {
+   "file": "hand_far_open.png",
+   "pivot": [
+    36.49497474683062,
+    16.929289321881356
+   ],
+   "parent": "forearm_far",
+   "offset": [
+    69.49497474683062,
+    226.92928932188136
+   ],
+   "rotation": 0,
+   "z": 34,
+   "joint": "wrist",
+   "range": [
+    -45,
+    45
+   ]
+  },
+  "thigh_near": {
+   "file": "thigh_near.png",
+   "pivot": [
+    69.5,
+    61.0
+   ],
+   "parent": "pelvis",
+   "offset": [
+    68.5,
+    271.0
+   ],
+   "rotation": 0,
+   "z": 14,
+   "joint": "hip",
+   "range": [
+    -10,
+    45
+   ]
+  },
+  "shin_near": {
+   "file": "shin_near.png",
+   "pivot": [
+    57.0,
+    35.0
+   ],
+   "parent": "thigh_near",
+   "offset": [
+    59.0,
+    361.0
+   ],
+   "rotation": 0,
+   "z": 16,
+   "joint": "knee",
+   "range": [
+    0,
+    60
+   ]
+  },
+  "foot_near": {
+   "file": "foot_near.png",
+   "pivot": [
+    69.5,
+    24.0
+   ],
+   "parent": "shin_near",
+   "offset": [
+    46.5,
+    370.0
+   ],
+   "rotation": 0,
+   "z": 18,
+   "joint": "ankle",
+   "range": [
+    -25,
+    25
+   ]
+  },
+  "thigh_far": {
+   "file": "thigh_far.png",
+   "pivot": [
+    68.5,
+    61.0
+   ],
+   "parent": "pelvis",
+   "offset": [
+    205.5,
+    271.0
+   ],
+   "rotation": 0,
+   "z": 14,
+   "joint": "hip",
+   "range": [
+    -10,
+    45
+   ]
+  },
+  "shin_far": {
+   "file": "shin_far.png",
+   "pivot": [
+    42.0,
+    35.0
+   ],
+   "parent": "thigh_far",
+   "offset": [
+    78.0,
+    361.0
+   ],
+   "rotation": 0,
+   "z": 16,
+   "joint": "knee",
+   "range": [
+    0,
+    60
+   ]
+  },
+  "foot_far": {
+   "file": "foot_far.png",
+   "pivot": [
+    33.0,
+    25.0
+   ],
+   "parent": "shin_far",
+   "offset": [
+    53.0,
+    370.0
+   ],
+   "rotation": 0,
+   "z": 18,
+   "joint": "ankle",
+   "range": [
+    -25,
+    25
+   ]
+  },
+  "head": {
+   "file": "head.png",
+   "pivot": [
+    101.5,
+    201.0
+   ],
+   "parent": "neck",
+   "offset": [
+    49.5,
+    41.0
+   ],
+   "rotation": 0,
+   "z": 24,
+   "joint": "head",
+   "range": [
+    -30,
+    30
+   ]
+  },
+  "neck": {
+   "file": "neck.png",
+   "pivot": [
+    50.0,
+    91.0
+   ],
+   "parent": "chest",
+   "offset": [
+    158.0,
+    50.0
+   ],
+   "rotation": 0,
+   "z": 22,
+   "joint": "neck",
+   "range": [
+    -25,
+    25
+   ]
+  },
+  "chest": {
+   "file": "chest.png",
+   "pivot": [
+    157.5,
+    373.0
+   ],
+   "parent": "pelvis",
+   "offset": [
+    136.5,
+    96.0
+   ],
+   "rotation": 0,
+   "z": 20,
+   "joint": "waist",
+   "range": [
+    -20,
+    20
+   ]
+  },
+  "pelvis": {
+   "file": "pelvis.png",
+   "pivot": [
+    136,
+    271
+   ],
+   "parent": null,
+   "offset": [
+    511,
+    760
+   ],
+   "rotation": 0,
+   "z": 10
+  },
+  "hand_near_grip": {
+   "file": "hand_near_grip.png",
+   "pivot": [
+    39.8,
+    21.0
+   ],
+   "parent": "forearm_near",
+   "offset": [
+    23.0,
+    227.0
+   ],
+   "rotation": 0,
+   "z": 34,
+   "hidden": true,
+   "variant_of": "hand_near_open"
+  },
+  "hand_near_point": {
+   "file": "hand_near_point.png",
+   "pivot": [
+    38.7,
+    21.0
+   ],
+   "parent": "forearm_near",
+   "offset": [
+    23.0,
+    227.0
+   ],
+   "rotation": 0,
+   "z": 34,
+   "hidden": true,
+   "variant_of": "hand_near_open"
+  },
+  "hand_near_notebook": {
+   "file": "hand_near_notebook.png",
+   "pivot": [
+    34.9,
+    21.0
+   ],
+   "parent": "forearm_near",
+   "offset": [
+    23.0,
+    227.0
+   ],
+   "rotation": 0,
+   "z": 34,
+   "hidden": true,
+   "variant_of": "hand_near_open"
+  },
+  "hand_far_grip": {
+   "file": "hand_far_grip.png",
+   "pivot": [
+    63.2,
+    21.0
+   ],
+   "parent": "forearm_far",
+   "offset": [
+    69.49497474683062,
+    226.92928932188136
+   ],
+   "rotation": 0,
+   "z": 34,
+   "hidden": true,
+   "variant_of": "hand_far_open"
+  },
+  "hand_far_point": {
+   "file": "hand_far_point.png",
+   "pivot": [
+    58.3,
+    21.0
+   ],
+   "parent": "forearm_far",
+   "offset": [
+    69.49497474683062,
+    226.92928932188136
+   ],
+   "rotation": 0,
+   "z": 34,
+   "hidden": true,
+   "variant_of": "hand_far_open"
+  },
+  "hand_far_notebook": {
+   "file": "hand_far_notebook.png",
+   "pivot": [
+    126.1,
+    21.0
+   ],
+   "parent": "forearm_far",
+   "offset": [
+    69.49497474683062,
+    226.92928932188136
+   ],
+   "rotation": 0,
+   "z": 34,
+   "hidden": true,
+   "variant_of": "hand_far_open"
+  }
+ },
+ "bend_tests": [
+  {
+   "part": "forearm_near",
+   "sign": 1,
+   "max": 120
+  },
+  {
+   "part": "forearm_far",
+   "sign": -1,
+   "max": 120
+  },
+  {
+   "part": "upper_arm_near",
+   "sign": 1,
+   "max": 90
+  },
+  {
+   "part": "upper_arm_far",
+   "sign": -1,
+   "max": 90
+  },
+  {
+   "part": "thigh_near",
+   "sign": 1,
+   "max": 45
+  },
+  {
+   "part": "thigh_far",
+   "sign": -1,
+   "max": 45
+  },
+  {
+   "part": "shin_near",
+   "sign": 1,
+   "max": 60
+  },
+  {
+   "part": "shin_far",
+   "sign": -1,
+   "max": 60
+  }
+ ],
+ "bend_angles": [
+  0,
+  30,
+  60,
+  120
+ ],
+ "bend_cell": 260
+}

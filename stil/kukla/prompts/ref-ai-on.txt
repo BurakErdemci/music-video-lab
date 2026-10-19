@@ -1,0 +1,9 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the AI character (silk-screen style), seen in side profile. Draw the SAME character as a rig-friendly NEUTRAL REFERENCE for cut-out puppet animation, standing in strict FRONT view (facing the viewer, symmetrical).
+
+Same character: smooth genderless slender body, cream-white (#F3EFE4) fill with fine navy stipple speckle, a thin navy outline, bald round head, NO face at all except ONE short vertical navy cursor line in the middle of the face (like the one in the reference). No clothes, no hair, no ears, no nose, no mouth.
+
+Pose: neutral standing, FRONT view. Both arms hang slightly AWAY from the body with a small clear gap of magenta between each arm and the torso, elbows straight, hands relaxed and open. Legs slightly apart so BOTH legs are fully visible and do not overlap, feet flat, both feet visible.
+
+Single figure, centred, full body head to toe, nothing cropped. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor, no ground line. ABSOLUTELY NO text, letters, numbers, logos or watermarks. Palette only cream, navy (+ magenta background). No 3D render look, no photorealism, no soft shading.

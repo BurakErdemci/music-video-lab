@@ -1,0 +1,9 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style), seen in side profile. Draw the SAME person exactly, as a rig-friendly NEUTRAL REFERENCE for cut-out puppet animation, in a standing pose seen in 3/4 FRONT view, body turned toward the viewer's RIGHT.
+
+Same person: slim adult, small head (about 1/7.5 of the total height), messy short hair silhouette with tufts, short-sleeved top and slim trousers drawn as ONE solid flat midnight navy (#18203A) silhouette, barefoot, thin cream (#F3EFE4) rim outline around the whole figure and thin cream inner lines only where needed (sleeve edge, trouser line), FACELESS (no facial features), fine silk-screen grain speckle, slight misregistration. EIGHT moon-yellow (#F0D35A) sticky notes stuck on the shoulders, chest, upper arms and back as in the reference; in this 3/4 front view some of them sit on the visible chest, shoulder and sleeve, each note a small flat square with a tiny tab at its top edge.
+
+Pose: neutral standing, 3/4 front view turned toward the viewer's right. Both arms hang slightly AWAY from the body with a small clear gap of magenta between each arm and the torso, elbows straight, hands relaxed and open. Legs slightly apart so BOTH legs are fully visible and do not overlap each other, feet flat on the ground line, both feet visible.
+
+Single figure, centred, full body head to toe, nothing cropped. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor, no ground line. ABSOLUTELY NO text, letters, numbers, logos or watermarks. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.
