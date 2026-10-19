@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the HUMAN character reference (ignore the magenta background, it is only a cut-out backdrop), (2) the AI character reference, (3) the APPROVED style frame of this music video. Match the style of image 3 EXACTLY:
+- Two-colour silk-screen gig poster, flat geometric shapes, halftone dots, slight ink misregistration, screen texture and paper grain.
+- Palette ONLY: midnight navy (#18203A), moon yellow (#F0D35A), paper cream-white (#F3EFE4). No other hues, no gradients, no magenta.
+- The HUMAN: a young man, faceless navy silhouette with a thin cream outline and messy hair, yellow sticky notes stuck on his shoulders and back (as image 1).
+- The AI: a slender cream-white figure with a thin navy outline and NO face; the only facial mark is ONE vertical navy cursor line on the head (as image 2).
+
+This frame shows: MID-TRANSITION: a note becomes a road. A huge yellow sticky note fills most of the frame, its lower half peeling up and curling like a page being turned; under the curl a cream world is revealed, and the faint ruled lines of the note continue out of the paper as a thin navy pen-line path across the cream, where a tiny cream AI figure is already walking. Graceful, paper-like.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no writing on the notes or screens. No other colours. No 3D, no photorealism, no soft shading.

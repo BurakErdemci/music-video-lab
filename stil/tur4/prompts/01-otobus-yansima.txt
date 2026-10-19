@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the HUMAN character reference (ignore the magenta background, it is only a cut-out backdrop), (2) the AI character reference, (3) the APPROVED style frame of this music video. Match the style of image 3 EXACTLY:
+- Two-colour silk-screen gig poster, flat geometric shapes, halftone dots, slight ink misregistration, screen texture and paper grain.
+- Palette ONLY: midnight navy (#18203A), moon yellow (#F0D35A), paper cream-white (#F3EFE4). No other hues, no gradients, no magenta.
+- The HUMAN: a young man, faceless navy silhouette with a thin cream outline and messy hair, yellow sticky notes stuck on his shoulders and back (as image 1).
+- The AI: a slender cream-white figure with a thin navy outline and NO face; the only facial mark is ONE vertical navy cursor line on the head (as image 2).
+
+This frame shows: NIGHT BUS. Wide shot inside a late-night city bus, everything flat navy. The human sits alone by the long bus window on the left half, his temple resting against the glass, eyes on the night outside, a few yellow notes on his back. Outside the window: a dark navy city sliding past, yellow streetlights stretched into short horizontal streaks, a yellow moon. IN the window glass, as a pale cream semi-transparent REFLECTION overlaid on the passing city, the AI sits on the other side of the pane facing him, its cream fingertip drawing a small heart in the fogged glass. The window frame is the same vertical glass seam idea as the main film. Quiet, tender, lonely.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no writing on the notes or screens. No other colours. No 3D, no photorealism, no soft shading.

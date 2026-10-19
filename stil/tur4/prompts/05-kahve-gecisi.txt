@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the HUMAN character reference (ignore the magenta background, it is only a cut-out backdrop), (2) the AI character reference, (3) the APPROVED style frame of this music video. Match the style of image 3 EXACTLY:
+- Two-colour silk-screen gig poster, flat geometric shapes, halftone dots, slight ink misregistration, screen texture and paper grain.
+- Palette ONLY: midnight navy (#18203A), moon yellow (#F0D35A), paper cream-white (#F3EFE4). No other hues, no gradients, no magenta.
+- The HUMAN: a young man, faceless navy silhouette with a thin cream outline and messy hair, yellow sticky notes stuck on his shoulders and back (as image 1).
+- The AI: a slender cream-white figure with a thin navy outline and NO face; the only facial mark is ONE vertical navy cursor line on the head (as image 2).
+
+This frame shows: WATER TRANSITION in one frame, top-down close-up. The human's navy hand holds a cream mug; the black-navy coffee surface fills the centre of the frame and reflects a yellow moon. A ripple ring spreads outward from a single falling drop; INSIDE the ripple rings the coffee surface turns cream-white and becomes a window into the AI world: the cream AI figure seen from above, standing in her empty cream room, looking up through the surface. The rings are drawn as screen-printed concentric bands alternating navy and cream, like ink spreading on wet paper. Calm, magical, liquid.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no writing on the notes or screens. No other colours. No 3D, no photorealism, no soft shading.
