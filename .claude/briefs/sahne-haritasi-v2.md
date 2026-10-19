@@ -293,3 +293,62 @@ Burak: "sahneler harika duruyor bayıldım ... önerilerin okay öyle devam edeb
 4. AI versions in the model-upgrade sequence: nearly identical (slightly cleaner lines, a version number changes);
    the point is that nothing really changes.
 5. The recap walk through the film's places after the final shatter (tur4/14): decide after the core clip is done.
+
+## Transition plan (2026-10-19, part-1 lane) — every scene-to-scene change, 0:00–4:00
+
+Meanings: **HalftoneBloom** = entering the screen / the AI's world. **InkBleed** = memory flowing away / his navy
+world spreading. **PaperFold** = the world turning into paper / notes. **SqueegeePrint** = a new day printed.
+**PlateShift** = things coming apart, out of register. **PEN** = the AI drawn, erased, redrawn. Non-effects: beat cut,
+shape match cut, camera move through an object, cut on action. Rules kept: no type twice in a row; each effect type at
+most 2–3 times; at least half are not effects; the two deliberate hard cuts (bar 84, bar 115) stay.
+
+| # | Time (bar) | From → to | Type | Why |
+|---|---|---|---|---|
+| 1 | 0:15.60 (9) | Droste intro → his morning screen | camera move through an object (the cream rush IS the screen glow; the zoom-out keeps going as a pull-back) | The loop of screens ends on the real screen; no effect, the same motion continues. |
+| 2 | 0:24.99 (14) | Screen ("Merhaba" typed) → the glass split | **HalftoneBloom** from the cursor | Entering her world through the screen. |
+| 3 | 0:28.74–0:32.49 (16–18) | He sits → he stands at the glass (inside scene 3) | cut on action (he starts to rise on "Dün", the next pose is at the glass) | A body move, so it is carried by the poses, not by an effect. |
+| 4 | 0:43.74 (24) | Split → full cream (pre-chorus 1) | camera move through an object (follow the last note through the glass; the navy side slides off left) | The note is the thread from his world into hers. |
+| 5 | 0:45.61 / 0:47.49 (25 / 26) | Her in cream ↔ page close-ups (inside scene 4) | beat cuts | Reading is a sequence of looks; cuts on the words "adın / yolun / hataların". |
+| 6 | 0:56.86 (31) | Notebook page → split (chorus 1) | **InkBleed** (1/2) from the page | The ink leaving the page is the memory leaving her; his navy world spreads back. |
+| 7 | 1:11.84 (39) | Chorus 1 → days at the desk | shape match cut (the last white wave = the white reset flash of his monitor) + 90° camera swing | Reset = wave; one shape, two meanings. |
+| 8 | 1:22.95 (45) | Days montage → the glass | camera move (pan with him; the wall slides in as the seam) | He walks out of the routine into the split. |
+| 9 | 1:28.68 (48) | The "Merhaba" note → verse 2 path | **PaperFold** (1/2) — the note folds/peels open and its ruled lines are the path | The world turning into paper: his note becomes her road. |
+| 10 | 1:41.77 (55) | Cream path → over-the-shoulder split | camera move through the glass (pull back, his head enters) | It was behind the glass all along. |
+| 11 | 1:51.12 (60) | Torch off → day street | shape match cut (torch circle → sun) after one black beat | The light he checks her with becomes his morning outside. |
+| 12 | 2:09.79 (70) | Day street → paper city | **PaperFold** (2/2) — the street folds flat onto his desk | The city they built is paper. |
+| 13 | 2:24.71 (78) | Paper city line-rain → night bus | shape match cut (line-rain → rain on the bus window) | The deleted lines become weather. |
+| 14 | 2:35.88 (84) | Bus → night run | **hard cut** (doors part on the +9 dB jump) — deliberate | The music's hit. |
+| 15 | 2:35.88–2:43.32 (84–87) | Navy ↔ cream flips during the run (inside scene 12) | **PlateShift** (1/2), one flip per downbeat | The two worlds out of register. |
+| 16 | 2:43.32 (88) | Run → navy flood | **InkBleed** (2/2) from the left edge | His world spreading over hers, at full size. |
+| 17 | 2:52.60 (93) | Flood → stripped final chorus (cream) | camera move through an object (the flood drains through the cracks; pass through the cracked glass) | Back home, then into her side. |
+| 18 | 2:55.84–2:57.70 (inside 13) | Her four re-formings | **PlateShift** (2/2) on the four strongest hits | A new model, out of register, the same pose. |
+| 19 | 3:00.02 (97) | Stripped chorus → full final chorus | **PEN** (her last pixels fall and the pen draws the glass seam) | She is redrawn; the seam is drawn by the same pen. |
+| 20 | 3:08.30–3:15.64 (inside 14) | Days montage on the split | **SqueegeePrint** (1/2), one pull per day | A new day printed over the last. |
+| 21 | 3:33.21 (115) | Trembling glass → coda | **hard cut** (shatter) — deliberate | The music's hit. |
+| 22 | 3:47.89 (123) | Coda → the white reset room | **SqueegeePrint** (2/2) in white (replaces the plain white wave) | The last new day; the reset. |
+| 23 | 4:00.76 | Last frame → first frame of scene 2 | match (identical frame) | The loop closes. |
+
+Counts: 23 changes; effects 11 (HalftoneBloom 1, InkBleed 2, PaperFold 2, PlateShift 2, SqueegeePrint 2, PEN 2 incl.
+the pen that draws her at 0:24.99 inside scene 3); not effects 12 (6 camera moves, 4 match/beat cuts, 1 cut on
+action, 1 loop match) + the 2 hard cuts. In sequence the effect types never repeat back to back (… InkBleed #6, match,
+camera, PaperFold #9, camera, match, PaperFold #12 is two non-effects after #9; PlateShift #15 → InkBleed #16 → camera →
+PlateShift #18 → PEN #19 → SqueegeePrint #20).
+
+## "Bir daha" sequence — the strongest moment (Burak, 2026-10-20; supersedes the scene-6 first half above)
+Measured: "daha" is sung at 71.80, 72.72, 73.70, 74.64, 75.54 and again 79.28, 80.26, 81.16 s — exactly every 2 beats;
+bars 40–45 (75.6–86.8 s) are the loudest steady plateau; energy drops at bar 46 (86.8 s).
+- One continuous, slow camera push-in toward the man at his desk runs through the whole sequence; the CONTENT cuts on every
+  "bir daha" to the same composition on a new day (time jumps, the camera does not). Cuts: every 2 beats on the sung "daha",
+  then every beat through bars 40–45, then every half beat in the last bar before 86.8 s.
+- Accumulation per cut: more yellow notes on his body, mugs stacking into a tower, sun ↔ moon in the window, his posture
+  sinking a little each day.
+- DAY COUNT = TALLY MARKS (Burak's call-back to the earlier calendar idea, replaces a numeric counter): each "bir daha" adds
+  one hand-drawn, print-textured stroke on his wall (four upright, the fifth across); in the acceleration the wall fills until
+  the marks become an uncountable grey mass.
+- The AI side never changes: on every cut her identical "Merhaba" bubble pops in the identical place, the identical wave.
+  His wall accumulates; her world is always day one.
+- Dead stop on the bar 46 downbeat (86.8 s): the montage freezes on one frame; then he walks to the glass, slides down
+  asleep (zzz), wakes with a start ("!") and sticks his own "Merhaba" note on the glass before she speaks (kept from calendar v2).
+- Callbacks: chorus 2 end (126.0–127.9 s, "bir daha" ×3) — the same cut rhythm echoes in the street's shop windows;
+  final chorus (202.2–204.0 s) — the tally wall returns on the split and freezes on "Yarın yine merhaba de", but this time
+  ONE tally mark stays on HER side too: the first time she keeps a day. The loop breaks.
