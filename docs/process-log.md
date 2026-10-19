@@ -39,9 +39,13 @@ Each entry is: what we did → what we measured → what a human saw → the les
 - Gemini's counts of pose changes were useful; its "snap" claims were often false at 10 fps (a 16-frame transition looks
   like one jump when sampled every 3 frames), and "floating feet" was a character rocking on tiptoe.
 - The blind watcher caught real readability problems the gates passed (an unreadable stamp, a climax too faint to
-  notice, captions printing over each other) — but neither watcher flagged limb distortion strongly enough.
-- Lesson: count with machines, judge motion with a human, and verify every machine claim at full frame rate
-  (`ffmpeg select='between(n,A,B)'`; `-ss` seeking returned the wrong frames).
+  notice, captions printing over each other), but it did not flag limb distortion.
+- Gemini DID give the right overall verdict on v6 ("the tempo is calm but the animation mechanics are frantic and
+  jerky", "visible in-between limb distortion" at 26.5 s). The architect discarded it together with its false
+  frame-level "snap" claims. That verdict matched what the director said the next morning better than any gate did.
+- Lesson: count with machines and verify every frame-level claim at full frame rate (`ffmpeg select='between(n,A,B)'`;
+  `-ss` seeking returned the wrong frames), but take a watcher's overall "how does it feel" verdict seriously even
+  when its timestamps are wrong. Judge motion with a human before calling a section done.
 
 ## 2026-10-19 · New direction
 
