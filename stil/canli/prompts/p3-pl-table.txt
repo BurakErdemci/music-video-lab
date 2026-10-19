@@ -1,0 +1,7 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the APPROVED desk of this film's side-view room, drawn in an eye-level FRONT ELEVATION; (2) the room itself. Match the style and the eye-level front elevation of image 1 EXACTLY: flat silk-screen print, navy #18203A shapes with thin cream #F3EFE4 rim lines, moon-yellow accents, fine grain, slight misregistration (wood tones only as navy and a little yellow-cream).
+
+Draw ONE isolated PROP, centred, nothing cropped: a plain wooden WORKTABLE in FRONT ELEVATION at eye level: the tabletop is a thin slab seen almost edge-on, TWO straight vertical legs at the two ends, both ending on ONE straight horizontal floor line. The space between the legs is empty. The top is EMPTY: no monitor, no objects, nothing on it. Proportions about 3.2 to 1 wide to high including the legs. No chair, no person, no floor shadow.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no people. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

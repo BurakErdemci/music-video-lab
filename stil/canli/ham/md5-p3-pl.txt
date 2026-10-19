@@ -1,0 +1,10 @@
+eebec3b9666dfa22b02902bb7c640a22 eebec3b9666dfa22b02902bb7c640a22 ham/p3-pl-shops-a.png
+7b3c80dd35c3d7eab3c89ff4b1c71467 7b3c80dd35c3d7eab3c89ff4b1c71467 ham/p3-pl-shops-b.png
+cc04714b435a4080c903af0f203f9dfe cc04714b435a4080c903af0f203f9dfe ham/p3-pl-tv.png
+6ebee3432ef40a7b3d947a59d6630eb3 6ebee3432ef40a7b3d947a59d6630eb3 ham/p3-pl-cafe.png
+6291f116b0b935d7982e46b4b9409bb5 6291f116b0b935d7982e46b4b9409bb5 ham/p3-pl-table.png
+2745c0d9aa440351a765293fe86d0d70 2745c0d9aa440351a765293fe86d0d70 ham/p3-pl-props.png
+  ham/p3-a-finger-r1.png
+bf902cd638c6102acfca5b6a79cfed28 bf902cd638c6102acfca5b6a79cfed28 ham/p3-h-kneel.png
+751e2bab8d39c7813219f9644dab10cd 751e2bab8d39c7813219f9644dab10cd ham/p3-h-freeze.png
+cd0f5159e9123b32ee9eaae2c049b59e cd0f5159e9123b32ee9eaae2c049b59e ham/p3-pl-table-r1.png

@@ -1,0 +1,11 @@
+{
+ "_note": "raw = coordinates on the raw 1672x941 generated image (measured by eye); prep converts to sprite px by subtracting the trim origin",
+ "raw": {
+  "a-walk": {"mugTop": [1095, 465]},
+  "a-palm": {"palm": [405, 335], "glassX": 373, "palmBox": [373, 237, 65, 218]},
+  "a-reach": {"note": [370, 275, 74, 68], "shoulder": [815, 240], "floorY": 892},
+  "a-finger": {"fingertip": [577, 197], "floorY": 885},
+  "a-tower": {"tower": [663, 221, 90, 267], "towerBase": [709, 486], "floorY": 905}
+ },
+ "headRaw": {"a-walk": [15, 280], "a-palm": [20, 283], "a-reach": [28, 180], "a-finger": [42, 205], "a-tower": [30, 165]}
+}

@@ -1,0 +1,26 @@
+# Part-3 human pose prompts (lane h). Run: python stil/canli/prompts/make_p3_h.py
+import os
+
+HERE = os.path.dirname(os.path.abspath(__file__))
+HEAD = "Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.\n\n"
+BG = "\n\nBackground: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.\n"
+ANCH = """Model anchors for the HUMAN (copy them exactly):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head).
+- Hair: the same short messy hair silhouette as the reference, the same tufts at the back and top. Not bigger.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette{FEET}.
+- Notes: moon-yellow (#F0D35A) square sticky notes stuck on the body and arms in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column down the back from the shoulder blade to the hip, two on the chest/ribs, one on the upper arm sleeve.
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, FACELESS (no eyes, no mouth), flat silk-screen style, slight misregistration, fine grain.
+"""
+RULES = "\nRules: pure side profile, the head is NOT turned away from the torso direction; two arms, five fingers at most per hand; every hand touches what it holds or rests on; nothing else is drawn (no table, no glass, no furniture, unless stated)."
+FULL = HEAD + "The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style); the SECOND is an approved drawing of him in this same film. Draw the SAME person, ONE single figure, full body head to toe, nothing cropped, centred, at the same scale as the second image.\n" + ANCH.replace('{FEET}', ', BAREFOOT') + "\nPose: "
+WAIST = HEAD + "The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style); the SECOND is an approved drawing of him in this same film. Draw the SAME person, ONE single figure, WAIST-UP: from the top of the hair down to the hips, the body cut off straight by the BOTTOM EDGE of the image at hip level (NO legs, no belt line drawn), drawn as large as the image allows, head and hair fully inside the image, centred horizontally.\n" + ANCH.replace('{FEET}', '') + "\nPose: "
+P = {}
+P['p3-h-walk'] = WAIST + "pure profile facing RIGHT, walking: upright with the slight forward lean of a walk, the far arm swinging a little back, the NEAR hand holds an upright cream (#F3EFE4) coffee MUG at chest height in front of him, his index and middle fingers hooked THROUGH the mug's loop handle (the handle on the side toward his body, clearly visible as a loop with the fingers through it). Head level, looking ahead." + RULES + BG
+P['p3-h-palm'] = WAIST + "pure profile facing RIGHT, standing still, his NEAR arm raised forward at shoulder height, elbow slightly bent, the PALM pressed FLAT on an invisible vertical glass plane just in front of him (the glass is NOT drawn): palm facing right, fingers together pointing straight up, the hand's flat side a straight vertical edge. Head level, looking at his hand. Far arm hangs relaxed." + RULES + BG
+P['p3-h-lean'] = FULL + "standing in profile facing RIGHT at the left end of a table (the table is NOT drawn), bent forward at the hips about 30 degrees, leaning over an invisible tabletop, BOTH hands resting flat (palms down, fingers together) on the invisible tabletop at hip height in front of him, both hands on ONE horizontal line, arms nearly straight, head tilted down looking at something small on the table. Both feet flat on the ground." + RULES + BG
+P['p3-h-head'] = FULL + "standing in profile facing RIGHT, BOTH hands clutching the top and sides of his head (fingers buried in the messy hair), elbows pointing forward, shoulders hunched, slight forward bend: despair at a disaster. Both feet flat on the ground." + RULES + BG
+P['p3-h-kneel'] = FULL + "kneeling on ONE knee in profile facing RIGHT (the back knee on the ground, the front foot flat on the ground), on an invisible floor. A small closed cardboard BOX (a plain cube about the size of a shoebox, navy with thin cream edge lines, with a BLANK cream rectangular label on its front face facing us - no letters, no marks on the label) sits on the floor in front of his front knee; his near hand rests on the box lid, head bowed looking at it. Quiet." + RULES + BG
+P['p3-h-freeze'] = FULL + "standing upright in profile facing RIGHT at the left end of an invisible table (NOT drawn): frozen in shock, body rigid and straight, shoulders raised, both hands lifted a few centimetres ABOVE an invisible tabletop at hip height in front of him, fingers spread, both hands at one height, head level staring ahead. Both feet flat on the ground." + RULES + BG
+for k, v in P.items():
+    open(os.path.join(HERE, k + '.txt'), 'w', encoding='utf8').write(v)
+print(len(P), 'prompts')
