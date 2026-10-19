@@ -103,3 +103,11 @@ Each entry is: what we did → what we measured → what a human saw → the les
   (back to true 3D), ink bleed, plus shape match cuts.
 - Burak watched the two kept transitions (ink bleed v2, paper fold v1): "ikisi de gayet iyi, bu tarz geçişler olabilir,
   kodla nerede güçlüysek oraya oynayalım". Direction confirmed: play to code's strengths.
+
+## 2026-10-19 · Cut-out parts
+
+- Both characters were cut into puppet parts from the canonical drawings themselves (masks), with matching rounded
+  overlaps at every joint, hidden areas repainted, extra hand shapes generated with Codex. Reassembled on their pivots
+  the profiles differ from the references by 0.51 % (human) and 0.34 % (AI) of pixels — the illustrated look survives,
+  which the 3D bodies could not do. Rigid bend tests: no gaps; short inner crease lines at elbow/knee at 90–120°.
+  The 3/4 and front views are drafts (boxy shoulders). Next: Blender 2D rig with mesh deformation.
