@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the AI character (silk-screen style), seen in side profile facing LEFT. Draw the SAME character: smooth genderless slender body, cream-white (#F3EFE4) fill with fine navy stipple speckle, a thin navy outline, bald round head, NO face at all except ONE short vertical navy cursor line on the face (exactly like the reference). No clothes, no hair, no ears, no nose, no mouth. Same proportions as the reference (small round head, long slim body).
+
+This is a KEY-POSE STRIP: draw EXACTLY THREE poses of the same single character side by side in one row, all in profile facing LEFT, at IDENTICAL scale, feet on the SAME horizontal baseline near the bottom, evenly spaced with clear magenta gaps (nothing touching):
+1) LEFT: neutral standing, both arms hanging relaxed at the sides, exactly like the reference.
+2) MIDDLE: a bright friendly WAVE: her near arm raised high, upper arm out to the front-left, forearm vertical, open palm, fingers spread a little and tilted slightly back; the other arm relaxed at her side; body upright and identical to pose 1 otherwise.
+3) RIGHT: the same wave a moment later: same upper arm, the forearm and open hand now tilted slightly FORWARD (to the left), the other extreme of the wave; everything else identical to pose 2.
+Full bodies head to toe, nothing cropped.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy and cream (+ magenta background). No 3D render look, no photorealism, no soft shading.

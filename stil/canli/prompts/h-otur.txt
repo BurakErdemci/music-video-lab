@@ -1,0 +1,16 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style). The SECOND shows how he holds a cream coffee mug. The THIRD shows his simple navy wooden chair and how he sits on it. Draw the SAME person.
+Model anchors for the HUMAN (copy them exactly from the attached canonical frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head).
+- Hair: the same short messy hair silhouette as the reference, the same tufts at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT.
+- Notes: moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column down the back from the shoulder blade to the hip, two on the chest/ribs, one on the upper arm sleeve.
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, FACELESS (no eyes, no mouth), flat silk-screen style, slight misregistration, fine grain.
+
+This is a KEY-POSE PAIR for a music video: draw EXACTLY TWO poses of the same man side by side, each SITTING on the SAME simple navy wooden chair (straight back, four thin legs, cream rim outline, like image 3), profile facing RIGHT, as if at a desk that is NOT drawn (nothing in front of him). Identical scale, the chair legs and his bare feet on the SAME baseline, the chair in the same place relative to each figure, a clear magenta gap between the two.
+1) LEFT: early morning, tired. He sits a little slouched, both hands wrapped around a plain cream (#F3EFE4) coffee mug held in front of his chest at about elbow height, elbows bent close to the body, head level, looking straight ahead to the right at a screen. Thighs horizontal, shins vertical, feet flat on the floor.
+2) RIGHT: the same seat, the same legs and feet exactly; now the mug is raised to just under his chin, both hands still around it, about to sip; chin lifted a little, head tilted very slightly, shoulders dropped and relaxed: a tired but warm moment.
+The mug is the same plain cream mug with a handle in both poses (no steam, no print on it).
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

@@ -1,0 +1,10 @@
+b0e3b56af68876fa96cdcfb97768e896  ham/a-poz-a.png  ==  b0e3b56af68876fa96cdcfb97768e896  ~/.codex/generated_images/01a155b7-e74c-7c00-a4f4-8a94127d22f0/exec-bd90866c-9055-4ca6-b313-3de6ce8f952d.png
+d9c2d435e2f2cd68e71d0a254d635736  ham/a-poz-b.png  ==  d9c2d435e2f2cd68e71d0a254d635736  ~/.codex/generated_images/01a155b7-e7d5-7431-879f-4b4ffee0bb7c/exec-53e2f2e1-522b-4424-a80f-ae0e5a0feb1a.png
+6ef334598c8c5a091b537882af68fc06  ham/bg-oda-sabah-a.png  ==  6ef334598c8c5a091b537882af68fc06  ~/.codex/generated_images/01a155b7-e7cf-7af3-a089-d8c1c38561bc/exec-cb812137-a82a-4e29-82b8-4e91071a749b.png
+833066bb93fc154defd182192f44768e  ham/bg-oda-sabah-b.png  ==  833066bb93fc154defd182192f44768e  ~/.codex/generated_images/01a155b7-e7ae-7582-845b-24a462f71da3/exec-996eb57b-623f-47c4-90e2-13ef27b2462b.png
+5da1ee03c4593763ec01878b39b9a35a  ham/h-cam-not-a.png  ==  5da1ee03c4593763ec01878b39b9a35a  ~/.codex/generated_images/01a155b7-e77f-7603-98ee-9c817621bff3/exec-8ce44be4-cd04-45e9-a9ea-9650ea88e130.png
+1344b6d5d671c4ec91646cbdab5c5b47  ham/h-cam-not-b.png  ==  1344b6d5d671c4ec91646cbdab5c5b47  ~/.codex/generated_images/01a155b7-e84f-7cf1-be9a-c1145b57d024/exec-2099c888-2167-496d-bbaf-0baf268bd8d5.png
+816481106a35423ad3b0ccbeaa0a3e6c  ham/h-otur-a.png  ==  816481106a35423ad3b0ccbeaa0a3e6c  ~/.codex/generated_images/01a155b7-e74c-79f1-aaab-351faef0eebc/exec-73e63d6b-c4b4-4f70-8393-79ca0bd35583.png
+6da06d59d340c101c3353a07e1bf7085  ham/h-otur-b.png  ==  6da06d59d340c101c3353a07e1bf7085  ~/.codex/generated_images/01a155b7-e7d1-75f2-ac9b-563306c553ef/exec-17310dee-2719-491b-a717-ffadb60ea3ff.png
+b36f93c769620c01b8d8270e76ecff77  ham/masa-monitor-a.png  ==  b36f93c769620c01b8d8270e76ecff77  ~/.codex/generated_images/01a155b7-e84e-7422-bd40-823d27afb106/exec-b29a40a5-0d8f-4962-bc0a-885d6e940439.png
+96d49286b0f612a87ac18997e4ba8bd5  ham/masa-monitor-b.png  ==  96d49286b0f612a87ac18997e4ba8bd5  ~/.codex/generated_images/01a155b7-e7bd-7072-97fb-fef57b1a7d4b/exec-f311dfd4-88d7-45eb-94c5-1f88d1bb53ec.png
