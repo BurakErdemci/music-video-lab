@@ -1,0 +1,14 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style); the SECOND is an approved drawing of him seated on his chair in this same film (copy the chair, the seat height, his legs and his posture from it). Draw the SAME person, ONE single figure on the SAME simple navy chair, full body head to toe, nothing cropped, centred, at the same scale as the second image.
+Model anchors for the HUMAN (copy them exactly):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head).
+- Hair: the same short messy hair silhouette as the reference, the same tufts at the back and top. Not bigger.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT.
+- Notes: moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column down the back from the shoulder blade to the hip, two on the chest/ribs, one on the upper arm sleeve.
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, FACELESS (no eyes, no mouth), flat silk-screen style, slight misregistration, fine grain.
+- The MUG: a plain cream (#F3EFE4) mug with a navy rim line and ONE clear loop HANDLE, seen from the side.
+
+Pose: seated in profile facing RIGHT, drinking: his near hand holds the mug BY ITS HANDLE (the handle is on the side of the mug nearest to his body, his fingers hooked through the handle loop, clearly visible), his far hand lightly supports the bottom of the mug; the mug is TILTED toward him and its RIM TOUCHES HIS LOWER LIP (no gap between the rim and his mouth area); head slightly tipped back, eyes (faceless) toward the mug. A physically plausible grip.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters, no steam. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

@@ -1,0 +1,7 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The FIRST attached image is the APPROVED design of the AI character (silk-screen style); the SECOND is an approved pose drawing of her in this same film. Draw the SAME character, ONE single figure, full body, nothing cropped, centred, at the same scale as the figures in the second image: smooth genderless slender body, cream-white (#F3EFE4) fill with fine navy stipple speckle, a thin navy outline, bald round head, NO face at all except ONE short vertical navy cursor line on the face (exactly like the reference). No clothes, no hair, no ears, no nose, no mouth. Same proportions as the reference (small round head, long slim body).
+
+Pose: standing in profile facing LEFT, her near arm forward at waist height, palm up and open, catching ONE moon-yellow square sticky note that has just landed on her palm; she looks down at it; the other arm relaxed.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

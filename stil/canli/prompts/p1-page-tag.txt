@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the approved style of this film (flat silk-screen print, navy + cream + moon yellow, fine paper grain, slight misregistration). Draw a FULL-FRAME close-up, seen from straight above, of an OPEN notebook filling the whole 16:9 frame edge to edge: two cream (#F3EFE4) pages with faint navy ruled lines, a dark navy (#18203A) cover rim along the frame edges and a navy spine down the middle. On the RIGHT page, drawn in navy pen: a simple luggage-tag / name-tag shape with a hole and string, its name written as an abstract wavy scribble (NOT letters); a small moon-yellow (#F0D35A) sticky note in a corner. The left page has a few lines of abstract handwriting scribbles.
+
+ABSOLUTELY NO real text, letters, numbers, logos, watermarks. Palette only navy, cream, moon yellow. No 3D render look, no photorealism, no soft shading, no hands, no people.

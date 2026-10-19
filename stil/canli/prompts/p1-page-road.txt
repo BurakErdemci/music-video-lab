@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the approved style of this film (flat silk-screen print, navy + cream + moon yellow, fine paper grain, slight misregistration). Draw a FULL-FRAME close-up, seen from straight above, of an OPEN notebook filling the whole 16:9 frame edge to edge: two cream (#F3EFE4) pages with faint navy ruled lines, a dark navy (#18203A) cover rim along the frame edges and a navy spine down the middle. On the RIGHT page, drawn in navy pen: a simple hand-sketched winding ROAD seen from above (two parallel lines curving from the bottom of the page to a tiny house at the top), a few dashes in the middle of the road, a small moon-yellow dot of a sun. The left page has a few lines of abstract handwriting scribbles.
+
+ABSOLUTELY NO real text, letters, numbers, logos, watermarks. Palette only navy, cream, moon yellow. No 3D render look, no photorealism, no soft shading, no hands, no people.

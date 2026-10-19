@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the approved style of this film (flat silk-screen print, navy + cream + moon yellow, fine grain). Draw ONE small CLOSED notebook lying flat, seen from slightly above at a three-quarter angle: a solid midnight navy (#18203A) cover with a thin cream rim line, a cream page edge visible on two sides, a moon-yellow elastic band across the cover. Centred, small (about a fifth of the image width), nothing else.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow. ABSOLUTELY NO text, letters, numbers, logos. No 3D render look.
