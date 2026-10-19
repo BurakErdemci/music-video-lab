@@ -193,12 +193,15 @@ const paintNotes = (ctx: Ctx2D, img: HTMLImageElement, t: number, warp: Warp): v
     const b = Math.sin(2 * Math.PI * (t / (c.per * 1.37) + c.ph * 2.1));
     for (let row = 0; row < c.h; row++) {
       const g = Math.pow(row / Math.max(1, c.h - 1), 1.6);
-      const dx = g * 0.9 * a;
-      const dy = g * 0.35 * b;
-      ctx.drawImage(mask, c.x, c.y + row, c.w, 1, c.x + dx, LIFT_PAD + c.y + row + off + dy, c.w, 1);
+      const dx = g * 2 * a;
+      const dy = g * 1 * b;
+      ctx.drawImage(mask, c.x, c.y + row, c.w, 1, c.x + dx, LIFT_PAD + c.y + row + off + dy, c.w, 1.7);
     }
   }
 };
+
+/** Pixel gain so amp 1.4 reaches ~3 px at the free tips (measured in the life-check script). */
+const HAIR_GAIN = 2.2;
 
 const paintHair = (ctx: Ctx2D, base: Canvas2D, t: number, hair: HairOpts, warp: Warp, cw: number): void => {
   const BW = 6;
@@ -210,11 +213,11 @@ const paintHair = (ctx: Ctx2D, base: Canvas2D, t: number, hair: HairOpts, warp: 
     const dy0 = Math.round(LIFT_PAD + mapY(warp, y));
     const dy1 = Math.round(LIFT_PAD + mapY(warp, Math.min(y + BH, hair.y1)));
     if (dy1 <= dy0) continue;
-    const n = vnoise('hair', t * 0.45 + y * 0.025);
+    const n = vnoise('hair', t * 0.4 + y * 0.025);
     for (let x = hair.x0; x < hair.x1; x += BW) {
       const xc = (x + BW / 2 - hair.x0) / (hair.x1 - hair.x0);
       const far = hair.face === 'left' ? xc : 1 - xc;
-      const dx = hair.amp * n * wy * smooth(0, 1, far);
+      const dx = hair.amp * HAIR_GAIN * n * wy * smooth(0, 1, far);
       const bw = Math.min(BW, hair.x1 - x);
       const sx = Math.min(Math.max(0, x - dx), cw - bw);
       ctx.clearRect(x, dy0, bw, dy1 - dy0);
@@ -249,7 +252,15 @@ export const paintCharacter = (
 
 const CREAM_RGB = '243,239,228';
 
-export const paintSteam = (ctx: CanvasRenderingContext2D, cw: number, ch: number, t: number, seed: string | number): void => {
+export const paintSteam = (
+  ctx: CanvasRenderingContext2D,
+  cw: number,
+  ch: number,
+  t: number,
+  seed: string | number,
+  opts: { lean?: number } = {},
+): void => {
+  const lean = opts.lean ?? 0;
   ctx.clearRect(0, 0, cw, ch);
   const r = seeded(`steam:${seed}`);
   const count = 3;
@@ -265,7 +276,7 @@ export const paintSteam = (ctx: CanvasRenderingContext2D, cw: number, ch: number
     const right: [number, number][] = [];
     for (let py = ch; py >= 0; py -= 3) {
       const yn = (ch - py) / ch;
-      const cx = bx + amp * Math.pow(yn, 0.7) * Math.sin(2 * Math.PI * (yn * freq - t * speed + ph));
+      const cx = bx + lean * (ch - py) + amp * Math.pow(yn, 0.7) * Math.sin(2 * Math.PI * (yn * freq - t * speed + ph));
       const body = 0.3 + 0.7 * Math.sin(Math.PI * Math.pow(yn, 0.55));
       const gap = smooth(-0.75, -0.2, vnoise(`${key}:gap`, yn * 2.4 - t * 0.35));
       const hw = width * body * gap * (1 - 0.5 * yn);
@@ -286,13 +297,20 @@ export const paintSteam = (ctx: CanvasRenderingContext2D, cw: number, ch: number
   }
 };
 
-export const paintSky = (ctx: CanvasRenderingContext2D, cw: number, ch: number, t: number, sunP: number): void => {
+export const paintSky = (
+  ctx: CanvasRenderingContext2D,
+  cw: number,
+  ch: number,
+  t: number,
+  sunP: number,
+  opts: { sunR?: number; dotStep?: number } = {},
+): void => {
   void t;
   ctx.fillStyle = palette.cream;
   ctx.fillRect(0, 0, cw, ch);
   const m = Math.min(cw, ch);
   // halftone dots in the lower sky, bigger towards the roofs
-  const step = Math.max(7, m * 0.02);
+  const step = Math.max(opts.dotStep === undefined ? 7 : 4, m * (opts.dotStep ?? 0.02));
   const y0 = ch * 0.42;
   const y1 = ch * 0.86;
   ctx.fillStyle = palette.navy;
@@ -306,7 +324,7 @@ export const paintSky = (ctx: CanvasRenderingContext2D, cw: number, ch: number, 
     }
   }
   // sun: the yellow plate is offset from its key ring (misregistration)
-  const r = 0.2 * m;
+  const r = (opts.sunR ?? 0.2) * m;
   const sx = cw * 0.56;
   const sy = ch * 0.8 + (ch * 0.38 - ch * 0.8) * Math.min(1, Math.max(0, sunP));
   ctx.strokeStyle = palette.navy;

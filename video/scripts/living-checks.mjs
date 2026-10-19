@@ -13,13 +13,26 @@ const HERE = path.dirname(fileURLToPath(import.meta.url));
 const VIDEO_DIR = path.resolve(HERE, '..');
 const ROOT = path.resolve(VIDEO_DIR, '..');
 const args = process.argv.slice(2);
-const oi = args.indexOf('--out');
-const OUT = path.resolve(oi >= 0 ? args[oi + 1] : path.join(VIDEO_DIR, 'out/living-checks'));
-const input = args.find((a, i) => !a.startsWith('--') && args[i - 1] !== '--out');
+const VALUE_FLAGS = ['--out', '--events', '--span', '--checks-module', '--concurrency-note'];
+const flagVals = (name) => args.flatMap((a, i) => (a === name ? [args[i + 1]] : []));
+const flagVal = (name) => flagVals(name)[0];
+const OUT = path.resolve(flagVal('--out') ?? path.join(VIDEO_DIR, 'out/living-checks'));
+const input = args.find((a, i) => !a.startsWith('--') && !VALUE_FLAGS.includes(args[i - 1]));
 if (!input) {
-  console.error('usage: node video/scripts/living-checks.mjs <video.mp4> [--out dir]');
+  console.error('usage: node video/scripts/living-checks.mjs <video.mp4> [--out dir] [--events events.json] [--span A:B:step:name]... [--checks-module m.ts] [--concurrency-note text]');
   process.exit(2);
 }
+const EVENTS_PATH = flagVal('--events') ? path.resolve(flagVal('--events')) : path.join(VIDEO_DIR, 'src/living/events.json');
+const CUSTOM_EVENTS = !!flagVal('--events');
+const CHECKS_MODULE = flagVal('--checks-module') ? path.resolve(flagVal('--checks-module')) : null;
+const NOTE = flagVal('--concurrency-note');
+// --span A:B:step:name, song frames (converted to composition frames below)
+const spans = flagVals('--span').map((s) => {
+  const [a, b, st, ...nm] = s.split(':');
+  const sp = { A: Number(a), B: Number(b), step: Number(st), name: nm.join(':') };
+  if (![sp.A, sp.B, sp.step].every(Number.isInteger) || sp.step < 1 || sp.B < sp.A || !sp.name) { console.error(`bad --span "${s}" (want A:B:step:name)`); process.exit(2); }
+  return sp;
+});
 const VID = path.resolve(input);
 fs.mkdirSync(OUT, { recursive: true });
 
@@ -36,9 +49,9 @@ const T0 = Date.now();
 const lap = (s) => console.log(`  [${((Date.now() - T0) / 1000).toFixed(1)}s] ${s}`);
 const run = (cmd, a, opt = {}) => spawnSync(cmd, a, { encoding: 'utf8', maxBuffer: 1 << 28, shell: process.platform === 'win32' && cmd === 'npx', ...opt });
 
-const ev = JSON.parse(fs.readFileSync(path.join(VIDEO_DIR, 'src/living/events.json'), 'utf8'));
+const ev = JSON.parse(fs.readFileSync(EVENTS_PATH, 'utf8'));
 const timing = JSON.parse(fs.readFileSync(path.join(ROOT, 'data/timing.json'), 'utf8'));
-const S0 = ev.songStart;
+const S0 = ev.songStart ?? 0;
 const events = ev.events;
 const slug = (s) => s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '').slice(0, 40);
 
@@ -46,6 +59,8 @@ const probe = run('ffprobe', ['-v', 'error', '-select_streams', 'v:0', '-count_p
 const st = JSON.parse(probe.stdout).streams[0];
 const NF = Number(st.nb_read_packets);
 console.log(`video ${path.relative(ROOT, VID)}  ${st.width}x${st.height} ${st.r_frame_rate}  ${NF} frames (songStart ${S0}, ${events.length} events)`);
+if (CUSTOM_EVENTS) console.log(`events file ${path.relative(ROOT, EVENTS_PATH)}`);
+if (NOTE) console.log(`note: ${NOTE}`);
 
 // ---------- 1. frame-exact sheets ----------
 const selectFrames = (expr, count, tmp) => {
@@ -58,6 +73,7 @@ const tile = (tmp, cols, rows, out) => run('ffmpeg', ['-v', 'error', '-y', '-fra
 const sheets = [];
 const tmpDir = path.join(OUT, '_tmp');
 for (const e of events) {
+  if (e.sheet === false) continue;
   const c = e.f - S0, A = Math.max(0, c - 3), B = Math.min(NF - 1, c + 3); // window clipped at the video ends
   const name = `sheet-${e.f}-${slug(e.name)}.png`;
   const want = B - A + 1;
@@ -66,13 +82,14 @@ for (const e of events) {
   if (got === want) tile(tmpDir, want, 1, path.join(OUT, name));
   sheets.push({ name, expected: want, got, ok: got === want && fs.existsSync(path.join(OUT, name)), note: want < 7 ? `window clipped to ${A}..${B}` : undefined });
 }
-{
-  const A = 750 - S0, B = 806 - S0, n = Math.floor((B - A) / 2) + 1;
-  const name = 'sheet-pen-reveal-750-806.png';
+const allSpans = CUSTOM_EVENTS ? spans : [{ A: 750, B: 806, step: 2, name: 'pen-reveal' }, ...spans];
+for (const sp of allSpans) {
+  const A = sp.A - S0, B = sp.B - S0, n = Math.floor((B - A) / sp.step) + 1;
+  const name = `sheet-${sp.name === 'pen-reveal' ? 'pen-reveal-750-806' : `span-${slug(sp.name)}-${sp.A}-${sp.B}`}.png`;
   if (A < 0 || B >= NF) sheets.push({ name, expected: n, got: 0, ok: false, note: 'outside video' });
   else {
-    const got = selectFrames(`between(n\\,${A}\\,${B})*not(mod(n-${A}\\,2))`, n, tmpDir);
-    if (got === n) tile(tmpDir, 6, Math.ceil(n / 6), path.join(OUT, name));
+    const got = selectFrames(`between(n\,${A}\,${B})*not(mod(n-${A}\,${sp.step}))`, n, tmpDir);
+    if (got === n) tile(tmpDir, Math.min(6, n), Math.ceil(n / 6), path.join(OUT, name));
     sheets.push({ name, expected: n, got, ok: got === n && fs.existsSync(path.join(OUT, name)) });
   }
 }
@@ -159,8 +176,19 @@ const halves = beats.slice(0, -1).flatMap((b, i) => [b, Math.round(((timing.beat
 const nearest = (grid, f) => grid.reduce((b, g) => (Math.abs(g - f) < Math.abs(b - f) ? g : b), grid[0]);
 const beatRows = [];
 for (const e of events) {
+  if (e.on === 'word') {
+    const norm = (w) => String(w ?? '').replace(/[^\p{L}\p{N}]+/gu, '').toLocaleLowerCase('tr');
+    const cand = timing.words.filter((w) => norm(w.w) === norm(e.word)).map((w) => Math.round(w.start * FPS));
+    if (!e.word || !cand.length) { beatRows.push({ f: e.f, on: e.on, grid: null, drift: null, name: e.name, msg: `word "${e.word}" not found in timing.json` }); continue; }
+    const g = nearest(cand, e.f);
+    beatRows.push({ f: e.f, on: e.on, grid: g, drift: e.f - g, name: e.name, msg: `word "${e.word}"${cand.length > 1 ? ` (${cand.length} matches)` : ''}` });
+    continue;
+  }
   const grid = e.on === 'downbeat' ? downs : e.on === 'beat' ? beats : e.on === 'half-beat' ? halves : null;
-  if (!grid) continue;
+  if (!grid) {
+    if (e.on !== 'none') beatRows.push({ f: e.f, on: String(e.on), grid: null, drift: null, name: e.name, msg: `unknown grid "${e.on}"` });
+    continue;
+  }
   const g = nearest(grid, e.f);
   beatRows.push({ f: e.f, on: e.on, grid: g, drift: e.f - g, name: e.name });
 }
@@ -183,6 +211,16 @@ const tscErrors = (tscOut.match(/error TS\d+/g) || []).length;
 const tscFirst = tscOut.split('\n').filter((l) => /error TS/.test(l)).slice(0, 5);
 lap('tsc done');
 
+// ---------- 5b. external checks module (caption overlap, stamps clear of characters, ...) ----------
+let modOut = null, modPass = true;
+if (CHECKS_MODULE) {
+  const m = run('node', ['--experimental-strip-types', '--no-warnings', CHECKS_MODULE], { cwd: VIDEO_DIR });
+  modOut = (m.stdout || '') + (m.stderr ? `
+[stderr] ${m.stderr}` : '');
+  modPass = m.status === 0 && /^TYPECHECK: PASS\s*$/m.test(modOut) && !/^TYPECHECK: FAIL\s*$/m.test(modOut);
+  lap('checks module done');
+}
+
 // ---------- report ----------
 const unintended = spikes.filter((s) => s.class === 'UNINTENDED');
 console.log(`\n== 1. sheets (${OUT})`);
@@ -195,11 +233,16 @@ console.log(`  cut events without a spike: ${missedCuts.length ? missedCuts.map(
 console.log(`  exact-duplicate runs > ${DUP_RUN} frames: ${dupRuns.length ? dupRuns.map((r) => `${r.from}-${r.to} (${r.frames})`).join(', ') : 'none'}`);
 console.log(`  plot: ${py.status === 0 ? 'jumpscan.png' : 'FAILED ' + (py.stderr || '').slice(0, 200)}`);
 console.log(`\n== 3. beat landing: ${beatPass ? 'PASS' : 'FAIL'} (${beatRows.length} events)`);
-for (const r of beatRows) console.log(`  f${r.f} ${r.on.padEnd(9)} grid ${r.grid} drift ${r.drift >= 0 ? '+' : ''}${r.drift}  ${r.name}`);
+for (const r of beatRows) console.log(r.drift === null ? `  FAIL f${r.f} ${r.on.padEnd(9)} ${r.msg}  ${r.name}` : `  f${r.f} ${r.on.padEnd(9)} grid ${r.grid} drift ${r.drift >= 0 ? '+' : ''}${r.drift}  ${r.name}${r.msg ? '  [' + r.msg + ']' : ''}`);
 console.log(`\n== 4. purity: ${realHits.length ? 'FAIL' : 'PASS'} (${files.length} files scanned, ${realHits.length} hits, ${hits.length - realHits.length} comment-only)`);
 for (const h of hits) console.log(`  ${h.comment ? '(comment) ' : ''}${h.at}  ${h.text}`);
 console.log(`\n== 5. tsc --noEmit: ${tsc.status === 0 ? 'PASS' : 'FAIL'} (${tscErrors} errors)`);
 for (const l of tscFirst) console.log('  ' + l);
 console.log(`\n== 6. black frames (mean luma < ${DARK}): ${dark.length}${dark.length ? '  frames ' + dark.slice(0, 20).join(',') : ''}`);
-const verdict = sheets.every((s) => s.ok) && !unintended.length && !missedCuts.length && beatPass && !realHits.length && tsc.status === 0 && !dark.length;
+if (CHECKS_MODULE) {
+  console.log(`
+== 7. checks module ${path.relative(ROOT, CHECKS_MODULE)}: ${modPass ? 'PASS' : 'FAIL'}`);
+  for (const l of modOut.split('\n')) if (l.trim()) console.log('  ' + l);
+}
+const verdict = sheets.every((s) => s.ok) && !unintended.length && !missedCuts.length && beatPass && !realHits.length && tsc.status === 0 && !dark.length && modPass;
 console.log(`\nOVERALL: ${verdict ? 'PASS' : 'FAIL'}   total ${((Date.now() - T0) / 1000).toFixed(1)}s`);

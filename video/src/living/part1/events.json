@@ -1,0 +1,254 @@
+{
+  "_doc": "Part1 timeline in SONG frames (30 fps); the Part1 composition starts at song frame 0, so composition frame = song frame. 'on' is the grid the event must land on: downbeat / beat / half-beat / word (then 'word' names the sung word it is bound to, matched by its start frame in data/timing.json) / none. 'kind' cut = a deliberate single-frame picture change (an allowed jump-scan spike); soft = no spike expected. 'sheet' false = no frame sheet for it. Written by the architect; part1/shots.ts reads the same numbers by name.",
+  "songStart": 0,
+  "songEnd": 1740,
+  "events": [
+    {
+      "f": 131,
+      "name": "intro: Droste level hand-off (approved intro, also in test90-v6) 1",
+      "on": "none",
+      "kind": "cut"
+    },
+    {
+      "f": 218,
+      "name": "intro: Droste level hand-off (approved intro, also in test90-v6) 2",
+      "on": "none",
+      "kind": "cut"
+    },
+    {
+      "f": 293,
+      "name": "intro: Droste level hand-off (approved intro, also in test90-v6) 3",
+      "on": "none",
+      "kind": "cut"
+    },
+    {
+      "f": 352,
+      "name": "intro: Droste level hand-off (approved intro, also in test90-v6) 4",
+      "on": "none",
+      "kind": "cut"
+    },
+    {
+      "f": 403,
+      "name": "intro: Droste level hand-off (approved intro, also in test90-v6) 5",
+      "on": "none",
+      "kind": "cut"
+    },
+    {
+      "f": 450,
+      "name": "intro: Droste level hand-off (approved intro, also in test90-v6) 6",
+      "on": "none",
+      "kind": "cut"
+    },
+    {
+      "f": 412,
+      "name": "intro: cream rush starts",
+      "on": "none",
+      "kind": "soft"
+    },
+    {
+      "f": 468,
+      "name": "hand-over: cream glow -> his screen, pull-back",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 637,
+      "name": "cut: P1 mug at chest -> P2 sip, closer",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 698,
+      "name": "Merhaba letter 1",
+      "on": "word",
+      "word": "Merhaba",
+      "kind": "soft"
+    },
+    {
+      "f": 700,
+      "name": "HalftoneBloom starts",
+      "on": "none",
+      "kind": "soft"
+    },
+    {
+      "f": 750,
+      "name": "HalftoneBloom lands, pen starts",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 792,
+      "name": "pen lines done, ink fill",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 806,
+      "name": "AI raises her hand (breakdown)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 810,
+      "name": "AI wave rig, overshoot and settle",
+      "on": "none",
+      "kind": "soft"
+    },
+    {
+      "f": 862,
+      "name": "AI stands and rocks, he lowers the mug",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 904,
+      "name": "he rises with the note (cut on action)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 961,
+      "name": "he is at the glass with the note",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1003,
+      "name": "AI turns to her blank wall (whole body), question mark",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1031,
+      "name": "AI steps up to her wall (3/4 back view)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1059,
+      "name": "he peels a note, AI faces the glass",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1087,
+      "name": "he slides a note, AI catches",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1101,
+      "name": "sweat drop on yine",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 1143,
+      "name": "he peels again, AI pins",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1172,
+      "name": "he slides again, AI catches",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1200,
+      "name": "handshake offered on both sides",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1214,
+      "name": "hands meet the glass",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 1256,
+      "name": "last note, camera follows it through the glass, AI turns to watch it",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1312,
+      "name": "full cream, AI looks down",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1326,
+      "name": "notebook lands at her feet",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 1354,
+      "name": "AI kneels to the notebook",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1368,
+      "name": "page close-up: name tag",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1382,
+      "name": "page close-up: road",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1396,
+      "name": "page close-up: crossed-out line",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1425,
+      "name": "AI reads cross-legged",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1453,
+      "name": "check mark on anliyorum",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 1495,
+      "name": "AI looks up from the page",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 1537,
+      "name": "close-up of her cursor face",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1593,
+      "name": "page close-up, the ink lifts",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1649,
+      "name": "InkBleed starts",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 1706,
+      "name": "InkBleed lands on the split (chorus 1)",
+      "on": "downbeat",
+      "kind": "soft"
+    }
+  ]
+}
