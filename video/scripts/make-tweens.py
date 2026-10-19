@@ -9,8 +9,9 @@ Why a distance-field morph: the strips have 4 key drawings and no in-betweens. A
 jumps; a cross-dissolve shows two half-transparent bodies (rejected by the director as ghosting). Blending
 the two silhouettes' signed distance fields gives ONE solid body whose outline flows from the first shape
 into the second: an arm that overlaps its old place extends or bends, the torso stays put. Inside the
-morphed outline the first drawing's detail (notes, lines) is shown until t = 1/2, the second's after, over
-the body's flat fill; the rim line is redrawn on the morphed edge. Measured on H12 2->3 (arm reaching out)
+morphed outline both drawings' own pixels (notes, lines, held props) are shown, warped along with the moved
+pieces and the matched detail and handed over where both cover the same place (compose(), test90-v6); the
+rim line is redrawn on the morphed edge. Measured on H12 2->3 (arm reaching out)
 it reads as the arm moving; it cannot rotate a limb that does not overlap its old place (that limb thins
 and regrows), which is why big moves got extra drawings (H04v2, the walk in-betweens).
 
@@ -22,7 +23,7 @@ import json
 import os
 import sys
 
-from PIL import Image, ImageChops, ImageFilter
+from PIL import Image, ImageChops, ImageFilter, ImageStat
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', '..'))
 PAIRS = os.path.join(ROOT, 'video', 'out', 'tween-pairs.json')
@@ -34,7 +35,6 @@ STEPS = 15
 Q = 2  # distance fields at half resolution
 RING = 2.6  # (v4) rim line width on screen, px
 RING_PX = 2  # rim: the morphed mask minus its erosion by this many px (a 5x5 min filter: ~3 px line)
-DETAIL_IN = 6  # px: a drawing's lines and notes are shown only this far inside its own silhouette
 COLORS = {'human': ((24, 32, 58), (243, 239, 228)), 'ai': ((243, 239, 228), (24, 32, 58))}  # fill, rim
 ALIGN_RANGE = 120
 ALIGN_GAIN = 0.06  # realign only if the overlap gets this much better than at the true offset
@@ -383,10 +383,18 @@ def piece_field(w, h, px):
     return [max(-TRUNC, min(TRUNC, v)) for v in sdf(im)]
 
 
+def travel(t):
+    """How far a carried piece has travelled at t (test90-v6). Linear, the first image (t = 1/16) already had a
+    torso that moves 300 px moved 19 px, and the Actor shows that image from the first frame of an eased transition:
+    a jump. Eased, the first step is 3 px."""
+    return t * t * (3 - 2 * t)
+
+
 def carried(t, w, h, pr):
     """Pixels of a carried piece at t: both pieces slid to the in-between place, their fields blended."""
     a, b, dx, dy, fa, fb = pr
-    sx, sy = t * dx, t * dy  # where the first piece has got to
+    p = travel(t)
+    sx, sy = p * dx, p * dy  # where the first piece has got to
     ax, ay = round(sx), round(sy)
     bx, by = round(sx - dx), round(sy - dy)
     xs = [i % w for i in a['px'] + b['px']]
@@ -470,11 +478,278 @@ def plain_mask(im, fill):
     return ImageChops.multiply(a, diff.point(lambda v: 255 if v < 28 else 0))
 
 
-def core_mask(im):
-    """Alpha of a drawing's pixels at least DETAIL_IN px inside its silhouette (its outline line excluded)."""
-    a = im.split()[3].point(lambda v: 255 if v > 100 else 0)
-    core = a.filter(ImageFilter.MinFilter(2 * DETAIL_IN + 1)).filter(ImageFilter.GaussianBlur(1.0))
-    return ImageChops.multiply(core, im.split()[3])
+# The detail layer (test90-v6). v5 showed the first drawing's pixels until t = 1/2 and the second's after, and only
+# 6 px inside each one's silhouette: a held book (thin, all edge) never showed and popped in at the end
+# (48.3 s), notes near the jacket's edge vanished for 15 frames (51.7 s), carried heads lost their hair. Now both
+# drawings are warped along with the shape (a carried piece, the head, brings its surroundings with it, fading out
+# over FALL px so the neck stretches instead of tearing) and shown in full wherever the morphed body covers them:
+# what only one drawing has shows at full strength as long as the shape holds it (a book grows in with its pages,
+# an arm retracts with its sleeve), and only where both drawings cover the same place does the first hand over to
+# the second, during XFADE, in a soft sweep from the head down (handover()). A drawing's own outline is dropped where it
+# lies deep inside the morphed body (the v4 double outline); near the body's edge the drawing's own silhouette
+# (hair tufts, fingers, the book's corners) extends the smoothed morph shape by up to EDGE px, the first drawing's
+# fading as the second's comes in, so the first image is the first drawing and the last image the second.
+FALL = 12.0  # half-res px
+GRID = 8  # warp mesh cell, screen px
+XFADE = (0.3, 0.7)
+SWEEP_BAND = 0.03
+EDGE = 8  # screen px
+EDGE_T = 0.25  # the drawing's own edge fades out over this share of the morph from its end
+OWN_RIM = 3  # screen px: a drawing's outline band
+DEEP = 3  # screen px: an outline this far inside the morphed edge is not on it
+
+
+def smooth01(x):
+    x = max(0.0, min(1.0, x))
+    return x * x * (3 - 2 * x)
+
+
+def warp(img, W, H, disp):
+    """img moved by the displacement disp(x, y) -> (dx, dy) (screen px, sampled on a GRID mesh): the pixel shown at
+    p comes from p - disp(p)."""
+    xs = list(range(0, W, GRID)) + [W]
+    ys = list(range(0, H, GRID)) + [H]
+    src = {}
+    moved = False
+    for y in ys:
+        for x in xs:
+            dx, dy = disp(x, y)
+            moved = moved or abs(dx) > 0.01 or abs(dy) > 0.01
+            src[(x, y)] = (x - dx, y - dy)
+    if not moved:
+        return img
+    mesh = []
+    for y0, y1 in zip(ys, ys[1:]):
+        for x0, x1 in zip(xs, xs[1:]):
+            mesh.append(((x0, y0, x1, y1), src[(x0, y0)] + src[(x0, y1)] + src[(x1, y1)] + src[(x1, y0)]))
+    def one(im):
+        if im.mode == 'L':
+            return im.transform((W, H), Image.MESH, mesh, Image.BILINEAR)
+        return im.convert('RGBa').transform((W, H), Image.MESH, mesh, Image.BILINEAR).convert('RGBA')
+    return [one(im) for im in img] if isinstance(img, list) else one(img)
+
+
+# Where the two drawings cover the same place, their detail is matched (test90-v6): the jacket notes of a body that
+# leans sit 10-30 px apart in the two drawings, and handing over between them in place showed two half-transparent
+# sets of notes (detail count down 40-60% for three images). A coarse block match finds, per FLOW_GRID cell of the
+# shared body, where its patch of the first drawing went in the second; both drawings are then warped towards each
+# other along it (the first by travel(t) of it, the second by the rest), so the hand-over happens on top of itself.
+FLOW_GRID = 16
+FLOW_PATCH = 12  # half patch, screen px
+FLOW_COARSE = 4  # first search at 1/4 resolution
+FLOW_RANGE = 8  # coarse px (32 screen px)
+FLOW_FINE = 3
+FLOW_GAIN = 0.85  # a match must beat staying in place by this factor
+FLOW_WHO = {'human', 'ai'}  # whose drawings are block-matched (the AI's lines too: 7 vs 8 morphs off in G2)
+
+
+def flow(ca, cb, W, H):
+    """Per grid node (x, y) on the shared body: (dx, dy) screen px such that the second drawing at p + d looks like
+    the first one at p. Returns a sampler disp(x, y) (bilinear over the grid; 0 off the matched body)."""
+    def gray(im):
+        bg = Image.new('RGBA', im.size, (128, 128, 128, 255))
+        bg.alpha_composite(im)
+        return bg.convert('L')
+    ga, gb = gray(ca), gray(cb)
+    c = FLOW_COARSE
+    sa, sb = ga.resize((W // c, H // c), Image.BOX), gb.resize((W // c, H // c), Image.BOX)
+    both = ImageChops.multiply(binary(ca.split()[3]), binary(cb.split()[3])).filter(ImageFilter.MinFilter(9))
+    bpx = both.load()
+
+    def sad(A, B, ax, ay, bx, by, r):
+        pa = A.crop((ax - r, ay - r, ax + r, ay + r))
+        pb = B.crop((bx - r, by - r, bx + r, by + r))
+        return ImageStat.Stat(ImageChops.difference(pa, pb)).sum[0]
+
+    nodes = {}
+    for y in range(0, H + 1, FLOW_GRID):
+        for x in range(0, W + 1, FLOW_GRID):
+            if not (FLOW_PATCH <= x < W - FLOW_PATCH and FLOW_PATCH <= y < H - FLOW_PATCH) or not bpx[x, y]:
+                continue
+            patch = ga.crop((x - FLOW_PATCH, y - FLOW_PATCH, x + FLOW_PATCH, y + FLOW_PATCH))
+            lo, hi = patch.getextrema()
+            if hi - lo < 40:  # flat body: nothing to match, nothing to ghost
+                continue
+            cx, cy, r = x // c, y // c, FLOW_PATCH // c
+            best = (sad(sa, sb, cx, cy, cx, cy, r), 0, 0)
+            zero = best[0]
+            for dy in range(-FLOW_RANGE, FLOW_RANGE + 1):
+                for dx in range(-FLOW_RANGE, FLOW_RANGE + 1):
+                    v = sad(sa, sb, cx, cy, cx + dx, cy + dy, r) * (1 + 0.01 * (abs(dx) + abs(dy)))
+                    if v < best[0]:
+                        best = (v, dx, dy)
+            if best[0] > FLOW_GAIN * zero:
+                nodes[(x, y)] = (0, 0)
+                continue
+            bx, by = best[1] * c, best[2] * c
+            fz = sad(ga, gb, x, y, x + bx, y + by, FLOW_PATCH)
+            fb = (fz, bx, by)
+            for dy in range(-FLOW_FINE, FLOW_FINE + 1):
+                for dx in range(-FLOW_FINE, FLOW_FINE + 1):
+                    v = sad(ga, gb, x, y, x + bx + dx, y + by + dy, FLOW_PATCH)
+                    if v < fb[0]:
+                        fb = (v, bx + dx, by + dy)
+            nodes[(x, y)] = (fb[1], fb[2])
+    # a 3x3 median against single wrong matches
+    sm = {}
+    for (x, y) in nodes:
+        nb = [nodes[(x + i * FLOW_GRID, y + j * FLOW_GRID)] for i in (-1, 0, 1) for j in (-1, 0, 1) if (x + i * FLOW_GRID, y + j * FLOW_GRID) in nodes]
+        xs = sorted(v[0] for v in nb)
+        ys = sorted(v[1] for v in nb)
+        sm[(x, y)] = (xs[len(xs) // 2], ys[len(ys) // 2])
+    # spread the matched shifts over the rest of the body (its edges, where only one drawing is, carry the same notes
+    # a few px off: left unshifted they showed both sets of notes at once, walk 5500 -> 8000 note px)
+    body = ImageChops.lighter(binary(ca.split()[3]), binary(cb.split()[3])).filter(ImageFilter.MaxFilter(2 * FLOW_GRID + 1)).load()
+    todo = [(x, y) for y in range(0, H + 1, FLOW_GRID) for x in range(0, W + 1, FLOW_GRID)
+            if (x, y) not in sm and body[min(x, W - 1), min(y, H - 1)]]
+    while todo and sm:
+        nxt = []
+        add = {}
+        for (x, y) in todo:
+            nb = [sm[(x + i * FLOW_GRID, y + j * FLOW_GRID)] for i in (-1, 0, 1) for j in (-1, 0, 1) if (x + i * FLOW_GRID, y + j * FLOW_GRID) in sm]
+            if nb:
+                add[(x, y)] = (sum(v[0] for v in nb) / len(nb), sum(v[1] for v in nb) / len(nb))
+            else:
+                nxt.append((x, y))
+        if not add:
+            break
+        sm.update(add)
+        todo = nxt
+
+    def disp(x, y):
+        gx, gy = x / FLOW_GRID, y / FLOW_GRID
+        x0, y0 = int(gx), int(gy)
+        tx = ty = tw = 0.0
+        for i, j in ((0, 0), (1, 0), (0, 1), (1, 1)):
+            v = sm.get(((x0 + i) * FLOW_GRID, (y0 + j) * FLOW_GRID))
+            if v is None:
+                continue
+            wt = (1 - abs(gx - x0 - i)) * (1 - abs(gy - y0 - j))
+            tx += wt * v[0]
+            ty += wt * v[1]
+            tw += wt
+        return (tx, ty) if tw else (0.0, 0.0)
+    return disp
+
+
+def displacement(t, w, h, carry, side, fl=None):
+    """Screen-px displacement of drawing `side` (0 first, 1 second) at t: the shift of the carried piece that dominates
+    there (only one: a head next to a moving arm took a share of the arm's shift and was bent), fading out with the
+    distance from where the piece is now over at least the shift itself (a steeper fade folded the warp mesh over:
+    smears, A06 -> a04); elsewhere the matched detail shift (flow)."""
+    parts = []
+    for pr in carry:
+        dx, dy = pr[2], pr[3]
+        if side == 0:
+            f, sx, sy = pr[4], travel(t) * dx, travel(t) * dy
+        else:
+            f, sx, sy = pr[5], -(1 - travel(t)) * dx, -(1 - travel(t)) * dy
+        if abs(sx) + abs(sy) > 0.01:
+            parts.append((f, sx, sy, min(TRUNC - 1, max(FALL, 1.25 * (sx * sx + sy * sy) ** 0.5))))
+
+    def disp(x, y):
+        best = (0.0, 0.0, 0.0)
+        for f, sx, sy, fall in parts:
+            qx = min(w - 1, max(0, int(round(x / Q - sx))))
+            qy = min(h - 1, max(0, int(round(y / Q - sy))))
+            wt = max(0.0, min(1.0, 1 - f[qy * w + qx] / fall))
+            if wt > best[0]:
+                best = (wt, sx, sy)
+        wt, sx, sy = best
+        tx, ty = wt * sx * Q, wt * sy * Q
+        if fl and wt < 1:
+            fx, fy = fl(x, y)
+            k = (1 - wt) * (travel(t) if side == 0 else -(1 - travel(t)))
+            tx += k * fx
+            ty += k * fy
+        return tx, ty
+    return disp
+
+
+def binary(a, lim=100):
+    return a.point(lambda v: 255 if v > lim else 0)
+
+
+def edge_grow(M, X, e):
+    """M plus the pixels of X within e px of M that connect to M through such pixels."""
+    if e <= 0:
+        return M
+    cand = ImageChops.multiply(X, M.filter(ImageFilter.MaxFilter(2 * e + 1)))
+    cur = M
+    for _ in range(e + 3):
+        cur = ImageChops.lighter(M, ImageChops.multiply(cur.filter(ImageFilter.MaxFilter(3)), cand))
+    return cur
+
+
+def own_rim(im):
+    b = binary(im.split()[3])
+    return ImageChops.subtract(b, b.filter(ImageFilter.MinFilter(2 * OWN_RIM + 1)))
+
+
+def compose(t, W, H, ca, cb, M, carry, fill, rim, fl=None, props=()):
+    w, h = W // Q, H // Q
+    layers = []
+    for side, im in ((0, ca), (1, cb)):
+        # a carried prop is lifted off its drawing and travels as a rigid layer on top (warped with the body, the
+        # pixels it left behind showed a second copy at its old place)
+        body, top = im, []
+        if props:
+            k = travel(t) if side == 0 else -(1 - travel(t))
+            lift = Image.new('L', (W, H), 0)
+            for pr in props:
+                pm = prop_mask(pr[side]['px'], w, h, W, H)
+                lift = ImageChops.lighter(lift, pm)
+                piece = Image.new('RGBA', (W, H))
+                piece.paste(im, (0, 0), pm)
+                top.append((piece, int(round(k * pr[2] * Q)), int(round(k * pr[3] * Q))))
+            body = im.copy()
+            body.putalpha(ImageChops.multiply(im.split()[3], ImageChops.invert(lift)))
+        # each drawing's own outline band is taken before the warp and warped along (taken after it, a stretched
+        # outline was wider than the band and left dark smears inside the body)
+        L, r = warp([body, own_rim(im)], W, H, displacement(t, w, h, carry, side, fl))
+        if top:
+            L = L.copy()
+            for piece, dx, dy in top:
+                moved_piece = Image.new('RGBA', (W, H))
+                moved_piece.paste(piece, (dx, dy))
+                L.alpha_composite(moved_piece)
+        layers.append((L, r))
+    (LA, rA), (LB, rB) = layers
+    aA, aB = LA.split()[3], LB.split()[3]
+    bA, bB = binary(aA), binary(aB)
+    s = smooth01((t - XFADE[0]) / (XFADE[1] - XFADE[0]))
+    # each drawing's own edge only near its own end of the morph: in the middle both fringes together swelled the
+    # body towards the union of the two drawings (artifactcheck bloat, A18 0 -> 1: both pairs of legs)
+    F = edge_grow(edge_grow(M, bA, int(round(EDGE * max(0.0, 1 - t / EDGE_T)))), bB, int(round(EDGE * max(0.0, 1 - (1 - t) / EDGE_T))))
+    outer = F.filter(ImageFilter.GaussianBlur(0.7))
+    inner = F.filter(ImageFilter.MinFilter(2 * RING_PX + 1)).filter(ImageFilter.GaussianBlur(0.7))
+    deep = F.filter(ImageFilter.MinFilter(2 * DEEP + 1))
+    out = Image.new('RGBA', (W, H), rim + (0,))
+    out.putalpha(outer)
+    out.paste(Image.new('RGBA', (W, H), fill + (255,)), (0, 0), inner)
+    # body texture first (where the other drawing's detail is dropped, the body still looks printed)
+    out.paste(LB, (0, 0), ImageChops.multiply(inner, plain_mask(LB, fill)))
+    out.paste(LA, (0, 0), ImageChops.multiply(inner, plain_mask(LA, fill)))
+    masks = []
+    for own, a in ((rA, aA), (rB, aB)):
+        masks.append(ImageChops.multiply(ImageChops.multiply(a, ImageChops.invert(ImageChops.multiply(own, deep))), inner))
+    mA, mB = masks
+    out.paste(LA, (0, 0), mA)
+    # the second drawing: in full where the first has nothing; where both are, handed over by a soft sweep from the
+    # top of the body to its bottom during XFADE (a plain cross-fade of the whole body halved every thin line at once:
+    # the AI's limb lines faded to half their count for three images)
+    sweep = handover(t, W, H)
+    out.paste(LB, (0, 0), ImageChops.multiply(mB, ImageChops.invert(ImageChops.multiply(ImageChops.invert(sweep), mA))))
+    return out
+
+
+def handover(t, W, H):
+    """Per pixel, how far the hand-over from the first drawing's detail to the second's has got (255 = done): a band
+    SWEEP_BAND wide (in t) passing from the top row at XFADE[0] to the bottom row at XFADE[1]."""
+    span = XFADE[1] - XFADE[0] - SWEEP_BAND
+    col = Image.new('L', (1, H))
+    col.putdata([int(round(255 * smooth01((t - XFADE[0] - span * y / max(1, H - 1)) / SWEEP_BAND))) for y in range(H)])
+    return col.resize((W, H), Image.NEAREST)
 
 
 def body_colour(ca, cb):
@@ -537,15 +812,19 @@ def neck(m, w, h, head_px, r_in):
         return
     cx = sum(i % w for i in hs) / len(hs)
     cy = sum(i // w for i in hs) / len(hs)
+    # the nearest pixel of the body's largest piece (not merely the nearest set pixel: that was a crumb beside the
+    # head, and the head floated free once the crumb was cleaned away, H17 2 -> 3, test90-v6)
+    lab, sizes = components(w, h, [0 if i in hs else v for i, v in enumerate(m)])
+    if not sizes:
+        return
+    big = max(range(len(sizes)), key=lambda c: sizes[c])
     best = None
-    R = int(r_in * 3)
-    for y in range(max(0, int(cy - R)), min(h, int(cy + R) + 1)):
-        for x in range(max(0, int(cx - R)), min(w, int(cx + R) + 1)):
-            i = y * w + x
-            if m[i] and i not in hs:
-                d = (x - cx) ** 2 + (y - cy) ** 2
-                if d > (r_in * 0.9) ** 2 and (best is None or d < best[0]):
-                    best = (d, x, y)
+    for i in range(w * h):
+        if lab[i] == big:
+            x, y = i % w, i // w
+            d = (x - cx) ** 2 + (y - cy) ** 2
+            if best is None or d < best[0]:
+                best = (d, x, y)
     if not best:
         return
     _, bx, by = best
@@ -579,6 +858,99 @@ def unsliver(mi, opened, w, h):
                 touch[c].add(lab_o[j])
     keep = [len(t) >= 2 for t in touch]
     return Image.frombytes('L', (w, h), bytes(255 if o[i] or (lab_d[i] >= 0 and keep[lab_d[i]]) else 0 for i in range(w * h)))
+
+
+# Carried props (test90-v6). A held book that changes place between two drawings (raised to read, then put on the lap,
+# 52 s) melted into the hands while a second book grew on the lap. A prop is found by its colour (the human's cream
+# pages, the AI's navy cover), opened so that outlines and lines drop out, and paired like a moved piece; it then
+# travels whole from its old place to its new one.
+PROP = {'human': (243, 239, 228), 'ai': (24, 32, 58)}
+PROP_MIN = 120  # half-res px
+PROP_OPEN = 5  # half-res px: thinner colour runs (outlines, lines) are not props
+PROP_IOU = 0.2  # a book turned from upright to flat keeps little of its shape
+PROP_SIZE = 3.4
+PROP_ARM = 12  # half-res: neck() radius parameter for the bridge to a carried prop (about 10 screen px wide)
+
+
+def prop_pieces(im, who, head):
+    w, h = im.width // Q, im.height // Q
+    r, g, b = ImageChops.difference(im.convert('RGB'), Image.new('RGB', im.size, PROP[who])).split()
+    col = ImageChops.add(ImageChops.add(r, g), b).point(lambda v: 255 if v < 60 else 0)
+    col = ImageChops.multiply(col, binary(im.split()[3]))
+    m = col.resize((w, h), Image.BOX).point(lambda v: 255 if v > 127 else 0)
+    m = m.filter(ImageFilter.MinFilter(PROP_OPEN)).filter(ImageFilter.MaxFilter(PROP_OPEN))
+    on = [1 if v else 0 for v in m.tobytes()]
+    if head:  # the AI's face slit is navy and solid; it travels with the head
+        for i in head['px']:
+            on[i] = 0
+    lab, sizes = components(w, h, on)
+    out = {c: {'id': c, 'n': n, 'px': []} for c, n in enumerate(sizes) if n >= PROP_MIN}
+    for i, c in enumerate(lab):
+        if c in out:
+            out[c]['px'].append(i)
+    for p in out.values():
+        p['cx'] = sum(i % w for i in p['px']) / p['n']
+        p['cy'] = sum(i // w for i in p['px']) / p['n']
+    return list(out.values())
+
+
+def match_props(w, h, PA, PB):
+    """Pairs (a, b, dx, dy) of props that changed place (a prop that stays is left to the matched detail)."""
+    pairs = []
+    used = set()
+    for a in sorted(PA, key=lambda p: -p['n']):
+        sa = set(a['px'])
+        best = None
+        for j, b in enumerate(PB):
+            # an open book held up and the same book closed on the lap differ 3x in area
+            if j in used or not 1 / PROP_SIZE <= b['n'] / a['n'] <= PROP_SIZE:
+                continue
+            if len(sa & set(b['px'])) > 0.5 * min(a['n'], b['n']):
+                continue
+            dx = round(b['cx'] - a['cx'])
+            dy = round(b['cy'] - a['cy'])
+            if abs(dx) + abs(dy) < 6:
+                continue
+            inter = sum(1 for i in b['px'] if (i - dx - dy * w) in sa)
+            iou = inter / (a['n'] + b['n'] - inter)
+            if iou >= PROP_IOU and (best is None or iou > best[0]):
+                best = (iou, j, dx, dy)
+        if best:
+            used.add(best[1])
+            pairs.append((a, PB[best[1]], best[2], best[3]))
+    return pairs
+
+
+def prop_mask(px, w, h, W, H):
+    m = bytearray(w * h)
+    for i in px:
+        m[i] = 255
+    return Image.frombytes('L', (w, h), bytes(m)).resize((W, H), Image.NEAREST).filter(ImageFilter.MaxFilter(5))
+
+
+def real_move(pa, pb, A, B):
+    """Is a matched pair of pieces one piece that moved? Not when its new place is already body in the first drawing
+    (or its old place still body in the second): the piece is there in both, moving it doubled it. Not when a big
+    piece changes size a lot: H26 1->2 matched the first drawing's upper back with the second one's legs (330 px
+    down); while v5 carried only the piece's own core that went unseen, warping the drawing along (v6) dragged a
+    note down to the feet."""
+    if sum(A[i] for i in pb['px']) > 0.5 * pb['n'] or sum(B[i] for i in pa['px']) > 0.5 * pa['n']:
+        return False
+    if max(pa['n'], pb['n']) > 1000 and min(pa['n'], pb['n']) < 0.6 * max(pa['n'], pb['n']):
+        return False
+    return True
+
+
+def hidden(carry, A, B):
+    """Pixels the blended field leaves to the carried pieces: a piece's own pixels, except where the other drawing has
+    body that is not its own piece (the second drawing's raised book over the first one's bowed head, 48.3 s: hidden,
+    the book never grew in and popped at the end)."""
+    out = set()
+    for pr in carry:
+        pa, pb = set(pr[0]['px']), set(pr[1]['px'])
+        out |= {i for i in pa if not B[i] or i in pb}
+        out |= {i for i in pb if not A[i] or i in pa}
+    return out
 
 
 def morph(pair):
@@ -622,6 +994,8 @@ def morph(pair):
     carry = []
     rA_saved, rB_saved = list(rA), list(rB)
     for pa, pb, dx, dy in match_pieces(w, h, pieces_of(w, h, A, core), pieces_of(w, h, B, core)):
+        if not real_move(pa, pb, A, B):
+            continue
         for i in pa['px']:
             rA[i] = 9.0
         for i in pb['px']:
@@ -635,7 +1009,7 @@ def morph(pair):
     ok = []
     for pr in carry:
         others = [q for q in carry if q is not pr]
-        hid = set(i for q in carry for i in q[0]['px'] + q[1]['px'])
+        hid = hidden(carry, A, B)
         v0 = [(x + y) / 2 for x, y in zip(fa, fb)]
         for i in hid:
             v0[i] = TRUNC
@@ -650,15 +1024,24 @@ def morph(pair):
             for i in pr[1]['px']:
                 rB[i] = rB_saved[i]
     carry = ok
+    # props before the head: neck() takes the head as the last carried piece
+    props = match_props(w, h, prop_pieces(ca, who, heads and heads[0]), prop_pieces(cb, who, heads and heads[1]))
+    first_prop = len(carry)
+    for pa, pb, dx, dy in props:
+        for i in pa['px']:
+            if not B[i]:
+                rA[i] = 9.0
+        for i in pb['px']:
+            if not A[i]:
+                rB[i] = 9.0
+        carry.append((pa, pb, dx, dy, piece_field(w, h, pa['px']), piece_field(w, h, pb['px'])))
     if heads:
         ha, hb, dx, dy = heads
         carry.append((ha, hb, dx, dy, piece_field(w, h, ha['px']), piece_field(w, h, hb['px'])))
-    hide = set(i for pr in carry for i in pr[0]['px'] + pr[1]['px'])
+    hide = hidden(carry, A, B)
     holesAB = [x | y for x, y in zip(hA, hB)]
     fill, rim = body_colour(ca, cb), COLORS[pair['a']['who']][1]
-    # the other drawing lends only its plain body texture (its notes and lines would show twice)
-    plain = [plain_mask(ca, fill), plain_mask(cb, fill)]
-    cores = [core_mask(ca), core_mask(cb)]
+    fl = flow(ca, cb, W, H) if who in FLOW_WHO else None
     frames = []
     for i in range(1, STEPS + 1):
         t = i / (STEPS + 1)
@@ -669,43 +1052,21 @@ def morph(pair):
         m = shape_at(t, w, h, A, B, rA, rB, core, holesAB, vals, [i for px, _ in moved for i in px])
         if heads:
             neck(m, w, h, moved[-1][0], HEAD[who][0])
+        # a travelling prop stays in the hand: a bridge as wide as an arm to the body (without it the book floated
+        # free between the raised hands and the lap, 52 s)
+        for k in range(len(props)):
+            neck(m, w, h, moved[first_prop + k][0], PROP_ARM)
         mi = Image.frombytes('L', half, bytes(255 if v else 0 for v in m))
         # drop slivers thinner than ~8 px (a crescent of the old head's back or a hair tuft left behind by the carried
         # head read as a hook, test90-v5 walk): open the shape, but keep whatever both drawings share there
         opened = ImageChops.lighter(mi.filter(ImageFilter.MinFilter(5)).filter(ImageFilter.MaxFilter(5)), ImageChops.multiply(mi, both_img))
         mi = unsliver(mi, opened, w, h)
-        # ONE outline (test90-v5): the edge comes from the morphed mask alone, smoothed at full resolution, and the
-        # drawings' own outlines never reach the frame (v4 pasted the current drawing's pixels, its rim line
-        # included, inside the new rim: two parallel outlines, AI 28.5 s). The current drawing lends its detail
-        # only DETAIL_IN px inside its own silhouette; between that and the new rim, body-coloured texture only.
+        # ONE outline (test90-v5): the edge comes from the morphed mask, smoothed at full resolution; a drawing's own
+        # outline shows only where it lies on that edge (v4 pasted the current drawing's pixels, its rim line
+        # included, inside the new rim: two parallel outlines, AI 28.5 s). See compose().
         full = mi.filter(ImageFilter.GaussianBlur(1.0)).resize((W, H), Image.BICUBIC).point(lambda v: 255 if v > 127 else 0)
         full = full.filter(ImageFilter.GaussianBlur(1.8)).point(lambda v: 255 if v > 127 else 0)
-        outer = full.filter(ImageFilter.GaussianBlur(0.7))
-        inner = full.filter(ImageFilter.MinFilter(2 * RING_PX + 1)).filter(ImageFilter.GaussianBlur(0.7))
-        k = 0 if t < 0.5 else 1
-        src, other = (ca, cb) if k == 0 else (cb, ca)
-        out = Image.new('RGBA', (W, H), rim + (0,))
-        out.putalpha(outer)
-        body = Image.new('RGBA', (W, H), fill + (255,))
-        out.paste(body, (0, 0), inner)
-        # where the current drawing has no body, the other one's body texture; then the current one's body texture;
-        # its lines and notes only well inside its own outline
-        out.paste(other, (0, 0), ImageChops.multiply(inner, plain[1 - k]))
-        out.paste(src, (0, 0), ImageChops.multiply(inner, plain[k]))
-        out.paste(src, (0, 0), ImageChops.multiply(inner, cores[k]))
-        # a carried piece brings its own drawing along (the AI's cursor slit stays in her head)
-        for pr, (_, (ox_, oy_)) in zip(carry, moved):
-            piece = pr[0] if t < 0.5 else pr[1]
-            pm = bytearray(w * h)
-            for i in piece['px']:
-                pm[i] = 255
-            pmask = Image.frombytes('L', half, bytes(pm)).resize((W, H), Image.NEAREST).filter(ImageFilter.MaxFilter(3))
-            layer = Image.new('RGBA', (W, H))
-            layer.paste(src, (0, 0), ImageChops.multiply(pmask, cores[k]))
-            shifted = Image.new('RGBA', (W, H))
-            shifted.paste(layer, (ox_ * Q, oy_ * Q))
-            out.paste(shifted, (0, 0), ImageChops.multiply(inner, shifted.split()[3]))
-        frames.append(out)
+        frames.append(compose(t, W, H, ca, cb, full, carry, fill, rim, fl, props))
     # how different the two shapes are once aligned (1 - IoU): the Actor gives bigger changes longer morphs
     size = 1 - overlap(alpha_mask(ca, 4), alpha_mask(cb, 4), 0)
     return frames, {'w': W, 'h': H, 'ax': round(ox, 2), 'slide': d - a, 'size': round(size, 3)}
@@ -716,7 +1077,8 @@ def stamp(pair):
     for side in ('a', 'b'):
         p = os.path.join(ROOT, pair[side]['file'])
         h.update(str(os.path.getmtime(p)).encode())
-    h.update(f'{STEPS}{Q}{RING}{ALIGN_GAIN}{ISLAND_KEEP}{TRUNC}{REPAIR}{PIECE_MIN}{PIECE_IOU}{RING_PX}{DETAIL_IN}{HEAD}open5v12'.encode())
+    h.update(f'{STEPS}{Q}{RING}{ALIGN_GAIN}{ISLAND_KEEP}{TRUNC}{REPAIR}{PIECE_MIN}{PIECE_IOU}{RING_PX}{HEAD}open5v12'.encode())
+    h.update(f'v6{FALL}{GRID}{XFADE}{SWEEP_BAND}{EDGE}{EDGE_T}{OWN_RIM}{DEEP}{FLOW_GRID}{FLOW_PATCH}{FLOW_COARSE}{FLOW_RANGE}{FLOW_FINE}{FLOW_GAIN}{sorted(FLOW_WHO)}{PROP}{PROP_MIN}{PROP_OPEN}{PROP_IOU}{PROP_SIZE}{PROP_ARM}'.encode())
     return h.hexdigest()[:16]
 
 

@@ -158,8 +158,10 @@ def double_contour(im, who, old_edges):
     outline AND on (within 3 px of) the outline of one of the two drawings, per outline pixel."""
     a = im.split()[3].point(lambda v: 255 if v > 100 else 0)
     band = ImageChops.subtract(a.filter(ImageFilter.MinFilter(2 * DC_IN + 1)), a.filter(ImageFilter.MinFilter(2 * DC_OUT + 1)))
-    diff = ImageChops.difference(im.convert('RGB'), Image.new('RGB', im.size, RIM[who])).convert('L')
-    line = diff.point(lambda v: 255 if v < 60 else 0)
+    # summed per-channel distance to the rim colour (test90-v6: the luminance of the difference put the human's
+    # yellow notes, 240,211,90, within 60 of her cream rim, so notes kept near the edge counted as an old outline)
+    r, g, b = ImageChops.difference(im.convert('RGB'), Image.new('RGB', im.size, RIM[who])).split()
+    line = ImageChops.add(ImageChops.add(r, g), b).point(lambda v: 255 if v < 60 else 0)
     n = ImageChops.multiply(ImageChops.multiply(band, line), old_edges).histogram()[255]
     per = ImageChops.subtract(a, a.filter(ImageFilter.MinFilter(3))).histogram()[255]
     return n / max(1, per)
