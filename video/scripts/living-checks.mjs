@@ -148,8 +148,13 @@ for (const [half, arr] of [['left', left], ['right', right]]) {
   }
 }
 spikes.sort((a, b) => a.frame - b.frame || (a.half < b.half ? -1 : 1));
-const dark = [];
-luma.forEach((v, i) => { if (v < DARK) dark.push(i); });
+const darkAll = [];
+luma.forEach((v, i) => { if (v < DARK) darkAll.push(i); });
+// events.json "deliberateBlack": [[A, B], ...] in song frames, inclusive; dark frames inside are reported, not failed.
+const blackRanges = (ev.deliberateBlack ?? []).map(([a, b]) => [a - S0, b - S0]);
+const inBlack = (i) => blackRanges.some(([a, b]) => i >= a && i <= b);
+const dark = darkAll.filter((i) => !inBlack(i));
+const deliberateDark = darkAll.filter(inBlack);
 const both = left.map((l, i) => Math.max(l, right[i]));
 const dupRuns = [];
 for (let i = 1; i < both.length;) {
@@ -161,9 +166,18 @@ for (let i = 1; i < both.length;) {
     i = j + 1;
   } else i++;
 }
-const missedCuts = cutFrames.filter((c) => c < DEC && !spikes.some((s) => s.frame === c)).map((c) => ({ frame: c, songFrame: c + S0, left: +(left[c] ?? 0).toFixed(2), right: +(right[c] ?? 0).toFixed(2) }));
+// A listed cut without a spike (camera moving, diff under ratio/floor) is soft if the picture really changed there
+// (max L/R diff >= CUT_MIN, well above codec noise), else it changed nothing and is a bug.
+const CUT_MIN = 1.0;
+const nbP75 = (arr, i) => { const nb = []; for (let k = Math.max(1, i - NEIGH); k <= Math.min(arr.length - 1, i + NEIGH); k++) if (k !== i) nb.push(arr[k]); return median(nb); };
+const noSpikeCuts = cutFrames.filter((c) => c < DEC && !spikes.some((s) => s.frame === c)).map((c) => ({
+  frame: c, songFrame: c + S0, left: +(left[c] ?? 0).toFixed(2), right: +(right[c] ?? 0).toFixed(2),
+  neighbourP75: +Math.max(nbP75(left, c), nbP75(right, c)).toFixed(3),
+}));
+const softCuts = noSpikeCuts.filter((m) => Math.max(m.left, m.right) >= CUT_MIN);
+const missedCuts = noSpikeCuts.filter((m) => Math.max(m.left, m.right) < CUT_MIN);
 fs.writeFileSync(path.join(OUT, 'jumpscan.json'), JSON.stringify({
-  video: VID, frames: DEC, floor: FLOOR, ratio: RATIO, neighbourhood: NEIGH, cutFrames, spikes, darkFrames: dark, duplicateRuns: dupRuns, cutsWithoutSpike: missedCuts,
+  video: VID, frames: DEC, floor: FLOOR, ratio: RATIO, neighbourhood: NEIGH, cutFrames, spikes, darkFrames: dark, duplicateRuns: dupRuns, cutsWithoutSpike: noSpikeCuts, softCuts, noChangeCuts: missedCuts, deliberateBlackFrames: deliberateDark,
   leftDiff: left.map((v) => +v.toFixed(3)), rightDiff: right.map((v) => +v.toFixed(3)), luma: luma.map((v) => +v.toFixed(2)),
 }));
 const py = run('python', [path.join(HERE, 'living-checks.py'), path.join(OUT, 'jumpscan.json'), path.join(OUT, 'jumpscan.png')]);
@@ -229,7 +243,9 @@ console.log(`\n== 2. jump scan  floor ${FLOOR}, ratio ${RATIO}x p75(+-${NEIGH}),
 console.log(`  spikes ${spikes.length}: ALLOWED ${spikes.length - unintended.length}, UNINTENDED ${unintended.length}`);
 for (const s of spikes.slice(0, 40)) console.log(`  ${s.class.padEnd(10)} frame ${s.frame} (song ${s.songFrame}) ${s.half} ${s.value} (neighbour median ${s.neighbourMedian})`);
 if (spikes.length > 40) console.log(`  ... ${spikes.length - 40} more in jumpscan.json`);
-console.log(`  cut events without a spike: ${missedCuts.length ? missedCuts.map((m) => `${m.frame} (L${m.left}/R${m.right})`).join(', ') : 'none'}`);
+const cutRow = (m) => `${m.frame} (L${m.left}/R${m.right}, neighbour p75 ${m.neighbourP75})`;
+console.log(`  listed cut, soft (below threshold; does not fail): ${softCuts.length ? softCuts.map(cutRow).join(', ') : 'none'}`);
+console.log(`  listed cut, NO CHANGE (max L/R < ${CUT_MIN}; fails): ${missedCuts.length ? missedCuts.map(cutRow).join(', ') : 'none'}`);
 console.log(`  exact-duplicate runs > ${DUP_RUN} frames: ${dupRuns.length ? dupRuns.map((r) => `${r.from}-${r.to} (${r.frames})`).join(', ') : 'none'}`);
 console.log(`  plot: ${py.status === 0 ? 'jumpscan.png' : 'FAILED ' + (py.stderr || '').slice(0, 200)}`);
 console.log(`\n== 3. beat landing: ${beatPass ? 'PASS' : 'FAIL'} (${beatRows.length} events)`);
@@ -239,6 +255,7 @@ for (const h of hits) console.log(`  ${h.comment ? '(comment) ' : ''}${h.at}  ${
 console.log(`\n== 5. tsc --noEmit: ${tsc.status === 0 ? 'PASS' : 'FAIL'} (${tscErrors} errors)`);
 for (const l of tscFirst) console.log('  ' + l);
 console.log(`\n== 6. black frames (mean luma < ${DARK}): ${dark.length}${dark.length ? '  frames ' + dark.slice(0, 20).join(',') : ''}`);
+console.log(`   deliberate black (inside deliberateBlack ranges, not failed): ${deliberateDark.length}${deliberateDark.length ? '  frames ' + deliberateDark.slice(0, 20).join(',') + (deliberateDark.length > 20 ? ',...' : '') : ''}`);
 if (CHECKS_MODULE) {
   console.log(`
 == 7. checks module ${path.relative(ROOT, CHECKS_MODULE)}: ${modPass ? 'PASS' : 'FAIL'}`);
