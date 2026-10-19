@@ -67,3 +67,11 @@ Each entry is: what we did → what we measured → what a human saw → the les
   on musical hits; every other transition flows through an object (screen ripple, ink spreading, a note peeling into a
   road, the torch circle becoming the sun, the street folding into the paper city, line-rain becoming bus-window rain).
   Every lyric line carries a one-sentence "why this image serves these words".
+
+## 2026-10-19 · Transition test v1 (water-like scene changes)
+
+- Three transitions built in Remotion without new packages: G1 screen dive and G2 ink bleed as small hand-written WebGL
+  shaders with seeded simplex noise, G5 street fold as nested CSS 3D hinged panels. Beat landings 0 frames off.
+- Gemini at 24 fps (told there are no intentional glitches): G1 4/10 ("rigid concentric rings, a cheap 2D preset",
+  stretching while zooming), G2 7/10 (organic), G5 8/10 (creative, a small perspective pop). The architect's own
+  full-rate sheets agreed. Lesson: drawn ripple rings read as a preset; water must show up as refraction of the image.
