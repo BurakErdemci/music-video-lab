@@ -37,3 +37,26 @@ export { ScribbleBoil, type ScribbleBoilProps } from './ScribbleBoil.tsx';
  *   Render-prop form: hands out the filter url so fills or groups get the same ink edge.
  */
 export { DryBrushStroke, DryBrush, dryBrushOutline, pathBounds, type DryBrushStrokeProps } from './DryBrushStroke.tsx';
+
+export { StickerCutout, type StickerCutoutProps } from './StickerCutout.tsx';
+export { PaintSpread, type PaintSpreadProps, type PaintSource } from './PaintSpread.tsx';
+export { CanvasBulge, type CanvasBulgeProps } from './CanvasBulge.tsx';
+export { CrackGrow, crackGraph, crackStep, type CrackGrowProps, type CrackSegment, type CrackOptions } from './CrackGrow.tsx';
+export { TimeRemap, fastForward, playBetween, type TimeRemapProps, type FrameMap } from './TimeRemap.tsx';
+
+/**
+ * Photosensitivity (contract: at most 3 flashes in any 1-second window; a flash = two opposing
+ * large luminance swings, so the budget is 6 swings per second).
+ * - ImpactBurst `flash` = 0-3 frames; one burst costs flash + 1 swings (impactSwings). Default 2
+ *   = 3 swings: two flashing bursts within one second already use the whole budget.
+ * - DuotoneFlash: every cue change is one swing (duotoneSwings). A 1-frame grade and its return
+ *   are 2 swings = one flash.
+ * - gradeCues() builds cues from { beat } / { word } / { frame } anchors with GRADES presets
+ *   (V, O, O_SOFT, P, POSTER, GOLD, M, MEMORY) and throws if its own cues break the budget.
+ * - Shots combine sources: collect every swing of a shot (grades, impact flashes, hard cuts
+ *   between very different plates) and call assertFlashBudget(swings, label) where the schedule
+ *   is built. TimeRemap fast-forward multiplies the rate of anything flashing inside it.
+ * - Not counted as flashes: speed-line flicker, scribble and sticker boil (small area, no
+ *   frame-wide luminance swing). Measure the render anyway; the model is conservative, not proof.
+ */
+export { MAX_FLASHES_PER_SECOND, flashRate, assertFlashBudget, duotoneSwings, impactSwings, gradeCues, GRADES, type Swing, type GradeName, type GradeStep, type Anchor } from './flash.ts';
