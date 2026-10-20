@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { C } from './theme.tsx';
+import { C, type OutlineRenderer } from './theme.tsx';
 
 export interface MissingTextureFillProps {
   /** SVG path data the checkerboard is clipped to (in the parent svg's user units). */
@@ -15,6 +15,10 @@ export interface MissingTextureFillProps {
   colorB?: string;
   /** Fill rule of the clip path. */
   clipRule?: 'nonzero' | 'evenodd';
+  /** Optional outline around the shape: width in user units and colour. */
+  outline?: { width: number; color: string };
+  /** Plug-in outline painter (e.g. the shared dry-brush stroke); defaults to a plain stroke. */
+  renderOutline?: OutlineRenderer;
 }
 
 /** Missing-texture checkerboard clipped to a path; drop it inside any <svg>. */
@@ -27,6 +31,10 @@ export const MissingTextureFill: React.FC<MissingTextureFillProps> = ({
   colorA = C.magenta,
   colorB = C.black,
   clipRule = 'nonzero',
+  outline,
+  renderOutline = ({ id, d: od, width, color }) => (
+    <path key={id} d={od} fill="none" stroke={color} strokeWidth={width} strokeLinejoin="round" />
+  ),
 }) => {
   const uid = useId().replace(/[^a-zA-Z0-9_-]/g, '');
   const pat = `mt-pat-${uid}`;
@@ -52,6 +60,7 @@ export const MissingTextureFill: React.FC<MissingTextureFillProps> = ({
       <g clipPath={`url(#${clip})`}>
         <rect x={-5000} y={-5000} width={10000} height={10000} fill={`url(#${pat})`} />
       </g>
+      {outline ? renderOutline({ id: 'outline', d, width: outline.width, color: outline.color }) : null}
     </g>
   );
 };

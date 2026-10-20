@@ -19,4 +19,4 @@ export type { TypingTextProps } from './TypingText.tsx';
 export { MissingTexture, MissingTextureFill } from './MissingTexture.tsx';
 export type { MissingTextureProps, MissingTextureFillProps } from './MissingTexture.tsx';
 export { C, pathAt, hashNoise, smoothNoise, UiFonts } from './theme.tsx';
-export type { Keyframe } from './theme.tsx';
+export type { Keyframe, OutlineRenderer, OutlineSpec } from './theme.tsx';

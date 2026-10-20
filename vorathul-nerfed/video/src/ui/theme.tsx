@@ -116,3 +116,7 @@ export const Scaled: React.FC<
     </div>
   );
 };
+
+/** One outline to paint: a path in the parent svg's user units. Lets a shared stroke (e.g. dry-brush) replace the plain one. */
+export interface OutlineSpec { id: string; d: string; width: number; color: string }
+export type OutlineRenderer = (o: OutlineSpec) => React.ReactNode;
