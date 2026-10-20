@@ -8,3 +8,6 @@ __pycache__/
 data/_*
 stil/*
 !stil/onayli/
+sfx/_kenney/
+!sfx/candidates/*.wav
+!sfx/candidates/*.mp3
