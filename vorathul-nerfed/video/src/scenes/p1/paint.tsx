@@ -4,9 +4,9 @@ import { AbsoluteFill } from 'remotion';
 import type { CameraPath, CameraPose } from '../../camera/api.ts';
 import { Stage } from '../../stage/Stage.tsx';
 import type { Vec3 } from '../../stage/Card.tsx';
-import type { DuotoneCue } from '../../vfx/effects.ts';
+import { gradeCues, type DuotoneCue } from '../../vfx/effects.ts';
 import { at } from './events.ts';
-import { Hud, hudAt, ImpactLayer, impactCamera, impactRoll, silAt, type HudState, type Impact } from './fx.tsx';
+import { Hud, hudAt, ImpactLayer, impactCamera, impactRoll, type HudState, type Impact } from './fx.tsx';
 import { clamp01, INK, IVORY, lerp, ShotFrame } from './kit.tsx';
 
 export interface Ctx {
@@ -42,14 +42,19 @@ export const HUD_EVENTS = {
 export const PaintingShot = ({ frame, camera, impacts = [], cues, stage, overlay, top, hud = true, dutch = 0 }: PaintingShotProps) => {
   const cam = impactCamera(camera, impacts);
   const pose = cam(frame);
-  const sil = silAt(frame, impacts);
+  // The impact-frame silhouette (N, N+1) is the collision table's hard ink/ivory DuotoneFlash cue. Toggling the
+  // cards' own flat-colour mode instead left the canvas dark for the rest of the shot in sequential renders
+  // (measured 20 Oct: every frame after N+3 of S07 in a --concurrency=1 render).
+  const sil = false;
+  const silCues = impacts.some((i) => i.sil) ? gradeCues(impacts.filter((i) => i.sil).map((i) => ({ at: { frame: i.at }, grade: 'POSTER' as const, hold: 2 })), 'p1 silhouette') : undefined;
+  const posterOn = !!silCues && impacts.some((i) => i.sil && frame >= i.at && frame <= i.at + 1);
   const c: Ctx = { frame, pose, sil };
   const h0 = hud ? hudAt(frame, HUD_EVENTS) : null;
   const h = h0 && typeof hud === 'function' ? hud(h0) : h0;
   return (
     <ShotFrame
       frame={frame}
-      cues={cues}
+      cues={cues ?? silCues}
       roll={dutch + impactRoll(frame, impacts)}
       over={
         <>
@@ -61,8 +66,8 @@ export const PaintingShot = ({ frame, camera, impacts = [], cues, stage, overlay
       <AbsoluteFill style={{ background: sil ? IVORY : INK }}>
         <Stage camera={() => pose}>{stage(c)}</Stage>
       </AbsoluteFill>
-      {sil ? null : <ImpactLayer frame={frame} impacts={impacts} pose={pose} />}
-      {sil ? null : overlay?.(c)}
+      {posterOn ? null : <ImpactLayer frame={frame} impacts={impacts} pose={pose} />}
+      {posterOn ? null : overlay?.(c)}
     </ShotFrame>
   );
 };
