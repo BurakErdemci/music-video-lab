@@ -72,6 +72,8 @@ export { MAX_FLASHES_PER_SECOND, flashRate, assertFlashBudget, duotoneSwings, im
  * light SWELLS (slow rise, fixed centre) rather than sweeping; screen/wall light steps between 3
  * levels (screenLevel, 5-7 frame holds); light on a figure = blurred colour quad behind + the same
  * hue at 0.15-0.35 on the figure (FigureSpill) - for heroes only, Vorathul's body stays #0A0A0A.
+ * LightSpill brightens EVERYTHING under it, his body included (measured in the gallery, f1236):
+ * keep him out with `region`, or put the spill below his card.
  */
 export { RimLight, flickerGain, screenLevel, SCREEN_LEVELS, type RimLightProps } from './RimLight.tsx';
 export { LightSpill, FigureSpill, pulse, swell, sparkLights, type LightSpillProps, type LightSource, type FigureSpillProps } from './LightSpill.tsx';
