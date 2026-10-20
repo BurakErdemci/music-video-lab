@@ -2445,5 +2445,139 @@
     "count": 1,
     "count_source": "plate",
     "mode": "RGB"
+  },
+  "G41c-1": {
+    "kind": "single",
+    "files": [
+      "assets/G41c-1.png"
+    ],
+    "sizes": [
+      [
+        943,
+        1221
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA",
+    "aspect_matches": "G41-1"
+  },
+  "G41c-2": {
+    "kind": "single",
+    "files": [
+      "assets/G41c-2.png"
+    ],
+    "sizes": [
+      [
+        725,
+        1001
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA",
+    "aspect_matches": "G41-2"
+  },
+  "G41c-3": {
+    "kind": "single",
+    "files": [
+      "assets/G41c-3.png"
+    ],
+    "sizes": [
+      [
+        1006,
+        735
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA",
+    "aspect_matches": "G41-3"
+  },
+  "G41c-4": {
+    "kind": "single",
+    "files": [
+      "assets/G41c-4.png"
+    ],
+    "sizes": [
+      [
+        876,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA",
+    "aspect_matches": "G41-4"
+  },
+  "G41c-5": {
+    "kind": "single",
+    "files": [
+      "assets/G41c-5.png"
+    ],
+    "sizes": [
+      [
+        992,
+        1017
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA",
+    "aspect_matches": "G41-5"
+  },
+  "G41c-6": {
+    "kind": "single",
+    "files": [
+      "assets/G41c-6.png"
+    ],
+    "sizes": [
+      [
+        1019,
+        995
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA",
+    "aspect_matches": "G41-6"
+  },
+  "G40c": {
+    "kind": "single",
+    "files": [
+      "assets/G40c.png"
+    ],
+    "sizes": [
+      [
+        1496,
+        825
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G42c-monitor": {
+    "kind": "single",
+    "files": [
+      "assets/G42c-monitor.png"
+    ],
+    "sizes": [
+      [
+        976,
+        988
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
   }
 }
