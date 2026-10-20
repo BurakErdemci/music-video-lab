@@ -2,7 +2,7 @@
 // shockwave, the gold explosion and the wing gust, four charge-up panels and the combo, the dagger flurry, the swat
 // and the combined strike that finally sticks.
 import { AbsoluteFill } from 'remotion';
-import { handheld, sequence, tween, whip, whipBlur, MED, WIDE, type CameraPose } from '../../camera/api.ts';
+import { anglesFromDir, handheld, sequence, tween, whip, whipBlur, MED, WIDE, type CameraPose } from '../../camera/api.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { Shards, SpeedLines } from '../../vfx/effects.ts';
 import { at } from './events.ts';
@@ -13,8 +13,33 @@ import { bob, PaintingShot } from './paint.tsx';
 import { GoldBlast, Inked, KoStars, Overlay, Puffs, Sigil, Slash, Sweat } from './props.tsx';
 import { chest, FAN, flight, Party, type HeroTrack } from './riff.tsx';
 import { echoesAt, ramp, rigFk, rigFor, rigWorld, Vorathul, type Timeline } from './vorathul.tsx';
-import { Pic, SvgCard } from './kit.tsx';
-import { World } from './world.tsx';
+import { inkFilterDef, Pic, SvgCard, svgDoc } from './kit.tsx';
+import { RO, World } from './world.tsx';
+import { ImpactBurst } from '../../vfx/effects.ts';
+
+/**
+ * A comic inset of a hero action that is too small in the wide (S17 panel style): slams in, holds, flies off.
+ * `heroes` are drawn in panel pixels; the burst lands on `hitAt` at `hit` (frame px, clipped to the panel).
+ */
+const ActionInset = ({ frame, from, until, hitAt, hit, pts, bg, lines, heroes, children }: {
+  frame: number; from: number; until: number; hitAt: number; hit: [number, number]; pts: [number, number][]; bg: string; lines: string;
+  heroes: { kind: HeroKind; pose: HeroPose; x: number; y: number; size: number; flip?: boolean }[]; children?: React.ReactNode;
+}) => {
+  if (frame < from || frame >= until) return null;
+  const f2 = two(frame);
+  const out = prog(frame, until - 4, 4);
+  return (
+    <AbsoluteFill style={{ opacity: 1 - out }}>
+      <Panel pts={pts} slam={slamIn(frame, from)} border={14}>
+        <AbsoluteFill style={{ background: bg }} />
+        <SpeedLines mode="radial" frame={f2 - from} duration={400} seed={hitAt} focus={hit} inner={120} count={48} thickness={46} color={lines} />
+        {heroes.map((h, i) => <HeroImg key={i} kind={h.kind} pose={h.pose} size={h.size} flip={h.flip} style={{ left: h.x - h.size / 2, top: h.y - h.size * 0.85 }} />)}
+        {children}
+        <ImpactBurst frame={f2 - hitAt} duration={8} seed={hitAt + 7} x={hit[0]} y={hit[1]} size={150} flash={0} />
+      </Panel>
+    </AbsoluteFill>
+  );
+};
 
 const REST = { ...FAN, wings: [null, 6], armL: [-25, 70, 0, 'fist'] } as const;
 
@@ -106,15 +131,22 @@ const S14_TL: Timeline = {
     { at: at('s14-pose') + 18, pose: 'slam_antic', dur: 18 },
   ],
 };
-const WIDE_A: CameraPose = { position: [1, 2.2, 32], target: [0.4, 6.2, -15] };
+const GALLERY_HIT: Vec3 = [27, 22.4, -29.4];
+// High in the left gallery, looking down across the nave; the whip turns from him to the crowd he throws the
+// rogue into on the far side, and back. The whip angles are measured from the two look directions.
+const WIDE_A: CameraPose = { position: [-23, 17, -22], target: [0, 4.5, -13.5], fov: 44 };
+const lookAngles = (from: Vec3, to: Vec3) => anglesFromDir([to[0] - from[0], to[1] - from[1], to[2] - from[2]]);
+const S14_A = lookAngles(WIDE_A.position, WIDE_A.target);
+const S14_B = lookAngles(WIDE_A.position, GALLERY_HIT);
+const S14_YAW = S14_B.yaw - S14_A.yaw;
+const S14_PITCH = S14_B.pitch - S14_A.pitch;
 const S14_CAM = handheld(
   sequence([
-    { from: 0, path: whip(WIDE_A, { start: S14_THROW + 3, yaw: 23, pitch: 6, frames: 7 }) },
-    { from: S14_DUCK + 6, path: whip(whip(WIDE_A, { start: 0, yaw: 23, pitch: 6, frames: 1 })(1), { start: S14_DUCK + 6, yaw: -23, pitch: -6, frames: 7 }) },
+    { from: 0, path: whip(WIDE_A, { start: S14_THROW + 3, yaw: S14_YAW, pitch: S14_PITCH, frames: 7 }) },
+    { from: S14_DUCK + 6, path: whip(whip(WIDE_A, { start: 0, yaw: S14_YAW, pitch: S14_PITCH, frames: 1 })(1), { start: S14_DUCK + 6, yaw: -S14_YAW, pitch: -S14_PITCH, frames: 7 }) },
   ]),
   { amp: 0.05, seed: 's14' },
 );
-const GALLERY_HIT: Vec3 = [27, 22.4, -29.4];
 
 const S14 = ({ frame }: { frame: number }) => {
   const st = rigFor(S14_TL, frame);
@@ -156,6 +188,19 @@ const S14 = ({ frame }: { frame: number }) => {
               <Puffs c={[g.x, g.y]} s={g.s * 2.2} age={f2 - S14_DUCK} count={7} seed={1402} life={30} />
               {f2 >= S14_DUCK + 4 && f2 < S14_DUCK + 26 ? <KoStars c={[g.x, g.y - g.s * 1.2]} s={g.s * 1.4} f={f2} /> : null}
             </Overlay>
+            {/* the double attack, too small from the gallery: a comic inset of knight and archer hitting him together */}
+            <ActionInset
+              frame={frame} from={S14_DBL - 8} until={S14_DBL + 16} hitAt={S14_DBL} hit={[1150, 560]} bg={IVORY} lines={GOLD}
+              pts={[[1060, 400], [1880, 360], [1880, 810], [1040, 840]]}
+              heroes={[
+                { kind: 'knight', pose: frame < S14_DBL + 2 ? 'attack' : 'fly', x: 1330 + 60 * prog(frame, S14_DBL - 8, 8), y: 810, size: 560, flip: true },
+                { kind: 'archer', pose: 'attack', x: 1700, y: 800, size: 520, flip: true },
+              ]}
+            >
+              <Overlay>
+                <path d="M1040 360L1150 360L1120 500L1190 660L1110 840L1040 840Z" fill={INK} />
+              </Overlay>
+            </ActionInset>
           </>
         );
       }}
@@ -450,7 +495,12 @@ const S18_TL: Timeline = {
   ],
   ramps: { wingS_R: ramp([S18_HIT, 0.6, 6], [S18_HIT + 22, 1, 10]), wingS_L: ramp([S18_HIT, 0.6, 6], [S18_HIT + 22, 1, 10]) },
 };
-const S18_CAM = handheld(tween(MED, { position: [0.8, 4.4, 10], target: [0, 6.6, -15] }, { start: S18_HIT, frames: 49 }), { amp: 0.05, seed: 's18' });
+// Off-axis three-quarter on a long lens from his left, trucking left; a near entrance pillar wipes across the
+// frame and reveals the combo hitting the fan.
+const S18_CAM = handheld(tween({ position: [11.5, 5.2, -0.5], target: [0, 7.4, -15], fov: 32 }, { position: [7.2, 5.6, -2.4], target: [0, 7.6, -15], fov: 32 }, { start: S18_HIT, frames: 49 }), { amp: 0.04, seed: 's18' });
+const S18_PILLAR: Vec3 = [8.6, 0, -5.2];
+/** G09 pass-by pillar stand-in: an ivory and gold column, ink shadow on its inner side, a carved capital. */
+const PILLAR_SVG = svgDoc(400, 2400, `<g filter="url(#k)"><rect x="60" y="0" width="280" height="2400" fill="${IVORY}"/><rect x="250" y="0" width="90" height="2400" fill="${INK}"/><rect x="60" y="0" width="40" height="2400" fill="${GOLD}"/><rect x="20" y="300" width="360" height="90" fill="${GOLD}" stroke="${INK}" stroke-width="14"/><rect x="40" y="390" width="320" height="40" fill="${INK}"/><rect x="20" y="2200" width="360" height="200" fill="${GOLD}" stroke="${INK}" stroke-width="14"/><path d="M150 450V2150M200 450V2150" stroke="${GOLD}" stroke-width="10"/></g>`, inkFilterDef('k', 1891, 10, 0.2));
 
 const S18 = ({ frame }: { frame: number }) => {
   const st = rigFor(S18_TL, frame);
@@ -476,6 +526,7 @@ const S18 = ({ frame }: { frame: number }) => {
           <World sil={sil} rayBend={12} cloudShift={7} />
           <Vorathul state={st} frame={frame} />
           <Party heroes={heroes} flat={sil ? INK : null} />
+          <Pic id="G09-1" color={IVORY} svg={PILLAR_SVG} width={2.4} height={14.4} pivot={[0, -7.2]} position={S18_PILLAR} renderOrder={RO.near + 50} flat={sil ? INK : null} />
         </>
       )}
       overlay={({ pose }) => {
@@ -566,6 +617,16 @@ const S19 = ({ frame }: { frame: number }) => {
               })}
               {f2 >= S19_AIR && f2 < S19_LAND ? heroesHeads(heroes, pose).map(([x, y, s], i) => <Sweat key={i} c={[x, y]} s={s} t={f2 - S19_AIR} />) : null}
             </Overlay>
+            {/* the last charge in close-up: all four run in together and the combined strike lands */}
+            <ActionInset
+              frame={frame} from={S19_CHARGE} until={S19_STRIKE + 6} hitAt={S19_STRIKE} hit={[860, 560]} bg={GOLD} lines={INK}
+              pts={[[40, 400], [880, 360], [900, 810], [40, 840]]}
+              heroes={(['knight', 'rogue', 'mage', 'archer'] as HeroKind[]).map((kind, i) => ({ kind, pose: 'attack' as HeroPose, x: 160 + i * 150 + 230 * outCubic(prog(frame, S19_CHARGE, S19_STRIKE - S19_CHARGE)), y: 810 - (i % 2) * 40, size: 520 }))}
+            >
+              <Overlay>
+                <path d="M900 360L820 360L860 500L790 650L880 810L900 810Z" fill={INK} />
+              </Overlay>
+            </ActionInset>
           </>
         );
       }}

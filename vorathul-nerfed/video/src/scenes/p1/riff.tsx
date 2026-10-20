@@ -212,8 +212,12 @@ const S10_TL: Timeline = {
     { at: S10_P2, pose: PISTON_R as never, dur: 11, ease: 'strike', hands: 'instant', impact: true },
     { at: S10_P2 + 16, pose: { ...RECOIL, wings: [null, 6], armR: [-35, 130, -45, 'grip'], armL: [30, 50, 0, 'open'], torso: -6, lean: -3 } as never, dur: 16 },
   ],
+  // Seen from behind: the front glows (slit, gems, studs, runes) would draw through his back, so they are off.
+  ramps: { slitOpacity: ramp([0, 0, 0]), gems: ramp([0, 0, 0]), studs: ramp([0, 0, 0]), runes: ramp([0, 0, 0]) },
 };
-const S10_CAM = handheld(tween({ position: [-4.5, 2.4, 11], target: [1, 6.2, -15] }, { position: [-5, 2.6, 8.5], target: [1.2, 6.4, -15] }, { start: at('s10-shatter'), frames: 58 }), { amp: 0.05, seed: 's10' });
+// High over his left shoulder from behind, looking down on the party: his black shoulder and pipes own the
+// foreground and the heroes are launched away from us. Steep enough that no horizon (no unbuilt world) shows.
+const S10_CAM = handheld(tween({ position: [3.2, 15.5, -25.5], target: [-2.2, 0.4, -8] }, { position: [2.4, 14.8, -24.5], target: [-1.2, 0.8, -8] }, { start: at('s10-shatter'), frames: 58 }), { amp: 0.05, seed: 's10' });
 
 const S10 = ({ frame }: { frame: number }) => {
   const st = rigFor(S10_TL, frame);
@@ -238,7 +242,8 @@ const S10 = ({ frame }: { frame: number }) => {
       stage={({ sil }) => (
         <>
           <World sil={sil} rayBend={12} cloudShift={7} />
-          <Vorathul state={st} frame={frame} echoes={echoesAt(S10_TL, frame, [S10_P1, S10_P2], { frames: 6 })} />
+          {/* seen from behind he is nearer than the heroes, so he draws over them */}
+          <Vorathul state={st} frame={frame} renderBase={450} echoes={echoesAt(S10_TL, frame, [S10_P1, S10_P2], { frames: 6 })} />
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
       )}
@@ -335,7 +340,8 @@ const S12_TL: Timeline = {
   ],
   ramps: { wingS_R: ramp([S12_BEAM, 0.55, 10], [S12_SPL + 14, 1, 12]), wingS_L: ramp([S12_BEAM, 0.55, 10], [S12_SPL + 14, 1, 12]) },
 };
-const S12_CAM = handheld(tween({ position: [2.2, 3.6, 12], target: [0.6, 5.4, -15] }, { position: [1.2, 3.9, 8.5], target: [0.8, 5.8, -15] }, { start: S12_BASH, frames: 78 }), { amp: 0.05, seed: 's12' });
+// Down on the tiles, wide lens: the knight's bash and the mage's beam happen at lens height, his bulk overhead.
+const S12_CAM = handheld(tween({ position: [-2.6, 0.32, -4.6], target: [0.6, 3.8, -15], fov: 58 }, { position: [-1.4, 0.36, -5.4], target: [1.2, 4.6, -15], fov: 58 }, { start: S12_BASH, frames: 78 }), { amp: 0.03, seed: 's12' });
 
 const S12 = ({ frame }: { frame: number }) => {
   const st = rigFor(S12_TL, frame);
