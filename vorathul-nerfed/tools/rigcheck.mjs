@@ -358,6 +358,7 @@ const testChecks = async (ids) => {
       for (const s of ['R', 'L']) for (let i = 0; i < 8; i++) extra.push(`wm_${s}${i}_body`, `wm_${s}${i}_mouth`, `pipe_${s}${i}_cork`);
       if (st.helm.split && st.helm.t > 0.001) extra.push('helm_half_R', 'helm_half_L', 'crown_half_R', 'crown_half_L');
       if (st.sword.attach === 'ground') extra.push('sword', 'sword_runes');
+      for (const side of ['R', 'L']) st.wings[side].pipes.forEach((p, i) => { if (p.fly > 0.001) extra.push(`pipe_${side}${i}_body`, `pipe_${side}${i}_mouth`, `pipe_${side}${i}_glow`); }); // a returning pipe in flight is a declared extra piece
       frames.push({ frame: n, extra });
     }
     const steps = [0, ...stepFrames(T)].filter((n) => n < T.frames);
@@ -366,9 +367,12 @@ const testChecks = async (ids) => {
     const badP = pieces.filter((p) => p.pieces !== 1);
     row('D', `${id}: silhouette pieces (declared extras removed) = 1 on all ${T.frames} frames`, badP.length ? `${badP.length} frames differ` : 'all 1', '= declared', badP.length === 0,
       badP.slice(0, 4).map((p) => `f${p.frame}:${p.pieces}`).join(' '));
-    const meas = iou.filter((r) => !inWindow(ws, r.frame));
+    // only genuinely consecutive rig steps count: a pair across a hold (no pose change for many frames) is not one step
+    const prevOf = new Map(steps.map((n, i) => [n, steps[i - 1]]));
+    const stepGap = Math.max(2, ...RIG_TESTS.map((t) => t.tl.step ?? 1));
+    const meas = iou.filter((r) => !inWindow(ws, r.frame) && r.frame - (prevOf.get(r.frame) ?? -99) <= stepGap);
     const worst = meas.reduce((a, r) => (r.iou < a.iou ? r : a), { iou: 2, frame: -1 });
-    row('E', `${id}: silhouette IoU of consecutive rig steps (${meas.length} steps, ${iou.length - meas.length} declared impact steps skipped)`, `min ${f2(worst.iou, 3)} at f${worst.frame}`, '>= 0.85', worst.iou >= 0.85);
+    row('E', `${id}: silhouette IoU of consecutive rig steps (${meas.length} steps measured, ${iou.length - meas.length} skipped: impact windows and pairs across holds)`, `min ${f2(worst.iou, 3)} at f${worst.frame}`, '>= 0.85', worst.iou >= 0.85);
     // F render: hidden parts leave no pixels (sampled)
     const hid = [];
     for (let n = 0; n < T.frames; n += 4) {

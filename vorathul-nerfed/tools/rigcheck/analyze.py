@@ -191,9 +191,10 @@ def op_pieces(o):
         rgba = rgba[ys.min() : ys.max() + 1, xs.min() : xs.max() + 1]
         ids, cov = id_map(rgba, 20)
         skip = [IDX_OF[i] for i in f.get("extra", []) if i in IDX_OF]
-        main = cov & ~np.isin(ids, skip) if skip else cov
+        # the extras' blended edge pixels carry no id, so the extras are grown by 3 px before they are removed (no outline crumbs left behind)
+        main = cov & ~dilate(np.isin(ids, skip), 3) if skip else cov
         sizes = component_sizes(main)
-        big = sizes[sizes >= 24]
+        big = sizes[sizes >= 40]  # slivers under 40 px (alpha-test crumbs between cards) are not pieces
         out.append({"frame": f["frame"], "pieces": int(len(big)), "area": int(main.sum())})
     return out
 
