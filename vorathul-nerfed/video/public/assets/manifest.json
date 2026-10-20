@@ -2061,5 +2061,229 @@
     "count": 1,
     "count_source": "plate",
     "mode": "RGB"
+  },
+  "G46-sheet": {
+    "kind": "plate",
+    "files": [
+      "assets/G46-sheet.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "G46-walk": {
+    "kind": "single",
+    "files": [
+      "assets/G46-walk.png"
+    ],
+    "sizes": [
+      [
+        720,
+        1426
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-click": {
+    "kind": "single",
+    "files": [
+      "assets/G46-click.png"
+    ],
+    "sizes": [
+      [
+        621,
+        1394
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-bored": {
+    "kind": "single",
+    "files": [
+      "assets/G46-bored.png"
+    ],
+    "sizes": [
+      [
+        561,
+        1404
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-tap": {
+    "kind": "single",
+    "files": [
+      "assets/G46-tap.png"
+    ],
+    "sizes": [
+      [
+        578,
+        1478
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-pin": {
+    "kind": "single",
+    "files": [
+      "assets/G46-pin.png"
+    ],
+    "sizes": [
+      [
+        573,
+        1435
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-dust": {
+    "kind": "single",
+    "files": [
+      "assets/G46-dust.png"
+    ],
+    "sizes": [
+      [
+        459,
+        1452
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-glance": {
+    "kind": "single",
+    "files": [
+      "assets/G46-glance.png"
+    ],
+    "sizes": [
+      [
+        495,
+        1441
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-sip": {
+    "kind": "single",
+    "files": [
+      "assets/G46-sip.png"
+    ],
+    "sizes": [
+      [
+        430,
+        1447
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G46-spit": {
+    "kind": "single",
+    "files": [
+      "assets/G46-spit.png"
+    ],
+    "sizes": [
+      [
+        834,
+        1462
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "P1-mic": {
+    "kind": "single",
+    "files": [
+      "assets/P1-mic.png"
+    ],
+    "sizes": [
+      [
+        471,
+        1499
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "P1-mic-stand": {
+    "kind": "single",
+    "files": [
+      "assets/P1-mic-stand.png"
+    ],
+    "sizes": [
+      [
+        591,
+        1492
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "P1-stage-lights": {
+    "kind": "single",
+    "files": [
+      "assets/P1-stage-lights.png"
+    ],
+    "sizes": [
+      [
+        1520,
+        907
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "P1-stage-glow": {
+    "kind": "plate",
+    "files": [
+      "assets/P1-stage-glow.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
   }
 }
