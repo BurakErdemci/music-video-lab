@@ -31,10 +31,22 @@ export interface PaintSpreadProps {
   duration?: number;
 }
 
-interface Stream { x: number; w: number; delay: number; speed: number; color: string; phase: number; amp: number; drops: number[]; stop: number }
+interface Stream {
+  x: number; w: number; delay: number; speed: number; color: string; phase: number; amp: number; drops: number[]; stop: number;
+  /** How much the run narrows by its tip (0.45-0.8). */
+  taper: number;
+  /** Extra width at the top that drains away quickly: a run fed by a thick spill. */
+  thick: number;
+  /** Second, shorter wobble and a slight lean, so no run is a straight column. */
+  kink: number;
+  lean: number;
+}
 
 const makeStreams = (seed: number, n: number, x0: number, x1: number, width: number, speed: number, colors: readonly string[], spread = 18): Stream[] => {
   const rng = seeded(`pour:${seed}`);
+  // Colours strictly in turn from a seeded start, so ink and gold come out close to half and half.
+  const first = rng.int(0, colors.length - 1);
+  const thickRuns = [rng.int(0, n - 1), rng.int(0, n - 1)];
   return Array.from({ length: n }, (_, i) => ({
     // Uneven spacing and widths: real runs bunch where the paint is thickest.
     x: x0 + ((x1 - x0) * (i + 0.5 + rng.range(-0.45, 0.45))) / n,
@@ -43,7 +55,11 @@ const makeStreams = (seed: number, n: number, x0: number, x1: number, width: num
     speed: speed * rng.range(0.35, 1.3),
     // Fraction of the drop to the floor at which the run stalls; about a third never get there.
     stop: rng() < 0.35 ? rng.range(0.15, 0.6) : 1,
-    color: colors[(i + rng.int(0, 1)) % colors.length] as string,
+    color: colors[(i + first) % colors.length] as string,
+    taper: rng.range(0.45, 0.8),
+    thick: thickRuns.includes(i) ? rng.range(0.6, 0.9) : 0,
+    kink: rng.range(0.06, 0.16),
+    lean: rng.range(-0.12, 0.12),
     phase: rng() * 6.3,
     amp: rng.range(0.1, 0.35),
     drops: Array.from({ length: rng.int(0, 2) }, () => rng.range(16, 40)),
@@ -51,7 +67,10 @@ const makeStreams = (seed: number, n: number, x0: number, x1: number, width: num
 };
 
 const STEPS = 12;
-const xAt = (s: Stream, y: number, w: number): number => s.x + s.amp * w * Math.sin(y / 85 + s.phase);
+const xAt = (s: Stream, y: number, w: number, top: number): number =>
+  s.x + s.amp * w * Math.sin(y / 85 + s.phase) + s.kink * w * Math.sin(y / 29 + s.phase * 2.3) + s.lean * (y - top);
+/** Width at fraction u (0 top, 1 tip) of the run. */
+const widthAt = (s: Stream, w: number, u: number): number => w * (1 - s.taper * u) * (1 + s.thick * (1 - u) ** 3);
 
 /** Body (narrowing run + bulb), gloss stroke and bulb highlight of one stream of length `len` from `top`. */
 const streamPaths = (s: Stream, top: number, len: number, w: number) => {
@@ -59,13 +78,13 @@ const streamPaths = (s: Stream, top: number, len: number, w: number) => {
   const right: Pt[] = [];
   for (let k = 0; k <= STEPS; k++) {
     const y = top + (len * k) / STEPS;
-    const ww = w * (1 - (0.62 * k) / STEPS);
-    const xc = xAt(s, y, w);
+    const ww = widthAt(s, w, k / STEPS);
+    const xc = xAt(s, y, w, top);
     left.push([xc - ww / 2, y]);
     right.push([xc + ww / 2, y]);
   }
   const tipY = top + len;
-  const xe = xAt(s, tipY, w);
+  const xe = xAt(s, tipY, w, top);
   const rb = w * 0.3;
   const by = tipY + rb * 0.4;
   // The bulb is wider than the neck: thick paint gathers at the bottom of a run before it drops.
@@ -76,8 +95,8 @@ const streamPaths = (s: Stream, top: number, len: number, w: number) => {
   const body = blobPath([...left, ...bulb, ...right.reverse()]);
   const glossPts = Array.from({ length: 8 }, (_, k): Pt => {
     const y = top + len * (0.04 + (0.7 * k) / 7);
-    const ww = w * (1 - (0.62 * (y - top)) / Math.max(1, len));
-    return [xAt(s, y, w) - ww * 0.22, y];
+    const ww = widthAt(s, w, (y - top) / Math.max(1, len));
+    return [xAt(s, y, w, top) - ww * 0.22, y];
   });
   return { body, gloss: len > w ? taperedPath(glossPts, w * 0.15, 0.25) : '', bulb: { x: xe, y: by, r: rb } };
 };
@@ -126,7 +145,7 @@ const pourStream = (s: Stream, t: number, top: number, floor: number | undefined
     const dt = t - ts;
     const y = y0 + s.speed * dt + 0.9 * dt * dt;
     const r = s.w * 0.17;
-    const x = xAt(s, y0, s.w);
+    const x = xAt(s, y0, s.w, top);
     if (floor !== undefined && y + r >= floor) {
       // Time since impact: solve y0 + v*dt + 0.9*dt^2 = floor - r for the hit time.
       const hit = (-s.speed + Math.sqrt(s.speed * s.speed + 3.6 * (floor - r - y0))) / 1.8;
@@ -145,12 +164,12 @@ const lipPath = (x0: number, x1: number, y: number, h: number, seed: number, dir
   const rng = seeded(`lip:${seed}`);
   const ph = rng() * 6.3;
   const pts: Pt[] = [[x0, y - 4 * dir], [x1, y - 4 * dir]];
-  const n = Math.max(4, Math.round((x1 - x0) / 38));
+  const n = Math.max(4, Math.round((x1 - x0) / 30));
   for (let k = n; k >= 0; k--) {
     const x = x0 + ((x1 - x0) * k) / n;
-    // Sagging scallops, deeper here and there, thinning to nothing at both ends.
+    // Uneven sagging scallops (a few deep bellies, shallow between), thinning out at both ends.
     const end = Math.sin((Math.PI * k) / n) ** 0.5;
-    pts.push([x, y + dir * h * end * (0.45 + 0.55 * Math.abs(Math.sin(x / 47 + ph)) + 0.3 * rng())]);
+    pts.push([x, y + dir * h * end * (0.2 + 1.1 * Math.abs(Math.sin(x / 61 + ph)) ** 1.6 + 0.35 * rng())]);
   }
   return blobPath(pts);
 };
@@ -184,12 +203,17 @@ export const PaintSpread = ({ frame, seed, mode = 'pour', edge, floor, streams =
     const e = edge ?? { x0: W * 0.3, x1: W * 0.7, y: H * 0.6 };
     makeStreams(seed, streams, e.x0, e.x1, width, speed, colors).forEach((s, i) => add(pourStream(s, t, e.y, floor, seed, i)));
     // The lip starts above the edge, so the paint visibly spills over the frame instead of sitting under it.
-    lips.push({ d: lipPath(e.x0 - width * 0.2, e.x1 + width * 0.2, e.y - width * 0.25, width * 0.55 * easeOutCubic((t + 1) / 10), seed), color: colors[0] as string });
+    // Two layers: an ink spill sagging further under a gold one, so the edge is neither one slab nor one colour.
+    const lipH = width * 0.55 * easeOutCubic((t + 1) / 10);
+    lips.push({ d: lipPath(e.x0 - width * 0.1, e.x1 + width * 0.1, e.y - width * 0.25, lipH * 1.35, seed + 1), color: (colors[1] ?? INK) as string });
+    lips.push({ d: lipPath(e.x0 - width * 0.2, e.x1 + width * 0.2, e.y - width * 0.25, lipH * 0.8, seed), color: colors[0] as string });
   } else {
     const k = clamp01(t / duration);
     // Top: a curtain of streams that widen until they merge.
-    const curtain = makeStreams(seed, 16, -40, W + 40, width * 1.4, H / (duration * 0.55), colors, 6);
-    curtain.forEach((s, i) => add(pourStream({ ...s, w: s.w * (1 + k * 2.2) }, t, 0, undefined, seed, i)));
+    // Few, broad sheets: many thin runs read as noise while the frame floods. Their sway scales
+    // with width, so it is damped here or the sheets fold into knots.
+    const curtain = makeStreams(seed, 6, -60, W + 60, width * 3.4, H / (duration * 0.55), colors, 6);
+    curtain.forEach((s, i) => add(pourStream({ ...s, drops: [], amp: s.amp * 0.4, kink: s.kink * 0.25, w: s.w * (1 + k * 1.2) }, t, 0, undefined, seed, i)));
     lips.push({ d: lipPath(-60, W + 60, 0, width * (0.6 + 2 * k), seed), color: colors[0] as string });
     // Sides: paint sheets creeping in from left and right.
     const side = (x: number, dir: number, c: string, s2: number) => {
