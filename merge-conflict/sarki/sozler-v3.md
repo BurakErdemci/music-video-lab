@@ -30,7 +30,10 @@ Modern metalcore, 152 BPM, 4/4, E minor, drop-C chugging high-gain palm-muted gu
 pop, synthpop, EDM, robotic vocals
 ```
 
-## Workflow for two different voices
+## Workflow for two different voices (NOT NEEDED - kept for reference)
+
+Burak, 20 Oct 2026: the same voice for both girls "does not bother me much; they separate enough in the build-up".
+One take is enough; the steps below are only for a future song that truly needs two voices.
 
 1. **Master take.** Generate with the style above until the backing, tempo and structure are right. The voice
    does not matter yet. Keep the best one.
