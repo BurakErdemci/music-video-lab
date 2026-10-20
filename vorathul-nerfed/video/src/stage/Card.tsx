@@ -1,7 +1,7 @@
 import { useMemo } from 'react';
 import { useLoader } from '@react-three/fiber';
 import { staticFile } from 'remotion';
-import { Color, DoubleSide, LinearFilter, NoBlending, NormalBlending, SRGBColorSpace, TextureLoader, type Texture } from 'three';
+import { Color, DoubleSide, LinearFilter, NoBlending, NormalBlending, SRGBColorSpace, TextureLoader, type ShaderMaterial, type Texture } from 'three';
 
 export type Vec3 = [number, number, number];
 
@@ -74,13 +74,20 @@ const FlatMaterial = ({ texture, opacity, idColor, checker }: { texture: Texture
     }),
     [texture],
   );
-  uniforms.uAlpha.value = opacity;
-  uniforms.idColor.value.copy(rawColor(idColor ?? '#000000'));
-  uniforms.cells.value = checker ? [checker.cellsX, checker.cellsY] : [1, 1];
-  uniforms.useId.value = idColor ? 1 : 0;
-  uniforms.useChecker.value = checker ? 1 : 0;
+  // Values are written at commit through the ref (not during render), so the uniforms always match the committed props.
+  const apply = (m: ShaderMaterial | null) => {
+    if (!m) return;
+    const u = m.uniforms as typeof uniforms;
+    u.uAlpha.value = opacity;
+    u.idColor.value.copy(rawColor(idColor ?? '#000000'));
+    u.cells.value = checker ? [checker.cellsX, checker.cellsY] : [1, 1];
+    u.useId.value = idColor ? 1 : 0;
+    u.useChecker.value = checker ? 1 : 0;
+    m.uniformsNeedUpdate = true;
+  };
   return (
     <shaderMaterial
+      ref={apply}
       uniforms={uniforms}
       vertexShader={VERT}
       fragmentShader={FRAG}

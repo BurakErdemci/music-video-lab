@@ -101,4 +101,20 @@ export const isBlankPng = (file) => {
   return true;
 };
 
+/** The repo-wide one-Chrome render lock (tools/locked.sh protocol: .render.lock/pid, stale locks are taken over). */
+export const withRenderLock = async (fn) => {
+  const lock = path.join(ROOT, '.render.lock');
+  for (;;) {
+    try { mkdirSync(lock); break; } catch { /* held */ }
+    let pid = NaN;
+    try { pid = Number(readFileSync(path.join(lock, 'pid'), 'utf8')); } catch { /* no pid yet */ }
+    let alive = true;
+    if (pid) { try { process.kill(pid, 0); } catch { alive = false; } }
+    if (pid && !alive) { rmSync(lock, { recursive: true, force: true }); continue; }
+    await new Promise((r) => setTimeout(r, 5000));
+  }
+  writeFileSync(path.join(lock, 'pid'), String(process.pid));
+  try { return await fn(); } finally { rmSync(lock, { recursive: true, force: true }); }
+};
+
 export const listFrames = (dir) => (existsSync(dir) ? readdirSync(dir).filter((n) => n.endsWith('.png')).sort() : []);

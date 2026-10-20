@@ -10,7 +10,7 @@
 import { spawn, spawnSync } from 'node:child_process';
 import { existsSync, readFileSync } from 'node:fs';
 import path from 'node:path';
-import { listFrames, makeRenderer, ROOT } from './rigcheck/lib.mjs';
+import { listFrames, makeRenderer, ROOT, withRenderLock } from './rigcheck/lib.mjs';
 import { drive, forward, toPx } from '../video/src/rig/fk.ts';
 import { apply } from '../video/src/rig/math.ts';
 import { RIG, RIG_JSON } from '../video/src/rig/model.ts';
@@ -246,15 +246,17 @@ const pythonSplit = async (op, key, parts = 3) => {
   return (await Promise.all(runs)).flat();
 };
 
-let renderer = null;
 const ensure = async (id, from, to) => {
   const dir = path.join(OUT, id);
   const have = new Set(listFrames(dir));
   let missing = false;
   for (let f = from; f <= to; f++) if (!have.has(`frame-${String(f).padStart(5, '0')}.png`)) { missing = true; break; }
   if (missing && !noRender) {
-    renderer ??= await makeRenderer();
-    const ms = await renderer.frames(id, 'id', dir, from, to);
+    // one Chrome at a time repo-wide: hold the lock only while rendering, close the browser before measuring
+    const ms = await withRenderLock(async () => {
+      const rr = await makeRenderer();
+      try { return await rr.frames(id, 'id', dir, from, to); } finally { await rr.close(); }
+    });
     timings.push([id, to - from + 1, ms]);
     console.log(`rendered ${id} ${from}-${to}: ${ms} ms`);
   } else if (missing) throw new Error(`--no-render but frames missing for ${id}`);
@@ -454,12 +456,16 @@ const handsAndFloor = async () => {
 const determinism = async () => {
   const T = TEST_BY_ID.get('RigTurntable');
   const main = await ensure('RigTurntable', 0, T.frames - 1); // rendered with 4 parallel tabs
-  renderer ??= await makeRenderer();
   const [f0, f1] = [200, 239];
   const same1 = path.join(OUT, 'det-one-a');
   const same2 = path.join(OUT, 'det-one-b');
-  await renderer.frames('RigTurntable', 'id', same1, f0, f1, 1);
-  await renderer.frames('RigTurntable', 'id', same2, f0, f1, 1);
+  await withRenderLock(async () => {
+    const rr = await makeRenderer({ concurrency: 1 });
+    try {
+      await rr.frames('RigTurntable', 'id', same1, f0, f1, 1);
+      await rr.frames('RigTurntable', 'id', same2, f0, f1, 1);
+    } finally { await rr.close(); }
+  });
   const names = Array.from({ length: f1 - f0 + 1 }, (_, i) => `frame-${String(f0 + i).padStart(5, '0')}.png`);
   const [ha, hb, hc] = python([
     { op: 'md5', files: names.map((n) => path.join(same1, n)) },
@@ -484,7 +490,6 @@ const main = async () => {
   if (want('helm')) await helmChecks();
   if (want('hands')) await handsAndFloor();
   if (want('determinism')) await determinism();
-  if (renderer) await renderer.close();
   const w = [Math.max(...rows.map((r) => r.id.length)), 0];
   console.log('\nrigcheck (life layer ON in turntable, fan and attack tests)');
   for (const r of rows) console.log(`${r.pass ? 'PASS' : 'FAIL'}  ${r.id.padEnd(w[0])}  ${r.measure}  ->  ${r.value}   [accept ${r.accept}]${r.note ? `   (${r.note})` : ''}`);
