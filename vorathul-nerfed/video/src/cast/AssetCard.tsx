@@ -1,12 +1,12 @@
 import { DoubleSide } from 'three';
 import { Card, type CardProps, type Vec3 } from '../stage/Card.tsx';
-import { AVAILABLE } from './available.ts';
+import { assetSize, AVAILABLE } from './available.ts';
 
 /** What to draw while the final image is missing: an approved style frame under public/plates/, or a flat colour. */
 export type StandIn = { src: string } | { color: string };
 
 export interface AssetCardProps extends Omit<CardProps, 'src'> {
-  /** Storyboard asset id (G01, G42, office-frame, ...). */
+  /** Storyboard asset id (G01, G42, office-plate, ...); a pose of a pose sheet is <id>-<n> (G15-3). */
   id: string;
   standIn: StandIn;
 }
@@ -20,7 +20,10 @@ const ColorCard = ({ color, width, height, position, rotation, scale, opacity = 
 
 /** A storyboard asset on the card stage: the final image once it is AVAILABLE, the stand-in before that. */
 export const AssetCard = ({ id, standIn, ...card }: AssetCardProps) => {
-  if (AVAILABLE.has(id)) return <Card src={`assets/${id}.png`} {...card} />;
+  // The final image keeps its own aspect: the card keeps the given height and takes the image's width,
+  // so swapping a stand-in for the real cut-out never stretches it.
+  const size = assetSize(id);
+  if (AVAILABLE.has(id) && size) return <Card src={`assets/${id}.png`} {...card} width={(card.height * size[0]) / size[1]} />;
   if ('src' in standIn) return <Card src={standIn.src} {...card} />;
   return <ColorCard color={standIn.color} {...card} />;
 };
