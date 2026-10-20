@@ -308,7 +308,9 @@ export const World = ({ sil = false, cloudShift = 0, rays = 0, rayBend = 0, bow,
       {[[-17, 34, 0], [15, 44, 1], [3, 56, 2], [-9, 52, 1], [21, 26, 0]].map(([x, y, k], i) => (
         <Pic key={`c${i}`} id={`G02-${(i % 5) + 1}`} color={IVORY} svg={CLOUD_SVG[k as number] as string} width={22} height={10} position={[(x as number) + cloudShift * Math.sign(-(x as number)), (y as number) - cloudShift * 0.4, -78]} renderOrder={RO.cloud + i * 0.01} flat={back} />
       ))}
-      <Pic id="G06" color={GOLD} svg={FLOOR_SVG} width={FLOOR.w} height={FLOOR.d} position={[0, 0, FLOOR.z0 + FLOOR.d / 2]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={RO.floor} flat={back} />
+      {/* Not the G06 final: it is a floor painted in its own perspective, so laid on the ground plane it doubles the
+          perspective, and sized by height it covers 144 of the 240 units (black void in the S14 and S16 lows). */}
+      <SvgCard svg={FLOOR_SVG} width={FLOOR.w} height={FLOOR.d} position={[0, 0, FLOOR.z0 + FLOOR.d / 2]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={RO.floor} flat={back} />
       {rays > 0
         ? [-26, -15, -6, 6, 15, 26].map((a, i) => (
             <SvgCard key={`r${i}`} svg={RAY_SVG} width={7} height={70} pivot={[0, 35]} position={[a * 0.35, 62, -46]} rotation={[0, 0, ((a * (1 - rayBend / 30) - Math.sign(a) * rayBend) * Math.PI) / 180]} opacity={rays * (0.42 + 0.1 * (i % 2))} renderOrder={RO.ray + i * 0.01} hidden={sil} />
