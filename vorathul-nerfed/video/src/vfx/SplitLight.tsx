@@ -74,14 +74,6 @@ const rampImage = (w: number, h: number, deg: number, softness: number): string 
   return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
 
-const Tone = ({ inp, dark, light, result }: { inp: string; dark: number[]; light: number[]; result: string }) => (
-  <feComponentTransfer in={inp} result={result}>
-    <feFuncR type="table" tableValues={`${dark[0]} ${light[0]}`} />
-    <feFuncG type="table" tableValues={`${dark[1]} ${light[1]}`} />
-    <feFuncB type="table" tableValues={`${dark[2]} ${light[2]}`} />
-  </feComponentTransfer>
-);
-
 export const SplitLight = ({ frame, cues, children, id = 'vfx-split' }: { frame: number; cues: readonly SplitCue[]; children: ReactNode; id?: string }) => {
   const { width, height } = useVideoConfig();
   const cue = [...cues].sort((a, b) => a.frame - b.frame).reverse().find((c) => c.frame <= frame);
@@ -92,7 +84,6 @@ export const SplitLight = ({ frame, cues, children, id = 'vfx-split' }: { frame:
   const rise = l.swell ? 1 - (1 - Math.min(1, (frame - cue.frame) / l.swell)) ** 2 : 1;
   const strength = (l.strength ?? 0.85) * rise;
   const kb = l.keepBlack ?? 0.05;
-  const [sh, ky, fl] = [rgb(l.shadow), rgb(l.key), rgb(l.fill)];
   const fid = `${id}-${cue.frame}-${Math.round(angle * 10)}-${Math.round(strength * 100)}`;
   // Ink mask: alpha 1 below keepBlack luminance, 0 a little above it.
   const k = 1 / Math.max(0.01, kb * 0.6);
@@ -100,17 +91,40 @@ export const SplitLight = ({ frame, cues, children, id = 'vfx-split' }: { frame:
     <AbsoluteFill>
       <svg width={0} height={0} style={{ position: 'absolute' }}>
         <filter id={fid} filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" x={0} y={0} width={width} height={height} colorInterpolationFilters="sRGB">
-          <feColorMatrix in="SourceGraphic" type="matrix" values="0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0.2126 0.7152 0.0722 0 0  0 0 0 1 0" result="g" />
-          <Tone inp="g" dark={sh} light={ky} result="keyLit" />
-          <Tone inp="g" dark={sh} light={fl} result="fillLit" />
+          {/* The light: key colour on the key side, fill colour on the other, crossing over softly. */}
+          <feFlood floodColor={l.key} result="kc" />
+          <feFlood floodColor={l.fill} result="fc" />
           <feImage href={rampImage(width, height, angle, l.softness ?? 0.32)} x={0} y={0} width={width} height={height} result="ramp" />
-          <feComposite in="keyLit" in2="ramp" operator="in" result="k" />
-          <feComposite in="fillLit" in2="ramp" operator="out" result="f" />
-          <feMerge result="lit">
+          <feComposite in="kc" in2="ramp" operator="in" result="k" />
+          <feComposite in="fc" in2="ramp" operator="out" result="f" />
+          <feMerge result="light">
             <feMergeNode in="f" />
             <feMergeNode in="k" />
           </feMerge>
-          <feComposite in="lit" in2="SourceGraphic" operator="arithmetic" k1={0} k2={strength} k3={1 - strength} k4={0} result="toned" />
+          {/* 'color' blend keeps each pixel's own luminance and takes the light's hue and saturation:
+              values and contrast survive, colour gets richer, nothing washes toward pastel. */}
+          <feBlend in="light" in2="SourceGraphic" mode="color" result="lit" />
+          <feFlood floodColor={l.shadow} result="sc" />
+          <feBlend in="sc" in2="SourceGraphic" mode="color" result="shadowLit" />
+          {/* Weights by luminance: the light takes the mid-tones and leaves highlights (gold stays
+              gold, ivory stays ivory); the shadow tint takes the darks only. */}
+          <feColorMatrix in="SourceGraphic" type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0.2126 0.7152 0.0722 0 0" result="L" />
+          <feComponentTransfer in="L" result="wLight">
+            <feFuncA type="table" tableValues={[0, 0.5, 0.85, 0.9, 0.6, 0.2, 0].map((v) => v * strength).join(' ')} />
+          </feComponentTransfer>
+          <feComponentTransfer in="L" result="wShadow">
+            <feFuncA type="table" tableValues={[0, 0.75, 0.35, 0, 0, 0, 0].map((v) => v * strength).join(' ')} />
+          </feComponentTransfer>
+          <feComposite in="shadowLit" in2="wShadow" operator="in" result="s1" />
+          <feComposite in="lit" in2="wLight" operator="in" result="l1" />
+          <feMerge result="mixed">
+            <feMergeNode in="SourceGraphic" />
+            <feMergeNode in="s1" />
+            <feMergeNode in="l1" />
+          </feMerge>
+          {/* Partial mixing toward a far hue (blue sky under gold light) passes through grey; a
+              saturation lift scaled with the grade's strength wins that back (measured). */}
+          <feColorMatrix in="mixed" type="saturate" values={String(1 + 0.6 * strength)} result="toned" />
           <feColorMatrix in="SourceGraphic" type="matrix" values={`0 0 0 0 ${rgb(INK)[0]}  0 0 0 0 ${rgb(INK)[1]}  0 0 0 0 ${rgb(INK)[2]}  ${-0.2126 * k} ${-0.7152 * k} ${-0.0722 * k} 0 ${kb * k * 1.6}`} result="ink" />
           <feMerge>
             <feMergeNode in="toned" />
