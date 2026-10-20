@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the APPROVED plate of the human's room (left half of the frame) in this music video, (2) the APPROVED morning screen style frame. Draw the SAME room as image 1 in the SAME style (two-colour silk-screen: midnight navy #18203A wall, cream #F3EFE4 and moon-yellow #F0D35A papers and sticky notes, halftone, paper grain, slight misregistration), now as a full 16:9 wide view of the room wall, EMPTY of furniture and people, ready for a desk and a person to be placed in front of it:
+- far left: the same tall bookshelf with books and pinned papers, cropped by the left edge;
+- the wall: sparse cream papers and yellow sticky notes pinned on it, mostly in the left third and the upper area;
+- a LARGE window a little right of centre, in the upper half of the frame, with a navy frame and cream rim lines and a cross bar dividing it into four panes; the four window PANES (the glass areas) are filled with ONE flat solid pure magenta (#FF00FF), completely uniform (the sky will be added later): no sky, no moon, no sun, no trees inside the window;
+- the lower third: the plain navy wall continues down to a floor line near the bottom with a few loose papers on the floor at the left; the lower middle and right of the wall are EMPTY plain navy wall (a desk will stand there).
+No desk, no chair, no person, no lamp. ABSOLUTELY NO text, letters, numbers, logos, watermarks. Palette only navy, cream, moon yellow; magenta ONLY inside the window panes. No 3D render look, no photorealism, no soft shading.

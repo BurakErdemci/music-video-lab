@@ -1,0 +1,572 @@
+{
+  "_doc": "Part2 timeline in SONG frames (30 fps); composition frame 0 = song frame 1706 (songStart). Same fields as part1/events.json: 'on' grid (downbeat/beat/half-beat/word/none), 'kind' cut = deliberate single-frame picture change, soft = none expected. 'deliberateBlack' = song-frame ranges that are black on purpose. 'handOver' = the torch dot Part 3 re-opens (fixed by the architect). part2/shots.ts reads these numbers by name.",
+  "songStart": 1706,
+  "songEnd": 3376,
+  "handOver": {
+    "f": 3340,
+    "x": 960,
+    "y": 470,
+    "r": 10,
+    "color": "#F0D35A",
+    "background": "navy-black #0b0f1e",
+    "note": "from 3341 to the end of Part2 the frame is this dot on black, unchanged, with the last caption"
+  },
+  "deliberateBlack": [
+    [
+      3338,
+      3375
+    ]
+  ],
+  "events": [
+    {
+      "f": 1706,
+      "name": "chorus 1 opens: InkBleed landing, seam with Part 1",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 1762,
+      "name": "white wave 1 wipes her side",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 1762,
+      "name": "AI sits on her box swinging her legs (revealed behind wave 1)",
+      "on": "downbeat",
+      "kind": "soft",
+      "sheet": false
+    },
+    {
+      "f": 1818,
+      "name": "white wave 2 wipes her side",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 1818,
+      "name": "cut on action: he is at the glass with a note",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 1846,
+      "name": "moon steps per beat on Ay dolar ay kucumur",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 1874,
+      "name": "white wave 3 wipes her side",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 1930,
+      "name": "white wave 4 wipes her side",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 1955,
+      "name": "stamp biliyorum (left)",
+      "on": "word",
+      "kind": "soft",
+      "word": "biliyorum"
+    },
+    {
+      "f": 1986,
+      "name": "stamp bilmiyorum (right, sung word heard as biliyorum)",
+      "on": "word",
+      "kind": "soft",
+      "word": "biliyorum"
+    },
+    {
+      "f": 1987,
+      "name": "white wave 5 wipes her side",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 2036,
+      "name": "buradayiz: she stands at the glass, both face it",
+      "on": "word",
+      "kind": "cut",
+      "word": "buradayız"
+    },
+    {
+      "f": 2043,
+      "name": "white wave 6 wipes her side",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 2099,
+      "name": "last white wave: fills the whole frame",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 2155,
+      "name": "shape match: the white is his monitor reset flash, days set",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2169,
+      "name": "cut: day 1: coffee",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2183,
+      "name": "cut: day 1: stretch",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2197,
+      "name": "cut: day 1: typing again",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2211,
+      "name": "cut: day 2",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2239,
+      "name": "cut: day 3",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2267,
+      "name": "cut: day 4 (every beat)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2281,
+      "name": "cut: day 5 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2295,
+      "name": "cut: day 6 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2310,
+      "name": "cut: day 7 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2324,
+      "name": "cut: day 8 (every beat)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2338,
+      "name": "cut: day 9 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2352,
+      "name": "cut: day 10 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2366,
+      "name": "cut: day 11 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2380,
+      "name": "cut: day 12 (every beat)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2394,
+      "name": "cut: day 13 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2408,
+      "name": "cut: day 14 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2422,
+      "name": "cut: day 15 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2436,
+      "name": "cut: day 16 (every beat)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2450,
+      "name": "cut: day 17 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2464,
+      "name": "cut: day 18 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2478,
+      "name": "cut: day 19 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2492,
+      "name": "cut: day 20 (every beat)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2506,
+      "name": "cut: day 21 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2520,
+      "name": "cut: day 22 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2534,
+      "name": "cut: day 23 (every beat)",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2548,
+      "name": "cut: day 24 (every half beat)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2555,
+      "name": "cut: day 25 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2562,
+      "name": "cut: day 26 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2569,
+      "name": "cut: day 27 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2576,
+      "name": "cut: day 28 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2583,
+      "name": "cut: day 29 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2590,
+      "name": "cut: day 30 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2597,
+      "name": "cut: day 31 (every half beat)",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2604,
+      "name": "DEAD STOP: the montage freezes for one beat",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 2618,
+      "name": "split: asleep against the glass, zzz",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2632,
+      "name": "wakes with a start, !",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2646,
+      "name": "presses his own Merhaba note on the glass",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2653,
+      "name": "cut: the note close, the push into it",
+      "on": "half-beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2660,
+      "name": "cut to the flat note: yellow fills the frame",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2674,
+      "name": "PaperFold starts (1st of 2)",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2702,
+      "name": "PaperFold lands: her path",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2716,
+      "name": "stride 1: a new place on the path",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2730,
+      "name": "stride 2: a new place on the path",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2744,
+      "name": "stride 3: a new place on the path",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2759,
+      "name": "stride 4: a new place on the path",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2773,
+      "name": "stride 5: a new place on the path",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2787,
+      "name": "stride 6: a new place on the path",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2801,
+      "name": "stride 7: a new place on the path",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2809,
+      "name": "midnight: the crescent appears (AYNI HATA)",
+      "on": "word",
+      "kind": "soft",
+      "word": "yine"
+    },
+    {
+      "f": 2815,
+      "name": "stride 8: a new place on the path",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2829,
+      "name": "trip on the knot",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2836,
+      "name": "she comes apart (slices + pixels)",
+      "on": "half-beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2850,
+      "name": "the pen redraws her: v2",
+      "on": "half-beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2871,
+      "name": "v2 strides into the same knot",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2885,
+      "name": "the same trip (gece yarisinda)",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2892,
+      "name": "she comes apart again",
+      "on": "half-beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2906,
+      "name": "the pen redraws her: v3",
+      "on": "half-beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2927,
+      "name": "taps box 1: lamp 1 lights",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2941,
+      "name": "taps box 2: lamp 2 lights",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 2955,
+      "name": "taps box 3: lamp 3 lights",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2969,
+      "name": "taps box 4: lamp 4 lights",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2997,
+      "name": "thumbs-up",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 3053,
+      "name": "pull back through the glass: his head enters",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 3067,
+      "name": "lid 1 opens: empty",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 3081,
+      "name": "lid 2 opens: empty",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 3095,
+      "name": "lid 3 opens: empty",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 3109,
+      "name": "lid 4 opens: empty",
+      "on": "downbeat",
+      "kind": "soft"
+    },
+    {
+      "f": 3116,
+      "name": "anger vein pops (olculmemis), the stamp lands",
+      "on": "word",
+      "kind": "cut",
+      "word": "ölçülmemiş"
+    },
+    {
+      "f": 3155,
+      "name": "Kizmiyorum: the vein deflates",
+      "on": "word",
+      "kind": "soft",
+      "word": "kızmıyorum"
+    },
+    {
+      "f": 3165,
+      "name": "cut: he sits calmly in the split",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 3213,
+      "name": "torch clicks on, beam through the glass",
+      "on": "word",
+      "kind": "cut",
+      "word": "güveniyorum"
+    },
+    {
+      "f": 3257,
+      "name": "the beam swings back onto his wall",
+      "on": "word",
+      "kind": "cut",
+      "word": "sen"
+    },
+    {
+      "f": 3321,
+      "name": "he holds the torch at the glass (ikimize)",
+      "on": "word",
+      "kind": "cut",
+      "word": "ikimize"
+    },
+    {
+      "f": 3333,
+      "name": "torch clicks off: the light circle shrinks",
+      "on": "downbeat",
+      "kind": "cut"
+    },
+    {
+      "f": 3340,
+      "name": "hand-over: one moon-yellow dot at (960,470) r 10 on black",
+      "on": "none",
+      "kind": "soft"
+    }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "_doc": "LivingTest timeline in SONG frames (30 fps). Composition frame = song frame - songStart. 'on' says which grid the event must land on (downbeat / beat / half-beat), 'kind' cut = a deliberate single-frame picture change (allowed jump-scan spike), soft = no spike expected. Written by the architect; shots.ts reads the same numbers.",
+  "songStart": 468,
+  "songEnd": 930,
+  "events": [
+    { "f": 468, "name": "open on the cursor, pull-back starts", "on": "downbeat", "kind": "soft" },
+    { "f": 623, "name": "Merhaba letter 1", "on": "beat", "kind": "soft" },
+    { "f": 637, "name": "cut: P1 wide -> P2 mug raised, closer framing", "on": "downbeat", "kind": "cut" },
+    { "f": 690, "name": "HalftoneBloom starts", "on": "none", "kind": "soft" },
+    { "f": 750, "name": "HalftoneBloom lands (bar 14)", "on": "downbeat", "kind": "soft" },
+    { "f": 750, "name": "pen starts drawing the AI", "on": "downbeat", "kind": "soft" },
+    { "f": 792, "name": "pen line closed, fill starts", "on": "beat", "kind": "soft" },
+    { "f": 806, "name": "AI wave pose A, cursor eye on", "on": "downbeat", "kind": "cut" },
+    { "f": 820, "name": "AI wave pose B", "on": "beat", "kind": "cut" },
+    { "f": 834, "name": "AI wave pose A", "on": "beat", "kind": "cut" },
+    { "f": 848, "name": "AI wave pose B", "on": "beat", "kind": "cut" },
+    { "f": 862, "name": "cut: human at the glass with the note, AI rocks on her heels", "on": "downbeat", "kind": "cut" }
+  ]
+}

@@ -1,0 +1,126 @@
+{
+ "_note": "Hand-measured in RAW trimmed-sprite px on 50 px grid overlays boards/p4-h-measure-<name>.png (+-10 px). prep_p4_h.py multiplies by the sprite scale. hair box = hair top to chin; headPx = hair top to chin (vertical). floorY/feetY/backX/frontX are read from alpha by prep.",
+ "h-leap": {
+  "hair": {
+   "x0": 345,
+   "y0": 18,
+   "x1": 500,
+   "y1": 170
+  },
+  "headPx": 150,
+  "fist": [
+   697,
+   38
+  ]
+ },
+ "h-run1": {
+  "hair": {
+   "x0": 458,
+   "y0": 8,
+   "x1": 610,
+   "y1": 148
+  },
+  "headPx": 140,
+  "fist": [
+   612,
+   268
+  ],
+  "hipX": 410
+ },
+ "h-run2": {
+  "hair": {
+   "x0": 462,
+   "y0": 10,
+   "x1": 615,
+   "y1": 150
+  },
+  "headPx": 140,
+  "fist": [
+   682,
+   235
+  ],
+  "hipX": 400
+ },
+ "h-run3": {
+  "hair": {
+   "x0": 475,
+   "y0": 8,
+   "x1": 640,
+   "y1": 160
+  },
+  "headPx": 152,
+  "fist": [
+   662,
+   268
+  ],
+  "hipX": 430
+ },
+ "h-pant": {
+  "hair": {
+   "x0": 275,
+   "y0": 8,
+   "x1": 420,
+   "y1": 155
+  },
+  "headPx": 147,
+  "palm": [
+   520,
+   90
+  ],
+  "glassX": 534
+ },
+ "h-floor-up": {
+  "hair": {
+   "x0": 430,
+   "y0": 8,
+   "x1": 640,
+   "y1": 190
+  },
+  "headPx": 182
+ },
+ "h-floor-book": {
+  "hair": {
+   "x0": 355,
+   "y0": 8,
+   "x1": 590,
+   "y1": 235
+  },
+  "headPx": 227,
+  "book": [
+   155,
+   255,
+   240,
+   170
+  ]
+ },
+ "h-cross": {
+  "hair": {
+   "x0": 300,
+   "y0": 12,
+   "x1": 445,
+   "y1": 140
+  },
+  "headPx": 128,
+  "hand": [
+   625,
+   298
+  ]
+ },
+ "h-desk-book": {
+  "hair": {
+   "x0": 205,
+   "y0": 6,
+   "x1": 395,
+   "y1": 172
+  },
+  "headPx": 164,
+  "hands": [
+   470,
+   420
+  ],
+  "handLift": [
+   495,
+   322
+  ]
+ }
+}

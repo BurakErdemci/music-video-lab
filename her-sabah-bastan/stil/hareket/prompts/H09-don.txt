@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the HUMAN character (silk-screen style). Draw the SAME character in every pose, identical design: messy hair silhouette, slim build, plain trousers, plain top, simple shoes, solid midnight navy (#18203A) body, thin cream (#F3EFE4) outline, faceless, 7-9 moon-yellow (#F0D35A) sticky notes on shoulders and back. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (four key poses): turning around in place: 1) seen in profile facing LEFT; 2) three-quarter view turning toward the viewer; 3) seen from the front (faceless); 4) seen in profile facing RIGHT.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale, feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

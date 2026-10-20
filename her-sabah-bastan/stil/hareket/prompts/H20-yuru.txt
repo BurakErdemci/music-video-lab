@@ -1,0 +1,18 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style). Draw the SAME person in every pose. Model anchors (copy them exactly from the attached frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head); same body size as the reference.
+- Hair: the same short messy hair silhouette as the reference, the same tufts sticking out at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT (no shoes, no sweater, no jeans, no cuffs).
+- Notes: EIGHT moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column of four down the back from the shoulder blade to the hip, two on the front of the chest/ribs, one on the upper arm sleeve. Same note size as the reference (about the size of the head's width).
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, faceless, flat silk-screen style, slight misregistration, fine grain.
+
+Action (four key poses of ONE walking step, the support phase): the SECOND attached image is the approved walk strip; profile facing RIGHT, same size. In ALL FOUR poses the SAME foot (the front foot of pose 1) is planted flat on the ground and stays at the SAME spot on the ground, while the body travels forward over it by an EQUAL distance from pose to pose. Measured from the hips:
+1) heel strike: the planted foot is one long step AHEAD of the hips, the other foot behind on its toes;
+2) the planted foot is half a step ahead of the hips, the knee slightly bent taking the weight, the back foot lifting off;
+3) passing: the planted foot is directly UNDER the hips, the leg straight, the other leg swinging through bent at the knee beside it;
+4) the planted foot is half a step BEHIND the hips, rising onto its toes, the swinging leg reaching forward, its heel about to touch the ground.
+Arms swing opposite to the legs, small natural swing. Same head height in all four (only a small bob).
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

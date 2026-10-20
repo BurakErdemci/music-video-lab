@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached images are APPROVED key-pose strips of the AI character (silk-screen style). Draw the SAME character, identical design: smooth genderless slender body, solid cream-white (#F3EFE4) fill, thin midnight navy (#18203A) outline, round bald head, NO face except ONE short vertical navy cursor line. KEEP THE SAME HEAD-TO-BODY PROPORTION AS THE REFERENCE: small round head, adult proportions, head height about 1/7.5 of the standing height (NOT a big chibi head). Same figure size as the reference. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (four key poses): sitting cross-legged on the floor exactly like the FIRST attached strip (same size, same place of the hips, same crossed legs in all four), with the SAME open navy notebook, four different small sub-actions while reading:
+1) holding the notebook up close in front of the head with both hands, reading intently;
+2) the notebook open on the lap, head tilted far back looking UP at something floating above, one hand raised a little toward it;
+3) one finger tracing a line on the open page, head bent close to it;
+4) the notebook hugged closed against the chest with both arms, head tilted, thinking.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

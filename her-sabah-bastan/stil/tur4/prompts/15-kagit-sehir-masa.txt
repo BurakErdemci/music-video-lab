@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) an APPROVED style frame of this music video (a street folding into a paper city on a desk), (2) another APPROVED style frame (the human's room at night). Match their style EXACTLY:
+- Two-colour silk-screen gig poster, flat geometric shapes, halftone dots, slight ink misregistration, screen texture and paper grain.
+- Palette ONLY: midnight navy (#18203A), moon yellow (#F0D35A), paper cream-white (#F3EFE4). No other hues, no gradients.
+
+This frame shows: an EMPTY STAGE PLATE, no people, no hands. The human's work desk seen from a 3/4 top view (camera above and in front, looking down at about 35 degrees). The desk top is a big flat cream paper-coloured surface filling the lower two thirds of the frame; behind it, at the top of the frame, a navy wall with a few pinned yellow and cream notes and the bottom edge of a window.
+On the desk stands a small PAPER CITY made of folded cream and navy paper: little pop-up paper houses, tiny paper towers and shop fronts with yellow lit windows, folded paper trees, a paper street strip, arranged in two loose groups: one group on the LEFT third of the desk and one group on the RIGHT third. Desk clutter at the edges only: a pencil cup with pencils, a craft knife, a cutting mat with a navy grid, paper scraps, a coffee mug, a few yellow sticky notes.
+IMPORTANT: the CENTRE of the desk (the middle third of the frame, from mid-height down to near the bottom edge) is completely EMPTY flat cream desk surface with only paper grain: nothing stands or lies there, because a folded paper street will be placed there later. Keep a soft yellow halftone pool of lamp light on that empty centre.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no writing on the notes. No people, no hands. No other colours. No 3D render look, no photorealism, no soft shading.

@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is an APPROVED key-pose strip of the AI character (silk-screen style). Draw the SAME character, identical design: smooth genderless slender body, solid cream-white (#F3EFE4) fill, thin midnight navy (#18203A) outline, round bald head, NO face except ONE short vertical navy cursor line. KEEP THE SAME HEAD-TO-BODY PROPORTION AS THE REFERENCE: small round head, adult proportions, head height about 1/7.5 of the standing height (NOT a big chibi head). Same figure size as the reference. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (four in-between poses of ONE walking step, the middle of the support phase): the attached image is her approved walk strip. Profile facing LEFT, same size, same head height. In ALL FOUR poses the SAME planted foot stays flat at one spot on the ground while the body travels forward (to the LEFT) over it by an EQUAL small distance from pose to pose:
+1) the planted foot is half a foot length AHEAD of the hips (to the left of them), the planted knee slightly bent taking the weight, the back foot lifting off on its toes;
+2) the planted foot is directly UNDER the hips, the planted leg vertical, the other leg swinging through bent at the knee beside it;
+3) the planted foot is half a foot length BEHIND the hips, the swinging knee in front of the body;
+4) the planted foot is one full foot length behind the hips, its heel starting to lift, the swinging leg reaching forward, still off the ground.
+Arms swing opposite to the legs, small natural swing.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

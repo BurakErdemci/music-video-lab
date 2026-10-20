@@ -1,0 +1,17 @@
+{
+ "_note": "Hand-measured in RAW (unscaled, trimmed) sprite px on the 50 px grid overlays boards/p2h-measure-<name>.png (about +-5 px). prep_p2h.py multiplies them by the per-sprite scale. Hair box = hair top to chin (head region); headPx = top of hair to chin.",
+ "h-type1": {"hair": {"x0":130,"y0":7,"x1":298,"y1":158}, "headPx":151, "hands":[441,410]},
+ "h-type2": {"hair": {"x0":215,"y0":6,"x1":394,"y1":168}, "headPx":162, "hands":[485,354]},
+ "h-type3": {"hair": {"x0":270,"y0":6,"x1":462,"y1":187}, "headPx":181, "hands":[498,368]},
+ "h-stretch": {"hair": {"x0":148,"y0":146,"x1":260,"y1":247}, "headPx":101},
+ "h-calm": {"hair": {"x0":105,"y0":5,"x1":288,"y1":172}, "headPx":167},
+ "h-torch": {"hair": {"x0":123,"y0":7,"x1":296,"y1":163}, "headPx":156, "lens":[526,334], "dir":[0.93,0.37]},
+ "h-torch-back": {"hair": {"x0":320,"y0":8,"x1":483,"y1":147}, "headPx":139, "lens":[16,71], "dir":[-0.86,-0.51]},
+ "h-sleep": {"hair": {"x0":334,"y0":7,"x1":564,"y1":227}, "headPx":220},
+ "h-wake": {"hair": {"x0":538,"y0":10,"x1":778,"y1":220}, "headPx":210},
+ "h-coffee": {"hair": {"x0":98,"y0":7,"x1":230,"y1":135}, "headPx":128, "mugTop":[28,249]},
+ "coffee-cab": {"spout":[292,83], "cabTopY":223},
+ "h-ots": {"headTop":[505,14]},
+ "ref": {"headFrac": 0.148},
+ "desk2": {"kb":[450,330], "floorY":781}
+}

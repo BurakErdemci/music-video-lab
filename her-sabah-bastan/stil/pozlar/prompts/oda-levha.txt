@@ -1,0 +1,7 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED style frame of a music video. Match its art style EXACTLY: two-colour silk-screen gig poster, flat shapes, slight ink misregistration, screen texture and paper grain. Palette ONLY midnight navy (#18203A), moon yellow (#F0D35A), paper cream (#F3EFE4).
+
+This frame is an EMPTY background plate (no people at all) of the same composition: the LEFT half (exactly x 0 to the vertical centre) is the human's small navy room at night: a window with a small moon-yellow moon and a dark tree outside, a simple navy desk with a closed notebook and a lamp, a simple chair, a bookshelf, a few loose papers on the floor, and only 4-5 pinned papers on the walls (keep the walls mostly EMPTY so more notes can be added later). A thin vertical glass seam line exactly at the centre. The RIGHT half is completely flat empty cream paper with only a faint floor line. No moon in the sky area (the moon is added separately). No people.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks. No other colours. No 3D, no photorealism.

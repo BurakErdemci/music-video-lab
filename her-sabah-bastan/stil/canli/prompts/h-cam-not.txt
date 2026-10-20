@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style). The SECOND shows him standing at a glass wall. Draw the SAME person, ONE single figure, full body head to toe, nothing cropped, centred, at the same scale as the canonical frame.
+Model anchors for the HUMAN (copy them exactly from the attached canonical frame):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head).
+- Hair: the same short messy hair silhouette as the reference, the same tufts at the back and top.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT.
+- Notes: moon-yellow (#F0D35A) square sticky notes stuck on the body in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column down the back from the shoulder blade to the hip, two on the chest/ribs, one on the upper arm sleeve.
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, FACELESS (no eyes, no mouth), flat silk-screen style, slight misregistration, fine grain.
+
+Pose: standing upright in profile facing RIGHT, close to an invisible glass pane just in front of him (the glass is NOT drawn). His near arm is raised forward, elbow slightly bent, and he holds ONE moon-yellow (#F0D35A) square paper note pressed flat against the glass at his face height, his open palm and fingers pressing the lower half of the note; the note is a little larger than his hand and shows a few short navy scribble lines (abstract lines only, no letters). His far arm hangs relaxed at his side. Weight on both feet, feet flat, calm, a little sad: showing yesterday's note.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

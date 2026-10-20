@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the HUMAN character reference (ignore the magenta background, it is only a cut-out backdrop), (2) the AI character reference, (3) the APPROVED style frame of this music video. Match the style of image 3 EXACTLY:
+- Two-colour silk-screen gig poster, flat geometric shapes, halftone dots, slight ink misregistration, screen texture and paper grain.
+- Palette ONLY: midnight navy (#18203A), moon yellow (#F0D35A), paper cream-white (#F3EFE4). No other hues, no gradients, no magenta.
+- The HUMAN: a young man, faceless navy silhouette with a thin cream outline and messy hair, yellow sticky notes stuck on his shoulders and back (as image 1).
+- The AI: a slender cream-white figure with a thin navy outline and NO face; the only facial mark is ONE vertical navy cursor line on the head (as image 2).
+
+This frame shows: MODEL UPGRADE CLIMAX, variant 2. Full-frame cream AI world, one AI figure in the centre walking on a thin navy pen-line path, drawn as FOUR overlapping exposures of the exact same walking pose, perfectly aligned on the same feet: each exposure a slightly different version (one a bit taller, one smoother, one made of horizontal slices with gaps, one breaking into yellow square pixels that blow off to the right like sparks). The outlines line up so the silhouette reads as ONE figure with a vibrating edge. At the right frame edge, a vertical glass seam with half a yellow moon cut by it. Strong, centred, iconic.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no writing on the notes or screens. No other colours. No 3D, no photorealism, no soft shading.

@@ -1,0 +1,28 @@
+{
+ "a-tap": {
+  "tap": [
+   332,
+   562
+  ]
+ },
+ "a-thumb": {
+  "thumb": [
+   50,
+   77
+  ]
+ },
+ "a-sit": {
+  "knee": [
+   85,
+   518
+  ],
+  "cut": 518,
+  "shinBackX": 118,
+  "thighBottomY": 538,
+  "tuck": 14
+ },
+ "headOverride": {
+  "a-squint": 136,
+  "a-tap": 131
+ }
+}

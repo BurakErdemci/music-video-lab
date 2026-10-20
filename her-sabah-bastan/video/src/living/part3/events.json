@@ -1,0 +1,277 @@
+{
+ "_doc": "Part3 timeline in SONG frames (30 fps); the Part3 composition starts at song frame 3340 (composition frame 0 = song frame 3340). Fields as part1/events.json: 'on' = grid the event lands on, 'kind' cut = deliberate single-frame picture change, soft = none expected. part3/shots.ts reads these numbers by name.",
+ "songStart": 3340,
+ "songEnd": 4676,
+ "events": [
+  {
+   "f": 3340,
+   "name": "seam: torch dot on navy-black (part 2 hand-over)",
+   "on": "none",
+   "kind": "soft"
+  },
+  {
+   "f": 3341,
+   "name": "seam: the dot on black",
+   "on": "none",
+   "kind": "soft"
+  },
+  {
+   "f": 3362,
+   "name": "iris opens: the dot becomes the sun",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3390,
+   "name": "iris fully open: street shot 1",
+   "on": "downbeat",
+   "kind": "soft"
+  },
+  {
+   "f": 3404,
+   "name": "stamp BASTAN",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3474,
+   "name": "cut: TV-shop window",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3488,
+   "name": "moon phase step 2",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3502,
+   "name": "moon phase step 3",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3516,
+   "name": "moon phase step 4",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3530,
+   "name": "moon phase step 5",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3544,
+   "name": "moon phase step 6",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3558,
+   "name": "moon phase step 7",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3572,
+   "name": "moon phase step 8",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3586,
+   "name": "cut: cafe window, he stops (BILIYORUM)",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3614,
+   "name": "her head tilts (BILMIYORUM)",
+   "on": "downbeat",
+   "kind": "soft"
+  },
+  {
+   "f": 3656,
+   "name": "palms meet on the glass (BURADAYIZ)",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3670,
+   "name": "hands invert back",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3698,
+   "name": "Her sabah bastan bir daha",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3726,
+   "name": "chorus wave 1 front",
+   "on": "downbeat",
+   "kind": "soft"
+  },
+  {
+   "f": 3740,
+   "name": "after wave 1: she is reset to Merhaba (under the wave)",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3768,
+   "name": "she reaches for the glass again 0 (under the wave)",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3782,
+   "name": "daha 1: reset to Merhaba, his note +1",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3796,
+   "name": "she reaches for the glass again 1",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3810,
+   "name": "daha 2: reset to Merhaba, his note +1",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3824,
+   "name": "she reaches for the glass again 2",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3838,
+   "name": "daha 3: cut to the wide street",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 3852,
+   "name": "PaperFold starts",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 3894,
+   "name": "PaperFold lands: the paper city on his desk",
+   "on": "downbeat",
+   "kind": "cut"
+  },
+  {
+   "f": 3950,
+   "name": "she sets the last tower on the seam",
+   "on": "downbeat",
+   "kind": "cut"
+  },
+  {
+   "f": 3992,
+   "name": "cut: he freezes (Bir sabah sildik)",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 4034,
+   "name": "the wall of notes pours down as line-rain (SILDIK)",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 4076,
+   "name": "counter starts (On yedi bin satir)",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 4188,
+   "name": "the click: counter 17.703, hands to head, big !",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 4202,
+   "name": "the paper city collapses (YEDEK)",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 4229,
+   "name": "he kneels by the yedek box",
+   "on": "downbeat",
+   "kind": "cut"
+  },
+  {
+   "f": 4285,
+   "name": "tilt up to his window, line-rain turns to rain",
+   "on": "downbeat",
+   "kind": "soft"
+  },
+  {
+   "f": 4341,
+   "name": "match cut: rain on the bus window",
+   "on": "downbeat",
+   "kind": "cut"
+  },
+  {
+   "f": 4369,
+   "name": "she fades into the reflection; cut from the window alone to the medium shot",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 4425,
+   "name": "his breath fogs the glass",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 4467,
+   "name": "she turns a page (UNUTMAYA)",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 4537,
+   "name": "she draws a heart in the fog (BOSUNA DEGILDI)",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 4593,
+   "name": "heart done",
+   "on": "beat",
+   "kind": "soft"
+  },
+  {
+   "f": 4621,
+   "name": "she reaches through with a yellow note",
+   "on": "downbeat",
+   "kind": "cut"
+  },
+  {
+   "f": 4649,
+   "name": "he reads the note (Seni)",
+   "on": "beat",
+   "kind": "cut"
+  },
+  {
+   "f": 4662,
+   "name": "he looks up: his stop (buraya)",
+   "on": "beat",
+   "kind": "cut"
+  }
+ ]
+}

@@ -1,0 +1,11 @@
+{
+ "plate": {"window": [[635,158],[1604,0],[1596,708],[700,578]], "sill": [[745,592],[1604,712]], "seat": [565,805], "seatBack": [540,425]},
+ "raw": {
+  "hb-lean": {"temple": [880,155], "mouth": [868,205], "hips": [690,595], "headTop": [810,48]},
+  "hb-read": {"note": [900,232,67,66], "hips": [680,600], "headTop": [745,22]},
+  "hb-lookup": {"hips": [690,600], "headTop": [760,38], "note": [900,390,52,42]},
+  "hb-refl": {"backX": 565, "floorY": 825}
+ },
+ "chosen": {"hb-lean": "p3-bus-hb-lean-r1", "hb-read": "p3-bus-hb-read-r1", "hb-lookup": "p3-bus-hb-lookup-r1", "hb-refl": "p3-bus-hb-refl"},
+ "scale": {"hb-lean": 1.1, "hb-read": 1.1, "hb-lookup": 1.1}
+}

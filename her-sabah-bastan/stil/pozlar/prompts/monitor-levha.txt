@@ -1,0 +1,7 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED style frame of a music video. Match its art style EXACTLY: two-colour silk-screen poster, flat shapes, slight ink misregistration, screen texture and paper grain. Palette ONLY midnight navy (#18203A), moon yellow (#F0D35A), paper cream (#F3EFE4).
+
+Scene: an over-the-shoulder view from BEHIND the human character (faceless navy silhouette with a thin cream outline, messy hair, small moon-yellow sticky notes on the shoulders and back) sitting on a simple chair at a simple desk in the dark navy room at night, facing a desktop computer MONITOR straight ahead. The monitor is seen exactly FRONT-ON, centred in the frame, large (about 45% of the frame width), with a simple navy bezel and a cream outline. The monitor's SCREEN area is a perfectly flat, uniform, solid pure magenta (#FF00FF) rectangle with sharp edges — nothing drawn on it. A few pinned notes on the wall around the monitor, a mug, scattered papers on the desk.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks. No other colours except the magenta screen. No 3D, no photorealism.

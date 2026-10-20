@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED style frame of a music video. Draw ONE prop in EXACTLY that silk-screen style: flat shapes, thin outlines, slight ink misregistration, fine screen grain. Palette ONLY midnight navy (#18203A), moon yellow (#F0D35A), paper cream (#F3EFE4), plus ONE extra colour allowed only here: yellow-green lamp light (#C9D94A).
+
+Prop: one simple open EMPTY cardboard box drawn in navy with cream outline (you can see inside, it is empty), and on top of it a small round indicator lamp that glows yellow-green (#C9D94A) with a few short flat light rays. Clean, slightly sad.
+
+Composition: the prop only, centred, generous margin, 16:9 landscape canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks; any writing is drawn as abstract scribble lines only. No people.

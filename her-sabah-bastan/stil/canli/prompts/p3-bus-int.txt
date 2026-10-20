@@ -1,0 +1,9 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: image 1 is a style frame of this film (a man by a night-bus window). Match its style EXACTLY: flat silk-screen print, navy (#18203A) shapes with thin cream (#F3EFE4) rim lines, moon-yellow (#F0D35A) accents, fine grain, slight misregistration.
+
+Draw the EMPTY INTERIOR of a night city bus, a MEDIUM SHOT of ONE window seat and its window, in the same three-quarter view as image 1: seen from the aisle looking toward the RIGHT side wall, which has ONE large window running diagonally into depth (its near edge large at the left, receding to the right). Rows of navy bench seats with cream rim lines, vertical chrome poles, ceiling light strips glowing moon yellow, a window ledge/sill below the window. The window seat in the foreground-left/centre beside that window is EMPTY; its seat backrest is about 45-55 percent of the image height, the seat cushion clearly visible. NO people at all, no text, no heart, no reflections.
+
+IMPORTANT: the glass of the large window is ONE flat solid pure magenta (#FF00FF), completely uniform and EMPTY: nothing drawn through it, no city, no moon, no reflections, no fog; only its dark navy window frame around it. (Magenta is filled later by code.) The only magenta in the image is that window glass; the rest of the bus is navy/cream/yellow. Smaller side windows further back may also be pure magenta glass.
+
+No text, no logos. Palette only navy, cream, moon yellow (+ the magenta glass). No 3D render look, no photorealism, no soft shading.

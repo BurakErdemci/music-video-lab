@@ -1,0 +1,15 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is the NEUTRAL reference of the AI character (silk-screen style), seen in FRONT view. Look closely at the hands hanging at her sides: that is the exact style to copy.
+
+This image is a CUT-OUT PUPPET PARTS SHEET of HANDS ONLY, for 2D bone animation. Draw FOUR separate hands of this same character, seen from the same FRONT view as the reference, each one cut off at the wrist, all in the same orientation as the hand on the viewer's LEFT hangs in the reference (wrist at the top, fingers pointing down or forward):
+1) relaxed open hand, fingers loosely together and slightly curled, hanging down (like the reference);
+2) hand curled into a loose grip as if holding the small handle of a coffee mug (fingers curled through an invisible handle, thumb on top) - draw NO mug;
+3) hand pointing / typing: index finger extended straight forward, other fingers curled under;
+4) hand holding a thin notebook from below: fingers flat and straight under, thumb on top pressing down, with a flat gap for the notebook between thumb and fingers - draw NO notebook.
+Each hand ends at the wrist in a plain ROUNDED stub (a short smooth round end of plain fill and outline, no cuff, no sleeve, no lines), so it can sit under a forearm.
+
+Style, copy EXACTLY from the reference: cream-white fill with fine navy stipple speckle, a thin navy outline, thin navy lines only where fingers separate. Same hand size as the reference (small, about the width of the forearm).
+
+Layout: the four hands in ONE row, left to right in the order above, all at IDENTICAL scale, evenly spaced, with wide magenta gaps between them (nothing touching, nothing overlapping). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no mug, no notebook, no arms, no other objects. Palette only cream and navy (+ magenta background). No 3D render look, no photorealism, no soft shading.

@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached images are APPROVED key-pose strips of the AI character (silk-screen style). Draw the SAME character, identical design: smooth genderless slender body, solid cream-white (#F3EFE4) fill, thin midnight navy (#18203A) outline, round bald head, NO face except ONE short vertical navy cursor line. KEEP THE SAME HEAD-TO-BODY PROPORTION AS THE REFERENCE: small round head, adult proportions, head height about 1/7.5 of the standing height (NOT a big chibi head). Same figure size as the reference. Flat silk-screen style, slight misregistration, fine grain.
+
+Action (four BREAKDOWN poses that animate sitting down; very small steps between them so they can be animated smoothly): the FIRST attached strip shows her standing (use its FIRST pose, bent forward looking down, as the start); the SECOND attached strip shows her sitting cross-legged on the floor holding an open navy notebook (use its FIRST pose as the end). Same size, same facing as those references:
+1) knees bending, body lowering, one hand reaching down toward a closed navy notebook lying on the floor in front of her feet;
+2) a deep squat, picking the closed navy notebook up with one hand, the other hand on the floor for balance;
+3) the hips lowering onto the floor, the legs starting to fold and cross, holding the closed notebook against the chest;
+4) seated cross-legged exactly like the first pose of the second reference, opening the navy notebook on her lap.
+
+This is an ANIMATION KEY-POSE STRIP: draw EXACTLY FOUR poses of the same single character side by side in one row, left to right in time order, like a sprite sheet. All four at IDENTICAL scale (the same scale as the attached reference), feet on the SAME horizontal baseline near the bottom, evenly spaced, with clear magenta gaps between them (no overlap, nothing touching). Wide 16:9 canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background) unless a prop colour is named.

@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Match the attached style reference EXACTLY: flat silk-screen print, navy #18203A shapes with thin cream #F3EFE4 trim lines, moon-yellow #F0D35A accents, fine grain, slight misregistration. Draw TWO separate isolated objects side by side with clear empty space between them, NOT touching, same flat front elevation, same scale as a street: on the LEFT a street TREE (navy trunk, a leafy crown of navy and moon-yellow leaves, as in the reference) standing on its base; on the RIGHT an old cast-iron street LAMP POST (navy, slim fluted column, a lantern head with a moon-yellow glow). Both have a bottom base line at about the same height. Nothing cropped, no ground, no shadow.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no people. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

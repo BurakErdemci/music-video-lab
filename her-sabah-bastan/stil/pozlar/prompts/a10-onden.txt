@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED design of the AI character (silk-screen style). Draw the SAME character, identical design: smooth genderless slender body, solid cream-white (#F3EFE4) fill, thin midnight navy (#18203A) outline, round bald head, NO face except ONE short vertical navy cursor line in the exact centre of the face. Same flat silk-screen style with slight misregistration and fine grain.
+
+Pose: standing perfectly FRONTAL, facing the viewer straight on, symmetrical, arms hanging at the sides, calm. The cursor line sits exactly in the middle of the head.
+
+Composition: the single character only, full body, centred, feet near the bottom edge, generous margin, 16:9 landscape canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks. Palette only navy, cream (+ the magenta background).

@@ -1,0 +1,9 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the APPROVED design of the man of this film; (2) the empty bus plate he will sit in (the set: its camera, perspective and scale); (3) a style frame showing him seated by the bus window. Match the style of image 1 EXACTLY: flat silk-screen print, navy (#18203A) silhouette with messy hair, yellow (#F0D35A) sticky notes all over his back and arms, thin cream (#F3EFE4) rim line, NO face detail.
+
+Draw ONLY the man, ONE figure, nothing cropped, centred, NO seat, NO window, NO floor, NO shadow, at the scale he would have sitting in the seat of image 2 (backrest about half the image height, so he is large). Camera: the SAME three-quarter view as image 3: seen from BEHIND-LEFT, seated, facing the window on the RIGHT, hips at seat height, legs forward toward the right. Rules: head turned at most 30 degrees relative to the torso; two arms, two legs, five fingers max per hand; hands touch what they hold.
+
+Pose: his near elbow rests on the window sill in front of him, his hand supports his chin/cheek, and his TEMPLE leans against the window glass. Tired, still, shoulders slumped.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

@@ -1,0 +1,8 @@
+Use your built-in image_gen tool to generate exactly ONE image. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED style frame of a music video. Draw ONE prop in EXACTLY that silk-screen style: flat shapes, thin outlines, slight ink misregistration, fine screen grain. Palette ONLY midnight navy (#18203A), moon yellow (#F0D35A), paper cream (#F3EFE4).
+
+Prop: the same thick notebook lying OPEN, seen from above at a slight angle: two cream pages densely filled with handwritten scribble lines (abstract, no readable characters), small doodles, a crossed-out line, two small moon-yellow sticky notes on the pages; navy cover edges visible.
+
+Composition: the prop only, centred, generous margin, 16:9 landscape canvas. Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor.
+ABSOLUTELY NO text, letters, numbers, logos, watermarks; any writing is drawn as abstract scribble lines only. No people.

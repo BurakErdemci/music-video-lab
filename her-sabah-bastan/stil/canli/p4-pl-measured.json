@@ -1,0 +1,6 @@
+{
+ "bus-door": {"doorway": [528, 58, 1143, 822], "stepY": 822, "floorY": 862},
+ "ins-foot": {"splash": [830, 585], "puddle": [0, 590, 1672, 941]},
+ "ins-fist": {"note": [1235, 128, 1600, 500], "fist": [1020, 470]},
+ "ins-face": {"mouth": [1062, 435], "headTop": [790, 0], "headH": 555}
+}

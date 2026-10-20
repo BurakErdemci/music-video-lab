@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image only, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./02-siyanotipi.png
+
+Subject: a small bedroom-office at dawn. The frame is split exactly down the vertical centre into two mirrored halves of the SAME room. LEFT half (the human): a lone faceless young person seen from behind/side, sitting hunched at a desk facing a monitor; the desk and wall are crowded with handwritten notes, sticky notes, a cold coffee cup, a notebook, the traces of many days. RIGHT half (the machine): the identical room mirrored, but completely empty, clean and untouched, nobody there, only the monitor glowing with a single blinking cursor. A pale moon is visible through one window that spans both halves.
+Composition: 16:9 landscape ~1536x864. Straight-on, symmetrical, the centre seam clearly readable. Generous negative space. Mood: quiet, lonely, melancholic, slightly depressive, early-morning stillness; bittersweet, not horror.
+
+Art direction:
+- Cyanotype sun-print aesthetic: deep Prussian blue (#123A73) ground with white and pale-blue (#CFE0F2) exposed shapes, like objects laid on photosensitive paper. Uneven brush-coated edges, chemical streaks, slight fading. The left half has many overlapping exposed paper shapes; the right half is nearly an empty clean exposure.
+- Strictly blue and white only, no other hues. No photorealism, no 3D.
+- ABSOLUTELY NO text, letters, numbers, logos, watermarks or readable UI. No faces with detail. No robots. No horror, no gore.
+
+After copying, print the output path and pixel size. Generate exactly one image, never more.

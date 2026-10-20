@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The attached image is a drawing of a small waist-high cabinet with a drip coffee machine on top (and a man, who is NOT wanted). Draw ONLY THE PROP: that same small waist-high CABINET (navy with thin cream rim lines, same style, same proportions, legs/feet on one level) with the small DRIP COFFEE MACHINE on top of it, in a FLAT SIDE VIEW at eye level, the machine's spout/nozzle clearly visible and facing RIGHT. NO person, NO mug, NO steam, nothing else; centred, nothing cropped; the bottom of the cabinet on one straight level.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters, no steam, no light beams. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

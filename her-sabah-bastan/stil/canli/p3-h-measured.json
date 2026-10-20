@@ -1,0 +1,9 @@
+{
+ "headHeight": {"h-walk": 262, "h-palm": 240, "h-lean": 131, "h-head": 150, "h-kneel": 147, "h-freeze": 117},
+ "h-walk": {"points": {"mugTop": [684, 458], "hair": {"x0": 322, "y0": 8, "x1": 608, "y1": 238}, "cutY": 917}},
+ "h-palm": {"points": {"palm": [708, 385], "glassX": 734, "palmBox": [650, 266, 92, 172], "hair": {"x0": 112, "y0": 8, "x1": 368, "y1": 195}, "cutY": 929}},
+ "h-lean": {"points": {"handY": 440, "handX": [215, 388], "floorY": 873, "hair": {"x0": 195, "y0": 7, "x1": 318, "y1": 105}}},
+ "h-head": {"points": {"floorY": 903, "headTop": [215, 10]}},
+ "h-kneel": {"points": {"floorY": 730, "label": [678, 637, 72, 43], "box": [585, 565, 206, 157]}},
+ "h-freeze": {"points": {"floorY": 881, "handY": 385, "hair": {"x0": 33, "y0": 6, "x1": 155, "y1": 100}}}
+}

@@ -1,0 +1,12 @@
+{
+ "_note": "raw = coordinates on the raw 1672x941 generated image (by eye); prep converts to sprite px. floorY is computed from alpha rows (>= 8 opaque px).",
+ "raw": {
+  "a-run": {},
+  "a-swept": {"hips": [800, 490]},
+  "a-cross": {"hand": [515, 272]},
+  "pair-back": {"hands": [834, 497], "hisHeadTop": [683, 65], "herHeadTop": [965, 112], "seam": [838]}
+ },
+ "headRaw": {"a-run": [33, 185], "a-swept": [183, 315], "a-cross": [22, 150], "pair-back": [65, 190]},
+ "withFloor": ["a-run", "a-cross", "pair-back"],
+ "withEye": ["a-run", "a-swept", "a-cross"]
+}

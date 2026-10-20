@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files; just generate it, then print DONE.
+
+The attached image is the APPROVED style frame of this music video. Match its art style EXACTLY:
+- Two-colour silk-screen gig poster, flat geometric shapes, slight ink misregistration, screen texture and paper grain.
+- Palette ONLY: midnight navy (#18203A), moon yellow (#F0D35A), paper cream-white (#F3EFE4). No other hues, no gradients.
+- The HUMAN: a faceless navy silhouette with a thin cream outline, yellow sticky notes stuck on shoulders and back.
+- The AI: a slender cream-white figure with a thin navy outline and NO face; the only facial mark is ONE vertical navy cursor line.
+- The world is split by a vertical glass seam; human side navy and crowded with pinned notes, AI side empty cream-white.
+
+This frame shows: the comfort. On the cream-white AI side, the AI figure sits cross-legged reading an open navy notebook. On the navy human side, the human sits on the floor with their back against the glass, head bowed, notes on their back. They are back to back through the glass. A half moon split by the glass seam above them.
+
+ABSOLUTELY NO text, letters, numbers, logos, watermarks. No other colours. No 3D, no photorealism, no soft shading.

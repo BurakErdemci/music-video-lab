@@ -1,0 +1,5 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+Attached: (1) the APPROVED design of the man of this film (silk-screen style). Draw the SAME man, ONE figure, FULL BODY, nothing cropped, centred, in a flat SIDE VIEW (profile, camera at his eye level): seated ON THE FLOOR facing RIGHT, knees drawn up, arms wrapped around his knees, back straight and upright (as if his back leans against a wall to his left), head slightly bowed. Dark navy silhouette, messy hair, yellow sticky notes on his back and arms, thin cream rim line, no face detail. No wall, no floor drawn. Two arms, two legs.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.
