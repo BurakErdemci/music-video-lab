@@ -7,6 +7,7 @@ import { EVENTS as P2 } from './scenes/p2/events.ts';
 import { EVENTS as P3 } from './scenes/p3/events.ts';
 import { EVENTS as P4 } from './scenes/p4/events.ts';
 import { EVENTS as P5 } from './scenes/p5/events.ts';
+import { TYPE_EVENTS } from './film/typography/schedule.ts';
 
 export type { EventAnchor, VideoEvent } from './anchors.ts';
 
@@ -20,4 +21,4 @@ const BASE: VideoEvent[] = [
   onWord('hated', 'memory', 'by being hated'),
 ];
 
-export const EVENTS: VideoEvent[] = [...BASE, ...P1, ...P2, ...P3, ...P4, ...P5].sort((a, b) => a.frame - b.frame);
+export const EVENTS: VideoEvent[] = [...BASE, ...P1, ...P2, ...P3, ...P4, ...P5, ...TYPE_EVENTS].sort((a, b) => a.frame - b.frame);
