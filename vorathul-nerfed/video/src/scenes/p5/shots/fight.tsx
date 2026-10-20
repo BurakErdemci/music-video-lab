@@ -168,7 +168,7 @@ export const S98 = ({ frame }: { frame: number }) => {
           const target = pts.mouths[n - 1]!.p;
           return <FlyingPipe key={n} from={[MON[0], scr, MON[2] + 0.3]} to={[target[0] + 1.6, target[1] + 0.6, target[2]]} t={(frame - (land - 20)) / 12} />;
         })}
-        <Dev who="glasses" at={[-1.9, F, -6.4]} height={3.6} order={3000} />
+        <Dev who="glasses" act="cower" at={[-1.9, F, -6.4]} height={3.6} order={3000} />
       </Stage>
       <div style={{ position: 'absolute', left: tl.x, top: tl.y, width: br.x - tl.x, height: br.y - tl.y, overflow: 'hidden' }}>
         <Desktop frame={frame} burstAt={burst} width={br.x - tl.x} x={0} y={0} />
@@ -491,13 +491,13 @@ export const S104 = ({ frame }: { frame: number }) => {
         {FLYERS.map((f, i) => {
           const p: Vec3 = t <= 0 ? f.at : [lerp(f.at[0], f.to[0], t), lerp(f.at[1], f.to[1], t) + Math.sin(Math.PI * t) * 2.4 + (after > 0 ? Math.max(0, 0.6 * Math.sin(after * 0.5)) * Math.exp(-after / 6) : 0), lerp(f.at[2], f.to[2], t)];
           const rot: Vec3 = [0, 0, t * f.spin];
-          return f.kind === 'monitor' ? <Monitor3D key={i} at={p} rot={rot} w={2.2} screen={O.blue} /> : <Chair key={i} at={p} rot={rot} size={2.4} />;
+          return f.kind === 'monitor' ? <Monitor3D key={i} at={p} rot={rot} w={2.2} screen={O.blue} /> : <Chair key={i} at={p} rot={rot} size={2.4} pose={6} />;
         })}
         {/* The desk we hide under: its underside across the top fifth, legs left and right. */}
         <Rect w={11} h={2.6} at={[2, -3.98, -6.9]} rot={[Math.PI / 2, 0, 0]} color={O.dark} />
         <Rect w={11} h={0.24} at={[2, -4.1, -8.2]} color={O.white} />
         <Rect w={0.22} h={2.2} at={[-2.6, F + 1.1, -7.6]} color={O.slate} />
-        <Dev who="glasses" at={[-1.3, F, -7.0]} height={1.9} order={3000} />
+        <Dev who="glasses" act="underDesk" at={[-1.3, F, -7.0]} height={1.9} order={3000} />
       </Stage>
       <SpeedLines mode="parallel" frame={twos(frame) - SWEEP} duration={14} seed={104} angle={Math.PI} count={30} speed={160} />
       <BladeTrail pts={[[W + 40, blade.y - 140], [blade.x + 120, blade.y - 40], [blade.x - 500, blade.y + 30], [-60, blade.y - 30]]} width={64} age={frame - SWEEP} life={8} />

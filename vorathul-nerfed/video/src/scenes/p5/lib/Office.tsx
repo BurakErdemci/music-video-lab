@@ -215,27 +215,34 @@ export const DEV_CROPS = {
   bun: [1300, 548, 236, 470] as [number, number, number, number],
 };
 
-/** G41 office chair (stand-in: the right chair of frame 07). Ground point at the wheels. */
-export const Chair = (p: Prop & { size?: number; order?: number }) => {
+/** G41 poses (manifest labels): 1 front, 2 side, 3 tipped, 4 upside-down, 5 tilted-back, 6 spin-top. */
+export type ChairPose = 1 | 2 | 3 | 4 | 5 | 6;
+
+/** G41 office chair (stand-in: the right chair of frame 07). Ground point at the wheels; `size` is the width of the stand-in. */
+export const Chair = (p: Prop & { size?: number; order?: number; pose?: ChairPose }) => {
   const s = p.size ?? 2.6;
   const h = (s * CHAIR_CROP[3]) / CHAIR_CROP[2];
   const pl = placed(p);
   return (
     <group position={pl.position} rotation={pl.rotation}>
-      <Asset id="G41" standIn={{ plate: OFFICE_PLATE, crop: CHAIR_CROP, keying: 'light' }} width={s} position={[0, h / 2, 0]} renderOrder={p.order} />
+      <Asset id={`G41-${p.pose ?? 1}`} standIn={{ plate: OFFICE_PLATE, crop: CHAIR_CROP, keying: 'light' }} width={s} height={h} position={[0, h / 2, 0]} renderOrder={p.order} />
     </group>
   );
 };
 
+/** G39 poses (manifest labels): 1-3 run, 4-6 under-desk, 7-9 cower, 10-12 spit-take; bored, glasses, bun in each. */
+export const DEV_POSE = { run: 1, underDesk: 4, cower: 7, spit: 10 } as const;
+const DEV_WHO = { hoodie: 0, glasses: 1, bun: 2 } as const;
+
 /** G39 developer (stand-in: one of the developers of frame 07). Ground point at the feet. */
-export const Dev = (p: Prop & { who?: keyof typeof DEV_CROPS; height?: number; flipX?: boolean; order?: number }) => {
+export const Dev = (p: Prop & { who?: keyof typeof DEV_CROPS; act?: keyof typeof DEV_POSE; height?: number; flipX?: boolean; order?: number }) => {
   const crop = DEV_CROPS[p.who ?? 'hoodie'];
   const hh = p.height ?? 3.4;
   const w = (hh * crop[2]) / crop[3];
   const pl = placed(p);
   return (
     <group position={pl.position} rotation={pl.rotation}>
-      <Asset id="G39" standIn={{ plate: OFFICE_PLATE, crop, keying: 'light' }} width={w} height={hh} position={[0, hh / 2, 0]} flipX={p.flipX} renderOrder={p.order} />
+      <Asset id={`G39-${DEV_POSE[p.act ?? 'run'] + DEV_WHO[p.who ?? 'hoodie']}`} standIn={{ plate: OFFICE_PLATE, crop, keying: 'light' }} width={w} height={hh} position={[0, hh / 2, 0]} flipX={p.flipX} renderOrder={p.order} />
     </group>
   );
 };

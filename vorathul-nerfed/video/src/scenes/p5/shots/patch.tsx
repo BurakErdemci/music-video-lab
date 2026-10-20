@@ -62,7 +62,7 @@ export const S105 = ({ frame }: { frame: number }) => {
         <Vorathul tl={S105_TL} frame={frame} at={S105_AT} />
         <Rect w={3.4} h={1.1} at={[LAST_MON[0], F + 0.55, LAST_MON[2] + 0.4]} color={O.white} />
         <Monitor3D at={LAST_MON} w={2.0} screen={O.blue} />
-        <Dev who="hoodie" at={[-1.6 + shiver, F, -8.4]} height={2.7} order={3000} />
+        <Dev who="hoodie" act="cower" at={[-1.6 + shiver, F, -8.4]} height={2.7} order={3000} />
       </Stage>
       <PatchNotesCard frame={frame} x={1180} y={90} width={640} title={patchTitle(frame)} enterAt={E('s105-cut') + 4} lines={[{ text: 'Boss behaviour: under review', appearAt: E('s105-two') + 4 }]} footer="Balance team (hiding)" />
       <InkSplash frame={22} duration={1000} seed={105} x={1800} y={96} size={60} />

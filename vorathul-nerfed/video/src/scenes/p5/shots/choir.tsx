@@ -4,7 +4,8 @@
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
 import { handheld, hold, OFF_LOW, SHAKE_PCT, tween, withShake, type CameraPath, type CameraPose, type ShakeHit } from '../../../camera/api.ts';
-import { Card, type Vec3 } from '../../../stage/Card.tsx';
+import { AssetCard } from '../../../cast/AssetCard.tsx';
+import type { Vec3 } from '../../../stage/Card.tsx';
 import { Stage } from '../../../stage/Stage.tsx';
 import { DamageNumber } from '../../../ui/kit.ts';
 import { DuotoneFlash, ImpactBurst, InkSplash, Meteor, Overlay, seeded, Shards, SpeedLines, InkFilter, inkFilterId } from '../../../vfx/effects.ts';
@@ -45,8 +46,8 @@ const PeelCeiling = ({ p }: { p: number }) => (
 /** His painted world hung over the office (G01 sky stand-in: frame 01). */
 const PaintedSky = () => (
   <>
-    <Card src={`plates/${PLATE01}`} width={70} height={46} position={[0, CEIL + 9, -6]} rotation={[Math.PI / 2, 0, 0]} renderOrder={-10} />
-    <Card src={`plates/${PLATE01}`} width={60} height={40} position={[0, CEIL + 10, WALL_Z - 6]} renderOrder={-11} />
+    <AssetCard id="G01" standIn={{ src: `plates/${PLATE01}` }} width={70} height={46} position={[0, CEIL + 9, -6]} rotation={[Math.PI / 2, 0, 0]} renderOrder={-10} />
+    <AssetCard id="G01" standIn={{ src: `plates/${PLATE01}` }} width={60} height={40} position={[0, CEIL + 10, WALL_Z - 6]} renderOrder={-11} />
   </>
 );
 
@@ -183,9 +184,9 @@ export const S109 = ({ frame }: { frame: number }) => {
             const s = TIER1[c.slot]!;
             const e = outCubic(fly);
             const p: Vec3 = [lerp(c.from[0], s.at[0], e), lerp(c.from[1], s.at[1], e) + Math.sin(Math.PI * fly) * 5, lerp(c.from[2], s.at[2], e)];
-            return <Chair key={i} at={p} rot={[0, 0, fly < 1 ? fly * 9 + i : s.rot]} size={2.7} />;
+            return <Chair key={i} at={p} rot={[0, 0, fly < 1 ? fly * 9 + i : s.rot]} size={2.7} pose={fly < 1 ? 6 : 1} />;
           })}
-          {SPARE.map((p, i) => <Chair key={`s${i}`} at={[p[0], p[1] + (spin > 0 ? 0.3 * Math.abs(Math.sin(spin * 0.3)) : 0), p[2]]} rot={[0, 0, spin * 0.35 * (i % 2 ? -1 : 1)]} size={2.5} />)}
+          {SPARE.map((p, i) => <Chair key={`s${i}`} at={[p[0], p[1] + (spin > 0 ? 0.3 * Math.abs(Math.sin(spin * 0.3)) : 0), p[2]]} rot={[0, 0, spin * 0.35 * (i % 2 ? -1 : 1)]} size={2.5} pose={spin > 0 ? 6 : 2} />)}
           {M109.map((m, i) => <Scorch key={i} at={m.at} frame={frame} land={m.land} seed={i} />)}
           <Vorathul tl={S109_TL} frame={frame} at={S109_AT} />
         </SkyRoom>
@@ -444,8 +445,8 @@ export const S114 = ({ frame }: { frame: number }) => {
           <SkyRoom>
             <Throne />
             <Vorathul tl={S114_TL} frame={frame} at={THRONE_AT} />
-            {devT > 0 && devT < 1 ? <Dev who="glasses" at={[devAt[0], F + Math.abs(Math.sin(ff * 0.6)) * 0.25, devAt[2]]} rot={[0, 0, frame >= CLONK && frame < CLONK + 8 ? 0.3 : -0.1]} height={3.2} order={3000} /> : null}
-            {frame >= CLONK - 10 && frame < CLONK + 40 ? <Chair at={[chairX, chairY, -6.9]} rot={[0, 0, (frame - CLONK) * 0.2]} size={2.3} order={3001} /> : null}
+            {devT > 0 && devT < 1 ? <Dev who="glasses" act="run" at={[devAt[0], F + Math.abs(Math.sin(ff * 0.6)) * 0.25, devAt[2]]} rot={[0, 0, frame >= CLONK && frame < CLONK + 8 ? 0.3 : -0.1]} height={3.2} order={3000} /> : null}
+            {frame >= CLONK - 10 && frame < CLONK + 40 ? <Chair at={[chairX, chairY, -6.9]} rot={[0, 0, (frame - CLONK) * 0.2]} size={2.3} order={3001} pose={4} /> : null}
           </SkyRoom>
         </Stage>
         {/* Smoke: ink-edged ivory and grey clouds drifting apart and thinning. */}
