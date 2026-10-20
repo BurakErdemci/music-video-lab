@@ -1,13 +1,15 @@
 // Debris chunks. The geometry and the ballistic pose are plain functions so the same shards can
 // later be put on stage cards for the canvas breakout; <Shards> is the SVG overlay renderer.
 import { seeded } from './seeded.ts';
-import { GOLD, INK, InkFilter, inkFilterId, IVORY, Overlay, polar, polyPath, type Pt } from './style.tsx';
+import { GOLD, INK, InkFilter, inkFilterId, IVORY, Overlay, polar, polyPath, taperedPath, type Pt } from './style.tsx';
 
 export interface ShardSpec {
   /** Polygon around the shard's own centre, px. */
   points: Pt[];
-  /** Dark side face (black wedge) that makes a flat chunk read as a block, as in frame 06. */
+  /** Dark side face (black band) that makes a flat chunk read as a block, as in frame 06. */
   facet: Pt[];
+  /** Tapered ink hatch strokes inside the lit face, parallel to the shadow side (pre-built path). */
+  hatch: string;
   fill: string;
   /** Initial velocity, px per frame. */
   vx: number;
@@ -46,9 +48,20 @@ export const shardSpecs = (seed: number, o: ShardOptions): ShardSpec[] => {
     // A band along one edge, not a wedge to the centre: reads as the block's shaded side.
     const inset = rng.range(0.45, 0.65);
     const facet: Pt[] = [a, b, [b[0] * inset, b[1] * inset], [a[0] * inset, a[1] * inset]];
+    // Hatches start on the shadow band's inner edge and run into the lit face, thick at the band
+    // and tapering out, the way an inker shades the turn of a block face.
+    const hatchCount = rng.int(3, 5);
+    const hatch = Array.from({ length: hatchCount }, (_, h) => {
+      const t = 0.15 + (0.7 * (h + rng.range(0.2, 0.8))) / hatchCount;
+      const start: Pt = [(a[0] + (b[0] - a[0]) * t) * inset, (a[1] + (b[1] - a[1]) * t) * inset];
+      // Across the centre and most of the way to the far edge.
+      const reach = rng.range(1.2, 1.7);
+      const line = Array.from({ length: 5 }, (_, i): Pt => [start[0] * (1 - (reach * i) / 4), start[1] * (1 - (reach * i) / 4)]);
+      return taperedPath(line, o.size * rng.range(0.1, 0.14), 0.06);
+    }).join('');
     const ang = o.direction + rng.range(-o.spread / 2, o.spread / 2);
     const sp = o.speed * rng.range(0.45, 1.25) * (pebble ? 1.2 : 1);
-    return { points, facet, fill: rng.pick(o.fills), vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, rot0: rng() * 360, spin: rng.range(-14, 14), pebble };
+    return { points, facet, hatch, fill: rng.pick(o.fills), vx: Math.cos(ang) * sp, vy: Math.sin(ang) * sp, rot0: rng() * 360, spin: rng.range(-14, 14), pebble };
   });
 };
 
@@ -72,11 +85,11 @@ export interface ShardsProps extends Partial<ShardOptions> {
 export const Shards = ({ frame, duration, seed, origin, gravity = 1.4, count = 28, size = 46, speed = 34, direction = -Math.PI / 2, spread = Math.PI * 1.4, fills = [GOLD, GOLD, IVORY] }: ShardsProps) => {
   if (frame < 0 || frame >= duration) return null;
   const specs = shardSpecs(seed, { count, size, speed, direction, spread, fills });
-  const filterId = inkFilterId(seed, 4);
+  const filterId = inkFilterId(seed, 5, 0.25);
   return (
     <Overlay>
       <defs>
-        <InkFilter seed={seed} rough={4} />
+        <InkFilter seed={seed} rough={5} breakup={0.25} />
       </defs>
       <g filter={`url(#${filterId})`}>
         {specs.map((s, i) => {
@@ -89,6 +102,7 @@ export const Shards = ({ frame, duration, seed, origin, gravity = 1.4, count = 2
                 <>
                   <path d={polyPath(s.points)} fill={s.fill} stroke={INK} strokeWidth={size * 0.12} strokeLinejoin="miter" />
                   <path d={polyPath(s.facet)} fill={INK} />
+                  <path d={s.hatch} fill={INK} />
                 </>
               )}
             </g>
