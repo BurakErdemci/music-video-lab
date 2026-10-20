@@ -59,13 +59,14 @@ const SEGMENTS: { from: number; label: string }[] = [
 // In the film the anchors are { beat } or { word }.
 const DUOTONE = gradeCues(
   [
-    { at: { frame: 480 }, grade: 'V', hold: 8 },
-    { at: { frame: 496 }, grade: 'GOLD', hold: 8 },
-    { at: { frame: 512 }, grade: 'MEMORY', hold: 14 },
-    { at: { frame: 1024 }, grade: 'V', hold: 6 },
-    { at: { frame: 1040 }, grade: 'O', hold: 8 },
-    { at: { frame: 1056 }, grade: 'POSTER', hold: 2 },
-    { at: { frame: 1068 }, grade: 'GOLD', hold: 4 },
+    // With the backdrop switches at 480 and 1020, each run keeps to 3 swings in any 30 frames.
+    { at: { frame: 482 }, grade: 'V', hold: 8 },
+    { at: { frame: 512 }, grade: 'GOLD' },
+    { at: { frame: 522 }, grade: 'MEMORY', hold: 6 },
+    { at: { frame: 1024 }, grade: 'V' },
+    { at: { frame: 1040 }, grade: 'O' },
+    { at: { frame: 1056 }, grade: 'POSTER' },
+    { at: { frame: 1068 }, grade: 'GOLD' },
   ],
   'gallery grades',
 );
@@ -74,7 +75,7 @@ const DUOTONE = gradeCues(
 // grades, impact flashes and the backdrop switches (paper / painting / office, TimeRemap jumps).
 const BACKDROP_SWITCHES = [360, 480, 620, 690, 810, 870, 960, 990, 1020];
 assertFlashBudget(
-  [...duotoneSwings(DUOTONE), ...impactSwings(190, 2), ...impactSwings(214, 1), ...BACKDROP_SWITCHES.map((frame) => ({ frame, swings: 1 }))],
+  [...duotoneSwings(DUOTONE), ...impactSwings(190, 2), ...impactSwings(220, 1), ...BACKDROP_SWITCHES.map((frame) => ({ frame, swings: 1 }))],
   'VfxGallery',
 );
 
@@ -160,7 +161,7 @@ const impactsOf = (m: (typeof METEORS)[number]) => m.start + METEOR_TRAVEL;
 const SHAKES = [
   { start: 52, strength: 22, seed: 1 },
   { start: 190, strength: 34, seed: 2 },
-  { start: 214, strength: 20, seed: 3 },
+  { start: 220, strength: 20, seed: 3 },
   { start: 238, strength: 18, seed: 4 },
   ...METEORS.map((m, i) => ({ start: impactsOf(m), strength: m.size * 0.5, seed: 10 + i })),
 ];
@@ -223,7 +224,8 @@ const GalleryScene = () => {
       {/* 5. Impacts */}
       <ImpactBurst frame={frame - 190} duration={14} seed={51} x={960} y={560} size={260} flash={2} />
       <InkSplash frame={frame - 192} duration={40} seed={52} x={960} y={560} size={200} fade={6} />
-      <ImpactBurst frame={frame - 214} duration={12} seed={53} x={1380} y={440} size={180} flash={1} />
+      {/* 30 frames after the first burst: its 3 swings fill that second. */}
+      <ImpactBurst frame={frame - 220} duration={12} seed={53} x={1380} y={440} size={180} flash={1} />
       {/* 6. Debris: a ground burst, then an all-round burst */}
       <ImpactBurst frame={frame - 238} duration={8} seed={61} x={960} y={880} size={150} flash={0} />
       <Shards frame={frame - 238} duration={46} seed={61} origin={[960, 880]} spread={Math.PI * 0.9} speed={40} size={64} count={34} />

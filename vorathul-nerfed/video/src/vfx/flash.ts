@@ -1,6 +1,7 @@
 // Photosensitivity budget (contract: at most 3 flashes in any 1-second window) and the grade
-// cue-list builder (storyboard 2, N10). A flash is a pair of opposing large luminance swings, so
-// the budget is counted in swings: at most 6 swings in any `fps`-frame window.
+// cue-list builder (storyboard 2, N10). Strict counting, the same rule as tools/flashcheck.py's
+// default: every large luminance swing is one flash, so at most 3 swings in any `fps`-frame window.
+// (Counting a flash as a PAIR of swings allowed 6, and the gallery built that way failed flashcheck.)
 import type { DuotoneCue } from './DuotoneFlash.tsx';
 import { beatFrame, f, FPS, word } from '../timing.ts';
 import { GOLD, INK, IVORY, VIOLET } from './style.tsx';
@@ -22,7 +23,7 @@ export const flashRate = (swings: readonly Swing[], fps = FPS): { maxSwingsPerSe
     for (let j = i; j < s.length && (s[j] as Swing).frame < (s[i] as Swing).frame + fps; j++) sum += (s[j] as Swing).swings;
     max = Math.max(max, sum);
   }
-  return { maxSwingsPerSecond: max, flashesPerSecond: max / 2, ok: max <= MAX_FLASHES_PER_SECOND * 2 };
+  return { maxSwingsPerSecond: max, flashesPerSecond: max, ok: max <= MAX_FLASHES_PER_SECOND };
 };
 
 /** Throws when the swings exceed the budget; call it where the schedule is built, like timing.ts's helpers. */

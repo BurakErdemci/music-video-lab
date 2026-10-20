@@ -45,12 +45,12 @@ export { CrackGrow, crackGraph, crackStep, type CrackGrowProps, type CrackSegmen
 export { TimeRemap, fastForward, playBetween, type TimeRemapProps, type FrameMap } from './TimeRemap.tsx';
 
 /**
- * Photosensitivity (contract: at most 3 flashes in any 1-second window; a flash = two opposing
- * large luminance swings, so the budget is 6 swings per second).
+ * Photosensitivity (contract: at most 3 flashes in any 1-second window, strict counting as in
+ * tools/flashcheck.py: every large luminance swing is one flash, so 3 swings per second).
  * - ImpactBurst `flash` = 0-3 frames; one burst costs flash + 1 swings (impactSwings). Default 2
- *   = 3 swings: two flashing bursts within one second already use the whole budget.
+ *   = 3 swings: one flashing burst uses the whole second.
  * - DuotoneFlash: every cue change is one swing (duotoneSwings). A 1-frame grade and its return
- *   are 2 swings = one flash.
+ *   are 2 swings.
  * - gradeCues() builds cues from { beat } / { word } / { frame } anchors with GRADES presets
  *   (V, O, O_SOFT, P, POSTER, GOLD, M, MEMORY) and throws if its own cues break the budget.
  * - Shots combine sources: collect every swing of a shot (grades, impact flashes, hard cuts
