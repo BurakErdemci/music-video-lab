@@ -17,7 +17,10 @@ import { RIG, RIG_JSON } from '../video/src/rig/model.ts';
 import { pipeGeom } from '../video/src/rig/pipes.ts';
 import { declaredChangeFrames, isBigChange, LIMITS, prepare, rawChannelsAt, rigAt, STANDING_TY_MIN, swordInHand } from '../video/src/rig/timeline.ts';
 import { jointPointH, RIG_TESTS, sweepList, sweepState, TEST_BY_ID } from '../video/src/rig/tests.ts';
-import { FIGURE_PX, FLOOR_PX_Y, MISSING_FRAMES, RIG_STEP_FRAMES, ROOT_PX_X, WORLD_UNIT } from '../video/src/rig/constants.ts';
+import { FIGURE_PX, FLOOR_PX_Y, ROOT_PX_X, WORLD_UNIT } from '../video/src/rig/constants.ts';
+import { pipeTiming } from '../video/src/rig/pipes.ts';
+
+const MISSING_FRAMES = pipeTiming(30).missing; // the rig test compositions run at 30 fps
 
 const args = process.argv.slice(2);
 const flag = (n) => args.includes(`--${n}`);
@@ -190,7 +193,34 @@ const numeric = () => {
   const total = [...intervals.entries()].reduce((s, [k, v]) => s + k * v, 0);
   const cnt = [...intervals.values()].reduce((s, v) => s + v, 0);
   const fps = cnt ? (30 * cnt) / total : 0;
-  row('H', 'cadence: distinct rig poses per second during transitions', `${f2(fps, 1)} fps (intervals: ${iv})`, `${30 / RIG_STEP_FRAMES} (true twos, section 9; the 12 of table 6.2 is superseded)`, Math.abs(fps - 30 / RIG_STEP_FRAMES) < 0.5);
+  row('H', 'cadence: distinct rig poses per second during transitions (default: on ones)', `${f2(fps, 1)} fps (intervals: ${iv})`, '30 (every frame; Burak 20 Oct, was 15 on twos)', Math.abs(fps - 30) < 0.5);
+  {
+    // opt-in stepped cadence: a timeline with step 2 must still land exactly on the arrival frame and move every 2nd frame
+    const base = TEST_BY_ID.get('RigTurntable');
+    const T2 = { ...base, tl: { ...base.tl, step: 2 } };
+    const js = stepFrames(T2, (st) => JSON.stringify([st.ch, st.sword.ground, st.sword.attach, st.seated]));
+    const pr2 = prepare(RIG, T2.tl);
+    const iv2 = new Map();
+    pr2.keys.forEach((k, j) => {
+      if (j === 0 || k.cut) return;
+      const inside = js.filter((n) => n >= pr2.starts[j] && n <= k.at);
+      for (let i = 1; i < inside.length; i++) iv2.set(inside[i] - inside[i - 1], (iv2.get(inside[i] - inside[i - 1]) ?? 0) + 1);
+    });
+    const t2 = [...iv2.entries()].reduce((acc, [k, v]) => acc + k * v, 0);
+    const c2 = [...iv2.values()].reduce((acc, v) => acc + v, 0);
+    const arrive = pr2.keys.slice(1).every((k, j) => JSON.stringify(rigAt(RIG, T2.tl, k.at).ch) === JSON.stringify(rigAt(RIG, base.tl, k.at).ch));
+    row('H-step2', 'opt-in cadence: Timeline.step = 2 gives 15 poses per second and still arrives exactly on every key', `${f2(c2 ? (30 * c2) / t2 : 0, 1)} fps, exact arrival ${arrive}`, '15 and exact', c2 > 0 && Math.abs((30 * c2) / t2 - 15) < 0.5 && arrive);
+    // fps independence: the same timeline authored at 60 fps (frames doubled) gives the same state at the same instant
+    const dbl = (n) => n * 2;
+    const tl60 = { fps: 60, keys: base.tl.keys.map((k) => ({ ...k, at: dbl(k.at), dur: dbl(k.dur) })), life: { scale: 0 } };
+    const tl30 = { ...base.tl, life: { scale: 0 } };
+    let worstDiff = 0;
+    for (const n of [100, 150, 160, 170, 200, 250, 320, 400, 470]) {
+      const a1 = rigAt(RIG, tl30, n).ch, a2 = rigAt(RIG, tl60, dbl(n)).ch;
+      for (const k of Object.keys(a1)) if (typeof a1[k] === 'number') worstDiff = Math.max(worstDiff, Math.abs(a1[k] - a2[k]));
+    }
+    row('fps', 'fps independence: a 30 fps timeline and its 60 fps (frames doubled) twin agree at the same instants', `max channel difference ${worstDiff.toExponential(2)}`, '< 1e-9', worstDiff < 1e-9);
+  }
   row('F-state', 'popping (state level): texture/visibility/z changes outside the declared event frames', `${undeclared} undeclared`, '0', undeclared === 0, undeclaredList.join('; '));
 
   // K (state level, life on): one deletion at a time
