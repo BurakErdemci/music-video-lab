@@ -18,5 +18,17 @@
       "stil/onayli/02-kanonik-karakter-sayfasi.jpg"
     ],
     "out": "stil/prompts/a-canonical-fix/out/office-frame.png"
+  },
+  {
+    "id": "office-plate",
+    "prompt": "stil/prompts/a-canonical-fix/office-plate.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/onayli/07-ofis-tablo.jpg"
+    ],
+    "out": "stil/prompts/a-canonical-fix/out/office-plate.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png"
+    ]
   }
 ]

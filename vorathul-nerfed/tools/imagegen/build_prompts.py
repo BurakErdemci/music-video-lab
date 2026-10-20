@@ -307,6 +307,26 @@ def office_frame_prompt():
     return head + "\n\n" + body
 
 
+# The office-frame run came back with a 3:2 painting although its prompt asked for 16:9 twice (20 Oct 2026).
+# The plate leaves the wall empty instead: the 16:9 frame and the live painting are drawn in code on top.
+def office_plate_prompt():
+    head = LINE1.format(id="office-plate")
+    body = (
+        "Two images are attached. The FIRST is the approved OFFICE scene; the SECOND is its earlier version. "
+        "Draw the SAME office room with EXACTLY the FIRST image's art style, palette, line weight, camera angle "
+        "and layout: flat vector illustration, thin uniform lines, greys #E9ECEF / #CED4DA / #ADB5BD, white, one "
+        "UI blue #3B82F6, sterile and calm.\n\n"
+        "Subject: the EMPTY office. CHANGES: (1) remove the framed painting completely; where it hung, the back "
+        "wall is plain, flat, empty light grey, with nothing on it in a wide horizontal area across the upper "
+        "middle of the wall (no frame, no shadow, no hooks, no notes, no posters there). (2) remove ALL people: "
+        "no developer in the middle, no person at the left desk, no person at the right desk; the two desks, "
+        "monitors, chairs, shelves, plants, ceiling lights and window stay exactly where they are, chairs empty.\n\n"
+        "Composition: same framing as the FIRST image, landscape; the empty wall area is the visual centre.\n\n"
+        "ABSOLUTELY NO text, letters, numbers or logos. No pink, no magenta, no gold, no violet anywhere. "
+        "No photorealism, no 3D rendering, no gradients beyond the flat greys.\n\n" + LAST)
+    return head + "\n\n" + body
+
+
 # ---------------------------------------------------------------- write rounds
 def write_round(name, entries):
     d = OUT / name
@@ -335,7 +355,8 @@ def main():
     rounds = {}
     rounds["a-canonical-fix"] = [
         dict(id=CANON_ID, text=canon_prompt(), refs=[REF_STYLE, REF_CANON_OLD, REF_WING]),
-        dict(id="office-frame", text=office_frame_prompt(), refs=[REF_OFFICE, REF_STYLE, REF_CANON_OLD])]
+        dict(id="office-frame", text=office_frame_prompt(), refs=[REF_OFFICE, REF_STYLE, REF_CANON_OLD]),
+        dict(id="office-plate", text=office_plate_prompt(), refs=[REF_OFFICE_NEW, REF_OFFICE])]
     b_ids = ["G15", "G16", "G17", "G18", "G11", "G42", "G43", "G44", "G45", "G32"]
     rounds["b-test"] = [asset_entry(g) for g in b_ids]
     rig = {sid: (size, subj, parts) for sid, size, subj, parts in RIG_SHEETS}

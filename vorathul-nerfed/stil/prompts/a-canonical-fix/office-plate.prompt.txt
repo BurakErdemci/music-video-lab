@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./office-plate.png
+
+Two images are attached. The FIRST is the approved OFFICE scene; the SECOND is its earlier version. Draw the SAME office room with EXACTLY the FIRST image's art style, palette, line weight, camera angle and layout: flat vector illustration, thin uniform lines, greys #E9ECEF / #CED4DA / #ADB5BD, white, one UI blue #3B82F6, sterile and calm.
+
+Subject: the EMPTY office. CHANGES: (1) remove the framed painting completely; where it hung, the back wall is plain, flat, empty light grey, with nothing on it in a wide horizontal area across the upper middle of the wall (no frame, no shadow, no hooks, no notes, no posters there). (2) remove ALL people: no developer in the middle, no person at the left desk, no person at the right desk; the two desks, monitors, chairs, shelves, plants, ceiling lights and window stay exactly where they are, chairs empty.
+
+Composition: same framing as the FIRST image, landscape; the empty wall area is the visual centre.
+
+ABSOLUTELY NO text, letters, numbers or logos. No pink, no magenta, no gold, no violet anywhere. No photorealism, no 3D rendering, no gradients beyond the flat greys.
+
+After copying, print the output path and pixel size.
