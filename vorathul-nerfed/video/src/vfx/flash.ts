@@ -33,10 +33,15 @@ export const assertFlashBudget = (swings: readonly Swing[], label: string, fps =
 };
 
 /**
- * Every cue change counts as one swing. Conservative on purpose: a hard two-colour grade changes
- * most pixels even when the frame's mean luminance barely moves, so mean-luminance tests undercount.
+ * Every palette change counts as one swing. Conservative on purpose: a hard two-colour grade
+ * changes most pixels even when the frame's mean luminance barely moves. A cue that keeps the
+ * same two colours and only changes detail (halftone, outline) is not a swing.
  */
-export const duotoneSwings = (cues: readonly DuotoneCue[]): Swing[] => cues.map((c) => ({ frame: c.frame, swings: 1 }));
+export const duotoneSwings = (cues: readonly DuotoneCue[]): Swing[] =>
+  cues.filter((c, i) => {
+    const prev = cues[i - 1];
+    return !(prev?.colors && c.colors && prev.colors[0] === c.colors[0] && prev.colors[1] === c.colors[1]);
+  }).map((c) => ({ frame: c.frame, swings: 1 }));
 
 /**
  * Swings caused by one ImpactBurst with `flash` frames (0-3): in, each change between the
@@ -47,14 +52,19 @@ export const impactSwings = (frame: number, flash: number): Swing[] => (flash > 
 /** Palette presets of storyboard 2 §3 (P painting = null: back to the ungraded picture). */
 export const GRADES = {
   V: { colors: [INK, VIOLET], hard: true },
-  O: { colors: ['#ADB5BD', '#FFFFFF'], hard: true },
-  O_SOFT: { colors: ['#ADB5BD', '#FFFFFF'], hard: false },
+  // Office drains his world: dark grey ink stays readable, mid-tones become a fine dot screen.
+  O: { colors: ['#495057', '#E9ECEF'], hard: true, halftone: 7 },
+  // O plus a thin UI-blue selection edge around the darkest shapes.
+  O_B: { colors: ['#495057', '#E9ECEF'], hard: true, halftone: 7, outline: '#3B82F6' },
+  // MEMORY's soft inverted two-tone in office colours: a white figure on a pale UI-blue field.
+  O_C: { colors: ['#FFFFFF', '#A5C4F8'], hard: false },
+  O_SOFT: { colors: ['#495057', '#E9ECEF'], hard: false, halftone: 7, mix: 0.5 },
   P: { colors: null, hard: false },
   POSTER: { colors: [INK, IVORY], hard: true },
   GOLD: { colors: [INK, GOLD], hard: true },
   M: { colors: [INK, '#E0129A'], hard: true },
   MEMORY: { colors: [IVORY, '#8EC5E8'], hard: false },
-} as const satisfies Record<string, { colors: readonly [string, string] | null; hard: boolean }>;
+} as const satisfies Record<string, { colors: readonly [string, string] | null; hard: boolean; halftone?: number; mix?: number; outline?: string }>;
 export type GradeName = keyof typeof GRADES;
 
 /** Where a grade starts: a beat index, a measured word, a measured hit time, or a frame computed elsewhere. */
@@ -77,8 +87,8 @@ export const gradeCues = (steps: readonly GradeStep[], label = 'grade cues'): Du
   const cues: DuotoneCue[] = [];
   const placed = steps.map((s) => ({ ...s, frame: anchorFrame(s.at) })).sort((a, b) => a.frame - b.frame);
   placed.forEach((s, i) => {
-    const g = GRADES[s.grade];
-    cues.push({ frame: s.frame, colors: g.colors ? [g.colors[0], g.colors[1]] : null, hard: g.hard });
+    const g: { colors: readonly [string, string] | null; hard: boolean; halftone?: number; mix?: number; outline?: string } = GRADES[s.grade];
+    cues.push({ frame: s.frame, colors: g.colors ? [g.colors[0], g.colors[1]] : null, hard: g.hard, halftone: g.halftone, mix: g.mix, outline: g.outline });
     // A hold that reaches the next step is dropped: the next grade replaces this one directly.
     const next = placed[i + 1];
     if (s.hold !== undefined && (!next || next.frame > s.frame + s.hold)) cues.push({ frame: s.frame + s.hold, colors: null });
