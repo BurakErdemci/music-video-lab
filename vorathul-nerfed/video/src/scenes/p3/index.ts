@@ -4,15 +4,17 @@ import type { ComponentType } from 'react';
 import { PART_RANGES, type Shot } from '../../film/shot.ts';
 import { S46, S47, S48, S49, S50, S51, S52, S53 } from './Chorus1.tsx';
 import { at } from './events.ts';
+import { S54, S55, S56, S57, S58, S59, S60, S61 } from './Verse2.tsx';
 
 const ORDER: [string, ComponentType<{ frame: number }>][] = [
   ['S46', S46], ['S47', S47], ['S48', S48], ['S49', S49], ['S50', S50], ['S51', S51], ['S52', S52], ['S53', S53],
+  ['S54', S54], ['S55', S55], ['S56', S56], ['S57', S57], ['S58', S58], ['S59', S59], ['S60', S60], ['S61', S61],
 ];
 
 export const SHOTS: Shot[] = ORDER.map(([id, Component], i) => {
   const next = ORDER[i + 1];
   const from = at(`${id.toLowerCase()}-cut`);
-  const to = next ? at(`${next[0].toLowerCase()}-cut`) : at('s54-cut');
+  const to = next ? at(`${next[0].toLowerCase()}-cut`) : at('s62-cut');
   return { id, from, to, Component };
 });
 
