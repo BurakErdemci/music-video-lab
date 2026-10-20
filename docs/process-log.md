@@ -131,3 +131,56 @@ Each entry is: what we did → what we measured → what a human saw → the les
   steam, blink). The camera and the world carry the motion. Burak's pen idea becomes a motif: the AI is drawn, erased and
   redrawn by an invisible pen ("her sabah baştan").
 - Lesson: measurements of geometry (bone length, silhouette, slip) say nothing about whether acting reads as human.
+
+## 2026-10-19/20 · Living-illustration test, then part 1 (0:00–0:58)
+
+- The 15-second living-illustration test (drawn poses, multiplane Three.js camera, the pen drawing the AI) was the first
+  character work Burak accepted ("gayet iyi, buradan gidebiliriz"). Gemini still called it a "motion comic" (6.5/10);
+  its concrete notes (a two-pose wave flickers, a pop-in with no motivation) were right and fixed in part 1.
+- Part 1 v1 (intro reused + verse 1 + pre-chorus 1): Burak "çok başarılı, kitap kısmı harika". His bug frames found
+  what no check measured: a 3/4 desk in a side-view room (the desk floats), a head turning without the body, a mug held
+  by its body instead of its handle.
+- Part 1 v2 fixed only those (plus bigger icons and captions, a bounce when the notebook lands, a line shimmer while
+  reading) and was approved: "perfecto ... en sevdiğim yer kitap kısmı".
+- Lessons, now written into every production brief: one perspective per set; turns are whole-body (head ≤ 30° from the
+  torso); grips must be physical; a careful viewer's defect is a defect even when every measurement passes. The favourite
+  part (the notebook pages) is the most "motion design" one: flat close-ups, cuts on the sung words, ink lifting off paper.
+- Tool note: the jump scanner reports FAIL when a deliberate cut happens during a camera move (the cut is softer than its
+  threshold). Not a defect of the film; the checker is being taught to tell "listed soft cut" from an unlisted spike.
+
+## 2026-10-20 (night) · Parts 2 and 3 in parallel
+
+- To fit the night, parts 2 and 3 were built by two lanes at the same time. The architect fixed the hand-over in advance
+  (part 2 ends on one yellow torch dot at a given pixel; part 3 opens it as the sun), so neither lane waited for the other.
+  Measured seams: part 1→2 mean difference 1.3 (lane) / 3.8 (architect, other frame pairing) — grain and codec noise only,
+  no doubled edges; part 2→3 1.8–4.4.
+- Part 2 ("bir daha"): the tally wall, the mug tower and the sinking posture carry the repetition; Gemini 9.3/10, no
+  anatomy or glitch notes. Known weak spot: the image model keeps shrinking the head when the arms go up (stretch pose,
+  six tries) — left as is, scaled by the chair.
+- Part 3: Gemini 6.5/10 and "no anatomy problems" — but the architect's full-size look found two floating cut-off torsos at
+  the café, a magenta key fringe on a hair outline, and a reflection that read as a person sitting inside the bus. Gemini's
+  own useful note was pacing (a wave holding too long). One narrow fix round fixed all five; the fringe now has a
+  measurable check (magenta-ish pixels inside the alpha edge = 0).
+- Render note: at `--concurrency=4` Chrome sometimes captures a corrupted frame (top-left third tiled 3x3), a different
+  frame each run, clean when rendered alone; more often while another render runs. Every render is now scanned and the
+  bad frames re-rendered singly and spliced back (`video/src/living/part3/repair.mjs`).
+- Lesson: an automated watcher's "no anatomy errors" is not a pass. Look at every new set at full size for crop edges,
+  key fringes and which plane a figure is in.
+
+## 2026-10-20 (night) · Part 4 and the first whole film
+
+- Part 4 (solo, final chorus, coda, reset) was built in two halves (4a 4676–6395, 4b 6396–7222) so each could be
+  rendered and fixed on its own; both halves start on a deliberate hard cut, so they need no seam work.
+- Code carried the biggest moments: the run is a time-slice of drawn poses with flips and cracks; the flood is an ink
+  wave; the glass shatters into 72 real Three.js shards textured with the scene; the last frame is pixel-identical to
+  part 1's first living frame, so the film loops.
+- Gemini 8.5/10 for both halves, no anatomy or glitch notes; its useful notes were two 6–8 s holds that read as paused
+  frames and a static reset room. The architect added: the "white" reset was a neutral grey outside the palette. One
+  fix round: breath/sway/blink + a continuous camera push through every hold, both palms flat on the glass for
+  "bir daha" (two new drawings, both accepted first try), a cream reset haze, her "Merhaba." typed on the sung word.
+- Assembly: the whole film is joined from the verified part renders by `video/scripts/assemble-parts.sh` (cuts at song
+  frames 1706, 3340, 4676, 6396; the song laid under in one piece) instead of re-rendering 7223 frames — a re-render
+  would bring back Chrome's random corrupted frames that the part renders already had repaired. 7223 frames,
+  240.77 s; all four seams checked frame by frame.
+- Lesson: in a parallel build, the architect writes the hand-over frames into both briefs before the lanes start; the
+  lanes then never need to talk to each other.
