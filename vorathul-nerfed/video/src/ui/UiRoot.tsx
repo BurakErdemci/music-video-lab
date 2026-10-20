@@ -8,7 +8,15 @@ import { ProgressSun } from './ProgressSun.tsx';
 import { RevertDialog } from './RevertDialog.tsx';
 import { SkipButton } from './SkipButton.tsx';
 import { StickyNote } from './StickyNote.tsx';
+import { dryBrushOutline } from '../vfx/effects.ts';
+import { BossNameplate } from './BossNameplate.tsx';
+import { ForumCard, Poster } from './Cards.tsx';
+import { Marquee, Padlock, Toggle } from './Controls.tsx';
+import { Desktop, Monitor, WindowStack } from './Desktop.tsx';
+import { DamageNumber, Nameplate, TicketPill } from './Labels.tsx';
+import { RubberStamp } from './RubberStamp.tsx';
 import { C, UI_FONT, UiFonts } from './theme.tsx';
+import { VideoTimeline } from './VideoTimeline.tsx';
 import { TypingText } from './TypingText.tsx';
 import { VolumeSlider } from './VolumeSlider.tsx';
 
@@ -95,8 +103,86 @@ const PageFour: React.FC = () => {
       <TypingText frame={frame} x={40} y={330} width={840} text="Patch 2.6 notes:" startFrame={6} framesPerChar={3} cutAtFrame={82} />
       <div style={{ position: 'absolute', left: 900, top: 200, width: 960, height: 640, overflow: 'hidden', border: `2px solid ${C.dark}`, borderRadius: 6 }}>
         <Img src={staticFile('01-tarz-cizgi-roman.jpg')} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-        <ProgressSun frame={frame} variant="comic" x={50} y={0} width={860} from={4} to={100} startFrame={6} durationFrames={70} />
+        <ProgressSun frame={frame} variant="comic" renderOutline={dryBrushOutline({ taper: 0.3 })} x={50} y={0} width={860} from={4} to={100} startFrame={6} durationFrames={70} />
       </div>
+    </AbsoluteFill>
+  );
+};
+
+const PageFive: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill>
+      <Caption>RubberStamp (tear) / Nameplate / DamageNumber / TicketPill / Toggle / Padlock / Marquee</Caption>
+      <RubberStamp frame={frame} x={70} y={170} width={640} at={8} tearAt={92} rotate={-8} />
+      <Nameplate frame={frame} x={80} y={470} width={340} text="LV 12" appearAt={10} />
+      <DamageNumber frame={frame} x={560} y={540} text="-1" at={30} color={C.ink} />
+      <DamageNumber frame={frame} x={680} y={540} text="-1" at={42} color={C.ink} />
+      <DamageNumber frame={frame} x={840} y={540} text="MISS" at={56} size={84} />
+      <TicketPill frame={frame} x={80} y={640} width={230} text="#47" appearAt={24} />
+      <TicketPill frame={frame} x={340} y={640} width={230} text="#48" appearAt={32} />
+      <TicketPill frame={frame} x={600} y={640} width={230} text="#49" appearAt={40} />
+      <Toggle frame={frame} x={900} y={170} width={640} flipAt={64} />
+      <Padlock frame={frame} x={1640} y={150} width={150} appearAt={14} clampAt={46} />
+      <div style={{ position: 'absolute', left: 900, top: 340, width: 940, height: 640, borderRadius: 18, background: C.white, border: `2px solid ${C.dark}` }}>
+        {[0, 1, 2, 3, 4, 5].map((i) => (
+          <div key={i} style={{ position: 'absolute', left: 60 + (i % 3) * 280, top: 70 + Math.floor(i / 3) * 280, width: 200, height: 200, borderRadius: 16, background: C.bg, border: `2px solid ${C.mid}` }} />
+        ))}
+        <Marquee frame={frame} from={{ x: 30, y: 30, w: 10, h: 10 }} to={{ x: 30, y: 30, w: 600, h: 520 }} startFrame={20} durationFrames={40} stroke={5} />
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+const PageSix: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill>
+      <Caption>ForumCard / Poster</Caption>
+      <ForumCard frame={frame} x={60} y={160} width={760} popAt={6} title="bring back phase 3" votes={214} replies={38} rotate={-1} />
+      <ForumCard frame={frame} x={60} y={450} width={760} popAt={18} title="boss is a tutorial now 2/10" votes={873} replies={120} rotate={1} author="gamer_77" />
+      <ForumCard frame={frame} x={60} y={740} width={760} popAt={30} title="#UnnerfVorathul" votes={1500} replies={402} rotate={-1} author="mod_team" />
+      <Poster frame={frame} x={940} y={190} width={400} popAt={14} lines={['WE WANT', 'VORATHUL']} rotate={-3} />
+      <Poster frame={frame} x={1400} y={260} width={400} popAt={26} lines={['UNNERF', 'PHASE 3']} rotate={3} />
+    </AbsoluteFill>
+  );
+};
+
+const PageSeven: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill>
+      <Caption>VideoTimeline (x16, hold to skip) / Desktop + RecycleBin / WindowStack</Caption>
+      <VideoTimeline frame={frame} x={60} y={130} width={1800} progressTo={1} startFrame={6} durationFrames={90} ffAt={30} holdAt={60} holdFrames={30} />
+      <Desktop frame={frame} x={60} y={330} width={880} burstAt={86} />
+      <WindowStack frame={frame} x={1000} y={340} width={860} popAt={8} />
+    </AbsoluteFill>
+  );
+};
+
+const PageEight: React.FC = () => {
+  const frame = useCurrentFrame();
+  return (
+    <AbsoluteFill>
+      <Caption>Monitor (his eye fills it) + RevertDialog / system dialog / BossNameplate</Caption>
+      <Monitor x={60} y={100} width={1000} screen={C.black}>
+        <div style={{ position: 'absolute', left: -40, top: 250, width: 1280, height: 170, borderRadius: '50%', background: '#9B5CE0' }} />
+        <RevertDialog frame={frame} x={300} y={200} width={600} enterAt={4} approachAt={10} pressAt={70} tremble seed={4} />
+      </Monitor>
+      <RevertDialog
+        frame={frame}
+        x={1100}
+        y={260}
+        width={720}
+        enterAt={10}
+        approachAt={20}
+        pressAt={74}
+        title="Unsaved changes"
+        body="Are you sure?"
+        confirmLabel="Discard"
+        cancelLabel="Stay"
+      />
+      <BossNameplate frame={frame} x={0} y={830} slamAt={30} outAt={80} />
     </AbsoluteFill>
   );
 };
@@ -108,9 +194,13 @@ export const UiKitGallery: React.FC = () => (
     <Sequence from={120} durationInFrames={120}><PageTwo /></Sequence>
     <Sequence from={240} durationInFrames={120}><PageThree /></Sequence>
     <Sequence from={360} durationInFrames={90}><PageFour /></Sequence>
+    <Sequence from={450} durationInFrames={120}><PageFive /></Sequence>
+    <Sequence from={570} durationInFrames={120}><PageSix /></Sequence>
+    <Sequence from={690} durationInFrames={120}><PageSeven /></Sequence>
+    <Sequence from={810} durationInFrames={90}><PageEight /></Sequence>
   </AbsoluteFill>
 );
 
 export const UiRoot: React.FC = () => (
-  <Composition id="UiKitGallery" component={UiKitGallery} durationInFrames={450} fps={30} width={1920} height={1080} />
+  <Composition id="UiKitGallery" component={UiKitGallery} durationInFrames={900} fps={30} width={1920} height={1080} />
 );

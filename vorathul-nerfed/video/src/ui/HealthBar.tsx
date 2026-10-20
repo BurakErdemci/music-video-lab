@@ -1,6 +1,6 @@
 import React from 'react';
 import { Cursor } from './Cursor.tsx';
-import { type BoxProps, C, easeInOut, LINE, lerp, prog, Scaled } from './theme.tsx';
+import { type BoxProps, C, easeInOut, LINE, lerp, numFrame, prog, Scaled } from './theme.tsx';
 
 export interface HealthBarProps extends BoxProps {
   frame: number;
@@ -56,7 +56,7 @@ export const HealthBar: React.FC<HealthBarProps> = ({
       <div style={{ position: 'relative', width: W, height: H }}>
         <div style={{ position: 'absolute', left: 0, top: 4, right: 0, display: 'flex', alignItems: 'baseline', justifyContent: 'space-between' }}>
           <div style={{ fontSize: 36, fontWeight: 800, color: C.ink, letterSpacing: 1.5 }}>{label}</div>
-          {showValue ? <div style={{ fontSize: 30, fontWeight: 700, color: C.slate }}>{Math.round(value)}%</div> : null}
+          {showValue ? <div style={{ fontSize: 30, fontWeight: 700, color: C.slate }}>{Math.round(lerp(from, to, easeInOut(prog(numFrame(frame, startFrame + durationFrames), startFrame, durationFrames))))}%</div> : null}
         </div>
         <div
           style={{

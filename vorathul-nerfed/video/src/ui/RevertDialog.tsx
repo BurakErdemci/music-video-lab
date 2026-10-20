@@ -17,6 +17,8 @@ export interface RevertDialogProps extends BoxProps {
   seed?: number;
   /** Fade the dialog out this many frames after the press (0 = stays). */
   closeAfter?: number;
+  confirmLabel?: string;
+  cancelLabel?: string;
 }
 
 const W = 900;
@@ -65,6 +67,8 @@ export const RevertDialog: React.FC<RevertDialogProps> = ({
   tremble = false,
   seed = 5,
   closeAfter = 0,
+  confirmLabel = 'Revert',
+  cancelLabel = 'Cancel',
   ...box
 }) => {
   const enter = easeOut(prog(frame, enterAt, 8));
@@ -113,8 +117,8 @@ export const RevertDialog: React.FC<RevertDialogProps> = ({
           <div style={{ padding: '30px 50px 0', fontSize: 46, fontWeight: 800, color: C.ink }}>{title}</div>
           <div style={{ padding: '12px 50px 0', fontSize: 28, fontWeight: 500, color: C.slate }}>{body}</div>
         </div>
-        <Button r={CANCEL} label="Cancel" primary={false} pressed={false} hover={false} />
-        <Button r={REVERT} label="Revert" primary pressed={pressed} hover={hoverRevert} />
+        <Button r={CANCEL} label={cancelLabel} primary={false} pressed={false} hover={false} />
+        <Button r={REVERT} label={confirmLabel} primary pressed={pressed} hover={hoverRevert} />
         <Cursor
           frame={frame}
           path={path}

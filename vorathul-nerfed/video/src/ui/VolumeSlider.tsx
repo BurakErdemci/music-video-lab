@@ -1,5 +1,5 @@
 import React from 'react';
-import { type BoxProps, C, easeInOut, LINE, lerp, prog, Scaled } from './theme.tsx';
+import { type BoxProps, C, easeInOut, LINE, lerp, numFrame, prog, Scaled } from './theme.tsx';
 
 export interface VolumeSliderProps extends BoxProps {
   frame: number;
@@ -102,7 +102,7 @@ export const VolumeSlider: React.FC<VolumeSliderProps> = ({
         />
         {showValue ? (
           <div style={{ position: 'absolute', right: 26, top: 0, height: H, display: 'flex', alignItems: 'center', fontSize: 30, fontWeight: 700, color: muted ? C.slate : C.ink }}>
-            {muted ? 'MUTE' : Math.round(level)}
+            {muted ? 'MUTE' : Math.round(lerp(from, to, easeInOut(prog(numFrame(frame, startFrame + durationFrames), startFrame, durationFrames))))}
           </div>
         ) : null}
       </div>

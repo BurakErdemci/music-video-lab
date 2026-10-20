@@ -10,7 +10,7 @@ export interface TypingTextProps extends BoxProps {
   framesPerChar?: number;
   /** Hard cut: from this frame on nothing is drawn (can land mid-word). */
   cutAtFrame?: number;
-  /** Caret blink half-period in frames. */
+  /** Caret blink half-period in frames (floored at 5 = at most 3 flashes per second). */
   blinkFrames?: number;
   /** Draw a plain document window around the text. */
   chrome?: boolean;
@@ -33,7 +33,7 @@ export const TypingText: React.FC<TypingTextProps> = ({
   const typed = frame < startFrame ? 0 : Math.min(text.length, Math.floor((frame - startFrame) / framesPerChar) + 1);
   const sinceKey = frame - startFrame - (typed - 1) * framesPerChar;
   const typing = typed > 0 && typed < text.length && sinceKey < framesPerChar + 2;
-  const caretOn = typing || Math.floor(Math.max(0, frame - startFrame) / blinkFrames) % 2 === 0;
+  const caretOn = typing || Math.floor(Math.max(0, frame - startFrame) / Math.max(5, blinkFrames)) % 2 === 0;
   return (
     <Scaled {...box} designW={W} designH={H}>
       <div

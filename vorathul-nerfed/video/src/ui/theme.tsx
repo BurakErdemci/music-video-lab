@@ -20,8 +20,13 @@ export const C = {
 
 export const UI_FONT = "'UiInter', 'Inter', system-ui, sans-serif";
 export const MONO_FONT = "'UiPlexMono', monospace";
+export const ANTON_FONT = "'UiAnton', 'Anton', Impact, sans-serif";
 /** Uniform office outline width in design units. */
 export const LINE = 2;
+
+/** Contract: no count-up or blink faster than 3 changes per second (30 fps) -> numbers update every 10 frames. */
+export const NUM_STEP = 10;
+export const numFrame = (frame: number, endFrame: number): number => (frame >= endFrame ? frame : Math.floor(frame / NUM_STEP) * NUM_STEP);
 
 export const clamp01 = (v: number): number => Math.min(1, Math.max(0, v));
 /** 0..1 progress of `frame` through [start, start+dur]. */
@@ -69,13 +74,14 @@ export const pathAt = (frame: number, path: Keyframe[]): { x: number; y: number 
 
 const fontCss = (): string => `
 @font-face { font-family: 'UiInter'; src: url('${staticFile('fonts/Inter-Variable.ttf')}') format('truetype'); font-weight: 100 900; font-style: normal; }
-@font-face { font-family: 'UiPlexMono'; src: url('${staticFile('fonts/IBMPlexMono-Medium.ttf')}') format('truetype'); font-weight: 500; font-style: normal; }`;
+@font-face { font-family: 'UiPlexMono'; src: url('${staticFile('fonts/IBMPlexMono-Medium.ttf')}') format('truetype'); font-weight: 500; font-style: normal; }
+@font-face { font-family: 'UiAnton'; src: url('${staticFile('fonts/Anton-Regular.ttf')}') format('truetype'); font-weight: 400; font-style: normal; }`;
 
 /** Injects the kit fonts and holds the render until they are loaded. */
 export const UiFonts: React.FC = () => {
   const [handle] = useState(() => delayRender('ui-fonts'));
   useEffect(() => {
-    Promise.all([document.fonts.load("600 20px 'UiInter'"), document.fonts.load("500 20px 'UiPlexMono'")])
+    Promise.all([document.fonts.load("600 20px 'UiInter'"), document.fonts.load("500 20px 'UiPlexMono'"), document.fonts.load("400 20px 'UiAnton'")])
       .catch(() => undefined)
       .finally(() => continueRender(handle));
   }, [handle]);

@@ -1,5 +1,5 @@
 import React, { useId } from 'react';
-import { type BoxProps, C, easeInOut, easeOut, lerp, type OutlineRenderer, prog, Scaled } from './theme.tsx';
+import { type BoxProps, C, easeInOut, easeOut, lerp, numFrame, type OutlineRenderer, prog, Scaled } from './theme.tsx';
 
 export interface ProgressSunProps extends BoxProps {
   frame: number;
@@ -29,7 +29,7 @@ const CX = W / 2;
 const RAYS = 13;
 
 const circleD = (cx: number, cy: number, r: number): string =>
-  `M${cx - r} ${cy} a${r} ${r} 0 1 0 ${2 * r} 0 a${r} ${r} 0 1 0 ${-2 * r} 0 Z`;
+  `M${cx - r} ${cy} A${r} ${r} 0 1 0 ${cx + r} ${cy} A${r} ${r} 0 1 0 ${cx - r} ${cy} Z`;
 const rectD = (x: number, y: number, w: number, h: number, r: number): string =>
   `M${x + r} ${y} H${x + w - r} Q${x + w} ${y} ${x + w} ${y + r} V${y + h - r} Q${x + w} ${y + h} ${x + w - r} ${y + h} H${x + r} Q${x} ${y + h} ${x} ${y + h - r} V${y + r} Q${x} ${y} ${x + r} ${y} Z`;
 
@@ -118,7 +118,7 @@ export const ProgressSun: React.FC<ProgressSunProps> = ({
               {label}
             </text>
             <text x={W} y={barY + BAR_H + 52} textAnchor="end" fontFamily="'UiInter', sans-serif" fontSize={32} fontWeight={800} fill={C.ink}>
-              {Math.round(value)}%
+              {Math.round(lerp(from, to, easeInOut(prog(numFrame(frame, startFrame + durationFrames), startFrame, durationFrames))))}%
             </text>
           </>
         )}
