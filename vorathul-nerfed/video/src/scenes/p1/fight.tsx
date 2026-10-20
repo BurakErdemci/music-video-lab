@@ -61,7 +61,7 @@ const S13_TL: Timeline = {
     { at: S13_WIND, pose: WIND as never, dur: 16 },
   ],
 };
-const S13_CAM = handheld(tween({ position: [5.4, 4.2, -6], target: [0.8, 7.2, -15] }, { position: [5, 4.6, -7], target: [1.2, 7.8, -15] }, { start: S13_STAB, frames: 67 }), { amp: 0.04, seed: 's13' });
+const S13_CAM = handheld(tween({ position: [5.4, 4.2, -6], target: [0.8, 7.8, -15] }, { position: [5, 4.6, -7], target: [1.2, 7.8, -15] }, { start: S13_STAB, frames: 67 }), { amp: 0.04, seed: 's13' });
 /** Freeze-hold of 4 frames on the grab (storyboard ladder): everything but the shake holds. */
 const held = (f: number) => (f >= S13_GRAB && f < S13_GRAB + 4 ? S13_GRAB : f);
 
@@ -497,7 +497,7 @@ const S18_TL: Timeline = {
 };
 // Off-axis three-quarter on a long lens from his left, trucking left; a near entrance pillar wipes across the
 // frame and reveals the combo hitting the fan.
-const S18_CAM = handheld(tween({ position: [11.5, 5.2, -0.5], target: [0, 7.4, -15], fov: 32 }, { position: [7.2, 5.6, -2.4], target: [0, 7.6, -15], fov: 32 }, { start: S18_HIT, frames: 49 }), { amp: 0.04, seed: 's18' });
+const S18_CAM = handheld(tween({ position: [11.5, 5.2, -0.5], target: [0, 7.4, -15], fov: 32 }, { position: [7.2, 5.6, -2.4], target: [0, 8.4, -15], fov: 32 }, { start: S18_HIT, frames: 49 }), { amp: 0.04, seed: 's18' });
 const S18_PILLAR: Vec3 = [8.6, 0, -5.2];
 /** G09 pass-by pillar stand-in: an ivory and gold column, ink shadow on its inner side, a carved capital. */
 const PILLAR_SVG = svgDoc(400, 2400, `<g filter="url(#k)"><rect x="60" y="0" width="280" height="2400" fill="${IVORY}"/><rect x="250" y="0" width="90" height="2400" fill="${INK}"/><rect x="60" y="0" width="40" height="2400" fill="${GOLD}"/><rect x="20" y="300" width="360" height="90" fill="${GOLD}" stroke="${INK}" stroke-width="14"/><rect x="40" y="390" width="320" height="40" fill="${INK}"/><rect x="20" y="2200" width="360" height="200" fill="${GOLD}" stroke="${INK}" stroke-width="14"/><path d="M150 450V2150M200 450V2150" stroke="${GOLD}" stroke-width="10"/></g>`, inkFilterDef('k', 1891, 10, 0.2));
