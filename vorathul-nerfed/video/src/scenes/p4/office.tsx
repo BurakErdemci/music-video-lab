@@ -6,25 +6,71 @@ import { AbsoluteFill } from 'remotion';
 import { AssetCard } from '../../cast/AssetCard.tsx';
 import { Stage, type CameraPath, type CameraPose } from '../../stage/Stage.tsx';
 import { Poster, ProgressSun, StickyNote, UiFonts } from '../../ui/kit.ts';
-import { CrackGrow, DuotoneFlash, gradeCues } from '../../vfx/effects.ts';
+import { CrackGrow, crackGraph, crackStep, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects.ts';
 import { TIMING } from '../../timing.ts';
 import { CUE, CRACK_STEPS } from './cues.ts';
-import { OFFICE_Z, PALM_UV, PLATE_CY, PLATE_H, PLATE_W, canvasBox, paintingBox, project } from './lib.ts';
+import { OFFICE_Z, PALM_UV, PLATE_CY, PLATE_H, PLATE_W, canvasBox, clamp01, paintingBox, project } from './lib.ts';
+import type { Box } from './lib.ts';
 
 export const CRACK = { seed: 21, escapeAt: 16, escapeDir: 0 } as const;
 
 const crackProps = { cues: CRACK_STEPS, seed: CRACK.seed, origin: PALM_UV, escapeAt: CRACK.escapeAt, escapeDir: CRACK.escapeDir };
 
+/**
+ * The newest crack step lights up for ten frames: light from the other side leaking through the fresh break (cool office white
+ * inside the painting, warm painted gold on the office wall), so every downbeat reads as one more step.
+ */
+const CrackGlow = ({ frame, box, color, width }: { frame: number; box: Box; color: string; width: number }) => {
+  const { step } = crackStep(frame, CRACK_STEPS);
+  if (!step) return null;
+  const age = frame - (CRACK_STEPS[step - 1] as number);
+  const a = clamp01(1 - age / 10);
+  if (a <= 0) return null;
+  const px = ([u, v]: [number, number]): [number, number] => [box[0] + u * box[2], box[1] + v * box[3]];
+  const segs = crackGraph(CRACK.seed, CRACK_STEPS.length, crackOptions).filter((s) => s.step === step);
+  return (
+    <Overlay>
+      {segs.map((s, i) => {
+        const p = px(s.a);
+        const q = px(s.b);
+        return (
+          <g key={i} strokeLinecap="round">
+            <line x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke={color} strokeWidth={width * 3.4 * (s.depth ? 0.6 : 1)} opacity={0.35 * a} />
+            <line x1={p[0]} y1={p[1]} x2={q[0]} y2={q[1]} stroke="#FFFFFF" strokeWidth={width * 1.5 * (s.depth ? 0.6 : 1)} opacity={0.9 * a} />
+          </g>
+        );
+      })}
+    </Overlay>
+  );
+};
+
+const crackOptions = { origin: PALM_UV, escapeAt: CRACK.escapeAt, escapeDir: CRACK.escapeDir };
+
 /** The crack as drawn on the canvas, seen from inside: UV maps onto the canvas rectangle projected through the camera. */
 export const InsideCracks = ({ frame, pose }: { frame: number; pose: CameraPose }) => {
   const box = canvasBox(pose);
-  return <CrackGrow frame={frame} {...crackProps} box={box} surface="inside" width={16 * (box[2] / 1920)} id="p4-crack-in" />;
+  const width = 17 * (box[2] / 1920);
+  return (
+    <>
+      <CrackGlow frame={frame} box={box} color="#BFD8FF" width={width} />
+      <CrackGrow frame={frame} {...crackProps} box={box} surface="inside" width={width} id="p4-crack-in" />
+    </>
+  );
 };
 
-/** The same crack on the painting hanging on the office wall; after the last step it runs on across the plaster. */
-export const OfficeCracks = ({ frame, pose }: { frame: number; pose: CameraPose }) => {
+/** The same crack on the painting hanging on the office wall; `layer` 'painting' sits under the wall items, 'wall' (the part that
+ *  has run out of the painting onto the plaster) over them. */
+export const OfficeCracks = ({ frame, pose, layer }: { frame: number; pose: CameraPose; layer: 'painting' | 'wall' }) => {
   const box = paintingBox(pose);
-  return <CrackGrow frame={frame} {...crackProps} box={box} surface="all" width={16 * (box[2] / 1920)} id="p4-crack-out" />;
+  const width = 17 * (box[2] / 1920);
+  return layer === 'painting' ? (
+    <>
+      <CrackGlow frame={frame} box={box} color="#E2B33C" width={width} />
+      <CrackGrow frame={frame} {...crackProps} box={box} surface="inside" width={width} id="p4-crack-out" />
+    </>
+  ) : (
+    <CrackGrow frame={frame} {...crackProps} box={box} surface="outside" width={width} id="p4-crack-wall" />
+  );
 };
 
 const O_ALWAYS = gradeCues([{ at: { frame: 0 }, grade: 'O' }], 'p4 office grade');
@@ -51,26 +97,18 @@ const at = (pose: CameraPose, x: number, y: number): [number, number] => project
 
 interface PosterSpec { x: number; y: number; w: number; rot: number; lines: string[]; popAt: number }
 const POSTERS: PosterSpec[] = [
-  { x: -9.6, y: 1.6, w: 3.0, rot: -4, lines: ['WE WANT', 'VORATHUL'], popAt: CUE.s84cut.frame },
-  { x: 9.7, y: 2.0, w: 3.0, rot: 3, lines: ['UNNERF', 'PHASE 3'], popAt: CUE.s84poster1.frame },
-  { x: -9.4, y: -3.0, w: 2.6, rot: 2, lines: ['BRING HIM', 'BACK'], popAt: CUE.s84poster2.frame },
+  { x: -7.6, y: 1.9, w: 2.3, rot: -4, lines: ['WE WANT', 'VORATHUL'], popAt: CUE.s84cut.frame },
+  { x: 7.6, y: -2.7, w: 2.3, rot: 3, lines: ['UNNERF', 'PHASE 3'], popAt: CUE.s84poster1.frame },
+  { x: -7.6, y: -2.6, w: 2.2, rot: 2, lines: ['BRING HIM', 'BACK'], popAt: CUE.s84poster2.frame },
 ];
 
+const NOTE_AT = [
+  [-5.2, 4.7, -5], [5.2, 4.8, 4], [-7.9, 4.5, 3], [-1.8, 4.8, 2], [1.8, 4.7, -3], [7.8, 4.3, -4],
+  [-4.9, -4.7, 4], [-1.5, -4.8, -2], [1.9, -4.7, 3], [5.3, -4.8, -4], [-6.1, -3.7, -3], [6.2, -3.9, 5],
+] as const;
 const TEXTS = ['REVERT', 'UNNERF', 'PHASE 3 PLS', 'BRING BACK', 'FIX IT', '#UNNERF', 'WE WAIT', 'REVERT!!', 'PHASE III', 'PLS', '1 STAR', 'UNNERF'];
-const NOTES: { x: number; y: number; rot: number; text: string; popAt: number }[] = [
-  { x: -6.1, y: 5.9, rot: -5, text: TEXTS[0] as string, popAt: CUE.s86cut.frame },
-  { x: 6.4, y: 5.8, rot: 4, text: TEXTS[1] as string, popAt: CUE.s86cut.frame + 6 },
-  { x: -8.4, y: -0.6, rot: 3, text: TEXTS[2] as string, popAt: CUE.s86cut.frame + 12 },
-  { x: -2.6, y: 6.0, rot: 2, text: TEXTS[3] as string, popAt: CUE.s86swarm.frame },
-  { x: 2.4, y: 5.95, rot: -3, text: TEXTS[4] as string, popAt: CUE.s86swarm.frame + 2 },
-  { x: 8.5, y: 0.2, rot: -4, text: TEXTS[5] as string, popAt: CUE.s86swarm.frame + 4 },
-  { x: 8.4, y: -3.4, rot: 5, text: TEXTS[6] as string, popAt: CUE.s86swarm.frame + 6 },
-  { x: -5.2, y: -5.9, rot: -2, text: TEXTS[7] as string, popAt: CUE.s86swarm.frame + 8 },
-  { x: 0.4, y: -6.0, rot: 3, text: TEXTS[8] as string, popAt: CUE.s86swarm.frame + 10 },
-  { x: 5.3, y: -5.8, rot: -4, text: TEXTS[9] as string, popAt: CUE.s86swarm.frame + 12 },
-  { x: -8.3, y: 3.6, rot: 4, text: TEXTS[10] as string, popAt: CUE.s86swarm.frame + 14 },
-  { x: 8.3, y: 4.0, rot: -3, text: TEXTS[11] as string, popAt: CUE.s86swarm.frame + 16 },
-];
+/** The first three notes land on the cut, the rest swarm in two frames apart from the swarm beat. */
+const NOTES = NOTE_AT.map(([x, y, rot], i) => ({ x, y, rot, text: TEXTS[i] as string, popAt: i < 3 ? CUE.s86cut.frame + i * 6 : CUE.s86swarm.frame + (i - 3) * 2 }));
 
 /** Beats elapsed since the petition cue: the bar climbs one step per beat. */
 const stepsSince = (frame: number, from: number): number => {
@@ -100,7 +138,7 @@ export const WallItems = ({ frame, pose }: { frame: number; pose: CameraPose }) 
       })}
       {NOTES.map((n, i) => {
         const [x, y] = at(pose, n.x, n.y);
-        const w = 2.1 * k;
+        const w = 1.9 * k;
         return <StickyNote key={i} frame={frame} slapAt={n.popAt} text={n.text} rotate={n.rot} width={w} x={x - w / 2} y={y - (w * 330) / 360 / 2} />;
       })}
     </AbsoluteFill>

@@ -57,6 +57,8 @@ const MemoryPanel = ({ frame }: { frame: number }) => {
 export const S76 = ({ frame }: { frame: number }) => {
   const z = zoomAt(frame);
   const world = camTransform(z);
+  // He rises into the shot as the camera pulls back; at the start the screen alone fills the frame.
+  const personIn = easeOut(prog(frame, CUE.s76pull.frame + 6, 18));
   const panelPx = SCREEN.w / W;
   return (
     <AbsoluteFill style={{ background: IVORY }}>
@@ -79,12 +81,10 @@ export const S76 = ({ frame }: { frame: number }) => {
           </div>
         </div>
       </div>
-      {/* G38 stand-in, in front of everything */}
-      <DuotoneFlash frame={frame} cues={O_GRADE} id="s76-person">
-        <div style={{ position: 'absolute', inset: 0, transform: world, transformOrigin: '0 0' }}>
-          <Playtester frame={frame} armsUpAt={CUE.s76arms.frame} x={640} y={330} width={760} />
-        </div>
-      </DuotoneFlash>
+      {/* G38 stand-in, in front of everything: already office-coloured, so it takes no grade (the grade fills transparency) */}
+      <div style={{ position: 'absolute', inset: 0, transform: world, transformOrigin: '0 0', opacity: personIn, translate: `0 ${(1 - personIn) * 380}px` }}>
+        <Playtester frame={frame} armsUpAt={CUE.s76arms.frame} x={640} y={330} width={760} />
+      </div>
     </AbsoluteFill>
   );
 };

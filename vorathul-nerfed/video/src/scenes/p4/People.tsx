@@ -132,7 +132,7 @@ export const DevHead = ({ frame, turnAt, turnTo = 1, spurtAt, x, y, r, seed = 3 
       ) : null}
       {spraying && spurt < 1 ? (
         <>
-          <path d={`M${fx} ${r * 0.58} Q${fx + r * (0.6 + spurt * 2.2)} ${r * (0.7 + spurt * 0.3)} ${fx + r * (1.1 + spurt * 3.4)} ${r * (0.9 + 2.4 * spurt * spurt)}`} stroke={LINE} strokeWidth={r * 0.42 * (1 - spurt)} strokeLinecap="round" fill="none" />
+          <path d={`M${fx} ${r * 0.58} Q${fx + r * (0.6 + spurt * 2.2)} ${r * (0.7 + spurt * 0.3)} ${fx + r * (1.1 + spurt * 3.4)} ${r * (0.9 + 2.4 * spurt * spurt)}`} stroke="#6C757D" strokeWidth={r * 0.34 * (1 - spurt)} strokeLinecap="round" fill="none" />
           {drops.map((d, i) => {
             const t = spurt * 0.9;
             return <circle key={i} cx={fx + Math.cos(d.a) * d.v * r * t * 1.6} cy={r * 0.6 + Math.sin(d.a) * d.v * r * t + (d.g * r * t * t) / 2} r={d.s * r * (1 - spurt * 0.5)} fill={LINE} opacity={1 - spurt * 0.6} />;

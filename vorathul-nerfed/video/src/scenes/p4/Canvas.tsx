@@ -13,14 +13,14 @@ import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog, twos 
 const DRAIN = 'saturate(0.55)';
 
 /** The hero's head while seated, for the ECU on the slit. */
-const SLIT_ECU = frameAt([0.15, 3.2, -15], 1.7);
+const SLIT_ECU = frameAt([0.15, 3.12, -15], 2.5);
 const STAND_MED = frameAt([0, 3.4, -15], 9.5);
 
 /** S77 03:07.57: back inside. ECU on the slit as it relights to half, then MED: he stands (a cut) and steps to the picture plane. */
 export const S77 = ({ frame }: { frame: number }) => {
   const med = CUE.s77med.frame;
   const path: CameraPath = (f) => {
-    if (f < med) return blendPose(SLIT_ECU, frameAt([0.15, 3.2, -15], 1.45), easeInOut(prog(f, CUE.s77cut.frame, med - CUE.s77cut.frame)));
+    if (f < med) return blendPose(SLIT_ECU, frameAt([0.17, 3.15, -15], 2.1), easeInOut(prog(f, CUE.s77cut.frame, med - CUE.s77cut.frame)));
     return blendPose(STAND_MED, CANVAS_CAM, easeInOut(prog(f, med, CUE.s78cut.frame - med)));
   };
   return (

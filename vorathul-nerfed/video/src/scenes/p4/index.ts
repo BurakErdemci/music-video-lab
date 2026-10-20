@@ -6,6 +6,7 @@ import { CUE, HATED_FRAME } from './cues.ts';
 import { S81, S82, S83, S84, S85, S86, S87, S88, S89, S90 } from './Build.tsx';
 import { S74, S75 } from './Interlude.tsx';
 import { S76 } from './Memory.tsx';
+import './flashPlan.ts';
 
 export const SHOTS: Shot[] = [
   { id: 'S74', from: PART_RANGES.p4[0], to: CUE.s75cut.frame, Component: S74 },

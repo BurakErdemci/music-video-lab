@@ -60,8 +60,9 @@ const Office = ({ frame, camera, children, wall = true }: OfficeProps) => {
   return (
     <AbsoluteFill style={{ background: '#E9ECEF' }}>
       <OfficeStage camera={camera} />
-      <OfficeCracks frame={frame} pose={pose} />
+      <OfficeCracks frame={frame} pose={pose} layer="painting" />
       {wall ? <WallItems frame={frame} pose={pose} /> : null}
+      <OfficeCracks frame={frame} pose={pose} layer="wall" />
       {children ? children(pose) : null}
     </AbsoluteFill>
   );
@@ -141,7 +142,17 @@ const worldPx = (pose: CameraPose, p: [number, number, number]): [number, number
 // ---- the shots ----
 /** S81 03:18.20: MED inside, front. Awareness step 4: crack 1 opens under his palm on the downbeat. */
 export const S81 = ({ frame }: { frame: number }) => (
-  <Inside frame={frame} camera={IN_MED}>{() => <DustFall frame={frame} start={CUE.s81dust.frame} />}</Inside>
+  <Inside frame={frame} camera={IN_MED}>
+    {(pose) => {
+      const palm = worldPx(pose, [PALM_WORLD[0], PALM_WORLD[1], CANVAS.z]);
+      return (
+        <>
+          <ImpactBurst frame={frame - CUE.s81cut.frame} duration={10} seed={81} x={palm[0]} y={palm[1]} size={150} flash={0} />
+          <DustFall frame={frame} start={CUE.s81dust.frame} />
+        </>
+      );
+    }}
+  </Inside>
 );
 
 const MONITOR_W = 700;
