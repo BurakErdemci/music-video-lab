@@ -31,6 +31,8 @@ const LIVE: readonly string[] = [
   'G46-bored', 'G46-click', 'G46-dust', 'G46-glance', 'G46-pin', 'G46-sip', 'G46-spit', 'G46-tap', 'G46-walk',
   // second-chorus stage props (p3; P1-stage-glow left out: near-flat cones)
   'P1-mic', 'P1-mic-stand', 'P1-stage-lights',
+  // empty drained cathedral (p4 S74-S78) and the empty painting after the breakout (p5)
+  'L4-banner', 'L4-candelabra', 'L4-dais', 'L4-dust', 'L4-floor', 'L4-helm', 'L4-painting-empty', 'L4-pillar', 'L4-wall-a', 'L4-wall-b',
   // organ loft (p1 S17-S24)
   'L1-bellows', 'L1-console', 'L1-floor', 'L1-pipes-near', 'L1-wall-a', 'L1-wall-b',
   // rooftop and open sky (p1 S25, p2)
