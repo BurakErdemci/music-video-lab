@@ -23,6 +23,7 @@ import type { PoseDef } from '../../../rig/types.ts';
 const F = OFFICE_FLOOR;
 const PLATE01 = '01-tarz-cizgi-roman.jpg';
 const CEIL = 5.2;
+const SKY_Y = CEIL + 9;
 
 // ---- the ceiling that peels like paper (C49) and the painted sky behind it ----
 const STRIPS = 8;
@@ -54,7 +55,8 @@ const PaintedSky = () => (
 /** The office after the summon: no ceiling, his sky above, the room in ruins and paint. */
 const SkyRoom = ({ children, desks }: { children?: ReactNode; desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean } }) => (
   <>
-    <AfterRoom ceiling={false} strips={false} desks={desks ?? ((i) => (i === 3 ? { hidden: true } : { rot: [0, 0, [0.3, -1.4, -0.2][i] ?? 0], off: [0, 0.4, 0] }))} />
+    {/* The wall runs up to his sky: with the ceiling gone there must be no gap or card edge above it. */}
+    <AfterRoom ceiling={false} strips={false} wallTop={SKY_Y} topPaint={false} desks={desks ?? ((i) => (i === 3 ? { hidden: true } : { rot: [0, 0, [0.3, -1.4, -0.2][i] ?? 0], off: [0, 0.4, 0] }))} />
     <PaintedSky />
     {children}
   </>
@@ -113,7 +115,7 @@ const S108_TL = timeline([
   move(E('s108-sky'), pose('summon_follow'), 20),
   move(E('s108-meteors') + 4, pose('summon_follow', { head: [20, -0.01], armL: [90, 20, 10, 'spread'], torso: 12 }), 16),
 ]);
-const S108_CAM: CameraPath = withShake(handheld(tween({ ...OFF_LOW, position: [0.6, -5.6, -2], target: [-1.6, 0, -14] }, { ...OFF_LOW, position: [0.9, -5.7, -1.4], target: [-1.2, 2.6, -14] }, { start: E('s108-peel'), frames: E('s108-sky') - E('s108-peel') + 10 }), { amp: 0.04, seed: 's108' }), {
+const S108_CAM: CameraPath = withShake(handheld(tween({ ...OFF_LOW, position: [0.4, -4.6, 0.5], target: [-1.6, -0.4, -16] }, { ...OFF_LOW, position: [0.6, -4.8, 1.0], target: [-1.2, 1.6, -16] }, { start: E('s108-peel'), frames: E('s108-sky') - E('s108-peel') + 10 }), { amp: 0.04, seed: 's108' }), {
   hits: [{ start: SUMMON, seed: 1081, amp: { pct: SHAKE_PCT.medium } }, { start: E('s108-sky'), seed: 1082, amp: { pct: SHAKE_PCT.small } }],
 });
 const FIRST_METEORS: { start: number; from: [number, number]; to: [number, number]; size: number }[] = [
@@ -130,12 +132,13 @@ export const S108 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S108_CAM}>
-        <AfterRoom ceiling={false} strips={false} />
+        <AfterRoom ceiling={false} strips={false} wallTop={SKY_Y} topPaint={false} />
         <PaintedSky />
         <PeelCeiling p={peel} />
         <Vorathul tl={S108_TL} frame={frame} at={S108_AT} />
       </Stage>
-      <SpeedLines mode="radial" frame={twos(frame) - SUMMON} duration={16} seed={108} focus={[tip.x, tip.y]} inner={140} color={VIOLET} count={40} />
+      {/* The painted light layer, screen-blended and low, instead of flat solid violet rays. */}
+      <DomPlate id="LX-rays" plate="03-kanat-yelpaze.jpg" crop={[0, 0, 1536, 1024]} x={0} y={0} width={W} style={{ mixBlendMode: 'screen', opacity: 0.5 * (1 - clamp01((frame - SUMMON) / 24)) }} />
       <InkSplash frame={frame - SUMMON} duration={30} seed={108} x={tip.x} y={tip.y} size={160} variant="violet" fade={8} direction={-Math.PI / 2} />
       {/* The "METEOR RAIN" caption returns and its strike-through peels off. */}
       {frame >= E('s108-sky') ? (
@@ -295,11 +298,12 @@ export const S111 = ({ frame }: { frame: number }) => {
 };
 
 // ------------------------------------------------------------------ S112 six comic panels, one meteor per hit
+// Frontal panels (yaw within 15 degrees): variety from height, distance and lens, never from behind or the side.
 const PANEL_CAMS: CameraPose[] = [
   { position: [0, -5.4, -3.5], target: [0, -0.4, -12], fov: 54 },
-  { position: [-9, 3.5, -2], target: [0, -2, -12], fov: 40 },
-  { position: [5.5, -1.2, -6.5], target: [0, -0.6, -12], fov: 40 },
-  { position: [2.5, -4.8, -19.5], target: [0, -0.5, -10], fov: 50 },
+  { position: [-2.5, 3.0, -1], target: [0, -1.5, -12], fov: 40 },
+  { position: [1.5, -0.6, -6.5], target: [0, -0.2, -12], fov: 40 },
+  { position: [-1.2, -5.8, -5], target: [0, 0.5, -12], fov: 60 },
   { position: [0, -2.2, 3.5], target: [0, -1.2, -12], fov: 36 },
   { position: [-3.2, 0.6, -5.5], target: [0.2, 1.0, -12], fov: 46 },
 ];

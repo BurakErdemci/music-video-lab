@@ -9,7 +9,7 @@ import { AbsoluteFill } from 'remotion';
 import { CanvasShatter } from '../lib/CanvasShatter.tsx';
 import { S91_WHITE_FRAMES } from '../lib/flash.ts';
 import { E, outCubic, project, prog, pxPerUnit, twos } from '../lib/geom.ts';
-import { Dev, Frame, O, PaintDecal, PAINT_Z } from '../lib/Office.tsx';
+import { Dev46, Frame, O, PaintDecal, PAINT_Z } from '../lib/Office.tsx';
 import { Inside, PinnedCards, Room } from '../lib/Room.tsx';
 import { Asset } from '../lib/PlateCard.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
@@ -104,8 +104,9 @@ const S92_TL = timeline([
 const S92_X = PUNCH[0];
 // He rises out of the hole on "rise", a 2-step lift on twos (rig root y is in H).
 const s92Y = (frame: number): number => F - 1.5 + 1.6 * outCubic(prog(twos(frame), E('s92-rise'), 14)) + 0.25 * outCubic(prog(twos(frame), E('s92-crown') - 4, 6));
-const S92_BASE: CameraPose = { ...OFF_LOW, position: [S92_X + 1.2, -5.6, -8.6], target: [S92_X, -2.2, -20] };
-const S92_UP: CameraPose = { ...OFF_LOW, position: [S92_X + 0.6, -5.5, -9.4], target: [S92_X, 2.4, -20] };
+// Frontal (review: a low side camera showed the painting as a skewed flat card); a slow push and rise.
+const S92_BASE: CameraPose = { position: [S92_X + 0.4, -1.0, -3.0], target: [S92_X, -0.6, -20], fov: 40 };
+const S92_UP: CameraPose = { position: [S92_X + 0.2, -0.7, -5.0], target: [S92_X, 0.1, -20], fov: 40 };
 const S92_CAM: CameraPath = withShake(handheld(tween(S92_BASE, S92_UP, { start: E('s92-cut'), frames: E('s92-crown') - E('s92-cut') }), { amp: 0.04, seed: 's92' }), {
   hits: [
     { start: E('s92-cut'), seed: 921, amp: { pct: SHAKE_PCT.medium } },
@@ -163,9 +164,10 @@ const S93_TL = timeline([
   move(E('s93-tear'), pose('burst', { armL: [135, 10, 0, 'fist'], armR: [100, 60, -10, 'fist'], head: [-10, 0.01], torso: -12, wings: [null, 4], legs: [6, 6] }), 12),
   move(E('s93-crumple'), pose('burst', { armL: [80, 120, 20, 'fist'], armR: [110, 70, -10, 'fist'], head: [6, 0], torso: 4, wings: [null, 10], legs: [8, 8] }), 16),
 ]);
-const CARDS_AT: [number, number] = [-6.0, 2.6];
+// Low on the rim so his helm stays inside the frontal frame while he tears them off.
+const CARDS_AT: [number, number] = [-6.2, 0.6];
 const S93_AT = solveAt(S93_TL, E('s93-tear'), 'handL', CARDS_AT, S93_Z);
-const S93_CAM: CameraPath = withShake(handheld(tween({ position: [-1.2, -3.4, -5.6], target: [-0.6, -1.2, -20], fov: 44 }, { position: [-2.4, -3.2, -6.4], target: [-1.8, -0.4, -20], fov: 44 }, { start: E('s93-cut'), frames: 47 }), { amp: 0.06, seed: 's93' }), {
+const S93_CAM: CameraPath = withShake(handheld(tween({ position: [-1.0, -3.0, -4.0], target: [-0.8, -2.2, -20], fov: 52 }, { position: [-1.6, -2.9, -4.8], target: [-1.4, -2.0, -20], fov: 52 }, { start: E('s93-cut'), frames: 47 }), { amp: 0.06, seed: 's93' }), {
   hits: [{ start: E('s93-tear'), seed: 931, amp: { pct: SHAKE_PCT.small } }, { start: E('s93-crumple'), seed: 932, amp: { pct: SHAKE_PCT.small } }],
 });
 
@@ -176,8 +178,8 @@ export const S93 = ({ frame }: { frame: number }) => {
   // The cards hang on the rim until torn, then ride his left fist and crumple into a ball.
   const tear = frame >= E('s93-tear');
   const crumple = outCubic(prog(ff, E('s93-crumple') - 6, 8));
-  const runX = -2.4 - 2.6 * prog(ff, E('s93-cut'), 47);
-  const bob = Math.abs(Math.sin((ff - E('s93-cut')) * 0.55)) * 0.25;
+  const runX = 1.6 - 8.5 * prog(ff, E('s93-cut'), 47);
+  const bob = Math.abs(Math.sin((ff - E('s93-cut')) * 0.55)) * 0.12;
   return (
     <Shot>
       <Stage camera={S93_CAM}>
@@ -190,8 +192,8 @@ export const S93 = ({ frame }: { frame: number }) => {
           <Vorathul tl={S93_TL} frame={frame} at={S93_AT} isolate={CHEST} renderBase={2000} />
         </InFront>
         <HandCards frame={frame} tear={tear} crumple={crumple} cam={cam} />
-        {/* The fleeing developer: foreground left, backing away sideways, bobbing on twos. */}
-        <Dev at={[runX, F + bob, -8.2]} rot={[0, 0, 0.06 * Math.sin((ff - E('s93-cut')) * 0.55)]} height={3.5} order={3000} />
+        {/* The fleeing developer (drawn G46), full figure, hurrying out of frame left. */}
+        <Dev46 pose="walk" at={[runX, F + bob, -11]} height={3.4} />
       </Stage>
       <SpeedLines mode="parallel" frame={ff - E('s93-tear')} duration={10} seed={93} angle={-Math.PI * 0.75} count={18} color={INK} speed={90} />
     </Shot>
@@ -221,10 +223,10 @@ const S94_TL = timeline([
   move(E('s94-airborne'), pose('burst', { root: [0.05, 0.42, 1.2], armR: [160, 30, -30, 'grip'], armL: [120, 60, 0, 'fist'], legs: [18, 4], torso: 10, flare: 6 }), 12),
 ]);
 const S94_X = -0.8;
-const S94_START: CameraPose = { position: [3.5, -1.2, 1.5], target: [-4, -0.8, -20], fov: 40 };
+const S94_START: CameraPose = { position: [2.5, -1.2, 1.5], target: [-3, -0.8, -20], fov: 40 };
 const S94_CAM: CameraPath = withShake(
   sequence([
-    { from: BURST, path: whip(S94_START, { start: BURST, yaw: 12, frames: 6 }) },
+    { from: BURST, path: whip(S94_START, { start: BURST, yaw: 10, frames: 6 }) },
     { from: BURST + 6, path: tween({ ...OFF_WIDE, position: [0.2, -1.4, 1] }, { position: [-0.6, -1.0, 2.5], target: [-0.8, -0.6, -16], fov: 44 }, { start: BURST + 6, frames: 36 }), blend: 4 },
   ]),
   { hits: [{ start: BURST, seed: 941, amp: { pct: SHAKE_PCT.big } }, { start: E('s94-bars'), seed: 942, amp: { pct: SHAKE_PCT.medium } }] },

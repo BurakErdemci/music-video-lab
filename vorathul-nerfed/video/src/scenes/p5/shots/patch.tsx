@@ -97,7 +97,6 @@ export const S106 = ({ frame }: { frame: number }) => {
     <Shot bg={O.bg}>
       <EyeMonitor frame={frame} push={push} />
       <RevertDialog frame={frame} x={dialogBox.x} y={dialogBox.y} width={DLG_W} enterAt={E('s106-dialog')} approachAt={E('s106-approach')} pressAt={E('s107-cut')} tremble seed={7} title="Revert patch 2.5?" body="All changes from this patch will be undone." />
-      <PatchNotesCard frame={frame} x={60} y={60} width={420} title={patchTitle(frame)} lines={[{ text: 'Boss behaviour: under review', appearAt: E('s105-cut') }]} />
     </Shot>
   );
 };
@@ -116,14 +115,15 @@ const Part1Edits = ({ g, helm }: { g: number; helm: { x: number; y: number; s: n
   const erased = g >= EDIT_METEORS;
   return (
     <AbsoluteFill>
-      <HealthBar frame={g} x={260} y={70} width={1400} label="VORATHUL" from={100} to={60} startFrame={EDIT_BAR} durationFrames={20} />
+      <HealthBar frame={g} x={260} y={160} width={1400} label="VORATHUL" from={100} to={60} startFrame={EDIT_BAR} durationFrames={20} />
       {[0, 1, 2, 3, 4].map((i) => {
-        const from: [number, number] = [300 + i * 330, -120];
-        const to: [number, number] = [160 + i * 360, 520 + (i % 2) * 120];
+        // Below the bar: the label and the bar stay clear of the replayed meteors.
+        const from: [number, number] = [300 + i * 330, 320];
+        const to: [number, number] = [160 + i * 360, 860 + (i % 2) * 60];
         return erased ? (
           <div key={i} style={{ position: 'absolute', left: lerp(from[0], to[0], 0.55) - 50, top: lerp(from[1], to[1], 0.55) - 50, width: 100, height: 100, backgroundImage: `repeating-conic-gradient(${MAGENTA} 0% 25%, ${INK} 0% 50%)`, backgroundSize: '34px 34px', transform: `rotate(${i * 17}deg)` }} />
         ) : (
-          <Meteor key={i} frame={11} duration={20} seed={1070 + i} from={from} to={to} size={46 + i * 6} />
+          <Meteor key={i} frame={16} duration={20} seed={1070 + i} from={from} to={to} size={46 + i * 6} trail={(46 + i * 6) * 4} />
         );
       })}
       <StickyNote frame={g} x={helm.x - 110 * helm.s} y={helm.y - 70 * helm.s} width={260 * helm.s} text="Phase 3: cut it" slapAt={EDIT_NOTE} rotate={-6} />
@@ -155,14 +155,14 @@ export const S107 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S107_CAM}>
-        <AfterRoom desks={RUIN} />
+        <AfterRoom desks={RUIN} topPaint={false} />
         <Wreck />
         <Vorathul tl={S107_TL} frame={frame} at={S107_AT} />
       </Stage>
       <TimeRemap map={REMAP}>{(gg) => <Part1Edits g={gg} helm={{ x: head.x, y: head.y, s }} />}</TimeRemap>
       {/* Rewind grammar in office colours: scan bands and the reverse badge. */}
       <AbsoluteFill style={{ backgroundImage: `repeating-linear-gradient(0deg, rgba(59,130,246,0.10) 0 6px, transparent 6px ${lines ? 22 : 26}px)`, mixBlendMode: 'multiply' }} />
-      <div style={{ position: 'absolute', left: 70, bottom: 70, padding: '10px 26px', background: O.blue, color: O.white, fontFamily: "'UiPlexMono', monospace", fontSize: 54, fontWeight: 500, borderRadius: 12 }}>◀◀ REVERTING · f{g}</div>
+      <div style={{ position: 'absolute', left: 70, bottom: 70, padding: '10px 26px', background: O.blue, color: O.white, fontFamily: "'UiPlexMono', monospace", fontSize: 54, fontWeight: 500, borderRadius: 12 }}>◀◀ REVERTING · PATCH 2.5 → 2.2</div>
     </Shot>
   );
 };

@@ -13,6 +13,7 @@ import { clamp01, E, inOut, lerp, outBack, outCubic, prog, project, pxPerUnit, t
 import { Chair, Desk, Dev, LightStrip, Monitor3D, O, Rect } from '../lib/Office.tsx';
 import { AVAILABLE } from '../../../cast/available.ts';
 import { Asset } from '../lib/PlateCard.tsx';
+import { DomPlate } from '../lib/DomPlate.tsx';
 import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
 import { Shot } from '../lib/Shell.tsx';
@@ -42,7 +43,7 @@ const S96_TL = timeline([
   strike(CLEAVE, pose('cleave_strike'), 18),
   move(CLEAVE + 18, pose('cleave_follow'), 18),
 ]);
-const S96_CAM: CameraPath = withShake(handheld(tween({ position: [0.4, -1.6, 2.6], target: [0, -0.8, -12] }, { position: [0, -1.8, 0.4], target: [0, -0.9, -12] }, { start: E('s96-cut'), frames: CLEAVE - E('s96-cut') }), { amp: 0.04, seed: 's96' }), {
+const S96_CAM: CameraPath = withShake(handheld(tween({ position: [0.4, -1.4, 3.0], target: [0, -0.4, -12] }, { position: [0, -1.2, 1.6], target: [0, 0.4, -12] }, { start: E('s96-cut'), frames: CLEAVE - E('s96-cut') }), { amp: 0.04, seed: 's96' }), {
   hits: [{ start: CLEAVE, seed: 961, amp: { pct: SHAKE_PCT.medium } }],
 });
 
@@ -51,13 +52,13 @@ export const S96 = ({ frame }: { frame: number }) => {
   const c = project(cam, [0, -1.0, -6]);
   const dw = Math.min(1100, 5.6 * pxPerUnit(cam, c.z));
   const split = frame - CLEAVE;
-  const half = (side: -1 | 1): ReactNode => {
+  const half = (side: -1 | 0 | 1): ReactNode => {
     const t = Math.max(0, split);
     const dx = side * (t * 9 + t * t * 0.6);
     const dy = t * t * 2.2;
     const rot = side * t * 2.6;
     return (
-      <div key={side} style={{ position: 'absolute', inset: 0, clipPath: side < 0 ? `inset(0 ${W - c.x}px 0 0)` : `inset(0 0 0 ${c.x}px)`, transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg)`, transformOrigin: `${c.x}px ${c.y + 300}px` }}>
+      <div key={side} style={{ position: 'absolute', inset: 0, clipPath: side === 0 ? undefined : side < 0 ? `inset(0 ${W - c.x}px 0 0)` : `inset(0 0 0 ${c.x}px)`, transform: `translate(${dx}px, ${dy}px) rotate(${rot}deg)`, transformOrigin: `${c.x}px ${c.y + 300}px` }}>
         <RevertDialog frame={frame} x={c.x - dw / 2} y={c.y - dw * 0.24} width={dw} enterAt={E('s96-cut')} approachAt={E('s96-cut') + 2} pressAt={CLEAVE + 14} title="Unsaved changes" body="Are you sure?" confirmLabel="Discard" cancelLabel="Stay" />
       </div>
     );
@@ -70,7 +71,7 @@ export const S96 = ({ frame }: { frame: number }) => {
         <AfterRoom />
         <Vorathul tl={S96_TL} frame={frame} at={S96_AT} echo={split >= 0 && split < 8 ? { copies: 2, delay: 2, offset: [-0.2, 0.25, -0.1] } : undefined} />
       </Stage>
-      {split < 0 ? half(-1) : [half(-1), half(1)]}
+      {split < 0 ? half(0) : [half(-1), half(1)]}
       <BladeTrail pts={[[tip.x, tip.y], [c.x + 10, c.y - 120], [c.x, c.y + 80], [low.x - 20, low.y]]} width={70} age={split} />
       <Shards frame={split} duration={30} seed={96} origin={[c.x, c.y]} direction={Math.PI / 2} spread={Math.PI * 1.6} speed={30} size={34} count={22} fills={[O.white, O.mid, O.blue]} />
       <ImpactBurst frame={split} duration={8} seed={96} x={c.x} y={c.y + 60} size={170} flash={0} />
@@ -81,14 +82,15 @@ export const S96 = ({ frame }: { frame: number }) => {
 // ------------------------------------------------------------------ S97 he drags his own health bar back
 const S97_CAM: CameraPose = { position: [0.2, -0.6, -4.5], target: [0, -0.2, -14] };
 const S97_DEPTH = 9.5;
-const BAR = { x: 210, y: 420, w: 1500 };
+// Low on the frame and to the right: the bar crosses at his waist, his helm and the label stay clear.
+const BAR = { x: 60, y: 760, w: 1500 };
 const barScale = BAR.w / 900;
 const capAt = (v: number): [number, number] => [BAR.x + (v / 100) * BAR.w, BAR.y + (60 + 32) * barScale];
 const barValue = (frame: number): number => lerp(60, 100, inOut(prog(frame, E('s97-cut'), E('s97-full') - E('s97-cut'))));
 const S97_TL = timeline([
   // His left arm (screen right in the front view) pulls the cap, so the body stays in frame on the left of it.
-  cut(E('s97-cut'), pose('base', { armL: [92, 18, 0, 'fist'], armR: [40, 80, 0, 'grip'], torso: -10, head: [-8, -0.005], lean: -6, wings: [null, 10] })),
-  move(E('s97-full') + 6, pose('base', { armL: [100, 40, 0, 'fist'], armR: [60, 70, 0, 'grip'], torso: -14, head: [-14, -0.01], lean: -8, wings: [null, 14] }), 12),
+  cut(E('s97-cut'), pose('base', { armL: [62, 8, 0, 'fist'], armR: [40, 80, 0, 'grip'], torso: -10, head: [-8, -0.005], lean: -6, wings: [null, 10] })),
+  move(E('s97-full') + 6, pose('base', { armL: [70, 30, 0, 'fist'], armR: [60, 70, 0, 'grip'], torso: -14, head: [-14, -0.01], lean: -8, wings: [null, 14] }), 12),
 ]);
 const S97_PATH: CameraPath = withShake(handheld(hold(S97_CAM), { amp: 0.03, seed: 's97' }), { hits: [{ start: E('s97-full'), seed: 971, amp: { pct: SHAKE_PCT.small } }] });
 
@@ -106,6 +108,8 @@ export const S97 = ({ frame }: { frame: number }) => {
         <AfterRoom />
         <Vorathul tl={S97_TL} frame={frame} at={at} />
       </Stage>
+      {/* An office HUD panel behind the bar keeps the label readable over the painting. */}
+      <div style={{ position: 'absolute', left: BAR.x - 30, top: BAR.y - 14, width: BAR.w + 60, height: 150 * barScale + 28, background: O.white, border: `3px solid ${O.dark}`, borderRadius: 22, opacity: 0.94 }} />
       <HealthBar frame={frame} x={BAR.x} y={BAR.y} width={BAR.w} label="VORATHUL" from={60} to={100} startFrame={E('s97-cut')} durationFrames={E('s97-full') - E('s97-cut')} ghost={false} />
       {/* The developer's grab cursor clings to the cap from the left and is yanked off when it reaches 100 %. */}
       <Cursor
@@ -128,7 +132,7 @@ const S98_TL = timeline([
 ]);
 const MON: Vec3 = [0.9, F + 2.2, -8.6];
 const MON_W = 3.4;
-const S98_CAM: CameraPath = handheld(tween({ position: [-1.6, -2.4, -4.2], target: [1.4, -1.2, -18] }, { position: [-1.2, -2.2, -4.9], target: [1.7, -0.7, -18] }, { start: E('s98-cut'), frames: 37 }), { amp: 0.04, seed: 's98' });
+const S98_CAM: CameraPath = handheld(tween({ position: [-1.6, -2.4, -4.2], target: [1.4, 0.0, -18] }, { position: [-1.2, -2.2, -4.9], target: [1.7, 0.4, -18] }, { start: E('s98-cut'), frames: 37 }), { amp: 0.04, seed: 's98' });
 const PIPE_TEX = texOf(VORATHUL_RIG, 'body_l');
 const MOUTH_TEX = texOf(VORATHUL_RIG, 'mouth_l');
 const hpxU = VORATHUL_RIG.hpx * UNIT;
@@ -168,7 +172,6 @@ export const S98 = ({ frame }: { frame: number }) => {
           const target = pts.mouths[n - 1]!.p;
           return <FlyingPipe key={n} from={[MON[0], scr, MON[2] + 0.3]} to={[target[0] + 1.6, target[1] + 0.6, target[2]]} t={(frame - (land - 20)) / 12} />;
         })}
-        <Dev who="glasses" act="cower" at={[-1.9, F, -6.4]} height={3.6} order={3000} />
       </Stage>
       <div style={{ position: 'absolute', left: tl.x, top: tl.y, width: br.x - tl.x, height: br.y - tl.y, overflow: 'hidden' }}>
         <Desktop frame={frame} burstAt={burst} width={br.x - tl.x} x={0} y={0} />
@@ -297,7 +300,8 @@ export const S100 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S100_CAM}>
-        <AfterRoom />
+        {/* The near desks stay out: their chairs filled the lower corner as a dark blob right at the lens. */}
+        <AfterRoom floorPaint={false} desks={(d) => (d % 2 ? { hidden: true } : {})} />
         <Vorathul tl={S100_TL} frame={frame} at={S100_AT} />
       </Stage>
       {cursors.map((c, i) => (
@@ -317,7 +321,7 @@ export const S100 = ({ frame }: { frame: number }) => {
 // ------------------------------------------------------------------ S101 the boss nameplate
 const S101_AT: Vec3 = [-0.6, F, -13.5];
 const S101_TL = timeline([cut(E('s101-cut'), pose('raise_sword', { head: [12, -0.01] }))]);
-const S101_CAM: CameraPath = withShake(handheld(tween({ position: [1.2, -2.8, -1.5], target: [-0.3, -0.8, -20] }, { position: [0.9, -2.6, -2.6], target: [-0.3, -0.6, -20] }, { start: E('s101-cut'), frames: 14 }), { amp: 0.03, seed: 's101' }), {
+const S101_CAM: CameraPath = withShake(handheld(tween({ position: [1.0, -1.8, 0.5], target: [-0.3, 0.6, -20] }, { position: [0.8, -1.7, -0.4], target: [-0.3, 0.8, -20] }, { start: E('s101-cut'), frames: 14 }), { amp: 0.03, seed: 's101' }), {
   hits: [{ start: E('s101-cut'), seed: 1011, amp: { pct: SHAKE_PCT.medium } }],
 });
 
@@ -394,13 +398,15 @@ export const S102 = ({ frame }: { frame: number }) => {
 };
 
 // ------------------------------------------------------------------ S103 A9 pipe-fan blast, restored, from the ceiling
-const S103_AT: Vec3 = [0, F + 0.05, -13];
+// Feet near the lens so the billboarded figure lies well in front of the wall (review: the wall cut him).
+const S103_AT: Vec3 = [0, F + 0.05, -8.8];
 const BLAST = E('s103-blast');
 const S103_TL = timeline(
   [cut(E('s103-cut'), pose('blast_antic')), strike(BLAST, pose('blast_strike'), 20), move(E('s103-strips'), pose('blast_follow'), 14)],
   { extraPipes: blastFire(BLAST) },
 );
-const S103_BASE: CameraPose = { position: [0.4, 4.6, -12.6], target: [0, F, -17.2], fov: 58 };
+// Steep enough that the top of the frame meets the floor, never the wall or the painting.
+const S103_BASE: CameraPose = { position: [0.4, 4.6, -10.4], target: [0, F, -12.4], fov: 56 };
 const S103_CAM: CameraPath = withShake(handheld(hold(S103_BASE), { amp: 0.04, seed: 's103' }), {
   hits: [{ start: BLAST, seed: 1031, amp: { pct: SHAKE_PCT.big } }, { start: E('s103-strips'), seed: 1032, amp: { pct: SHAKE_PCT.medium } }],
 });
@@ -411,7 +417,7 @@ const pitched = (p: Vec3): Vec3 => {
   const z = p[2] - S103_AT[2];
   return [p[0], S103_AT[1] + y * Math.cos(PITCH) - z * Math.sin(PITCH), S103_AT[2] + y * Math.sin(PITCH) + z * Math.cos(PITCH)];
 };
-const STRIPS: Vec3[] = [[-5.2, 3.5, -10.6], [5.4, 3.5, -11.4], [-4.6, 3.5, -15.2], [5.0, 3.5, -15.8]];
+const STRIPS: Vec3[] = [[-5.0, 3.5, -8.6], [5.2, 3.5, -9.4], [-4.4, 3.5, -12.6], [4.8, 3.5, -13.2]];
 
 export const S103 = ({ frame }: { frame: number }) => {
   const cam = S103_CAM(frame);
@@ -440,16 +446,22 @@ export const S103 = ({ frame }: { frame: number }) => {
           const w = age >= 0 && age < 10 ? 70 * (1 - age / 10) : 0;
           return (
             <g key={i}>
-              {charge > 0 ? <circle cx={p.x} cy={p.y} r={10 + 26 * charge * (0.7 + 0.3 * Math.sin(frame * 2 + i))} fill={VIOLET} opacity={0.85} /> : null}
-              {len > 0 ? <path d={taperedPath([[p.x, p.y], [p.x + out[0] * len * 0.5, p.y + out[1] * len * 0.5], [p.x + out[0] * len, p.y + out[1] * len]], w, 0.25)} fill={VIOLET} /> : null}
+              {len > 0 ? <InkSplash frame={age} duration={10} seed={1060 + i} x={p.x + out[0] * len * 0.35} y={p.y + out[1] * len * 0.35} size={60 + w} variant="violet" fade={4} direction={Math.atan2(out[1], out[0])} /> : null}
             </g>
           );
         })}
       </Overlay>
       {pts.mouths.map((m, i) => {
         const p = project(cam, pitched(m.p));
-        return <InkSplash key={i} frame={frame - BLAST - 2 * Math.floor(i / 2)} duration={18} seed={1030 + i} x={p.x} y={p.y} size={80} variant="violet" fade={6} />;
+        return (
+          <AbsoluteFill key={i}>
+            <InkSplash frame={frame - E('s103-charge') - (i % 4)} duration={BLAST - E('s103-charge')} seed={1080 + i} x={p.x} y={p.y} size={40 + 30 * charge} variant="violet" fade={4} />
+            <InkSplash frame={frame - BLAST - 2 * Math.floor(i / 2)} duration={18} seed={1030 + i} x={p.x} y={p.y} size={80} variant="violet" fade={6} />
+          </AbsoluteFill>
+        );
       })}
+      {/* The painted light layer (LX-rays, screen blend, low opacity) instead of flat solid beams. */}
+      <DomPlate id="LX-rays" plate="03-kanat-yelpaze.jpg" crop={[0, 0, 1536, 1024]} x={0} y={0} width={W} style={{ mixBlendMode: 'screen', opacity: frame >= BLAST ? 0.55 * (1 - clamp01((frame - BLAST) / 18)) : 0 }} />
       {STRIPS.map((s, i) => {
         const p = project(cam, s);
         return <Shards key={i} frame={strips - (i % 2)} duration={30} seed={1033 + i} origin={[p.x, p.y]} direction={Math.atan2(p.y - H / 2, p.x - W / 2)} spread={Math.PI * 0.9} speed={34} size={34} count={14} fills={[O.white, O.white, O.mid]} />;
