@@ -17,6 +17,14 @@ levels: vault `Teknik/Arastirmalar/Suno_Prompt_Kurallari_2026-10-20`):
 One change from the researched draft: the first tag "Modern metalcore" replaced by **"Kawaii heavy metal"** -
 "şov attı" (it delivered). The style below is the working one.
 
+## Chorus fix (Burak, 20 Oct 2026)
+
+The v3 take's chorus "does not flow, is not catchy, I stumble when singing it"; the v1 chorus stuck in his head.
+The lyrics differed in two places, both reverted to v1: the third line changed every chorus ("One conflict" ->
+"Forty conflicts, forty files, the whole repo's on fire", too many syllables), and the tag asked for gang vocals,
+which can push Suno to shout instead of sing a melody. Now both choruses are identical and sung; the gang shouts
+stay only in the (parentheses). The final chorus keeps its own words, as in v1.
+
 ## Settings
 
 - Model: try **v6** and **v6-wild** (one guide reports heavy genres respond better on wild). Max Mode on.
@@ -86,10 +94,10 @@ Orange, orange, ORANGE!
 
 [Break]
 
-[Chorus - gang vocals, full band]
+[Chorus - catchy sung melody, both voices, full band]
 Accept current change! (NO!)
 Accept incoming change! (NO!)
-One conflict, one line, the build is on fire
+Two girls, one line, the build is on fire
 Merge conflict, merge conflict, heart going haywire
 Accept current change! (NEVER!)
 Accept incoming change! (NEVER!)
@@ -115,10 +123,10 @@ I wrote that comment!
 I KNOW! I TOUCHED IT!
 (AAAAAH!)
 
-[Chorus - gang vocals, bigger]
+[Chorus - same melody, both voices, bigger]
 Accept current change! (NO!)
 Accept incoming change! (NO!)
-Forty conflicts, forty files, the whole repo's on fire
+Two girls, one line, the build is on fire
 Merge conflict, merge conflict, heart going haywire
 Accept current change! (NEVER!)
 Accept incoming change! (NEVER!)
@@ -165,7 +173,7 @@ Two branches of the same old tree, you know
 
 [Break]
 
-[Final Chorus - gang vocals, loudest]
+[Final Chorus - same melody, both voices, loudest]
 Accept both changes! (YES!)
 Accept both changes! (YES!)
 Blue and orange together, it's a gradient now
