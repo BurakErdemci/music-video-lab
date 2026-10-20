@@ -472,14 +472,14 @@ export const S114 = ({ frame }: { frame: number }) => {
           </SkyRoom>
         </Paint>
       </Stage>
-        {/* Smoke: ink-edged ivory and grey clouds drifting apart and thinning. */}
+        {/* Smoke: ink and umber clouds drifting apart and thinning (ivory smoke over the dark converted hall made the cut a flash). */}
         <Overlay style={{ opacity: 1 - clear }}>
           <defs>
             <InkFilter seed={114} rough={14} breakup={0.2} />
           </defs>
           <g filter={`url(#${inkFilterId(114, 14, 0.2)})`}>
             {SMOKE.map((s, i) => (
-              <circle key={i} cx={s.x + s.vx * (ff - E('s114-cut'))} cy={s.y + s.vy * (ff - E('s114-cut'))} r={s.r * (1 + 0.6 * clear)} fill={s.dark ? O.dark : IVORY} stroke={INK} strokeWidth={8} />
+              <circle key={i} cx={s.x + s.vx * (ff - E('s114-cut'))} cy={s.y + s.vy * (ff - E('s114-cut'))} r={s.r * (1 + 0.6 * clear)} fill={s.dark ? '#141210' : '#4A3C26'} stroke={INK} strokeWidth={8} />
             ))}
           </g>
         </Overlay>
@@ -488,6 +488,8 @@ export const S114 = ({ frame }: { frame: number }) => {
         </Overlay>
         {/* The blast's ink carries over the cut and thins out (measured: a clean cut here was a 4th swing in the second). */}
         <InkSplash frame={frame - WHITEOUT - 9} duration={44} seed={1135} x={BLAST_AT.x} y={BLAST_AT.y} size={620} variant="violet" fade={24} />
+        {/* The blast's shards fly on across the cut too (measured: their sudden loss made the cut a 4th swing). */}
+        <Shards frame={frame - WHITEOUT - 9} duration={40} seed={1134} origin={[BLAST_AT.x, BLAST_AT.y]} direction={0} spread={Math.PI * 2} speed={70} size={90} count={44} fills={[GOLD, IVORY, O.white, O.mid]} gravity={1.6} />
         <ImpactBurst frame={frame - CLONK} duration={8} seed={1142} x={head.x} y={head.y} size={110} flash={0} />
         <DamageNumber frame={frame} text="-1" at={CLONK} x={head.x} y={head.y - 40} size={84} />
       </BlastScene>
