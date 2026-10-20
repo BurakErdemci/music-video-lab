@@ -568,6 +568,10 @@ that produced §1.3, so every frame equals `round(anchor × 30)`.
 2. **Photosensitivity is a hard rule:** no more than **3 flashes per second** in any 1-second window
    (a flash = a large luminance swing of the frame, both directions; red flashes count double). A
    frame-luminance check tool gates every render; strobe and grade cues are tuned until it passes.
+   Tool: `tools/flashcheck.py` (default counts every opposing luminance change as one flash — stricter
+   than WCAG's pair counting, kept on purpose; `--count pairs` shows the WCAG reading). Measured: the
+   VFX gallery fails at 00:06 and 00:15 (5 changes/s at ~90 % area) — ImpactBurst's 3-frame
+   ivory → posterise → black flash is ~2–3 changes, so allow at most one such impact per second.
 3. **Render the breakout (f6670–f6960) first** as the heavy-load test, twice, through
    `tools/glitchcheck.py`, with no other Remotion process running.
 4. **Approved style frames may appear on screen as collage material** — they are our own images.
