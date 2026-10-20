@@ -559,3 +559,19 @@ that produced §1.3, so every frame equals `round(anchor × 30)`.
 - **S113** — f7949 `word('Vorathul', 5)` cut: A13 summon from the throne · f7961 `beat[812]` giant meteor appears · f7971 `beat[813]` it grows · f7981 `beat[814]` it fills the sky · f7991 `beat[815]` BIGGEST BLAST (loudest bar) · f8000 `beat[816]` palette cut 1 of 3 (one per beat)
 - **S114** — f8020 `beat[818]` cut: smoke clears · f8040 `beat[820]` silhouette · f8060 `beat[822]` embers · f8080 `hit[89]` chair clonks a dev · f8100 `beat[826]` push in · f8119 `beat[828]` push in · f8139 `beat[830]` head back: laugh
 - **S115** — f8149 `beat[831]` cut: paint floods in · f8159 `beat[832]` half covered · f8169 `beat[833]` screen black · f8179 `beat[834]` end card starts typing · f8189 `beat[835]` types "Patch 2." · f8199 `beat[836]` types "Patch 2.6 no" · f8209 `beat[837]` CUT OFF
+
+## Architect decisions (20 Oct 2026)
+
+1. **Holds:** the "≥ 1 s calm between transitions" rule applies inside one continuous shot only. In
+   fights, attacks are separated by cuts; two attacks inside the same shot keep ≥ 12 frames apart
+   (rig request R4 accepted).
+2. **Photosensitivity is a hard rule:** no more than **3 flashes per second** in any 1-second window
+   (a flash = a large luminance swing of the frame, both directions; red flashes count double). A
+   frame-luminance check tool gates every render; strobe and grade cues are tuned until it passes.
+3. **Render the breakout (f6670–f6960) first** as the heavy-load test, twice, through
+   `tools/glitchcheck.py`, with no other Remotion process running.
+4. **Approved style frames may appear on screen as collage material** — they are our own images.
+5. **Cuts that follow words** instead of section lines stay (scene 9 on "Patch" 137.22, the first
+   choir chant one frame early).
+6. **Open for the director's listening check:** no measured onsets under the choruses and the final
+   fight; strikes sit on beats/words. Confirm they land by ear.
