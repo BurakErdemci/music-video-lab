@@ -19,8 +19,10 @@ import { SpeedLines } from './SpeedLines.tsx';
 import { StickerCutout } from './StickerCutout.tsx';
 import { GOLD, INK, IVORY, SKY, VIOLET, VIOLET_LIGHT, type Pt } from './style.tsx';
 import { fastForward, playBetween, TimeRemap } from './TimeRemap.tsx';
+import { LIGHT_END, LIGHT_SEGMENTS, LIGHT_SWITCHES, LightSegment, SPLIT_CUES } from './GalleryLight.tsx';
+import { splitSwings } from './SplitLight.tsx';
 
-export const GALLERY_FRAMES = 1140;
+export const GALLERY_FRAMES = LIGHT_END;
 /** The meteor segment's splashes and debris hold until here. */
 const METEOR_END = 360;
 
@@ -57,6 +59,7 @@ const SEGMENTS: { from: number; label: string }[] = [
   { from: 1060, label: 'grade O_A (alternative: no edge)' },
   { from: 1080, label: 'grade O_C (alternative: MEMORY logic)' },
   { from: 1100, label: 'grade POSTER / GOLD' },
+  ...LIGHT_SEGMENTS,
 ];
 
 // Grades built by the cue helper; every anchor is a frame here because the gallery has no song.
@@ -74,6 +77,7 @@ const DUOTONE = gradeCues(
     { at: { frame: 1080 }, grade: 'O_C' },
     { at: { frame: 1100 }, grade: 'POSTER' },
     { at: { frame: 1116 }, grade: 'GOLD' },
+    { at: { frame: 1140 }, grade: 'P' },
   ],
   'gallery grades',
 );
@@ -82,7 +86,15 @@ const DUOTONE = gradeCues(
 // grades, impact flashes and the backdrop switches (paper / painting / office, TimeRemap jumps).
 const BACKDROP_SWITCHES = [360, 480, 620, 690, 810, 870, 960, 990, 1020];
 assertFlashBudget(
-  [...duotoneSwings(DUOTONE), ...impactSwings(190, 2), ...impactSwings(220, 1), ...BACKDROP_SWITCHES.map((frame) => ({ frame, swings: 1 }))],
+  [
+    ...duotoneSwings(DUOTONE),
+    ...impactSwings(190, 2),
+    ...impactSwings(220, 1),
+    ...[...BACKDROP_SWITCHES, ...LIGHT_SWITCHES].map((frame) => ({ frame, swings: 1 })),
+    ...splitSwings(SPLIT_CUES),
+    // LIGHT: rim on (f1155), violet spill on (f1210), the gold blast pulse in and out (f1228, f1242).
+    ...[1155, 1210, 1228, 1242].map((frame) => ({ frame, swings: 1 })),
+  ],
   'VfxGallery',
 );
 
@@ -301,6 +313,8 @@ const GalleryScene = () => {
           <CrackGrow frame={frame} cues={CRACK_CUES} seed={7} origin={[0.22, 0.4]} escapeAt={14} escapeDir={Math.PI * 0.95} box={CARD} surface="outside" width={14} />
         </>
       ))}
+      {/* 18. Light: rim, spill, split, and one motivated low-fps hold */}
+      <LightSegment frame={frame} />
     </Misregister>
   );
 };
