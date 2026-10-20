@@ -19,8 +19,8 @@ const RO = { sky: -100, pillars: -95, gallery: -90, floor: -80, stepA: -70, step
 /** A banner lying on the floor with its broken pole beside it; `rot` is the yaw. */
 const Banner = ({ x, z, rot, len = 6 }: { x: number; z: number; rot: number; len?: number }) => (
   <group position={[x, 0.03, z]} rotation={[0, rot, 0]}>
-    <Asset id="G36" look={{ color: '#E2B33C' }} width={1.5} height={len} rotation={FLAT} renderOrder={RO.props} />
-    <Asset id="G36" look={{ color: '#0A0908' }} width={0.14} height={len + 1.4} position={[-0.95, 0.01, -0.3]} rotation={FLAT} renderOrder={RO.props + 1} />
+    <Asset id="p4-flat" look={{ color: '#E2B33C' }} width={1.5} height={len} rotation={FLAT} renderOrder={RO.props} />
+    <Asset id="p4-flat" look={{ color: '#0A0908' }} width={0.14} height={len + 1.4} position={[-0.95, 0.01, -0.3]} rotation={FLAT} renderOrder={RO.props + 1} />
   </group>
 );
 
@@ -35,10 +35,10 @@ export const Cathedral = ({ banners = true }: { banners?: boolean }) => (
     <Asset id="G35b" look={{ src: PLATE, crop: [0.73, 0.02, 1, 0.8] }} width={14.2} height={27.4} position={[23.5, 13.7, -38]} renderOrder={RO.gallery} />
     <Asset id="floor" look={{ color: '#EFE3C2' }} width={160} height={70} position={[0, 0, -28]} rotation={FLAT} renderOrder={RO.floor} />
     {/* two low steps: gold edge, ivory tread (G36) */}
-    <Asset id="G36" look={{ color: '#E2B33C' }} width={16} height={0.55} position={[0, 0.275, -11.5]} renderOrder={RO.stepA} />
-    <Asset id="G36" look={{ color: '#F4ECD8' }} width={16} height={7.5} position={[0, 0.55, -15.25]} rotation={FLAT} renderOrder={RO.stepA} />
-    <Asset id="G36" look={{ color: '#E2B33C' }} width={12} height={0.55} position={[0, 0.825, -13.5]} renderOrder={RO.stepB} />
-    <Asset id="G36" look={{ color: '#F4ECD8' }} width={12} height={5.5} position={[0, 1.1, -16.25]} rotation={FLAT} renderOrder={RO.stepB} />
+    <Asset id="p4-flat" look={{ color: '#E2B33C' }} width={16} height={0.55} position={[0, 0.275, -11.5]} renderOrder={RO.stepA} />
+    <Asset id="p4-flat" look={{ color: '#F4ECD8' }} width={16} height={7.5} position={[0, 0.55, -15.25]} rotation={FLAT} renderOrder={RO.stepA} />
+    <Asset id="p4-flat" look={{ color: '#E2B33C' }} width={12} height={0.55} position={[0, 0.825, -13.5]} renderOrder={RO.stepB} />
+    <Asset id="p4-flat" look={{ color: '#F4ECD8' }} width={12} height={5.5} position={[0, 1.1, -16.25]} rotation={FLAT} renderOrder={RO.stepB} />
     {banners ? (
       <>
         <Banner x={-7.5} z={-8.5} rot={0.5} />

@@ -8,7 +8,7 @@ import { CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
 import { DevHead } from './People.tsx';
 import { OfficeStage, WallItems } from './office.tsx';
-import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog, twos } from './lib.ts';
+import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog } from './lib.ts';
 
 const DRAIN = 'saturate(0.55)';
 
@@ -43,7 +43,6 @@ const palmPx = (): [number, number] => [PALM_UV[0] * W, PALM_UV[1] * H];
 
 /** Canvas weave: a fine linen grid, strongest where the paint stretches thin (a ring around the press point). */
 const Weave = ({ frame, x, y, amount }: { frame: number; x: number; y: number; amount: number }) => {
-  const f = twos(frame);
   const R = 360;
   const lines: string[] = [];
   for (let i = -R; i <= R; i += 16) {
@@ -61,7 +60,7 @@ const Weave = ({ frame, x, y, amount }: { frame: number; x: number; y: number; a
           <circle cx={x} cy={y} r={R} fill="url(#p4-weave-g)" />
         </mask>
       </defs>
-      <g mask="url(#p4-weave-m)" opacity={0.75 * amount} transform={`translate(${(f % 4) * 0.4} 0)`}>
+      <g mask="url(#p4-weave-m)" opacity={0.75 * amount}>
         <path d={lines.join('')} stroke="#FFFFFF" strokeWidth={2.4} />
         <path d={lines.join('')} stroke="#7A6A3C" strokeWidth={1} transform="translate(1.5 1.5)" />
       </g>
@@ -75,13 +74,16 @@ export const S78 = ({ frame }: { frame: number }) => {
   const [x, y] = palmPx();
   return (
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
-      <CanvasBulge frame={frame} amount={amount} x={x} y={y} size={360} rotate={-8} seed={3} id="p4-bulge-a">
-        <AbsoluteFill style={{ filter: DRAIN }}>
-          <Stage camera={hold(CANVAS_CAM)}>
-            <Cathedral banners={false} />
-            <Hero frame={frame} />
-          </Stage>
-        </AbsoluteFill>
+      <AbsoluteFill style={{ filter: DRAIN }}>
+        <Stage camera={hold(CANVAS_CAM)}>
+          <Cathedral banners={false} />
+          <Hero frame={frame} />
+        </Stage>
+      </AbsoluteFill>
+      {/* the bulge's drawn marks only: CanvasBulge's displacement filter over the WebGL canvas rendered mosaic-tiled
+          capture frames in every pass, so the picture is not displaced */}
+      <CanvasBulge frame={frame - (frame % 10)} amount={amount} x={x} y={y} size={360} rotate={-8} seed={3} id="p4-bulge-a">
+        {null}
       </CanvasBulge>
       <Weave frame={frame} x={x} y={y} amount={amount} />
     </AbsoluteFill>
@@ -140,8 +142,11 @@ export const S80 = ({ frame }: { frame: number }) => {
   const amount = 1 - 0.65 * easeInOut(prog(frame, CUE.s80relax.frame, 10));
   return (
     <AbsoluteFill style={{ background: '#E9ECEF' }}>
-      <CanvasBulge frame={frame} amount={amount} x={x} y={y} size={box[2] * 0.2} rotate={-8} seed={4} id="p4-bulge-b">
-        <OfficeStage camera={hold(pose)} />
+      <OfficeStage camera={hold(pose)} />
+      {/* only the bulge's drawn marks (shadow, light crescent, contour, strain): a displacement filter stacked on the
+          halftone office grade rendered as mosaic-tiled capture frames in every pass */}
+      <CanvasBulge frame={frame - (frame % 10)} amount={amount} x={x} y={y} size={box[2] * 0.2} rotate={-8} seed={4} id="p4-bulge-b">
+        {null}
       </CanvasBulge>
       <WallItems frame={frame} pose={pose} />
     </AbsoluteFill>
