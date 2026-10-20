@@ -42,7 +42,9 @@ const jolt = (f: number): P => {
 export const flightCam = (f: number): Cam => {
   const c0 = gb().cam;
   const end: Cam = { x: CAM_FLIGHT_END.x, y: CAM_FLIGHT_END.y, z: CAM_FLIGHT_END.z - DD };
-  const u = easeInOut3((f - F_SHATTER) / (F_LAND - 1 - F_SHATTER));
+  // a little linear share keeps the camera drifting into the landing (6496-6505 must breathe, not stop dead)
+  const x = clamp01((f - F_SHATTER) / (F_LAND - 1 - F_SHATTER));
+  const u = 0.88 * easeInOut3(x) + 0.12 * x;
   const [jx, jy] = jolt(f);
   return { x: lerp(c0.x, end.x, u) + jx, y: lerp(c0.y, end.y, u) + jy, z: lerp(c0.z, end.z, u) };
 };
@@ -117,6 +119,10 @@ export interface FShard {
   recap: number;
   c: P;
   area: number;
+  /** Radius of the smallest circle about the centroid that holds the outline. */
+  rad: number;
+  /** Small pieces blown far back: they never reach the camera and are still drifting down at the landing. */
+  settle: boolean;
   th: number;
   dir: P;
   R: number;
@@ -198,7 +204,7 @@ const build = (): FShardSet => {
     const local: P[] = poly.map((p) => [p[0] - c[0], -(p[1] - c[1])] as P);
     if (areaOf(local) < 0) local.reverse();
     const uv: P[] = local.map(([x, y]) => [(960 + (c[0] + x - cam0.x) * kp) / 1920, 1 - (540 + (c[1] - y - cam0.y) * kp) / 1080] as P);
-    shards.push({ i: shards.length, poly: local, uv, uv2: [], recap: -1, c, area: Math.abs(areaOf(local)), th: 0, dir: [0, 0], R: 0, kxy: 0, zT: 0, kz: 0, A: [0, 0, 0], kr: 0, spin: [0, 0, 0], ph: 0, pass: 0, off: [0, 0] });
+    shards.push({ i: shards.length, poly: local, uv, uv2: [], recap: -1, c, area: Math.abs(areaOf(local)), rad: Math.max(...local.map(([x, y]) => Math.hypot(x, y))), settle: false, th: 0, dir: [0, 0], R: 0, kxy: 0, zT: 0, kz: 0, A: [0, 0, 0], kr: 0, spin: [0, 0, 0], ph: 0, pass: 0, off: [0, 0] });
   });
 
   // the recap shards: the biggest cells fully inside the frame, roughly round ones first (a still reads in a fat cell)
@@ -235,6 +241,8 @@ const build = (): FShardSet => {
     s.uv2 = s.poly.map(([x, y]) => [u0 + (x - mx) / iw, v0 + (y - my) / ih] as P);
   });
 
+  const small = shards.filter((s) => s.recap < 0).sort((a, b) => a.area - b.area).slice(0, 18);
+  for (const s of small) s.settle = true;
   shards.forEach((s) => {
     const r = seeded(`p4f:shard:${s.i}`);
     const dx = s.c[0] - impact[0];
@@ -248,7 +256,7 @@ const build = (): FShardSet => {
     s.kxy = 3.0 + 1.8 * r();
     // toward the camera: small pieces near the palms fastest
     // about 45 % blow back toward the world: the camera still passes shards after it crosses the glass plane
-    s.zT = r() < 0.45 ? -(100 + 520 * r()) : 150 + 650 * r() + 150 / (1 + r0 / (200 * unit));
+    s.zT = s.settle ? -(1100 + 380 * r()) : r() < 0.45 ? -(100 + 520 * r()) : 150 + 650 * r() + 150 / (1 + r0 / (200 * unit));
     s.kz = 1.0 + 0.8 * r();
     const sgn = (): number => (r() < 0.5 ? -1 : 1);
     const lively = s.recap >= 0 ? 0.35 : 1;
@@ -257,9 +265,7 @@ const build = (): FShardSet => {
     s.spin = [sgn() * 0.4 * r() * lively, sgn() * 0.4 * r() * lively, sgn() * (0.1 + 0.4 * r()) * lively];
     s.ph = r() * Math.PI * 2;
     if (s.recap >= 0) {
-      const a = r() * Math.PI * 2;
-      const L = 130 + 110 * r();
-      s.off = [Math.cos(a) * L, Math.sin(a) * L * 0.7];
+      s.off = [(r() - 0.5) * 140, 0];
     }
   });
   return { shards, cam0, impact };
@@ -282,18 +288,26 @@ export interface FPose {
 
 const Z_GLASS = -D_PIC; // three z of the glass plane
 
-/** Recap shards ease from the glass to a point just off the lens at `pass`, and keep going past it. */
+/**
+ * Recap shards: they move into the frame's middle column early (between the two figures, who stand left and right of
+ * it) and rise as they come closer, so they leave through the TOP edge while they are at most ~900 px wide: they fly
+ * over the camera's head and never cover either figure. Past the pass they keep the same motion (off screen).
+ */
+const PASS_W = 900;
 const recapPose = (s: FShard, f: number): FPose => {
   const t = Math.max(0, f - F_SHATTER) / 30;
   const T = (s.pass - F_SHATTER) / 30;
   const g = burst(t, 1.6, 0.1) / burst(T, 1.6, 0.1);
+  const gx = Math.min(1, burst(t, 4.2, 0.2) / burst(T, 4.2, 0.2));
   const cp = flightCam(s.pass);
+  // at the pass: the distance where it is PASS_W px wide, and high enough that its lowest point is above the frame
+  const dp = Math.max(140, (s.rad * 2 * 1000) / PASS_W);
+  const ks = 1000 / dp;
   const tx = cp.x + s.off[0];
-  const ty = cp.y + s.off[1];
-  // the target sits 60 px in front of the lens at the pass; past it the shard keeps the same velocity
-  const x = lerp(s.c[0], tx, g);
+  const ty = cp.y - 540 / ks - s.rad * 1.08;
+  const x = lerp(s.c[0], tx, gx);
   const yd = lerp(s.c[1], ty, g);
-  const z = lerp(Z_GLASS, cp.z - 60, g);
+  const z = lerp(Z_GLASS, cp.z - dp, g);
   const settle = 1 - burst(t, s.kr, 0.2) * 0.75;
   return {
     x,
@@ -315,6 +329,11 @@ export const shardPose = (s: FShard, f: number): FPose => {
   const x = s.c[0] + s.dir[0] * s.R * g;
   const yd = s.c[1] + s.dir[1] * s.R * g;
   const z = Z_GLASS + s.zT * gz + 40 * t;
+  if (s.settle) {
+    // debris still drifting down through the landing, turning slowly
+    const fall = 22 * t + 9 * t * t;
+    return { x, y: -(yd + fall), z, rx: s.A[0] * gr + 0.9 * t, ry: s.A[1] * gr + 0.7 * t, rz: s.A[2] * gr + 0.5 * t, mix: 0 };
+  }
   return { x, y: -yd, z, rx: s.A[0] * gr + s.spin[0] * t, ry: s.A[1] * gr + s.spin[1] * t, rz: s.A[2] * gr + s.spin[2] * t, mix: 0 };
 };
 

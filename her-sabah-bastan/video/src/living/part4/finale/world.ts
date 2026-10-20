@@ -31,9 +31,9 @@ interface Pose {
 /** k = -1 the flight (blown apart, palms still raised), 0..4 the steps, 5 the union. */
 const POSES: Record<number, Pose> = {
   [-1]: { he: 'h-palm-full', she: 'a-palm-full', gap: 1500 },
-  0: { he: 'h-cross', she: 'a-step1', gap: 1100 },
-  1: { he: 'h-hand', she: 'a-step2', gap: 820 },
-  2: { he: 'h-cross', she: 'a-cross', gap: 520 },
+  0: { he: 'h-cross', she: 'a-step1', gap: 880 },
+  1: { he: 'h-hand', she: 'a-step2', gap: 660 },
+  2: { he: 'h-cross', she: 'a-cross', gap: 450 },
   3: { he: 'h-hand', she: 'a-hand', gap: 300 },
   4: { he: 'h-palm-full', she: 'a-palm-full', gap: 64 },
   5: { he: 'h-palm-full', she: 'a-palm-full', gap: 0 },
@@ -100,12 +100,13 @@ const fieldLayers = (dd: number): Layer[] => [
 ];
 
 /** The seam's halftone band on the field plane: cream dots on his navy, navy dots on her cream, 50 % at the seam. */
-const BAND_BOX: Rect = { x: SEAM - 560, y: -1400, w: 1120, h: 3600 };
-const BAND_RES = 0.5;
+// full resolution and a coarse screen (24 px): a stretched, fine screen averaged to grey when seen from a distance
+const BAND_BOX: Rect = { x: SEAM - 560, y: -700, w: 1120, h: 2500 };
+const BAND_RES = 1;
 const bandLayer = (dd: number, half: number): Layer =>
   canvasLayer('band', 'p4f:band', BAND_BOX.w * BAND_RES, BAND_BOX.h * BAND_RES, D_FIELD + dd, BAND_BOX, (ctx, cw, ch) => {
     if (half < 1) return;
-    const step = 16 * BAND_RES;
+    const step = 24 * BAND_RES;
     const sx = (SEAM - BAND_BOX.x) * BAND_RES;
     const hb = half * BAND_RES;
     for (const side of [-1, 1] as const) {
@@ -122,7 +123,7 @@ const bandLayer = (dd: number, half: number): Layer =>
           if (y < -step || y > ch + step) continue;
           const t = (x - sx) / hb;
           if (side < 0 ? t >= 0 || t < -1 : t < 0 || t > 1) continue;
-          const cov = 0.5 * (1 - Math.abs(t));
+          const cov = 0.42 * (1 - Math.abs(t));
           const r = step * Math.sqrt(cov / Math.PI);
           if (r < 0.2) continue;
           ctx.moveTo(x + r, y);
@@ -324,9 +325,9 @@ const figures = (f: number, k: number, dd: number, pulse: number): Layer[] => {
 
 /** Each shot's camera: [start, end] of its slow move; beats add a short punch-in. */
 const SHOT_CAMS: [Cam, Cam][] = [
-  [{ x: 960, y: 600, z: 1460 }, { x: 960, y: 610, z: 1330 }],
-  [{ x: 430, y: 560, z: 780 }, { x: 500, y: 560, z: 700 }],
-  [{ x: 1500, y: 560, z: 780 }, { x: 1430, y: 560, z: 700 }],
+  [{ x: 880, y: 590, z: 1150 }, { x: 900, y: 590, z: 1060 }],
+  [{ x: 480, y: 560, z: 780 }, { x: 550, y: 560, z: 700 }],
+  [{ x: 1480, y: 560, z: 780 }, { x: 1410, y: 560, z: 700 }],
   [{ x: 960, y: 600, z: 1040 }, { x: 960, y: 590, z: 930 }],
   [{ x: 960, y: 420, z: 640 }, { x: 960, y: 395, z: 455 }],
 ];
