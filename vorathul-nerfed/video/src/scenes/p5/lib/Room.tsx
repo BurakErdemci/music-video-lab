@@ -71,8 +71,9 @@ export const AfterRoom = ({ desks, ceiling = true, strips = true, wallTop, floor
   <>
     <Room wave={80} centre={[-3, -10]} desks={desks} ceiling={ceiling} strips={strips} wallTop={wallTop} />
     <Inside />
-    <PaintDecal at={[-5.5, -4.6, WALL_Z + 0.06]} w={7} h={5.5} seed={21} drips order={40} />
-    <PaintDecal at={[4.5, -4.8, WALL_Z + 0.06]} w={6} h={5} seed={22} drips order={41} />
+    {/* Drips end above the skirting: a decal running below the floor line showed as a black blob at low cameras. */}
+    <PaintDecal at={[-5.5, -3.4, WALL_Z + 0.06]} w={7} h={5} seed={21} drips order={40} />
+    <PaintDecal at={[4.5, -3.4, WALL_Z + 0.06]} w={6} h={5} seed={22} drips order={41} />
     {topPaint ? <PaintDecal at={[0.5, 5.6, WALL_Z + 0.06]} w={9} h={4} seed={23} order={42} /> : null}
     {floorPaint ? (
       <>
