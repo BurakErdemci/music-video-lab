@@ -311,9 +311,10 @@ export const S100 = ({ frame }: { frame: number }) => {
         const m = project(cam, pts.mouths[n - 1]!.p);
         return <InkSplash key={n} frame={frame - pipeLandFrame(n)} duration={16} seed={1000 + n} x={m.x} y={m.y} size={90} variant="violet" fade={6} />;
       })}
-      {/* The lead cursor of the swarm, 1.2 units ahead of the lens. */}
-      {/* Clamped: at 1.2 units the true size would swallow the frame in its outline. */}
-      <Cursor frame={frame} path={[{ f: frame, x: Math.min(lp.x, W * 0.62), y: Math.max(lp.y, H * 0.62) }]} size={7} />
+      {/* The lead cursor of the swarm, 1.2 units ahead of the lens. Its true size would fill the frame, and at
+          size 7 its black-outlined tail ran off the bottom edge and read as a smudge (review 45): drawn at 4,
+          whole and inside the frame. */}
+      <Cursor frame={frame} path={[{ f: frame, x: Math.min(Math.max(lp.x, W * 0.55), W * 0.7), y: Math.min(Math.max(lp.y, H * 0.5), H * 0.66) }]} size={4} />
     </Shot>
   );
 };
