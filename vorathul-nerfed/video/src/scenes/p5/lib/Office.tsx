@@ -128,6 +128,24 @@ export const LightStrip = ({ at, len = 7, rot }: { at: Vec3; len?: number; rot?:
   </group>
 );
 
+/**
+ * Wall-coloured ring just in front of the canvas plane, around the frame: the copy of him drawn ON the canvas (he is
+ * in the painting) must never show on the bare wall outside it. Parts that come out toward the room sit nearer.
+ */
+export const BreachRing = ({ width = 3.6 }: { width?: number }) => {
+  const fw = CARD_W + 2 * FRAME_T;
+  const fh = CARD_H + 2 * FRAME_T;
+  const z = PAINT_Z + 0.05;
+  return (
+    <group>
+      <Rect w={fw + 2 * width} h={width} at={[0, fh / 2 + width / 2, z]} color={O.bg} />
+      <Rect w={fw + 2 * width} h={Math.min(width, -fh / 2 - OFFICE_FLOOR)} at={[0, (-fh / 2 + Math.max(-fh / 2 - width, OFFICE_FLOOR)) / 2, z]} color={O.bg} />
+      <Rect w={width} h={fh} at={[-fw / 2 - width / 2, 0, z]} color={O.bg} />
+      <Rect w={width} h={fh} at={[fw / 2 + width / 2, 0, z]} color={O.bg} />
+    </group>
+  );
+};
+
 /** The black picture frame around the card. `burst` > 0 = frames since it exploded into bars (A4, S94). */
 export const Frame = ({ burst = -1, seed = 4 }: { burst?: number; seed?: number }) => {
   const fw = CARD_W + 2 * FRAME_T;

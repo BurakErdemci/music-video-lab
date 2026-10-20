@@ -13,7 +13,8 @@ import { OFFICE_FLOOR } from './vorathul.ts';
 
 /** 0 = office, 1 = his world. Eased between the stage cuts so the shift reads as a progression across shots. */
 export const conversionAt = (frame: number): number => {
-  const k: [number, number][] = [[E('s95-cut'), 0], [E('s98-cut'), 0.3], [E('s104-cut'), 0.85], [E('s105-cut'), 1]];
+  // It starts low at the breach in S93 (the paint spills out of it), then grows from where he lands.
+  const k: [number, number][] = [[E('s93-cut'), 0], [E('s95-cut'), 0.06], [E('s98-cut'), 0.3], [E('s104-cut'), 0.85], [E('s105-cut'), 1]];
   if (frame <= k[0]![0]) return 0;
   for (let i = 1; i < k.length; i++) {
     const [f1, v1] = k[i]!;
