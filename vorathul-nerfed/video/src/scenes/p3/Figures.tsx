@@ -316,16 +316,24 @@ export const Flakes = ({ frame, start, count = 26, seed = 3, fall = 2.4 }: { fra
   );
 };
 
-/** Gold light rays fanning from a point (the hero-angle glory, C01). */
-export const LightRays = ({ x, y, frame, opacity = 0.85, n = 14, len = 1600 }: { x: number; y: number; frame: number; opacity?: number; n?: number; len?: number }) => (
-  <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, opacity }}>
-    {Array.from({ length: n }, (_, i) => {
-      const a = (i / n) * Math.PI * 2 + (frame - (frame % 2)) * 0.004;
-      const w = 0.07;
-      return <path key={i} d={`M${x} ${y} L${x + Math.cos(a - w) * len} ${y + Math.sin(a - w) * len} L${x + Math.cos(a + w) * len} ${y + Math.sin(a + w) * len} Z`} fill={i % 2 ? GOLD : IVORY} opacity={i % 2 ? 0.9 : 0.6} />;
-    })}
-  </svg>
-);
+/** Painted light: LX-rays (halftone gold shafts on black, 1536 x 1024) screen-blended, one fan every 45 degrees
+ *  around `x, y`. The shafts converge on a point about (-130, -880) px of the image (measured), which is the pivot. */
+const RAYS_APEX = [-130, -880] as const;
+export const LightRays = ({ x, y, frame, opacity = 0.3 }: { x: number; y: number; frame: number; opacity?: number }) => {
+  const k = 0.55;
+  const drift = (frame - (frame % 2)) * 0.15;
+  return (
+    <AbsoluteFill style={{ mixBlendMode: 'screen', opacity, overflow: 'hidden' }}>
+      {Array.from({ length: 8 }, (_, i) => (
+        <Img
+          key={i}
+          src={staticFile('assets/LX-rays.png')}
+          style={{ position: 'absolute', left: x - RAYS_APEX[0] * k, top: y - RAYS_APEX[1] * k, width: 1536 * k, height: 1024 * k, transformOrigin: `${RAYS_APEX[0] * k}px ${RAYS_APEX[1] * k}px`, transform: `rotate(${i * 45 + drift}deg)` }}
+        />
+      ))}
+    </AbsoluteFill>
+  );
+};
 
 /** The painted boss health bar (C09 / G25 stand-in), attached to the painting camera. */
 export const ComicHpBar = ({ value = 60, x = 960, y = 92, width = 980, wobble = 0, children }: { value?: number; x?: number; y?: number; width?: number; wobble?: number; children?: ReactNode }) => {

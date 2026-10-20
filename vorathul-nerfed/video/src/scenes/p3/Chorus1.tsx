@@ -120,7 +120,7 @@ export const S47 = ({ frame }: { frame: number }) => {
         <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
-      <LightRays x={960} y={project(pose, [0, 30, -14]).y} frame={frame} opacity={0.5 * (1 - prog(frame, T1 - 6, 6))} />
+      <LightRays x={960} y={project(pose, [0, 30, -14]).y} frame={frame} opacity={0.3 * (1 - prog(frame, T1 - 6, 6))} />
       {TABLETS.map((t, i) => {
         // Hover high in the sky, then drop on the anchor (ease-in). Tablet 3 rides his helm and slides off when he peeks out.
         const drop = easeIn(prog(frame, t.land - 9, 9));
@@ -302,7 +302,7 @@ export const S50 = ({ frame }: { frame: number }) => {
         <Throne frame={frame} />
         <Vorathul st={st} place={{ pos: [-5, 0, -19], scale: SCALE_C }} />
       </Stage>
-      <LightRays x={kx} y={ky - kh * 0.62} frame={frame} opacity={0.75} />
+      <LightRays x={kx} y={ky - kh * 0.62} frame={frame} opacity={0.3} />
       <Kid asset="G32-1" x={kx} y={ky} h={kh} pose={{ armL: 150, armR: 165, head: -6, twirl: twos(frame) === frame ? twirl : twirl - speed, lean: -2 }} />
       <Nameplate frame={frame} text="LV 12" appearAt={at('s50-lv')} framesPerChar={(at('s50-12') - at('s50-lv')) / 3} x={kx - 170} y={ky - kh - 110} width={330} />
     </ShotFrame>
