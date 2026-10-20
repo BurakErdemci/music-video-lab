@@ -65,3 +65,26 @@ export { TimeRemap, fastForward, playBetween, type TimeRemapProps, type FrameMap
  *   the second that follows a flashing burst. Gate every render on tools/flashcheck.py.
  */
 export { MAX_FLASHES_PER_SECOND, flashRate, assertFlashBudget, duotoneSwings, impactSwings, gradeCues, GRADES, type Swing, type GradeName, type GradeStep, type Anchor } from './flash.ts';
+
+// Light, faked on the unlit stage (round 6).
+/**
+ * Measured light recipe (reference study): rims 1-3 px, saturated, on the side opposite the key;
+ * light SWELLS (slow rise, fixed centre) rather than sweeping; screen/wall light steps between 3
+ * levels (screenLevel, 5-7 frame holds); light on a figure = blurred colour quad behind + the same
+ * hue at 0.15-0.35 on the figure (FigureSpill) - for heroes only, Vorathul's body stays #0A0A0A.
+ */
+export { RimLight, flickerGain, screenLevel, SCREEN_LEVELS, type RimLightProps } from './RimLight.tsx';
+export { LightSpill, FigureSpill, pulse, swell, sparkLights, type LightSpillProps, type LightSource, type FigureSpillProps } from './LightSpill.tsx';
+/**
+ * SplitLight: directional key/fill grade with tinted shadows; true ink black is kept. Count its
+ * cues with splitSwings() in the shot's flash budget: a colour change is a swing, an angle drift is not.
+ */
+export { SplitLight, SPLITS, splitSwings, type SplitCue, type SplitSetup } from './SplitLight.tsx';
+/**
+ * holdFrames / Stutter: deliberate low frame rate. RULE (director): it is a storytelling tool,
+ * never decoration. Opt-in only, applied nowhere by default; use it only where a moment is built
+ * around it (e.g. a nerfed, lagging move that recovers to smooth motion), never sprinkled across
+ * shots. Prefer seededHolds (4-7 frame holds, measured) and give every step a real pose or offset
+ * change, or it reads as plain lag. The film's general on-twos boil is a separate, existing rule.
+ */
+export { holdFrames, seededHolds, Stutter } from './Stutter.tsx';
