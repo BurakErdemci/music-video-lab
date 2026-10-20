@@ -573,3 +573,22 @@ that produced §1.3, so every frame here equals `round(anchor × 30)`.
    key-colour cut-out before the other 26 images.
 6. **Open for the director's listening check (at home):** "Of" 74.48 s (p = 0.275), the first
    "Patch" (77.76 mix vs 79.14 vocal stem; 79.14 used), the intro "VORASOL" chants.
+
+## Colour collisions added (part 2 pass)
+
+Markers only; the shots above are not rewritten. Palettes and technique names as in
+[`storyboard-02-chorus-to-end.md`](storyboard-02-chorus-to-end.md) §3 (P painting, V Vorathul,
+O office, M magenta for deleted things only). Every frame below is an existing event frame of
+Appendix A.
+
+| Where | Frames | Palettes | Collision / transition | Technique |
+|---|---|---|---|---|
+| S07, S09, S11, S15, S16, S19, S22, S24, S28 big impacts | f587, f640, f742, f1042, f1120, f1371, f1439, f1583, f1699, f2087 | P → ink/ivory | the black/ivory posterise flash on the impact frame (recipe N, N+1) made a full-frame two-colour grade, so violet glows stay violet and the rest is exactly #0A0A0A / #F4ECD8 | `DuotoneFlash` hard cue ['#0A0A0A', '#F4ECD8'] for 2 frames, `ImpactBurst` flash |
+| Vorathul's strikes S09–S19 | f640, f703, f723, f742, f936, f965, f1042, f1158, f1371 | V echoes | violet echo trail on every strike he makes (pipe pistons, sweep, grab, throw, slam, wing gust, swat): 3 copies, delay 1 frame, violet → ink → ivory | `EchoTrail` (`echo` on pipes and arms, `smear` on the sword sweep f742) |
+| S22, S24 second form | f1583, f1699 | V hard | one beat of hard black/violet grade on the helm split and the second-form slam (rhymes with the growl flashes of part 2 S54, S56) | `DuotoneFlash` hard ['#0A0A0A', '#9B5CE0'] |
+| S26 office cut | f1850 | P → O | hard palette switch on the cut: the first office frame lands as a flat O grade for 2 frames before the plates resolve | hard cut + `DuotoneFlash` soft ['#ADB5BD', '#FFFFFF'] 2 frames |
+| S30–S31 pull-back | f2170 → f2305, back on f2313 | P bleeds to O | gold → office-grey bleed: from the frame match f2234 the painting's gold drains toward office grey from the frame edge inward as the frame enters (f2240 band, f2250 full frame, f2289 desks), fully grey-graded by `hit[47]` f2305; on "update" f2313 the painting snaps back to full colour with the 100 % flash | edge-masked `DuotoneFlash` soft ['#ADB5BD', '#F4ECD8'], mask radius driven by the office camera distance |
+| S33 freeze | f2347 → f2364 | P/O → O | the paused game is graded office grey/white for the whole freeze; colour returns on the strongest hit | `DuotoneFlash` soft cue on f2347, null on f2364 |
+| S36–S41 Patch 2.3 edits | f2532, f2574, f2593, f2645, f2657, f2726 | O seeps into P | office grey seeping into the painting where each office tool touches it: a flat grey ring with a thin uniform line grows from the pinch point, the giant hand, the eraser corner and the slapped note, and fades within 12 frames | `PaintSpread` (part 2 N3) with O fills and a thin plain edge instead of dry brush |
+| S37, S39, S41 deletions | f2593, f2657, f2735 | M | already magenta (cells, meteors, pip III); add a 1-frame hard M/ink grade on each delete frame so the magenta reads as a jolt | `DuotoneFlash` hard ['#0A0A0A', '#E0129A'] 1 frame |
+| S45 scream | f2963 | V | the sky plate alone gets a one-beat black/violet grade while the cathedral stays in P: the sky behaves like a separate surface | `DuotoneFlash` on the P0 layer only (render-target or layer mask) |
