@@ -16,12 +16,14 @@ export const PANEL_CUES = gradeCues(
 );
 
 // S113/S114 X28 (Z6 fix): the white-out on beat 815 is held ivory into the black/violet cue of beat 816 (one
-// swing, not two), gold on 817, grey/white moved to 819, back to colour on 820. S114 cuts on 818 underneath.
+// swing, not two), gold on 818 with the S114 cut, grey/white moved to 819, back to colour on 820.
 export const WHITEOUT = E('s113-blast');
 export const BLAST_CUES = gradeCues(
   [
     { at: { beat: 816 }, grade: 'V' },
-    { at: { beat: 817 }, grade: 'GOLD' },
+    // Gold lands on the S114 cut (beat 818): a cut and a cue on one frame are one swing (measured: gold on 817 plus
+    // the cut on 818 made four in the blast second).
+    { at: { beat: 818 }, grade: 'GOLD' },
     { at: { beat: 819 }, grade: 'O' },
     { at: { beat: 820 }, grade: 'P' },
   ],
