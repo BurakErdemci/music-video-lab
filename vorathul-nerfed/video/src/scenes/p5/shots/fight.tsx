@@ -14,11 +14,11 @@ import { Chair, Desk, Dev, LightStrip, Monitor3D, O, Rect } from '../lib/Office.
 import { AVAILABLE } from '../../../cast/available.ts';
 import { Asset } from '../lib/PlateCard.tsx';
 import { DomPlate } from '../lib/DomPlate.tsx';
-import { AfterRoom } from '../lib/Room.tsx';
+import { AfterRoom, DESKS } from '../lib/Room.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
 import { Shot } from '../lib/Shell.tsx';
 import { Vorathul } from '../lib/Vorathul.tsx';
-import { Paint } from '../lib/Conversion.tsx';
+import { Paint, SWAP_AT } from '../lib/Conversion.tsx';
 import { blastFire, cut, INK, IVORY, move, OFFICE_FLOOR, pipeLandFrame, pose, strike, timeline, UNIT, VIOLET } from '../lib/vorathul.ts';
 
 const F = OFFICE_FLOOR;
@@ -477,6 +477,11 @@ export const S103 = ({ frame }: { frame: number }) => {
             <InkSplash frame={frame - BLAST - 2 * Math.floor(i / 2)} duration={18} seed={1030 + i} x={p.x} y={p.y} size={80} variant="violet" fade={6} />
           </AbsoluteFill>
         );
+      })}
+      {/* The blast converts the furniture: an ink and gold splash on every desk group as it swaps. */}
+      {DESKS.map((d, i) => {
+        const p = project(cam, [d[0], d[1] + 1.8, d[2]]);
+        return <InkSplash key={`sw${i}`} frame={frame - SWAP_AT - 1 - (i % 2) * 2} duration={20} seed={1090 + i} x={p.x} y={p.y} size={190} variant={i % 2 ? 'violet' : 'black'} fade={8} direction={i < 2 ? Math.PI : 0} />;
       })}
       {/* The painted light layer (LX-rays, screen blend, low opacity) instead of flat solid beams. */}
       <DomPlate id="LX-rays" plate="03-kanat-yelpaze.jpg" crop={[0, 0, 1536, 1024]} x={0} y={0} width={W} style={{ mixBlendMode: 'screen', opacity: frame >= BLAST ? 0.55 * (1 - clamp01((frame - BLAST) / 18)) : 0 }} />

@@ -2,7 +2,7 @@
 import { AssetCard } from '../../../cast/AssetCard.tsx';
 import { AVAILABLE } from '../../../cast/available.ts';
 import { PlateCard } from './PlateCard.tsx';
-import { conversionAt, PaletteCtx, paletteAt, RisingPipes, WallConversion } from './Conversion.tsx';
+import { conversionAt, PaletteCtx, paletteAt, RisingPipes, SwapCtx, swapAt, WallConversion } from './Conversion.tsx';
 import { CARD_H, CARD_W, CEIL_Y, FRAME_T } from './Office.tsx';
 import { clamp01 } from './geom.ts';
 import type { Vec3 } from '../../../stage/Card.tsx';
@@ -14,11 +14,14 @@ const F = OFFICE_FLOOR;
 const PLATE01 = '01-tarz-cizgi-roman.jpg';
 
 /** The office before the ruin: desks left and right, monitors, chairs, light strips. */
+/** Desk ground points of the office set (the S103 swap splashes land on them). */
+export const DESKS: Vec3[] = [[-11.5, F, -13], [-10.5, F, -6.5], [11.5, F, -13], [10.5, F, -6.5]];
 export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true, wallTop, conv = 0 }: { wave?: number; centre?: [number, number]; desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number; conv?: number }) => {
-  const D: Vec3[] = [[-11.5, F, -13], [-10.5, F, -6.5], [11.5, F, -13], [10.5, F, -6.5]];
+  const D = DESKS;
   const rise = clamp01((conv - 0.4) / 0.4);
   return (
     <PaletteCtx.Provider value={paletteAt(conv)}>
+     <SwapCtx.Provider value={swapAt(conv)}>
       <WallConversion conv={conv} z={WALL_Z + 0.1} top={wallTop ?? CEIL_Y} hole={[CARD_W / 2 + FRAME_T, CARD_H / 2 + FRAME_T]} />
       {/* Organ pipes grow up behind the back desks and beside the frame. */}
       <RisingPipes at={[-12.5, F, -14.6]} rise={rise} />
@@ -43,6 +46,7 @@ export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true, w
           </group>
         );
       })}
+     </SwapCtx.Provider>
     </PaletteCtx.Provider>
   );
 };

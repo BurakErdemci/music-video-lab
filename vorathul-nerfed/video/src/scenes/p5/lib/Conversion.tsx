@@ -51,8 +51,28 @@ export const paintColor = (color: string, t: number): string => {
 
 /** How far the office's flat colours have turned to his palette (0 = office); read by Office's Rect. */
 export const PaletteCtx = createContext(0);
-/** Gives every office prop of a shot (also those outside the Room) the palette of that frame. */
-export const Paint = ({ frame, children }: { frame: number; children: ReactNode }) => <PaletteCtx.Provider value={paletteAt(conversionAt(frame))}>{children}</PaletteCtx.Provider>;
+/**
+ * The furniture swap: chairs, desks and monitors cross-fade to their converted twins (G41c, G40c, G42c) in the
+ * 12 frames after the restored pipe-fan blast (S103, beat 737), under ink splashes. Nothing is flying then, and
+ * every chair that flies or joins the throne pile later is already converted.
+ */
+export const SWAP_AT = E('s103-blast');
+export const SWAP_FRAMES = 12;
+const SWAP_C0 = conversionAt(SWAP_AT);
+const SWAP_C1 = conversionAt(SWAP_AT + SWAP_FRAMES);
+export const swapAt = (conv: number): number => clamp01((conv - SWAP_C0) / (SWAP_C1 - SWAP_C0));
+export const SwapCtx = createContext(0);
+export const useSwap = (): number => useContext(SwapCtx);
+
+/** Gives every office prop of a shot (also those outside the Room) the palette and furniture swap of that frame. */
+export const Paint = ({ frame, children }: { frame: number; children: ReactNode }) => {
+  const c = conversionAt(frame);
+  return (
+    <PaletteCtx.Provider value={paletteAt(c)}>
+      <SwapCtx.Provider value={swapAt(c)}>{children}</SwapCtx.Provider>
+    </PaletteCtx.Provider>
+  );
+};
 export const usePalette = (): number => useContext(PaletteCtx);
 
 // ---- the wall: paint and his architecture through a growing ink-edged mask ----

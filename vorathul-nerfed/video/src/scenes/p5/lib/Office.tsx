@@ -7,7 +7,8 @@ import { CanvasTexture, DoubleSide, LinearFilter, SRGBColorSpace } from 'three';
 import type { Vec3 } from '../../../stage/Card.tsx';
 import { seeded } from '../../../vfx/effects.ts';
 import { Asset } from './PlateCard.tsx';
-import { paintColor, usePalette } from './Conversion.tsx';
+import { paintColor, usePalette, useSwap } from './Conversion.tsx';
+import { AssetCard } from '../../../cast/AssetCard.tsx';
 import { GOLD, INK, IVORY, OFFICE_FLOOR } from './vorathul.ts';
 
 export const O = { bg: '#E9ECEF', mid: '#CED4DA', dark: '#ADB5BD', slate: '#868E96', ink: '#343A40', white: '#FFFFFF', blue: '#3B82F6', ceil: '#F1F3F5' } as const;
@@ -199,14 +200,19 @@ const placed = ({ at, off = [0, 0, 0], rot = [0, 0, 0] }: Prop) => ({ position: 
 /** Desk: front-facing flat table (top edge, front panel, two legs), 4.6 wide. */
 export const Desk = (p: Prop & { w?: number }) => {
   const w = p.w ?? 4.6;
+  const sw = useSwap();
+  const ch = (w * 1.15 * 825) / 1496;
   return (
     <group {...placed(p)}>
+      {sw > 0 ? <AssetCard id="G40c" standIn={{ color: '#0A0A0A' }} width={w * 1.15} height={ch} position={[0, ch / 2, 0.12]} opacity={sw} renderOrder={1400} /> : null}
+      {sw >= 1 ? null : <>
       <Rect w={w} h={1.6} at={[0, 2.2, -0.75]} rot={[-Math.PI / 2, 0, 0]} color="#F8F9FA" />
       <Panel w={w} h={0.22} at={[0, 2.12, 0.05]} fill={O.white} />
       <Rect w={0.14} h={2.0} at={[-w / 2 + 0.25, 1.0, 0]} color={O.dark} />
       <Rect w={0.14} h={2.0} at={[w / 2 - 0.25, 1.0, 0]} color={O.dark} />
       <Panel w={1.3} h={1.6} at={[w / 2 - 0.95, 1.0, 0.02]} fill={O.bg} />
       <Rect w={1.1} h={0.04} at={[w / 2 - 0.95, 1.3, 0.04]} color={O.dark} />
+      </>}
     </group>
   );
 };
@@ -215,8 +221,18 @@ export const Desk = (p: Prop & { w?: number }) => {
 export const Monitor3D = (p: Prop & { w?: number; screen?: string; children?: ReactNode }) => {
   const w = p.w ?? 2.2;
   const h = w * 0.6;
+  const sw = useSwap();
+  if (sw >= 1) {
+    const mh = w * 1.05;
+    return (
+      <group {...placed(p)}>
+        <AssetCard id="G42c-monitor" standIn={{ color: '#9B5CE0' }} width={mh} height={mh} position={[0, mh / 2, 0.05]} renderOrder={1401} />
+      </group>
+    );
+  }
   return (
     <group {...placed(p)}>
+      {sw > 0 ? <AssetCard id="G42c-monitor" standIn={{ color: '#9B5CE0' }} width={w * 1.05} height={w * 1.05} position={[0, (w * 1.05) / 2, 0.08]} opacity={sw} renderOrder={1401} /> : null}
       <Rect w={0.18} h={0.5} at={[0, 0.25, -0.05]} color={O.ink} />
       <Rect w={0.9} h={0.08} at={[0, 0.04, -0.05]} color={O.ink} />
       <Rect w={w} h={h} at={[0, 0.5 + h / 2, 0]} color={O.ink} />
@@ -252,9 +268,12 @@ export const Chair = (p: Prop & { size?: number; order?: number; pose?: ChairPos
   const s = p.size ?? 2.6;
   const h = (s * CHAIR_CROP[3]) / CHAIR_CROP[2];
   const pl = placed(p);
+  const sw = useSwap();
+  // Converted twin (same pose and aspect as G41-n) fades in on top; the grey chair goes when it is opaque.
   return (
     <group position={pl.position} rotation={pl.rotation}>
-      <Asset id={`G41-${p.pose ?? 1}`} standIn={{ plate: OFFICE_PLATE, crop: CHAIR_CROP, keying: 'light' }} width={s} height={h} position={[0, h / 2, 0]} renderOrder={p.order} />
+      {sw > 0 ? <AssetCard id={`G41c-${p.pose ?? 1}`} standIn={{ color: '#0A0A0A' }} width={s} height={h} position={[0, h / 2, 0.02]} opacity={sw} renderOrder={(p.order ?? 1300) + 1} /> : null}
+      {sw >= 1 ? null : <Asset id={`G41-${p.pose ?? 1}`} standIn={{ plate: OFFICE_PLATE, crop: CHAIR_CROP, keying: 'light' }} width={s} height={h} position={[0, h / 2, 0]} renderOrder={p.order} />}
     </group>
   );
 };
