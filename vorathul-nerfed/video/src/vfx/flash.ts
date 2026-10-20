@@ -52,12 +52,15 @@ export const impactSwings = (frame: number, flash: number): Swing[] => (flash > 
 /** Palette presets of storyboard 2 §3 (P painting = null: back to the ungraded picture). */
 export const GRADES = {
   V: { colors: [INK, VIOLET], hard: true },
-  // Office drains his world: dark grey ink stays readable, mid-tones become a fine dot screen.
-  O: { colors: ['#495057', '#E9ECEF'], hard: true, halftone: 7 },
-  // O plus a thin UI-blue selection edge around the darkest shapes.
-  O_B: { colors: ['#495057', '#E9ECEF'], hard: true, halftone: 7, outline: '#3B82F6' },
-  // MEMORY's soft inverted two-tone in office colours: a white figure on a pale UI-blue field.
+  // The office grade (director's pick, O-b): his world drained to dark grey ink on office grey,
+  // mid-tones as a fine dot screen, the darkest shapes edged in UI blue like a tool selection.
+  O: { colors: ['#495057', '#E9ECEF'], hard: true, halftone: 7, outline: '#3B82F6' },
+  // Alternatives kept for comparison, not for the default path: O-a = O without the edge;
+  // O-c = MEMORY's soft inverted two-tone in office colours (white figure on pale UI blue).
+  O_A: { colors: ['#495057', '#E9ECEF'], hard: true, halftone: 7 },
   O_C: { colors: ['#FFFFFF', '#A5C4F8'], hard: false },
+  // O's colours as a soft, half-strength screen for seeps and one-beat drains. No selection edge:
+  // on a soft, partial grade the blue line reads as a tool acting, which is the hard cut's job.
   O_SOFT: { colors: ['#495057', '#E9ECEF'], hard: false, halftone: 7, mix: 0.5 },
   P: { colors: null, hard: false },
   POSTER: { colors: [INK, IVORY], hard: true },

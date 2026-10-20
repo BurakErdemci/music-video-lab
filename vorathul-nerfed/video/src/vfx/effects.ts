@@ -53,7 +53,8 @@ export { TimeRemap, fastForward, playBetween, type TimeRemapProps, type FrameMap
  * - DuotoneFlash: every cue change is one swing (duotoneSwings). A 1-frame grade and its return
  *   are 2 swings.
  * - gradeCues() builds cues from { beat } / { word } / { frame } anchors with GRADES presets
- *   (V, O, O_SOFT, P, POSTER, GOLD, M, MEMORY) and throws if its own cues break the budget.
+ *   (V, O, O_SOFT, P, POSTER, GOLD, M, MEMORY; O_A and O_C are kept alternatives) and throws if
+ *   its own cues break the budget.
  * - Shots combine sources: collect every swing of a shot (grades, impact flashes, hard cuts
  *   between very different plates) and call assertFlashBudget(swings, label) where the schedule
  *   is built. TimeRemap fast-forward multiplies the rate of anything flashing inside it.
