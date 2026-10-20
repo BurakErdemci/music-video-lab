@@ -81,8 +81,10 @@ const Throne = ({ tier = 2, pitch = 0 }: { tier?: 1 | 2; pitch?: number }) => (
     ))}
   </>
 );
-/** Seated on top of the pile. */
-const THRONE_AT: Vec3 = [0, F + 2.5, THRONE_Z + 0.7];
+/** Seated in front of the pile. The drawn sit_alone carries its own stone seat (pelvis 0.49 H, seat base -0.088 H;
+ * the placeholder sat at 0.22 H), so the root goes 0.75 above the floor: the seat stands on it and the helm lands
+ * 0.2 above where the shots were framed. */
+const THRONE_AT: Vec3 = [0, F + 0.75, THRONE_Z + 0.7];
 
 // ---- meteors landing in the office (DOM Meteor aimed at a projected world point) ----
 const MeteorFall = ({ frame, cam, at, land, seed, size = 70, travel = 14, from = [-520, -980] }: { frame: number; cam: CameraPose; at: Vec3; land: number; seed: number; size?: number; travel?: number; from?: [number, number] }) => {
@@ -407,7 +409,7 @@ export const S113 = ({ frame }: { frame: number }) => {
 const S114_TL = timeline([
   cut(E('s114-cut'), THRONE_SIT),
   move(E('s114-silhouette'), { ...THRONE_SIT, head: [8, 0], armR: [40, 60, 0, 'grip'] } as Partial<PoseDef>, 16),
-  move(E('s114-laugh'), { ...LAUGH, seated: true, pelvis: [0, -0.3], legs: [0, 0], sword: 'ground', plant: [0.05, 0] } as Partial<PoseDef>, 16),
+  move(E('s114-laugh'), { ...LAUGH, seated: true, pelvis: THRONE_SIT.pelvis, legs: [0, 0], sword: 'ground', plant: [0.05, 0] } as Partial<PoseDef>, 16),
 ]);
 const PUSH = (frame: number): number => 2.2 * outCubic(prog(frame, E('s114-push1'), 8)) + 2.2 * outCubic(prog(frame, E('s114-push2'), 8)) + 0.012 * (frame - E('s114-cut'));
 const S114_CAM: CameraPath = withShake((frame) => {
