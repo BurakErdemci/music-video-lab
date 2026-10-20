@@ -34,10 +34,10 @@ const Updater = ({ fill, label }: { fill: number; label: string }) => {
       </text>
       <rect x={x0 + 0.28} y={y0 + 0.72} width={sw - 0.56} height={0.2} rx={0.1} fill={C.mid} />
       {fill > 0 ? <rect x={x0 + 0.28} y={y0 + 0.72} width={(sw - 0.56) * (fill / 100)} height={0.2} rx={0.1} fill={C.blue} /> : null}
-      <text x={x0 + 0.28} y={y0 + 1.2} fontFamily="'UiInter', sans-serif" fontWeight={600} fontSize={0.15} fill={C.slate}>
+      <text x={x0 + 0.28} y={y0 + 1.2} fontFamily="'UiInter', sans-serif" fontWeight={600} fontSize={0.115} fill={C.slate}>
         {name}
       </text>
-      <text x={x0 + sw - 0.28} y={y0 + 1.2} textAnchor="end" fontFamily="'UiInter', sans-serif" fontWeight={700} fontSize={0.15} fill={C.ink}>
+      <text x={x0 + sw - 0.28} y={y0 + 1.2} textAnchor="end" fontFamily="'UiInter', sans-serif" fontWeight={700} fontSize={0.115} fill={C.ink}>
         {pct}
       </text>
     </g>
