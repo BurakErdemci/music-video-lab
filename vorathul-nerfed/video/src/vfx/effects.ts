@@ -39,7 +39,8 @@ export { ScribbleBoil, type ScribbleBoilProps } from './ScribbleBoil.tsx';
 export { DryBrushStroke, DryBrush, dryBrushOutline, pathBounds, type DryBrushStrokeProps } from './DryBrushStroke.tsx';
 
 export { StickerCutout, type StickerCutoutProps } from './StickerCutout.tsx';
-export { PaintSpread, type PaintSpreadProps, type PaintSource } from './PaintSpread.tsx';
+export { PaintSpread, type PaintSpreadProps } from './PaintSpread.tsx';
+export { PaintSeep, type PaintSeepProps, type PaintSource } from './PaintSeep.tsx';
 export { CanvasBulge, type CanvasBulgeProps } from './CanvasBulge.tsx';
 export { CrackGrow, crackGraph, crackStep, type CrackGrowProps, type CrackSegment, type CrackOptions } from './CrackGrow.tsx';
 export { TimeRemap, fastForward, playBetween, type TimeRemapProps, type FrameMap } from './TimeRemap.tsx';
@@ -58,5 +59,8 @@ export { TimeRemap, fastForward, playBetween, type TimeRemapProps, type FrameMap
  *   is built. TimeRemap fast-forward multiplies the rate of anything flashing inside it.
  * - Not counted as flashes: speed-line flicker, scribble and sticker boil (small area, no
  *   frame-wide luminance swing). Measure the render anyway; the model is conservative, not proof.
+ * - Measured: a big ImpactBurst star (even with flash 0), its debris and a strong shake on the
+ *   high-contrast painting can each register as a swing in tools/flashcheck.py. Keep them out of
+ *   the second that follows a flashing burst. Gate every render on tools/flashcheck.py.
  */
 export { MAX_FLASHES_PER_SECOND, flashRate, assertFlashBudget, duotoneSwings, impactSwings, gradeCues, GRADES, type Swing, type GradeName, type GradeStep, type Anchor } from './flash.ts';
