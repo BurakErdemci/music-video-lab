@@ -24,6 +24,14 @@ export interface LightSpillProps {
   region?: string;
   /** 1 = linear falloff, higher = a tighter hot core. */
   falloff?: number;
+  /**
+   * Wrap mode: the picture to light. The light is then applied inside a filter that can see the
+   * picture, so pixels darker than `keepBlack` stay exact ink (Vorathul's body, ink lines). Without
+   * children the spill is a free overlay blended over whatever is below and lights everything.
+   */
+  children?: ReactNode;
+  /** Wrap mode only: luminance below which pixels keep exact ink (default 0.05; 0 turns it off). */
+  keepBlack?: number;
   id?: string;
 }
 
@@ -40,9 +48,50 @@ export const pulse = (start: number, attack: number, hold: number, release: numb
   return peak * (1 - clamp01((t - attack - hold) / release));
 };
 
-export const LightSpill = ({ frame, sources, blend = 'screen', region, falloff = 1.6, id = 'vfx-spill' }: LightSpillProps) => {
+const STOPS = [0, 0.15, 0.35, 0.6, 0.85, 1];
+
+/** The light pools as a standalone SVG document (used as a filter image in wrap mode). */
+const spillSvg = (w: number, h: number, frame: number, sources: readonly LightSource[], falloff: number): string => {
+  const grads = sources
+    .map((s, i) => {
+      const k = Math.max(0, typeof s.intensity === 'function' ? s.intensity(frame) : s.intensity);
+      const stops = STOPS.map((o) => `<stop offset="${o}" stop-color="${s.color}" stop-opacity="${Math.min(1, k * (1 - o) ** falloff).toFixed(3)}"/>`).join('');
+      return `<radialGradient id="g${i}" cx="${s.x}" cy="${s.y}" r="${s.radius}" gradientUnits="userSpaceOnUse">${stops}</radialGradient>`;
+    })
+    .join('');
+  const pools = sources.map((s, i) => `<circle cx="${s.x}" cy="${s.y}" r="${s.radius}" fill="url(#g${i})"/>`).join('');
+  return `data:image/svg+xml,${encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="${w}" height="${h}"><defs>${grads}</defs>${pools}</svg>`)}`;
+};
+
+export const LightSpill = ({ frame, sources, blend = 'screen', region, falloff = 1.6, children, keepBlack = 0.05, id = 'vfx-spill' }: LightSpillProps) => {
   const { width, height } = useVideoConfig();
-  const stops = [0, 0.15, 0.35, 0.6, 0.85, 1];
+  const stops = STOPS;
+  if (children !== undefined) {
+    const kb = Math.max(0, keepBlack);
+    const k = 1 / Math.max(0.01, kb * 0.6);
+    const fid = `${id}-wrap-${frame}`;
+    return (
+      <AbsoluteFill>
+        <svg width={0} height={0} style={{ position: 'absolute' }}>
+          <filter id={fid} filterUnits="userSpaceOnUse" primitiveUnits="userSpaceOnUse" x={0} y={0} width={width} height={height} colorInterpolationFilters="sRGB">
+            <feImage href={spillSvg(width, height, frame, sources, falloff)} x={0} y={0} width={width} height={height} result="light" />
+            <feBlend in="light" in2="SourceGraphic" mode={String(blend)} result="lit" />
+            {kb > 0 ? (
+              <>
+                {/* Ink: opaque below keepBlack luminance, so his body and the lines stay exact #0A0A0A. */}
+                <feColorMatrix in="SourceGraphic" type="matrix" values={`0 0 0 0 0.039  0 0 0 0 0.039  0 0 0 0 0.031  ${-0.2126 * k} ${-0.7152 * k} ${-0.0722 * k} 0 ${kb * k * 1.6}`} result="ink" />
+                <feMerge>
+                  <feMergeNode in="lit" />
+                  <feMergeNode in="ink" />
+                </feMerge>
+              </>
+            ) : null}
+          </filter>
+        </svg>
+        <AbsoluteFill style={{ filter: `url(#${fid})` }}>{children}</AbsoluteFill>
+      </AbsoluteFill>
+    );
+  }
   return (
     <AbsoluteFill style={{ mixBlendMode: blend, clipPath: region, pointerEvents: 'none' }}>
       <svg width={width} height={height} style={{ position: 'absolute', inset: 0 }}>
