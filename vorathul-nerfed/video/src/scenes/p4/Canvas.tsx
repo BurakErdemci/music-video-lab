@@ -6,21 +6,23 @@ import { Stage, type CameraPath } from '../../stage/Stage.tsx';
 import { CanvasBulge, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects.ts';
 import { CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
+import { jointWorld } from './rigline.ts';
 import { DevHead } from './People.tsx';
 import { OfficeStage, WallItems } from './office.tsx';
 import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog } from './lib.ts';
 
 const DRAIN = 'saturate(0.55)';
 
-/** The hero's head while seated, for the ECU on the slit. */
-const SLIT_ECU = frameAt([0.15, 3.12, -15], 2.5);
+/** The hero's slit while seated, measured from the rig (the drawn sit_alone puts it at y 4.23, not the placeholder's 3.1). */
+const SLIT = jointWorld(CUE.s77cut.frame, 'eye_slit');
+const SLIT_ECU = frameAt([SLIT[0], SLIT[1], -15], 2.5);
 const STAND_MED = frameAt([0, 3.4, -15], 9.5);
 
 /** S77 03:07.57: back inside. ECU on the slit as it relights to half, then MED: he stands (a cut) and steps to the picture plane. */
 export const S77 = ({ frame }: { frame: number }) => {
   const med = CUE.s77med.frame;
   const path: CameraPath = (f) => {
-    if (f < med) return blendPose(SLIT_ECU, frameAt([0.17, 3.15, -15], 2.1), easeInOut(prog(f, CUE.s77cut.frame, med - CUE.s77cut.frame)));
+    if (f < med) return blendPose(SLIT_ECU, frameAt([SLIT[0] + 0.02, SLIT[1] + 0.03, -15], 2.1), easeInOut(prog(f, CUE.s77cut.frame, med - CUE.s77cut.frame)));
     return blendPose(STAND_MED, CANVAS_CAM, easeInOut(prog(f, med, CUE.s78cut.frame - med)));
   };
   return (
