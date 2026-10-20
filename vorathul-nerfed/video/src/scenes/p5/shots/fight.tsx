@@ -48,7 +48,7 @@ const S96_CAM: CameraPath = withShake(handheld(tween({ position: [0.4, -1.6, 2.6
 export const S96 = ({ frame }: { frame: number }) => {
   const cam = S96_CAM(frame);
   const c = project(cam, [0, -1.0, -6]);
-  const dw = 9 * pxPerUnit(cam, c.z);
+  const dw = Math.min(1100, 5.6 * pxPerUnit(cam, c.z));
   const split = frame - CLEAVE;
   const half = (side: -1 | 1): ReactNode => {
     const t = Math.max(0, split);
@@ -305,7 +305,8 @@ export const S100 = ({ frame }: { frame: number }) => {
         return <InkSplash key={n} frame={frame - pipeLandFrame(n)} duration={16} seed={1000 + n} x={m.x} y={m.y} size={90} variant="violet" fade={6} />;
       })}
       {/* The lead cursor of the swarm, 1.2 units ahead of the lens. */}
-      <Cursor frame={frame} path={[{ f: frame, x: lp.x, y: lp.y }]} size={(1.5 * pxPerUnit(cam, lp.z)) / 40} />
+      {/* Clamped: at 1.2 units the true size would swallow the frame in its outline. */}
+      <Cursor frame={frame} path={[{ f: frame, x: Math.min(lp.x, W * 0.62), y: Math.max(lp.y, H * 0.62) }]} size={7} />
     </Shot>
   );
 };
@@ -395,7 +396,7 @@ const S103_TL = timeline(
   [cut(E('s103-cut'), pose('blast_antic')), strike(BLAST, pose('blast_strike'), 20), move(E('s103-strips'), pose('blast_follow'), 14)],
   { extraPipes: blastFire(BLAST) },
 );
-const S103_BASE: CameraPose = { position: [0.4, 4.6, -11.0], target: [0, F, -13.4], fov: 56 };
+const S103_BASE: CameraPose = { position: [0.4, 4.6, -12.6], target: [0, F, -17.2], fov: 58 };
 const S103_CAM: CameraPath = withShake(handheld(hold(S103_BASE), { amp: 0.04, seed: 's103' }), {
   hits: [{ start: BLAST, seed: 1031, amp: { pct: SHAKE_PCT.big } }, { start: E('s103-strips'), seed: 1032, amp: { pct: SHAKE_PCT.medium } }],
 });
@@ -492,7 +493,7 @@ export const S104 = ({ frame }: { frame: number }) => {
         <Rect w={11} h={2.6} at={[2, -3.98, -6.9]} rot={[Math.PI / 2, 0, 0]} color={O.dark} />
         <Rect w={11} h={0.24} at={[2, -4.1, -8.2]} color={O.white} />
         <Rect w={0.22} h={2.2} at={[-2.6, F + 1.1, -7.6]} color={O.slate} />
-        <Dev who="glasses" at={[0.2, F, -7.0]} height={2.5} order={3000} />
+        <Dev who="glasses" at={[-1.3, F, -7.0]} height={1.9} order={3000} />
       </Stage>
       <SpeedLines mode="parallel" frame={twos(frame) - SWEEP} duration={14} seed={104} angle={Math.PI} count={30} speed={160} />
       <BladeTrail pts={[[W + 40, blade.y - 140], [blade.x + 120, blade.y - 40], [blade.x - 500, blade.y + 30], [-60, blade.y - 30]]} width={64} age={frame - SWEEP} life={8} />

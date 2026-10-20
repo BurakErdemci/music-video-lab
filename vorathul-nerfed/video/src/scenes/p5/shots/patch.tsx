@@ -49,7 +49,7 @@ const Wreck = () => (
 // ------------------------------------------------------------------ S105 the ruins, Patch 2.5 types
 const S105_AT: Vec3 = [3.4, F, -17.2];
 const S105_TL = timeline([cut(E('s105-cut'), pose('base', { head: [-14, 0.02], torso: -6, armR: [-15, 60, -20, 'grip'], armL: [30, 80, 0, 'spread'], lean: -3 })), move(E('s105-two'), pose('base', { head: [-18, 0.025], torso: -10, armR: [-15, 60, -20, 'grip'], armL: [60, 70, 0, 'spread'], lean: -5 }), 20)]);
-const S105_CAM: CameraPath = handheld(tween({ position: [-1.4, -2.6, -4.5], target: [0.4, -2.6, -20] }, { position: [-1.9, -2.8, -5.6], target: [0.2, -2.9, -20] }, { start: E('s105-cut'), frames: 61 }), { amp: 0.05, seed: 's105' });
+const S105_CAM: CameraPath = handheld(tween({ position: [-2.2, -2.4, 0.5], target: [0, -2.2, -20] }, { position: [-2.6, -2.6, -1.4], target: [-0.4, -2.6, -20] }, { start: E('s105-cut'), frames: 61 }), { amp: 0.05, seed: 's105' });
 const LAST_MON: Vec3 = [-3.6, F + 1.1, -9.8];
 
 export const S105 = ({ frame }: { frame: number }) => {

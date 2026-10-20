@@ -11,7 +11,9 @@ export const DomPlateFilters = () => (
   <svg width={0} height={0} style={{ position: 'absolute' }}>
     <filter id="p5-ink-key" colorInterpolationFilters="sRGB">
       {/* alpha = 1 where luminance is low; colour forced to ink. */}
-      <feColorMatrix type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.04  0 0 0 0 0.04  -1.6 -3.1 -0.6 0 1.45" />
+      <feColorMatrix type="matrix" values="0 0 0 0 0.04  0 0 0 0 0.04  0 0 0 0 0.04  -1.6 -3.1 -0.6 0 1.45" result="k" />
+      {/* Keep it inside the picture: the filter margin is transparent black, which the matrix would turn to ink. */}
+      <feComposite in="k" in2="SourceAlpha" operator="in" />
     </filter>
     <filter id="p5-ivory" colorInterpolationFilters="sRGB">
       <feFlood floodColor="#F4ECD8" result="c" />
