@@ -1,5 +1,5 @@
-import { useEffect, useState } from 'react';
-import { cancelRender, continueRender, delayRender, staticFile } from 'remotion';
+import { useLoader } from '@react-three/fiber';
+import { staticFile } from 'remotion';
 import { LinearFilter, SRGBColorSpace, TextureLoader, type Texture } from 'three';
 
 export type Vec3 = [number, number, number];
@@ -18,35 +18,21 @@ export interface CardProps {
   renderOrder?: number;
 }
 
-/** Loads a texture and holds the render until it is decoded, so a frame never renders with a black card. */
-export const useCardTexture = (src: string): Texture | null => {
-  const [texture, setTexture] = useState<Texture | null>(null);
-  useEffect(() => {
-    const handle = delayRender(`texture ${src}`);
-    let live = true;
-    new TextureLoader().load(
-      staticFile(src),
-      (tex) => {
-        tex.colorSpace = SRGBColorSpace;
-        tex.minFilter = LinearFilter;
-        tex.generateMipmaps = false;
-        if (live) setTexture(tex);
-        continueRender(handle);
-      },
-      undefined,
-      (err) => cancelRender(err instanceof Error ? err : new Error(`texture ${src} failed to load`)),
-    );
-    return () => {
-      live = false;
-    };
-  }, [src]);
+/**
+ * Suspends until the image is decoded (R3F useLoader); @remotion/three holds the frame while the canvas is suspended,
+ * so a frame is never captured with a missing card.
+ */
+export const useCardTexture = (src: string): Texture => {
+  const texture = useLoader(TextureLoader, staticFile(src));
+  texture.colorSpace = SRGBColorSpace;
+  texture.generateMipmaps = false;
+  texture.minFilter = LinearFilter;
   return texture;
 };
 
 /** A flat, unlit drawing on a plane. No lights, no tone mapping. */
 export const Card = ({ src, width, height, position, rotation, scale, opacity = 1, renderOrder }: CardProps) => {
   const texture = useCardTexture(src);
-  if (!texture) return null;
   return (
     <mesh position={position} rotation={rotation} scale={scale} renderOrder={renderOrder}>
       <planeGeometry args={[width, height]} />
