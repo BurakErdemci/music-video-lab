@@ -16,6 +16,9 @@ const DESK_H = 5.0;
 
 /** The left monitor's updater window on top of the final desk: UPDATE 2.3 with the same fill as the sun. */
 const Updater = ({ fill, label }: { fill: number; label: string }) => {
+  // The label is "UPDATE 2.3  NN%": the name sits left and the percentage right so neither can run out of the card.
+  const name = label.replace(/\s*\d+%$/, '');
+  const pct = label.match(/\d+%$/)?.[0] ?? '';
   const [w] = finalSize('G28-1') as [number, number];
   const [, h] = finalSize('G28-1') as [number, number];
   const W = (DESK_H * w) / h;
@@ -31,8 +34,11 @@ const Updater = ({ fill, label }: { fill: number; label: string }) => {
       </text>
       <rect x={x0 + 0.28} y={y0 + 0.72} width={sw - 0.56} height={0.2} rx={0.1} fill={C.mid} />
       {fill > 0 ? <rect x={x0 + 0.28} y={y0 + 0.72} width={(sw - 0.56) * (fill / 100)} height={0.2} rx={0.1} fill={C.blue} /> : null}
-      <text x={x0 + 0.28} y={y0 + 1.22} fontFamily="'UiInter', sans-serif" fontWeight={600} fontSize={0.2} fill={C.slate}>
-        {label}
+      <text x={x0 + 0.28} y={y0 + 1.2} fontFamily="'UiInter', sans-serif" fontWeight={600} fontSize={0.15} fill={C.slate}>
+        {name}
+      </text>
+      <text x={x0 + sw - 0.28} y={y0 + 1.2} textAnchor="end" fontFamily="'UiInter', sans-serif" fontWeight={700} fontSize={0.15} fill={C.ink}>
+        {pct}
       </text>
     </g>
   );

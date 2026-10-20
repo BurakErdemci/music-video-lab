@@ -80,6 +80,8 @@ export const World3D = ({ frame, sun, pillars, skyShake = [0, 0], skyViolet = fa
         <FinalCard id="L2-roof" height={8.8} position={[0, -0.1, 0]} renderOrder={20} />
       </Layer>
       {rig ? <Rig cfg={headUp ? RIG_NO_HEAD : RIG_CFG} state={state} /> : null}
+      {/* G13 takes the head's place in the stack. S45 frames it so its straight bottom and side edges fall outside the shot. */}
+      {headUp ? <FinalCard id="G13" height={5} position={[0, 1.25, 0]} renderOrder={178.5} /> : null}
       {pillars ? (
         <>
           <FinalCard id="L2-buttress" height={4} position={[-2.8, 0, 6]} renderOrder={300} />

@@ -238,7 +238,8 @@ const ScreenUpdater: React.FC<{ title: string; fill: number; label: string }> = 
       <text x={0.3} y={0.7} fontFamily={UI_FONT} fontWeight={600} fontSize={0.19} fill={C.ink}>{title}</text>
       <rect x={0.3} y={0.8} width={barW} height={barH} rx={barH / 2} fill={C.mid} />
       {fw > 0 ? <rect x={0.3} y={0.8} width={fw} height={barH} rx={Math.min(barH / 2, fw / 2)} fill={C.blue} /> : null}
-      <text x={0.3} y={1.13} fontFamily={UI_FONT} fontWeight={600} fontSize={0.14} fill={C.slate}>{label}</text>
+      <text x={0.3} y={1.13} fontFamily={UI_FONT} fontWeight={600} fontSize={0.12} fill={C.slate}>{label.replace(/\s*\d+%$/, '')}</text>
+      <text x={0.3 + barW} y={1.13} textAnchor="end" fontFamily={UI_FONT} fontWeight={700} fontSize={0.12} fill={C.ink}>{label.match(/\d+%$/)?.[0] ?? ''}</text>
     </g>
   );
 };

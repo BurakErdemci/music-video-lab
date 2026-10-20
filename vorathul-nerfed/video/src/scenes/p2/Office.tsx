@@ -76,10 +76,10 @@ export const OfficeScene = ({ frame, cam, paint, notes, dev, onFrame, drain = 0,
         </Layer>
       ) : null}
       <Layer cam={cam} z={Z.desks}>
-        <g transform={`translate(-7.6 ${fl})`}>
+        <g transform={`translate(-6 ${fl})`}>
           <Desk side="L" fill={fill} label={screen.label} />
         </g>
-        <g transform={`translate(7.6 ${fl})`}>
+        <g transform={`translate(6 ${fl})`}>
           <Desk side="R" fill={0} label="" />
         </g>
       </Layer>

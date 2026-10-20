@@ -60,7 +60,7 @@ export const devAt = (f: number): Dev => {
     return { x: 2.3, side: false, pose: { ...TAP_READY, armL: arm(10, 14, 'grip'), bob: breathe } };
   }
   // S42: he pins the card to the frame, then dusts his hands
-  const x = 6.9;
+  const x = 4.8;
   const pin = smooth((f - T.players) / 8);
   const dust = smooth((f - (T.felt - 4)) / 6);
   const rub = 6 * Math.sin((f - T.felt) * 1.7) * dust;

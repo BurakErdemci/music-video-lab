@@ -124,8 +124,9 @@ const PanelFrame = () => (
 );
 
 // ---- S45 the first look up: only the sky shakes, hard ------------------------------------------------------------------------
-const LOW_VIEW: View = { cx: 0, cy: 1.2, h: 4.8 };
-const SKY_VIEW = (f: number): View => ({ ...LOW_VIEW, h: LOW_VIEW.h - 0.4 * clamp((f - SHOT_FROM.S45) / 38) });
+// A close view on the helm: tight enough that the G13 card's straight bottom and side edges (5.2 x 5 units) lie outside the frame.
+const LOW_VIEW: View = { cx: 0, cy: 1.95, h: 2.8 };
+const SKY_VIEW = (): View => LOW_VIEW;
 
 const skyShakeAt = (f: number): [number, number] => {
   const a = shake(f, T.lookUp, 0.6, 61, 24);
@@ -135,12 +136,7 @@ const skyShakeAt = (f: number): [number, number] => {
 
 /** The helm seen from below: collar in front, the lit slit foreshortened, horns and crown behind (stand-in for G13). */
 const HelmFromBelow = () =>
-  finalSize('G13') ? (
-    <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
-      <defs><clipPath id="p2g13"><rect x={HELM[0] - 215} y={HELM[1] - 170} width={430} height={330} /></clipPath></defs>
-      <image href={staticFile('assets/G13.png')} x={HELM[0] - 215} y={HELM[1] - 170} width={430} height={412} clipPath="url(#p2g13)" />
-    </svg>
-  ) : (
+  finalSize('G13') ? null : (
   <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
     <g transform={`translate(${HELM[0]} ${HELM[1] + 30}) scale(0.55)`} fill="#0A0908">
       <path d="M-210 -150 Q-300 -330 -170 -330 Q-250 -230 -150 -170Z" />
@@ -153,6 +149,24 @@ const HelmFromBelow = () =>
     </g>
   </svg>
   );
+
+/** The violet slit flares when the scream tears the note off the helm, then settles to a steady glow. */
+const SLIT: readonly [number, number] = [HELM[0], 360];
+const SlitFlare = ({ f }: { f: number }) => {
+  const t = f - (T.lookUp + 3);
+  if (t < 0) return null;
+  const k = t < 6 ? t / 6 : Math.max(0.28, 1 - (t - 6) / 14);
+  return (
+    <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
+      <defs>
+        <filter id="p2flare" x="-50%" y="-200%" width="200%" height="500%">
+          <feGaussianBlur stdDeviation={9} />
+        </filter>
+      </defs>
+      <ellipse cx={SLIT[0]} cy={SLIT[1]} rx={125 * (0.7 + 0.3 * k)} ry={20 * (0.7 + 0.6 * k)} fill="#C9A2F4" opacity={0.7 * k} filter="url(#p2flare)" />
+    </svg>
+  );
+};
 
 const Flakes = ({ f }: { f: number }) => {
   const parts = [T.flakes1, T.flakes2].flatMap((start, k) => {
@@ -189,7 +203,7 @@ export const S45 = ({ frame }: { frame: number }) => {
   const sky = frame >= T.lookUp ? skyShakeAt(frame) : ([0, 0] as const);
   return (
     <Shot frame={frame}>
-      <PaintView {...paintAt(frame, { skyShake: sky, skyViolet: up && frame < T.lookUp + 10, headUp: up, under: up ? <HelmFromBelow /> : undefined })} view={SKY_VIEW(frame)} hudFixed />
+      <PaintView {...paintAt(frame, { skyShake: sky, skyViolet: up && frame < T.lookUp + 10, headUp: up, under: up ? <HelmFromBelow /> : undefined, overlayTop: <SlitFlare f={frame} /> })} view={SKY_VIEW()} hudFixed />
       <Flakes f={frame} />
       <PanelFrame />
     </Shot>

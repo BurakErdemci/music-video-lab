@@ -314,22 +314,68 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
         {[T.meteor1, T.meteor2].map((s, i) => (f >= s && f < s + 6 ? <ImpactBurst key={s} frame={f - s} duration={12} seed={80 + i} x={i ? 1560 : 300} y={FLOOR - 30} size={110} flash={0} /> : null))}
       </svg>
       <Seeps f={f} />
-      {f >= noteSlap ? (
-        <StickyNote
-          frame={f}
-          x={NOTE.x - NOTE.w / 2 + (f >= T.tug && f < T.tug + 18 ? Math.sin((f - T.tug) * 2.4) * 10 : 0)}
-          y={NOTE.y - NOTE.w * 0.46}
-          width={NOTE.w}
-          text="Phase 3"
-          slapAt={noteSlap}
-          rotate={-7}
-        />
-      ) : null}
-      {f >= noteSlap + 6 ? (
-        <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={SVG_STYLE}>
-          <path d={`M${NOTE.x - NOTE.w * 0.4} ${NOTE.y - NOTE.w * 0.04} L${NOTE.x + NOTE.w * 0.4} ${NOTE.y + NOTE.w * 0.2}`} stroke={C.blue} strokeWidth={9} strokeLinecap="round" opacity={clamp((f - noteSlap - 6) / 5)} />
+      {f >= noteSlap ? <NoteOnHelm f={f} slapAt={noteSlap} /> : null}
+    </>
+  );
+};
+
+// ---- the sticky note on the helm, and how the scream tears it off ------------------------------------------------------
+
+const TEAR_FRAMES = 14;
+const PAD = 26;
+/** The jagged tear line, as fractions of the padded note box: the two halves share it exactly. */
+const TEAR: readonly (readonly [number, number])[] = [[0.6, 0], [0.47, 0.18], [0.58, 0.36], [0.43, 0.55], [0.56, 0.75], [0.42, 1]];
+const poly = (pts: readonly (readonly [number, number])[]): string => 'polygon(' + pts.map(([x, y]) => (x * 100).toFixed(1) + '% ' + (y * 100).toFixed(1) + '%').join(',') + ')';
+const HALF_A = poly([[0, 0], ...TEAR, [0, 1]]);
+const HALF_B = poly([...TEAR, [1, 1], [1, 0]]);
+
+/** One piece of the note (the whole note before the tear, a half of it after) with its blue cross-out line. */
+const NotePiece = ({ f, slapAt, clip, move }: { f: number; slapAt: number; clip?: string; move?: string }) => {
+  const W = NOTE.w + 2 * PAD;
+  const H = NOTE.w * 0.917 + 2 * PAD;
+  const tug = f >= T.tug && f < T.tug + 18 ? Math.sin((f - T.tug) * 2.4) * 10 : 0;
+  const cx = PAD + NOTE.w / 2;
+  const cy = PAD + NOTE.w * 0.46;
+  return (
+    <div style={{ position: 'absolute', left: NOTE.x - NOTE.w / 2 - PAD + tug, top: NOTE.y - NOTE.w * 0.46 - PAD, width: W, height: H, clipPath: clip, transform: move, transformOrigin: '50% 50%' }}>
+      <StickyNote frame={f} x={PAD} y={PAD} width={NOTE.w} text="Phase 3" slapAt={slapAt} rotate={-7} />
+      {f >= slapAt + 6 ? (
+        <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} style={{ position: 'absolute', left: 0, top: 0, overflow: 'visible' }}>
+          <path d={`M${cx - NOTE.w * 0.4} ${cy - NOTE.w * 0.04} L${cx + NOTE.w * 0.4} ${cy + NOTE.w * 0.2}`} stroke={C.blue} strokeWidth={9} strokeLinecap="round" opacity={clamp((f - slapAt - 6) / 5)} />
         </svg>
       ) : null}
+    </div>
+  );
+};
+
+/** Paper scraps thrown off the tear, seeded and ballistic. */
+const Scraps = ({ t }: { t: number }) => {
+  const r = seeded('p2scraps');
+  return (
+    <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={SVG_STYLE}>
+      {Array.from({ length: 16 }, (_, i) => {
+        const a = r.range(0, Math.PI * 2);
+        const v = r.range(14, 40);
+        const s = r.range(9, 22);
+        const x = NOTE.x + Math.cos(a) * v * t;
+        const y = NOTE.y + Math.sin(a) * v * t + 1.4 * t * t;
+        return <rect key={i} x={x - s / 2} y={y - s / 2} width={s} height={s * 0.8} transform={`rotate(${r.range(0, 90) + t * r.range(-30, 30)} ${x} ${y})`} fill={C.note} stroke={C.dark} strokeWidth={2} opacity={clamp(1 - t / 16)} />;
+      })}
+    </svg>
+  );
+};
+
+const NoteOnHelm = ({ f, slapAt }: { f: number; slapAt: number }): ReactNode => {
+  const t = f - T.lookUp;
+  if (t < 0) return <NotePiece f={f} slapAt={slapAt} />;
+  if (t > TEAR_FRAMES + 2) return null;
+  const a = `translate(${-85 * t}px, ${-30 * t + 1.5 * t * t}px) rotate(${-16 * t}deg)`;
+  const b = `translate(${75 * t}px, ${-60 * t + 2.4 * t * t}px) rotate(${22 * t}deg)`;
+  return (
+    <>
+      <NotePiece f={f} slapAt={slapAt} clip={HALF_A} move={a} />
+      <NotePiece f={f} slapAt={slapAt} clip={HALF_B} move={b} />
+      <Scraps t={t} />
     </>
   );
 };
