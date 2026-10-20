@@ -27,6 +27,16 @@ const LIVE: readonly string[] = [
   'G35a', 'G35b',
   // p5 office cast and key stills
   'G14', 'G39-1', 'G39-2', 'G39-3', 'G39-7', 'G39-8', 'G41-1', 'G41-2', 'G41-4', 'G42', 'G43', 'G44', 'G45',
+  // organ loft (p1 S17-S24)
+  'L1-bellows', 'L1-console', 'L1-floor', 'L1-pipes-near', 'L1-wall-a', 'L1-wall-b',
+  // rooftop and open sky (p1 S25, p2)
+  'L2-buttress', 'L2-gargoyle', 'L2-land', 'L2-roof', 'L2-sky-a', 'L2-sky-b', 'L2-spires',
+  // throne room, crumbling (p3)
+  'L3-column', 'L3-column-broken', 'L3-cracks', 'L3-floor', 'L3-rubble', 'L3-wall', 'L3-wall-ruin',
+  // painted light layer
+  'LX-rays',
+  // hero comic panels (p1)
+  'H-s06-archer', 'H-s06-knight', 'H-s06-mage', 'H-s06-rogue', 'H-s14-double', 'H-s17-archer', 'H-s17-knight', 'H-s17-mage', 'H-s17-rogue', 'H-s19-charge',
 ];
 
 export const AVAILABLE: ReadonlySet<string> = new Set(LIVE.filter((id) => SIZES.has(id)));
