@@ -18,9 +18,9 @@ type Pt = readonly [number, number];
 export const FLOOR = 992;
 const HERO_H = 116;
 /** Where the helm sits in window px (the sticky note lands here); measured on the rig stills. */
-export const HELM: Pt = [962, 400];
+export const HELM: Pt = [962, 345];
 /** The giant sticky note sits on the upper right of the helm and leaves the eye slit free. */
-const NOTE = { x: HELM[0] + 55, y: HELM[1] - 115, w: 150 };
+const NOTE = { x: HELM[0] + 45, y: HELM[1] - 70, w: 170 };
 
 const clamp = (v: number, a = 0, b = 1): number => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;

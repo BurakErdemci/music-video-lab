@@ -3,8 +3,8 @@
 import { Rig, type RigConfig } from '../../../rig/Rig.tsx';
 import { VORATHUL_FIT, VORATHUL_RIG } from '../../../rig/model.ts';
 import { rigAt } from '../../../rig/timeline.ts';
-import { CropCard, SvgCard } from './cards.tsx';
-import { cathedralSvg, pillarSvg, skySvg, sunSvg, SUN_STEPS } from './art.ts';
+import { SvgCard } from './cards.tsx';
+import { skySvg, sunSvg, SUN_STEPS } from './art.ts';
 import { FinalCard, FinalCrop } from './finals.tsx';
 import { D0, depthScale } from './space.ts';
 import { VORATHUL_TL } from './vorathul.ts';
@@ -25,9 +25,8 @@ export interface World3DProps {
 
 /** Apparent x of the progress-bar sun (right of centre, clear of the health bar). */
 const SUN_X = 1.7;
-const PLATE = 'plates/01-tarz-cizgi-roman.jpg';
 // Fitted so the drawn helm stays clear of the HUD bars as the placeholder's did.
-const RIG_UNIT = 6.8 * VORATHUL_FIT;
+const RIG_UNIT = 6.8 * VORATHUL_FIT * 0.9;
 const FEET_Y = -3.95;
 
 const RIG_CFG: RigConfig = { model: VORATHUL_RIG, pass: 'beauty', unit: RIG_UNIT, origin: [0, FEET_Y, 0], renderBase: 100 };
@@ -58,10 +57,12 @@ export const World3D = ({ frame, sun, pillars, skyShake = [0, 0], skyViolet = fa
   return (
     <>
       <Layer z={-10} x={skyShake[0]} y={skyShake[1]}>
-        <FinalCrop id="G01" u0={0} u1={1} v0={0.078} v1={0.922} width={16.6} height={9.4} renderOrder={0} hidden={skyViolet} standIn={<SvgCard svg={skySvg(false)} width={16.6} height={9.4} renderOrder={0} hidden={skyViolet} />} />
+        <FinalCard id="L2-sky-a" height={9.4} position={[-7.05, 0, 0]} renderOrder={0} hidden={skyViolet} />
+        <FinalCard id="L2-sky-b" height={9.4} position={[7.05, 0, 0]} renderOrder={0} hidden={skyViolet} />
         <SvgCard svg={skySvg(true)} width={16.6} height={9.4} renderOrder={1} hidden={!skyViolet} />
-        <FinalCard id="G02-1" height={2.4} position={[-5.6, 3.2, 0]} renderOrder={2} hidden={skyViolet} />
-        <FinalCard id="G02-3" height={2.1} position={[5.9, 2.6, 0]} renderOrder={2} hidden={skyViolet} />
+      </Layer>
+      <Layer z={-9}>
+        <FinalCard id="L2-land" height={4.4} position={[0, 1.0, 0]} renderOrder={3} />
       </Layer>
       <Layer z={-6} x={SUN_X} y={sun?.y ?? 0}>
         {SUN_STEPS.map((s) => (
@@ -69,52 +70,25 @@ export const World3D = ({ frame, sun, pillars, skyShake = [0, 0], skyViolet = fa
         ))}
       </Layer>
       <Layer z={-7}>
-        <FinalCard id="G03" height={7.6} position={[0, -0.1, 0]} renderOrder={10} standIn={<SvgCard svg={cathedralSvg()} width={16} height={9} renderOrder={10} />} />
-      </Layer>
-      <Layer z={-3.5}>
-        <FinalCard id="G08-1" height={4.6} position={[-6.9, 0.9, 0]} renderOrder={12} />
-        <FinalCard id="G08-3" height={4.6} position={[6.9, 0.9, 0]} renderOrder={12} />
+        <FinalCrop id="L2-spires" u0={0} u1={1} v0={0} v1={0.72} width={11.4} height={5.0} position={[0, 2.3, 0]} renderOrder={10} />
       </Layer>
       <Layer z={-4.5}>
-        <FinalCard
-          id="G04a"
-          height={8.2}
-          position={[-5.6, 0.2, 0]}
-          renderOrder={15}
-          standIn={<CropCard src={PLATE} u0={0.04} u1={0.24} v0={0.078} v1={0.922} width={3.2} height={9} position={[-6.4, 0, 0]} renderOrder={15} />}
-        />
-        <FinalCard
-          id="G04b"
-          height={8.2}
-          position={[5.7, 0.2, 0]}
-          renderOrder={15}
-          standIn={<CropCard src={PLATE} u0={0.76} u1={0.96} v0={0.078} v1={0.922} width={3.2} height={9} position={[6.4, 0, 0]} renderOrder={15} />}
-        />
+        <FinalCard id="L2-buttress" height={6.6} position={[-5.7, -0.6, 0]} renderOrder={15} />
+        <FinalCard id="L2-buttress" height={6.6} position={[5.7, -0.6, 0]} scale={[-1, 1, 1]} renderOrder={15} />
       </Layer>
       <Layer z={-3}>
-        <FinalCrop
-          id="G06"
-          u0={0}
-          u1={1}
-          v0={0.72}
-          v1={1}
-          width={16.6}
-          height={3}
-          position={[0, -3, 0]}
-          renderOrder={20}
-          standIn={<CropCard src={PLATE} u0={0} u1={1} v0={0.8} v1={0.922} width={16} height={1.3} position={[0, -3.85, 0]} renderOrder={20} />}
-        />
+        <FinalCard id="L2-roof" height={8.8} position={[0, -0.1, 0]} renderOrder={20} />
       </Layer>
       {rig ? <Rig cfg={headUp ? RIG_NO_HEAD : RIG_CFG} state={state} /> : null}
       {pillars ? (
         <>
-          <FinalCrop id="G09-1" u0={0.18} u1={0.82} v0={0} v1={1} width={1} height={6} position={[-2.4, 0, 8]} renderOrder={300} standIn={<SvgCard svg={pillarSvg('L')} width={0.5} height={6} position={[-2.65, 0, 8]} renderOrder={300} />} />
-          <FinalCrop id="G09-2" u0={0.18} u1={0.82} v0={0} v1={1} width={1} height={6} position={[2.4, 0, 8]} renderOrder={300} standIn={<SvgCard svg={pillarSvg('R')} width={0.5} height={6} position={[2.65, 0, 8]} renderOrder={300} />} />
+          <FinalCard id="L2-buttress" height={4} position={[-2.8, 0, 6]} renderOrder={300} />
+          <FinalCard id="L2-buttress" height={4} position={[2.8, 0, 6]} scale={[-1, 1, 1]} renderOrder={300} />
         </>
       ) : null}
       <Layer z={1.5}>
-        <FinalCard id="G07-1" height={2.5} position={[-6.2, -3.15, 0]} renderOrder={250} />
-        <FinalCard id="G07-2" height={2.5} position={[6.2, -3.15, 0]} renderOrder={250} />
+        <FinalCard id="L2-gargoyle" height={2.6} position={[-6.3, -3.0, 0]} renderOrder={250} />
+        <FinalCard id="L2-gargoyle" height={2.6} position={[6.3, -3.0, 0]} scale={[-1, 1, 1]} renderOrder={250} />
       </Layer>
     </>
   );

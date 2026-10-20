@@ -30,7 +30,7 @@ export const depthScale = (z: number): number => (D0 - z) / D0;
 /** Named painting views (storyboard 1 section 0.1, in this window's units). */
 export const VIEWS = {
   WIDE: FULL,
-  MED: { cx: 0, cy: 0.9, h: 6.0 },
+  MED: { cx: 0, cy: 1.2, h: 6.4 },
   CLOSE: { cx: 0, cy: 1.7, h: 3.4 },
   ECU: { cx: 0, cy: 2.55, h: 1.9 },
   FLOOR: { cx: 1.2, cy: -3.1, h: 3.2 },

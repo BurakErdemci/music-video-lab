@@ -45,7 +45,7 @@ export const S28 = ({ frame }: { frame: number }) => {
 };
 
 // ---- S29-S30 the pull-back: victory, then the camera leaves through the entrance --------------------------------------------
-const MED_START: View = { cx: 0, cy: 0.9, h: 6.0 };
+const MED_START: View = { cx: 0, cy: 1.2, h: 6.4 };
 const FULL_VIEW: View = VIEWS.WIDE;
 /** Ease-in (quartic): still accelerating on the last frame, where the office camera takes over at the same speed. */
 export const pullBackView = (f: number): View => lerpView(MED_START, FULL_VIEW, clamp((f - T.came) / (T.frameMatch - T.came)) ** 4);
@@ -78,7 +78,7 @@ export const S39 = ({ frame }: { frame: number }) => (
 );
 
 // ---- S41 the slap: a giant sticky note clamps the helm shut ------------------------------------------------------------------
-const HELM_CLOSE: View = { cx: 0, cy: 1.3, h: 3.4 };
+const HELM_CLOSE: View = { cx: 0, cy: 1.5, h: 3.4 };
 export const S41 = ({ frame }: { frame: number }) => (
   <Shot frame={frame} cues={M_CUES(T.pipMagenta)}>
     <PaintView {...paintAt(frame)} view={shakeView(HELM_CLOSE, frame, SHAKES)} hudFixed />
@@ -97,8 +97,8 @@ export const S43 = ({ frame }: { frame: number }) => (
 const PANELS: readonly { at: number; view: View }[] = [
   { at: T.zoom1, view: { cx: -3.6, cy: 3.5, h: 2.7 } },
   { at: T.zoom2, view: { cx: 3.3, cy: -3.35, h: 2.4 } },
-  { at: T.zoom3, view: { cx: 0, cy: 1.4, h: 3.0 } },
-  { at: T.zoom4, view: { cx: 0, cy: 1.35, h: 1.6 } },
+  { at: T.zoom3, view: { cx: 0, cy: 1.5, h: 3.0 } },
+  { at: T.zoom4, view: { cx: 0, cy: 1.55, h: 1.6 } },
 ];
 const panelAt = (f: number): { at: number; view: View } => PANELS.reduce((cur, p) => (f >= p.at ? p : cur), PANELS[0] as { at: number; view: View });
 
@@ -124,7 +124,7 @@ const PanelFrame = () => (
 );
 
 // ---- S45 the first look up: only the sky shakes, hard ------------------------------------------------------------------------
-const LOW_VIEW: View = { cx: 0, cy: 1.0, h: 4.8 };
+const LOW_VIEW: View = { cx: 0, cy: 1.2, h: 4.8 };
 const SKY_VIEW = (f: number): View => ({ ...LOW_VIEW, h: LOW_VIEW.h - 0.4 * clamp((f - SHOT_FROM.S45) / 38) });
 
 const skyShakeAt = (f: number): [number, number] => {
@@ -137,7 +137,8 @@ const skyShakeAt = (f: number): [number, number] => {
 const HelmFromBelow = () =>
   finalSize('G13') ? (
     <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
-      <image href={staticFile('assets/G13.png')} x={HELM[0] - 215} y={HELM[1] - 215} width={430} height={412} />
+      <defs><clipPath id="p2g13"><rect x={HELM[0] - 215} y={HELM[1] - 170} width={430} height={330} /></clipPath></defs>
+      <image href={staticFile('assets/G13.png')} x={HELM[0] - 215} y={HELM[1] - 170} width={430} height={412} clipPath="url(#p2g13)" />
     </svg>
   ) : (
   <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
