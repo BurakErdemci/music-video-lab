@@ -4,7 +4,7 @@ import { AVAILABLE, assetSize } from '../../../cast/available.ts';
 import { Card, type Vec3 } from '../../../stage/Card.tsx';
 import { CropCard } from './cards.tsx';
 
-export const PREVIEW_FINALS = true;
+export const PREVIEW_FINALS = false;
 
 /** Pixel size of the final image for `id`, or undefined when the code-drawn stand-in should be used. */
 export const finalSize = (id: string): [number, number] | undefined => (PREVIEW_FINALS || AVAILABLE.has(id) ? assetSize(id) : undefined);
