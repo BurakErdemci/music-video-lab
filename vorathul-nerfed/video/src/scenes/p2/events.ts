@@ -61,6 +61,7 @@ export const EVENTS: VideoEvent[] = [
   // S35 the tap
   hit('s35-cut', 'cut', 57),
   word('s35-tap', 'impact', 'Vorathul'),
+  beat('s35-tap-ends', 'key', 260),
   // S36 edit 1 begins
   word('s36-pinch', 'cut', 'health'),
   word('s36-reduced', 'key', 'reduced'),

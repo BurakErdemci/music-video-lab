@@ -70,11 +70,6 @@ export const OfficeScene = ({ frame, cam, paint, notes, dev, onFrame, drain = 0,
         <StickyNotesArt progress={notes} />
         {onFrame}
       </Layer>
-      {dev ? (
-        <Layer cam={cam} z={Z.dev}>
-          {dev}
-        </Layer>
-      ) : null}
       <Layer cam={cam} z={Z.desks}>
         <g transform={`translate(-6 ${fl})`}>
           <Desk side="L" fill={fill} label={screen.label} />
@@ -83,6 +78,12 @@ export const OfficeScene = ({ frame, cam, paint, notes, dev, onFrame, drain = 0,
           <Desk side="R" fill={0} label="" />
         </g>
       </Layer>
+      {/* Drawn after the desks on purpose: he walks in across the room in front of the right desk, so he is never half hidden by it. */}
+      {dev ? (
+        <Layer cam={cam} z={Z.dev}>
+          {dev}
+        </Layer>
+      ) : null}
       <Layer cam={cam} z={Z.corner}>
         <g transform={`translate(-6.4 ${fl})`}>
           <DeskCorner />

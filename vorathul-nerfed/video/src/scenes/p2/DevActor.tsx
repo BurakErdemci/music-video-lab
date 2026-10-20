@@ -2,6 +2,7 @@
 import { DevBack, DevSide, DEV_STAND, lerpDevPose, type DevPose } from './art/dev.tsx';
 import { T } from './frames.ts';
 import { OFFICE } from './art/office.tsx';
+import { DevFinal, hasDevFinals } from './DevFinal.tsx';
 
 const clamp = (v: number, a = 0, b = 1): number => Math.min(b, Math.max(a, v));
 const smooth = (t: number): number => {
@@ -71,6 +72,7 @@ export const devAt = (f: number): Dev => {
 
 /** The developer as an SVG group in world units (feet on the floor line). */
 export const DevActor = ({ frame, x, flipX = false }: { frame: number; x?: number; flipX?: boolean }) => {
+  if (hasDevFinals()) return <DevFinal frame={frame} />;
   const d = devAt(frame);
   const Body = d.side ? DevSide : DevBack;
   return (

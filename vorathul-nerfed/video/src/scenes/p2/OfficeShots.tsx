@@ -276,7 +276,7 @@ export const S40 = ({ frame: f }: { frame: number }) => {
 
 // ---- S42 the card is pinned ------------------------------------------------------------------------------------------------------
 
-const CARD_PIN = { x: 9.3, y: -1.3, w: 3.6 };
+const CARD_PIN = { x: 7.6, y: -0.07, w: 3.4 };
 export const S42 = ({ frame: f }: { frame: number }) => {
   const slap = clamp((f - (SHOT_FROM.S42 + 3)) / 5);
   const pinned = (
