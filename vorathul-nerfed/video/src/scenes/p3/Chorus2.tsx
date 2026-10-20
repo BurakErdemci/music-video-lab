@@ -52,7 +52,7 @@ export const S68 = ({ frame }: { frame: number }) => {
         const hop = hopCurve(frame, STEP68 + j, 8) * 0.6;
         return (
           <div key={j}>
-            <Knight asset="G15-1" x={p.x} y={p.y} h={1.45 * p.s} pose={{ hop, armL: j % 2 ? 160 : 20, armR: j % 3 ? 25 : 150, lean: j % 2 ? -3 : 4, item: j === 2 ? 'spear' : 'none' }} seed={680 + j} />
+            <Knight asset={`G34-${j + 1}`} x={p.x} y={p.y} h={1.45 * p.s} pose={{ hop, armL: j % 2 ? 160 : 20, armR: j % 3 ? 25 : 150, lean: j % 2 ? -3 : 4, item: j === 2 ? 'spear' : 'none' }} seed={680 + j} />
             <TicketPill frame={frame} text={`#${47 + j}`} appearAt={C68 - 20} x={p.x - 0.4 * p.s} y={p.y - 2.05 * p.s - hop * 30} width={0.8 * p.s} />
           </div>
         );
@@ -115,7 +115,7 @@ export const S69 = ({ frame }: { frame: number }) => {
         const hop = j < 4 ? hopCurve(frame, HOPS[j]! - 4, 10) : 0;
         return (
           <div key={j}>
-            <Knight asset={frame >= LAUGH ? 'G15-7' : hop > 0.1 ? 'G15-2' : 'G15-1'} x={p.x} y={p.y} h={1.4 * p.s} flip pose={{ hop, armL: 30 + hop * 120, armR: 30 + hop * 120, laugh, lean: j === 4 ? 0 : -4 }} seed={690 + j} />
+            <Knight asset={hop > 0.1 ? `G34-${9 + (j % 4)}` : `G34-${j + 2}`} x={p.x} y={p.y} h={1.4 * p.s} flip pose={{ hop, armL: 30 + hop * 120, armR: 30 + hop * 120, laugh, lean: j === 4 ? 0 : -4 }} seed={690 + j} />
             {frame >= LAUGH && frame < LAUGH + 40 && j % 2 === 0 ? (
               <div style={{ position: 'absolute', left: p.x - 30, top: p.y - 1.9 * p.s - laugh * 30, fontFamily: ANTON, fontSize: 0.45 * p.s, color: GOLD, WebkitTextStroke: `3px ${INK}`, transform: `rotate(${j * 7 - 10}deg)` }}>HA</div>
             ) : null}
@@ -132,7 +132,7 @@ export const S69 = ({ frame }: { frame: number }) => {
         );
       })()}
       {/* The first hero's back, out of focus, fills the left third. */}
-      <Knight asset="G15-1" x={170} y={1320} h={1050} flip pose={{ armL: 10, armR: 10 }} seed={699} style={{ filter: 'blur(6px)' }} />
+      <Knight asset="G34-1" x={170} y={1320} h={1050} flip pose={{ armL: 10, armR: 10 }} seed={699} style={{ filter: 'blur(6px)' }} />
     </ShotFrame>
   );
 };
@@ -329,7 +329,7 @@ export const S73 = ({ frame }: { frame: number }) => {
       </Stage>
       {[0, 1, 2].map((j) => {
         const p = project(pose, [-5.5 + j * 0.9 + walk * (j % 2 ? -7 : 9), 0, -18 - j]);
-        return <Knight key={j} asset={walk > 0 ? 'G15-5' : 'G15-1'} x={p.x} y={p.y} h={1.4 * p.s} flip={j % 2 === 1} pose={{ hop: walk > 0 ? Math.abs(Math.sin(twos(frame) * 0.5 + j)) * 0.12 : 0, armL: 20, armR: 20 }} seed={730 + j} />;
+        return <Knight key={j} asset={`G34-${6 + j}`} x={p.x} y={p.y} h={1.4 * p.s} flip={j % 2 === 1} pose={{ hop: walk > 0 ? Math.abs(Math.sin(twos(frame) * 0.5 + j)) * 0.12 : 0, armL: 20, armR: 20 }} seed={730 + j} />;
       })}
       <Kid asset={frame >= EXIT ? 'G32-6' : after ? 'G32-5' : 'G32-2'} x={kid.x} y={kid.y} h={1.9 * kid.s} flip pose={{ ...k.pose, armL: (k.pose.armL ?? 20) + shrug * 60, armR: (k.pose.armR ?? 20) + shrug * 60 }} />
       {SMACKS73.map((s, i) => <DamageNumber key={i} frame={frame} text={'−1'} at={s} x={helm.x + 40 - i * 34} y={helm.y - 110} size={76} />)}

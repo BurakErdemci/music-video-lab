@@ -164,6 +164,11 @@ export const Knight = ({ pose = {}, seed = 41, ...box }: FigBox & { pose?: Knigh
 
 /** The boot sole straight at the lens (G33 stand-in): cracked ink tread, gold buckle. */
 export const BootSole = ({ x, y, h, rot = 0 }: { x: number; y: number; h: number; rot?: number }) => {
+  const size = AVAILABLE.has('G33-2') ? assetSize('G33-2') : undefined;
+  if (size) {
+    const iw = (h * size[0]) / size[1];
+    return <Img src={staticFile('assets/G33-2.png')} style={{ position: 'absolute', left: x - iw / 2, top: y - h / 2, width: iw, height: h, transform: `rotate(${rot}deg)` }} />;
+  }
   const w = h * 0.72;
   return (
     <svg viewBox="0 0 360 500" style={{ position: 'absolute', left: x - w / 2, top: y - h / 2, width: w, height: h, overflow: 'visible', transform: `rotate(${rot}deg)` }}>
@@ -215,6 +220,13 @@ export const Tablet = ({ x, y, h, text, rot = 0, crack = 0, seed = 5 }: { x: num
 
 /** A flat ivory cloud with an ink outline and a gold shadow band; `storm` = ink cloud with a violet rim. */
 export const Cloud = ({ x, y, w, seed = 1, storm = 0, opacity = 1 }: { x: number; y: number; w: number; seed?: number; storm?: number; opacity?: number }) => {
+  // G02 has five cloud cut-outs; a storm cloud is the same drawing inked over (CSS filter), as storyboard X10 recolours G02.
+  const asset = `G02-${(seed % 5) + 1}`;
+  const size = AVAILABLE.has(asset) ? assetSize(asset) : undefined;
+  if (size) {
+    const ih = (w * size[1]) / size[0];
+    return <Img src={staticFile(`assets/${asset}.png`)} style={{ position: 'absolute', left: x - w / 2, top: y - ih / 2, width: w, height: ih, opacity, filter: storm > 0.5 ? `brightness(0.15) drop-shadow(0 0 6px ${VIOLET})` : undefined }} />;
+  }
   const rng = seeded(`cloud:${seed}`);
   const bumps = Array.from({ length: 6 }, (_, i) => ({ cx: 40 + i * 44 + rng.range(-8, 8), cy: 70 - Math.sin((i / 5) * Math.PI) * 30 + rng.range(-6, 6), r: 30 + rng.range(0, 22) }));
   const fill = storm > 0.5 ? INK : IVORY;

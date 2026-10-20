@@ -69,8 +69,11 @@ export const Sky = ({ rect = [-220, -40, 220, 240], z = -68, color = '#8EC5E8' }
 /** P1 cathedral back wall: the left and right gallery halves of frame 01, meeting at the black spires. */
 export const Wall = ({ z = -50, pitch = 0 }: { z?: number; pitch?: number }) => (
   <group position={[0, -6, z]} rotation={[pitch, 0, 0]}>
+    {/* The final G03 is one whole wall (sized by height); the stand-in is the two gallery halves. */}
+    {AVAILABLE.has('G03') ? <AssetCard id="G03" standIn={{ src: PLATE.style }} width={WALL_H * 1.58} height={WALL_H} position={[0, WALL_H / 2, 0]} renderOrder={-90} /> : (<>
     <PlateAsset id="G03" plate={PLATE.style} crop={[0, 0, 0.345, 0.56]} width={WALL_W} height={WALL_H} position={[-WALL_W / 2, WALL_H / 2, 0]} renderOrder={-90} />
     <PlateAsset id="G03" plate={PLATE.style} crop={[0.655, 0, 1, 0.56]} width={WALL_W} height={WALL_H} position={[WALL_W / 2, WALL_H / 2, 0]} renderOrder={-90} />
+    </>)}
   </group>
 );
 export const WALL_TOP = WALL_H - 6;
