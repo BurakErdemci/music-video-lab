@@ -1,0 +1,5 @@
+{
+ "_note": "RAW 1672x941 px by eye (+-10). Hand edges (glassX) and floorY are read from alpha by prep. hair = hair top to chin box; headRaw = [top, chin] rows.",
+ "h-palm-full": {"hair": {"x0": 762, "y0": 42, "x1": 893, "y1": 170}, "headRaw": [42, 170], "palmRaw": [1076, 212]},
+ "a-palm-full": {"headRaw": [27, 150], "palmRaw": [600, 165]}
+}

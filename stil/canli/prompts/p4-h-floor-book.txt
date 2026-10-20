@@ -1,0 +1,14 @@
+Use your built-in image_gen tool to generate exactly ONE image, 16:9 landscape. Do not copy or move any files and do not run shell commands; just generate it, then print DONE.
+
+The FIRST attached image is the CANONICAL on-model frame of the HUMAN character (silk-screen style); the SECOND is the approved drawing of him sitting on the floor in profile facing LEFT (copy the seat, hips, legs and feet and the scale EXACTLY from it), the THIRD is the navy NOTEBOOK with a yellow elastic band, closed. Draw the SAME person, ONE single figure, FULL BODY head to toe (bare feet included), nothing cropped, centred, at the same scale as the approved drawings.
+Model anchors for the HUMAN (copy them exactly):
+- Proportions: slim adult, small head; head height about 1/7.5 of the standing height (NOT a big chibi head).
+- Hair: the same short messy hair silhouette as the reference, the same tufts at the back and top. Not bigger.
+- Outfit: short-sleeved plain top and slim plain trousers drawn as one solid midnight navy (#18203A) silhouette, BAREFOOT (bare feet with toes, as in the approved drawing).
+- Notes: moon-yellow (#F0D35A) square sticky notes stuck on the body and arms in the SAME pattern as the reference: one large note on top of the shoulder, a vertical column down the back from the shoulder blade to the hip, two on the chest/ribs, one on the upper arm sleeve.
+- Line: thin cream (#F3EFE4) rim outline around the whole figure, FACELESS (no eyes, no mouth), flat silk-screen style, slight misregistration, fine grain.
+
+Pose: Camera: the home glass split, PURE SIDE VIEW facing LEFT, sitting ON THE FLOOR exactly as in the second image: the same hips position, the same bare feet place, the knees bent up in front of him, his back upright and straight (an invisible vertical wall behind him, NOT drawn; no chair). Pose: he holds the navy notebook (navy cover, yellow elastic band hanging loose, as in the third image) OPEN in BOTH hands above his knees, the cream inner pages facing him with faint thin ruled lines (no writing), his hands gripping the book's outer edges, his head bowed looking DOWN at it: page one. The open book is held at chest height above his knees.
+Rules: ONE perspective only, exactly the camera named in the pose (no other view); the head is NOT turned more than 30 degrees away from the torso direction; two arms and two legs only, natural joints, no doubled or bent-wrong limbs; five fingers at most per hand; every hand touches what it holds or rests on (a note is held at its edge inside the fist); nothing else is drawn (no bus, no street, no table, no glass, no wall, no furniture, no shadow) unless stated.
+
+Background: ONE flat solid pure magenta (#FF00FF), completely uniform, no shadow, no floor line, no ground. ABSOLUTELY NO text, letters, numbers, logos, watermarks, no other characters. Palette only navy, cream, moon yellow (+ magenta background). No 3D render look, no photorealism, no soft shading.

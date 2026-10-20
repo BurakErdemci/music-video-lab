@@ -1,0 +1,2 @@
+p4-g-h-palm-full 8c13cc5eb6e205a8eb29f240fed6b918 8c13cc5eb6e205a8eb29f240fed6b918 /c/Users/burcu/.codex/generated_images/01a156e6-a90b-7c81-bc90-2233fcd7e16a/exec-7297ad9e-de3a-4c3e-82ae-e5d372d1360d.png
+p4-g-a-palm-full 98b3fbce0f460f23fac04bc31d37e2a5 98b3fbce0f460f23fac04bc31d37e2a5 /c/Users/burcu/.codex/generated_images/01a156e6-a92f-7d80-b0cf-42bb6547fa8c/exec-1d508274-3983-49b7-bdcc-5df17079fe53.png
