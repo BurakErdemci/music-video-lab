@@ -4,7 +4,7 @@
 // itself off when the textures are not placeholders. Strike echoes stay flat-colour copies (id pass).
 import { forward } from '../../rig/fk.ts';
 import { apply, angleOf, type Affine } from '../../rig/math.ts';
-import { VORATHUL_RIG } from '../../rig/model.ts';
+import { VORATHUL_FIT, VORATHUL_RIG } from '../../rig/model.ts';
 import { Rig, type RigConfig } from '../../rig/Rig.tsx';
 import { rigAt, type Key, type RampKey, type Timeline } from '../../rig/timeline.ts';
 import type { RigModel, RigState } from '../../rig/types.ts';
@@ -13,8 +13,9 @@ import { seeded } from '../../vfx/effects.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { INK, inkFilterDef, poly, r2, SvgCard, svgDoc, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 
-/** World units per H: feet at y 0, crown tip at y 12 (storyboard 1 §0.1). */
-export const UNIT = 12;
+/** World units per H: feet at y 0, crown tip at y 12 (storyboard 1 §0.1), fitted so the drawn helm sits where the
+ * shots were framed on the placeholder. */
+export const UNIT = 12 * VORATHUL_FIT;
 export const ORIGIN: Vec3 = [0, 0, -15];
 
 const GLOW = /^(eye_slit|crown_gems|chest_studs|sword_runes|eye_\d|pipe_[RL]\d_glow)$/;

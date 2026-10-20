@@ -56,6 +56,12 @@ export const RIG: RigModel = loadRig(RIG_JSON);
 export const RIG_DRAWN: RigModel = loadRig(rawDrawn as unknown as RigJson);
 /** The rig every scene draws Vorathul with: the one switch between placeholder and final art. */
 export const VORATHUL_RIG: RigModel = RIG_DRAWN;
+/**
+ * Unit factor for scenes framed on the placeholder: the drawn rig stands 1.010 H to the helm top in its base pose,
+ * the placeholder 0.970 H (forward() over every card, measured 20 Oct 2026), so a lane multiplying its H-to-world unit
+ * by this keeps the helm where its cameras were framed. Feet stay on the floor; root travel shrinks by the same 4 %.
+ */
+export const VORATHUL_FIT = VORATHUL_RIG === RIG_DRAWN ? 0.97 / 1.01 : 1;
 
 export const texOf = (m: RigModel, slot: string) => m.json.textures[slot]!;
 /** Card centre offset from the joint (H, y up): where the card sits relative to its pivot. */

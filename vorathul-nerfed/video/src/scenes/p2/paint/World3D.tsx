@@ -1,7 +1,7 @@
 // The painting's 3D card stack (everything that is not a code-drawn overlay): sky, sun, cathedral, galleries, floor,
 // pillars and Vorathul's rig. Pure function of the frame.
 import { Rig, type RigConfig } from '../../../rig/Rig.tsx';
-import { VORATHUL_RIG } from '../../../rig/model.ts';
+import { VORATHUL_FIT, VORATHUL_RIG } from '../../../rig/model.ts';
 import { rigAt } from '../../../rig/timeline.ts';
 import { CropCard, SvgCard } from './cards.tsx';
 import { cathedralSvg, pillarSvg, skySvg, sunSvg, SUN_STEPS } from './art.ts';
@@ -26,7 +26,8 @@ export interface World3DProps {
 /** Apparent x of the progress-bar sun (right of centre, clear of the health bar). */
 const SUN_X = 1.7;
 const PLATE = 'plates/01-tarz-cizgi-roman.jpg';
-const RIG_UNIT = 6.8;
+// Fitted so the drawn helm stays clear of the HUD bars as the placeholder's did.
+const RIG_UNIT = 6.8 * VORATHUL_FIT;
 const FEET_Y = -3.95;
 
 const RIG_CFG: RigConfig = { model: VORATHUL_RIG, pass: 'beauty', unit: RIG_UNIT, origin: [0, FEET_Y, 0], renderBase: 100 };
