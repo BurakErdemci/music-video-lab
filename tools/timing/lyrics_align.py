@@ -1,4 +1,4 @@
-"""Parse sozler.md (section + singer tags) and align whisper words to lyric words (monotone DP, Turkish-folded fuzzy match)."""
+"""Parse sarki/sozler.md (section headers + voice tags) and align whisper words to lyric words (monotone DP, fuzzy match)."""
 import re, json, difflib
 
 FOLD = str.maketrans({"ı": "i", "İ": "i", "I": "i", "ş": "s", "Ş": "s", "ğ": "g", "Ğ": "g", "ü": "u", "Ü": "u", "ö": "o", "Ö": "o", "ç": "c", "Ç": "c", "â": "a", "î": "i", "û": "u"})
@@ -8,26 +8,22 @@ def norm(w):
     return re.sub(r"[^a-z0-9]", "", w)
 
 def parse(path):
-    """-> sections [{name, header, tag_singer, lines:[{text, singer_tag}]}] ; (fade out) style directions skipped"""
+    """-> sections [{name, header, lines:[{text, voice_tag}]}] ; HTML comments skipped; a leading (Growled)/(Operatic) tag sets voice_tag"""
     secs = []; cur = None
     for raw in open(path, encoding="utf-8"):
         s = raw.strip()
-        if not s: continue
+        if not s or s.startswith("<!--"): continue
         m = re.match(r"^\[(.+)\]$", s)
         if m:
             hdr = m.group(1); name = hdr.split(":")[0].strip()
-            low = hdr.lower()
-            sing = "male" if "male vocal" in low and "female" not in low else "female" if "female vocal" in low else "duet" if "duet" in low else None
-            cur = dict(name=name, header=hdr, singer_default=sing, lines=[]); secs.append(cur); continue
+            cur = dict(name=name, header=hdr, lines=[]); secs.append(cur); continue
         if cur is None: continue
-        tag = cur["singer_default"]
-        m = re.match(r"^\((Male|Female|Both)[^)]*\)\s*(.*)$", s)
+        tag = None
+        m = re.match(r"^\((Growled|Operatic)\)\s*(.*)$", s)
         if m:
             tag = m.group(1).lower(); s = m.group(2)
-        elif s.lower() in ("(fade out)",):
-            continue
         if not norm(s): continue
-        cur["lines"].append(dict(text=s, singer_tag=tag))
+        cur["lines"].append(dict(text=s, voice_tag=tag))
     return secs
 
 def sim(a, b):

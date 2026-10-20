@@ -4,21 +4,26 @@
  3. kick-band onsets vs nearest beat per 30 s window -> drift check in frames at 30 fps.
 Writes data/grid-verification.json."""
 import json, sys, numpy as np, librosa
+from pathlib import Path
 from scipy.signal import find_peaks
 sys.stdout.reconfigure(encoding="utf-8")
-R = "C:\\Users\\burcu\\Documents\\klip-her-sabah\\"
-T = json.load(open(R + "data\\timing.json", encoding="utf-8"))
+R = str(Path(__file__).resolve().parents[2]) + "/"
+T = json.load(open(R + "data/timing.json", encoding="utf-8"))
 g = np.array(T["beats"]); db = np.array(T["downbeats"]); FPS = T["fps"]; F = 1000 / FPS
-y, sr = librosa.load(R + "sarki\\her-sabah-bastan.wav", sr=22050, mono=True); dur = len(y) / sr
+y, sr = librosa.load(R + "audio/Vorathul.Nerfed.wav", sr=22050, mono=True); dur = len(y) / sr
 out = {}
 
-# 1) equation
+# 1) equation, per constant-tempo grid segment (the tempo changes, so one mean period would hide it): downbeats in segment x 4 x period vs segment length
+rows = []
+for sg in T["tempo"]["grid_segments"]:
+    n_in = int(((db >= sg["start"] - 0.01) & (db < sg["end"] - 0.01)).sum())
+    rows.append(dict(start=sg["start"], end=sg["end"], bpm=sg["bpm"], bars=n_in, bars_x4_x_period_s=round(n_in * 4 * sg["period"], 2), length_s=round(sg["end"] - sg["start"], 2),
+                     diff_beats=round((sg["end"] - sg["start"] - n_in * 4 * sg["period"]) / sg["period"], 2)))
+out["equation_per_segment"] = rows
 nb = len(db); per = np.mean(np.diff(g)); i0 = int(np.argmin(np.abs(g - db[0])))
-span = g[i0 + 4 * nb] - g[i0] if i0 + 4 * nb < len(g) else g[-1] - g[i0]
-out["equation"] = dict(bars=nb, beats_per_bar=4, mean_beat_period=round(float(per), 5), bars_x4_x_period=round(nb * 4 * per, 3),
-                       span_first_downbeat_to_last_beat_s=round(float(span), 3),
-                       first_downbeat=round(float(db[0]), 3), audio_end=round(dur, 3))
-print("equation: %d bars x 4 x %.5f s = %.3f s ; first downbeat %.3f -> last beat %.3f = %.3f s ; file %.3f s" % (nb, per, nb * 4 * per, db[0], g[-1], g[-1] - db[0], dur))
+out["equation"] = dict(bars=nb, beats_total=len(g), first_downbeat=round(float(db[0]), 3), audio_end=round(dur, 3), sum_of_bar_lengths_s=round(float(sum(b["end"] - b["start"] for b in T["bars"])), 3))
+print("structure equation per grid segment (bars x 4 x period vs length; diff in beats):")
+for r in rows: print("  %7.2f-%7.2f s  %6.2f BPM  %3d bars x 4 x period = %7.2f s  length %7.2f s  diff %+5.2f beats" % (r["start"], r["end"], r["bpm"], r["bars"], r["bars_x4_x_period_s"], r["length_s"], r["diff_beats"]))
 
 # 2) energy steps vs downbeats
 hop = int(0.025 * sr)
@@ -52,7 +57,7 @@ print("kick-band onsets vs nearest beat, per 30 s (median offset ms, 90th pct |o
 for r in rows: print("  %-8s n=%3d median %+6.1f  p90 %5.1f" % (r["window"], r["n"], r["median_ms"], r["p90_abs_ms"]))
 out["max_abs_window_median_ms"] = max(abs(r["median_ms"]) for r in rows) if rows else None
 print("max |window median| = %.1f ms (%.2f frames)" % (out["max_abs_window_median_ms"], out["max_abs_window_median_ms"] / F))
-json.dump(out, open(R + "data\\grid-verification.json", "w", encoding="utf-8"), indent=1)
+json.dump(out, open(R + "data/grid-verification.json", "w", encoding="utf-8"), indent=1)
 
 # 4) downbeat phase: harmonic rhythm. Chord changes (bass-chroma novelty between consecutive beats) and kick-band onsets should be
 #    strongest on the chosen bar starts. Phase p = (beat index - first downbeat beat index) % 4; chosen downbeats are p == 0.
@@ -61,7 +66,7 @@ yb = y
 Cb = librosa.feature.chroma_cqt(y=yb, sr=sr, hop_length=hopc, fmin=librosa.note_to_hz("C1"), n_octaves=3); tc = librosa.times_like(Cb[0], sr=sr, hop_length=hopc)
 Bs = []
 for i, t in enumerate(g):
-    z = g[i + 1] if i + 1 < len(g) else t + 0.46
+    z = g[i + 1] if i + 1 < len(g) else t + 0.32
     m = (tc >= t) & (tc < z); Bs.append(Cb[:, m].mean(1) if m.any() else np.zeros(12))
 Bs = np.array(Bs); Bs = Bs / (np.linalg.norm(Bs, axis=1, keepdims=True) + 1e-9)
 nov = np.r_[0, 1 - np.sum(Bs[1:] * Bs[:-1], axis=1)]
@@ -79,4 +84,4 @@ for r in rows: print("  %-34s chord-change best phase %d %s | kick best phase %d
 n_c = sum(r["best_phase_chord"] == 0 for r in rows); n_k = sum(r["best_phase_kick"] == 0 for r in rows)
 out["phase0_wins"] = dict(sections=len(rows), chord_change=n_c, kick=n_k)
 print("phase 0 is the max in %d/%d sections (chord change) and %d/%d (kick)" % (n_c, len(rows), n_k, len(rows)))
-json.dump(out, open(R + "data\\grid-verification.json", "w", encoding="utf-8"), indent=1)
+json.dump(out, open(R + "data/grid-verification.json", "w", encoding="utf-8"), indent=1)
