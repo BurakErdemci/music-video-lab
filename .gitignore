@@ -6,3 +6,5 @@ out/
 __pycache__/
 .delegate-runs/
 data/_*
+stil/*
+!stil/onayli/
