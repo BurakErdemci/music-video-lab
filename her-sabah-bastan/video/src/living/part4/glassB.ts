@@ -2,6 +2,7 @@
 // (one squeegee pull per day), MERHABA, ANLATIRSIN, BIR DAHA (tally marks, one on her side), the trembling glass and
 // the "Merhaba" bubble. Continues glassA's last picture (palms on the glass, three run cracks, SPLIT_CAM).
 import { rock } from '../life.ts';
+import { palette } from '../../style/palette.ts';
 import { seeded } from '../../style/seeded.ts';
 import { paintLayers } from '../compose2d.ts';
 import { paintMugTower, MUG_CANVAS } from '../part2/paintDays.ts';
@@ -50,6 +51,7 @@ import {
   TALLY_BOX,
   D_SKYROOM,
 } from './splitSet.ts';
+import { imprintLayer, PRESS_IMPRINT, type Imprint } from '../imprint.ts';
 import { herSideReset } from './halftoneReset.ts';
 import { paintHerMark, paintBubble, paintSpread, paintTallyPop, palmsScreen, picPxOf, picScale, spreadCracks, trembleAt, TALLY_CANVAS } from './glassBFx.ts';
 
@@ -73,6 +75,15 @@ const FLASH = 4;
 const TALLY_MARKS = [ev('tally mark daha 1'), ev('tally mark daha 2'), ev('tally mark daha 3')];
 const HER_MARK_F = TALLY_MARKS[2] as number;
 const BUBBLE_F = ev('the Merhaba bubble');
+
+// The yellow imprints (the tease of the finale's union), above both hands and under the cracked glass: the fade of the
+// reaching hands' first meeting (glassA draws its growth), and the flat palms' meeting at the seam on the last BIR DAHA,
+// where her tally mark is printed in the shared moon-yellow.
+const PALMS_FLAT_C = (): [number, number] => {
+  const m = sp(HIS_PRESS);
+  return [SEAM, FLOOR - ((m.floorY as number) - PALM_ROW.h) * PALM_S_HIS];
+};
+const PALM_PRINT = (): Imprint => ({ f0: HER_MARK_F, c: PALMS_FLAT_C(), r: 36, step: 5.5 });
 
 const FLOOR_UP = pose('h-floor-up');
 const FLOOR_BOOK = pose('h-floor-book');
@@ -277,9 +288,20 @@ const layersOf = (f: number, v: View): { layers: Layer[]; cam: Cam } => {
     // her one mark, the first day she keeps
     const k = f - HER_MARK_F;
     if (k >= 0) {
-      layers.push(canvasLayer('her-mark', 'p4:her-mark', 320, 200, 0, placeAt(HER_MARK_BOX, 0, SPLIT_CAM), (ctx, cw, ch) => paintHerMark(ctx, cw, ch, k)));
+      layers.push(canvasLayer('her-mark', 'p4:her-mark', 320, 200, 0, placeAt(HER_MARK_BOX, 0, SPLIT_CAM), (ctx, cw, ch) => {
+        paintHerMark(ctx, cw, ch, k);
+        // the brush strands are semi-transparent: stack the mark on itself so the yellow stays solid
+        ctx.drawImage(ctx.canvas, 0, 0);
+        ctx.drawImage(ctx.canvas, 0, 0);
+        // her first kept day is printed in the shared ink: the dry-brush strokes recoloured moon-yellow
+        ctx.globalCompositeOperation = 'source-in';
+        ctx.fillStyle = palette.moonYellow;
+        ctx.fillRect(0, 0, cw, ch);
+      }));
     }
   }
+
+  for (const imp of [imprintLayer('imprint-press', f, PRESS_IMPRINT, -1), imprintLayer('imprint-palms', f, PALM_PRINT(), -1)]) if (imp) layers.push(imp);
 
   // the picture glass: the cracks (and the bubble) tremble with it
   const shake: [number, number] = f < T.daha ? [0, 0] : f < T.outro ? trembleAt(f, T.daha, T.outro, 2, 6, 2.2) : trembleAt(f, T.outro, T.end + 1, 6, 14, 1.25);

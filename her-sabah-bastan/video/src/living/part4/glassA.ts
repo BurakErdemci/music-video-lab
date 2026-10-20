@@ -7,6 +7,7 @@ import { paintLayers } from '../compose2d.ts';
 import { paintCracks, RUN_CRACKS } from './cracks.ts';
 import { paintDrain } from './flood.ts';
 import { paintSweat } from '../icons.ts';
+import { imprintLayer, PRESS_IMPRINT } from '../imprint.ts';
 import { paintPenReveal } from '../pen.ts';
 import { paintVersionTag } from '../part2/paintVerse.ts';
 import * as P1 from '../part1/shots.ts';
@@ -374,11 +375,15 @@ const stageAt = (f: number): { layers: Layer[]; cam: Cam } => {
     if (sp_) layers.push(sp_);
     if (f < F_PULL) layers.push(pixelLayer(f));
     else layers.push(...penHer(f));
+    const imp = imprintLayer('imprint-press', f, PRESS_IMPRINT, -1);
+    if (imp) layers.push(imp);
     const c = crackLayer(f, cam);
     if (c) layers.push(c);
     return { layers, cam };
   }
   layers = [...back(F_END), ...pressLayers(f)];
+  const imp = imprintLayer('imprint-press', f, PRESS_IMPRINT, -1);
+  if (imp) layers.push(imp);
   const c = crackLayer(f, cam);
   if (c) layers.push(c);
   return { layers, cam };

@@ -33,6 +33,7 @@ import {
   type Layer,
   type Rect,
 } from './common.ts';
+import { imprintLayer, type Imprint } from '../imprint.ts';
 import { aiLayers, HUMAN_BREATH, invertedSprite, paintNote, tintedSprite } from './figures.ts';
 import { D0, planeScale } from '../types.ts';
 
@@ -304,6 +305,20 @@ const palmScr = (name: 'h-palm' | 'a-palm', head: number): Rect => {
 const PALM_Y = 560;
 const HIS_PALM = (): Rect => palmScr('h-palm', 242);
 const HER_PALM = (): Rect => palmScr('a-palm', 240);
+/** The yellow imprint where the two palms meet on the glass (BURADAYIZ): a palm print about 1.1 x one palm box tall, centred
+ * on the contact line (midpoint of the two palm points) at the palm boxes' height. */
+const CAFE_IMPRINT = (): Imprint => {
+  const parts = (['h-palm', 'a-palm'] as const).map((name) => {
+    const r = name === 'h-palm' ? HIS_PALM() : HER_PALM();
+    const s = r.w / sp(name).w;
+    const p = pt(name, 'palm');
+    const pb = pt(name, 'palmBox');
+    return { x: r.x + (p[0] as number) * s, y: r.y + ((pb[1] as number) + (pb[3] as number) / 2) * s, h: (pb[3] as number) * s };
+  });
+  const [a, b] = parts as [(typeof parts)[0], (typeof parts)[0]];
+  const palmH = (a.h + b.h) / 2;
+  return { f0: F.palms, c: [(a.x + b.x) / 2, (a.y + b.y) / 2], r: (1.1 * palmH * 0.6) / 2, step: 7 };
+};
 /** His notes: one more on every sung "daha" (beyond those drawn). Fractions of his sprite's bbox. */
 const EXTRA_NOTES: readonly [number, number, number][] = [
   [0.2, 0.62, -12],
@@ -358,6 +373,9 @@ const cafeLayers = (f: number, cam: Cam): Layer[] => {
   }
   // the hands invert for one beat where they meet (the approved crossing hint)
   if (f >= F.palms && f < F.invertBack) layers.push(...invertedHands());
+  // the imprint rides on the inverted palms and fades over the next beat; above both hands (d -2 / 16)
+  const imp = imprintLayer('imprint-cafe', f, CAFE_IMPRINT(), -3);
+  if (imp) layers.push(imp);
   void cam;
   return layers;
 };
