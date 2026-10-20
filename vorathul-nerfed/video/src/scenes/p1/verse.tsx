@@ -16,6 +16,7 @@ import { REST } from './fight.tsx';
 import { hudAt } from './fx.tsx';
 import { echoesAt, ramp, rigFk, rigFor, rigWorld, Vorathul, type Timeline } from './vorathul.tsx';
 import { RO, World } from './world.tsx';
+import { LoftWake, OrganLoft, Rooftop } from './locations.tsx';
 
 /** The next beat after the one a hit sits on: a hit up to 2 frames before a beat belongs to that beat (1583 -> 1593). */
 const nextBeat = (frame: number): number => {
@@ -79,7 +80,7 @@ const S20 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S20_CAM}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} near={false} />
+          <OrganLoft />
           <Vorathul state={st} frame={frame} crack={0} />
           <Pic id="G10" color={GOLD} svg={PILE_SVG} width={PILE.w} height={PILE.h} pivot={[0, -PILE.h / 2]} position={[0, -0.2, PILE.z]} renderOrder={RO.hero - 10} flat={sil ? INK : null} />
           <Party heroes={heroes} flat={sil ? INK : null} />
@@ -241,7 +242,7 @@ const S22 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S22_CAM} impacts={impacts} cues={S22_CUES}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} near={false} />
+          <OrganLoft light={1} />
           <Vorathul state={st} frame={frame} cracks={frame >= S22_SPLIT ? 1 : 0} echoes={echoesAt(S22_TL, frame, [S22_SPLIT], { frames: 6 })} />
         </>
       )}
@@ -250,6 +251,8 @@ const S22 = ({ frame }: { frame: number }) => {
         const ring = (i: number) => (i === 4 ? S22_E[0] : i === 3 || i === 5 ? S22_E[1] : S22_E[2]);
         return (
           <>
+            {/* the loft wakes with him: the pipe mouths flare violet in a wave from the centre */}
+            <LoftWake frame={frame} pose={pose} start={S22_SPLIT} span={22} />
             <Overlay>{eyes.map((e, k) => <Glint key={k} frame={frame} at={ring(k + 1)} x={e.x} y={e.y} size={e.s * 0.07} hold={false} />)}</Overlay>
             {frame >= S22_E[0] ? (
               <Panel pts={[[1330, 150], [1860, 110], [1860, 640], [1300, 700]]} slam={slamIn(frame, S22_E[0])} border={14}>
@@ -287,7 +290,7 @@ const S23 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S23_CAM} hud={false}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} />
+          <OrganLoft />
           <Vorathul state={st} frame={frame} cracks={1} />
         </>
       )}
@@ -350,7 +353,7 @@ const S24 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S24_CAM} impacts={impacts} cues={S24_CUES} dutch={4}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} />
+          <OrganLoft light={1} />
           <Vorathul state={st} frame={frame} cracks={1} echoes={echoesAt(S24_TL, frame, [S24_SLAM], { frames: 7 })} />
           <Party heroes={heroes} flat={sil ? INK : null} />
           <Hero kind="knight" pose={knight.pose} position={knight.p} rot={knight.rot} centre={knight.centre} renderOrder={RO.hero} flat={sil ? INK : null} hidden={frame >= S24_SHIELD} />
@@ -432,7 +435,7 @@ const S25 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S25_CAM} impacts={impacts} dutch={-5}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} />
+          <Rooftop />
           <Vorathul state={st} frame={frame} cracks={1} echoes={echoesAt(S25_TL, frame, [S25_IN, S25_RAIN], { frames: 6 })} />
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
