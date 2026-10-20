@@ -1,11 +1,10 @@
-// Vorathul on the painting stage: the shared rig drawn as one flat black mass (#0A0A0A) with violet only on the glow
-// cards (eye slit, gems, studs, runes, pipe mouths, the seven eyes), plus code-drawn dressing that gives the
-// placeholder rig the silhouette of KARAKTER.md (tattered floor-length cape, spiky fur collar, crescent horns,
-// second-form armour cracks). The dressing switches itself off once the rig lane's real part images replace the
-// placeholders.
+// Vorathul on the painting stage: the shared rig in its beauty pass (the drawn cut-outs are already black armour,
+// ivory line and violet glows). With the placeholder rig it drew as one flat black mass with violet only on the
+// glow cards, plus code-drawn dressing (tattered cape, fur collar, crescent horns, armour cracks) that switches
+// itself off when the textures are not placeholders. Strike echoes stay flat-colour copies (id pass).
 import { forward } from '../../rig/fk.ts';
 import { apply, angleOf, type Affine } from '../../rig/math.ts';
-import { RIG } from '../../rig/model.ts';
+import { VORATHUL_RIG } from '../../rig/model.ts';
 import { Rig, type RigConfig } from '../../rig/Rig.tsx';
 import { rigAt, type Key, type RampKey, type Timeline } from '../../rig/timeline.ts';
 import type { RigModel, RigState } from '../../rig/types.ts';
@@ -19,29 +18,29 @@ export const UNIT = 12;
 export const ORIGIN: Vec3 = [0, 0, -15];
 
 const GLOW = /^(eye_slit|crown_gems|chest_studs|sword_runes|eye_\d|pipe_[RL]\d_glow)$/;
-const idColors = Object.fromEntries(Object.keys(RIG.json.idColors).map((id) => [id, GLOW.test(id) ? VIOLET : INK]));
-/** The rig model with the film palette as its flat-colour pass: one ink silhouette, violet glows. */
-export const VORA: RigModel = { ...RIG, json: { ...RIG.json, idColors } };
-export const PLACEHOLDER = Object.values(RIG.json.textures).some((t) => t.src.includes('placeholder'));
+const idColors = Object.fromEntries(Object.keys(VORATHUL_RIG.json.idColors).map((id) => [id, GLOW.test(id) ? VIOLET : INK]));
+/** The rig model; its idColors (one ink silhouette, violet glows) only matter for the placeholder's id pass. */
+export const VORA: RigModel = { ...VORATHUL_RIG, json: { ...VORATHUL_RIG.json, idColors } };
+export const PLACEHOLDER = Object.values(VORATHUL_RIG.json.textures).some((t) => t.src.includes('placeholder'));
 
 // The placeholder collar is a plain block that covers the eye slit in a one-colour pass; the code-drawn fur collar
 // replaces it until the real collar drawing lands.
-const NO_COLLAR: ReadonlySet<string> | undefined = PLACEHOLDER ? new Set(Object.keys(RIG.json.idColors).filter((id) => id !== 'collar')) : undefined;
-export const rigConfig = (origin: Vec3 = ORIGIN, renderBase = 0, model: RigModel = VORA): RigConfig => ({ model, pass: 'id', unit: UNIT, origin, renderBase, isolate: NO_COLLAR });
+const NO_COLLAR: ReadonlySet<string> | undefined = PLACEHOLDER ? new Set(Object.keys(VORATHUL_RIG.json.idColors).filter((id) => id !== 'collar')) : undefined;
+export const rigConfig = (origin: Vec3 = ORIGIN, renderBase = 0, model: RigModel = VORA, pass: RigConfig['pass'] = PLACEHOLDER ? 'id' : 'beauty'): RigConfig => ({ model, pass, unit: UNIT, origin, renderBase, isolate: NO_COLLAR });
 
 /** The same rig in one flat colour (strike echoes). */
 const MONO = new Map<string, RigModel>();
 const monoModel = (color: string): RigModel => {
   let m = MONO.get(color);
   if (!m) {
-    m = { ...RIG, json: { ...RIG.json, idColors: Object.fromEntries(Object.keys(RIG.json.idColors).map((id) => [id, color])) } };
+    m = { ...VORATHUL_RIG, json: { ...VORATHUL_RIG.json, idColors: Object.fromEntries(Object.keys(VORATHUL_RIG.json.idColors).map((id) => [id, color])) } };
     MONO.set(color, m);
   }
   return m;
 };
 export interface Echo { state: RigState; color: string; offset: Vec3 }
 /** Echoes trail only what strikes: arms, hands, sword and pipes (a whole-body copy reads as a second figure). */
-const ECHO_PARTS: ReadonlySet<string> = new Set(Object.keys(RIG.json.idColors).filter((id) => /^(upper_arm|forearm|hand)_[RL]$|^sword|^pipe_[RL]\d_(body|mouth)$/.test(id)));
+const ECHO_PARTS: ReadonlySet<string> = new Set(Object.keys(VORATHUL_RIG.json.idColors).filter((id) => /^(upper_arm|forearm|hand)_[RL]$|^sword|^pipe_[RL]\d_(body|mouth)$/.test(id)));
 
 /** Root-local H point of a node -> world, with the root's translation, lean and scale (as Rig.tsx places it). */
 export const rigWorld = (st: RigState, fk: Map<string, Affine>, node: string, local: [number, number] = [0, 0], origin: Vec3 = ORIGIN): Vec3 => {
@@ -203,7 +202,7 @@ export const Vorathul = ({ state, origin = ORIGIN, renderBase = 0, frame, crack 
   return (
     <group visible={!hidden}>
       {echoes.map((e, k) => (
-        <Rig key={`echo${k}`} cfg={{ ...rigConfig([origin[0] + e.offset[0], origin[1] + e.offset[1], origin[2] + e.offset[2]], renderBase - 40 + k * 10, monoModel(e.color)), isolate: ECHO_PARTS }} state={e.state} />
+        <Rig key={`echo${k}`} cfg={{ ...rigConfig([origin[0] + e.offset[0], origin[1] + e.offset[1], origin[2] + e.offset[2]], renderBase - 40 + k * 10, monoModel(e.color), 'id'), isolate: ECHO_PARTS }} state={e.state} />
       ))}
       <Rig cfg={cfg} state={state} />
       {PLACEHOLDER ? (

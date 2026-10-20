@@ -1,6 +1,6 @@
 // The painting world (P) as part 4 shows it: an emptied cathedral in drained ivory, and Vorathul's nerfed rig inside it.
 import { Rig, type RigConfig } from '../../rig/Rig.tsx';
-import { RIG } from '../../rig/model.ts';
+import { VORATHUL_RIG } from '../../rig/model.ts';
 import type { CameraPose } from '../../stage/Stage.tsx';
 import { Asset } from './cards.tsx';
 import { vorathulAt } from './rigline.ts';
@@ -57,7 +57,7 @@ export interface HeroProps {
 
 /** The nerfed Vorathul rig at its timeline pose for `frame`. */
 export const Hero = ({ frame, origin = [0, 0, HERO_Z] }: HeroProps) => {
-  const cfg: RigConfig = { model: RIG, pass: 'beauty', unit: UNIT, origin };
+  const cfg: RigConfig = { model: VORATHUL_RIG, pass: 'beauty', unit: UNIT, origin };
   return <Rig cfg={cfg} state={vorathulAt(frame)} />;
 };
 

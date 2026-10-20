@@ -286,13 +286,13 @@ const S05 = ({ frame }: { frame: number }) => {
   );
 };
 
-import { RIG } from '../../rig/model.ts';
+import { VORATHUL_RIG } from '../../rig/model.ts';
 import { pipeGeom } from '../../rig/pipes.ts';
-const VORA_PIPES = RIG.json.pipes.items;
+const VORA_PIPES = VORATHUL_RIG.json.pipes.items;
 /** Pipe i's mouth in its wing root's frame (H): root + dir * mouth centre at the current theta. */
 const pipeMouth = (st: ReturnType<typeof rigFor>, side: 'R' | 'L', i: number, _len: number): [number, number] => {
   const ps = st.wings[side].pipes[i]!;
-  const g = pipeGeom(RIG.json.pipes, VORA_PIPES[i]!, ps.theta, ps.lengthScale, ps.fly);
+  const g = pipeGeom(VORATHUL_RIG.json.pipes, VORA_PIPES[i]!, ps.theta, ps.lengthScale, ps.fly);
   return [g.root[0] + g.dir[0] * g.mouthCentre, g.root[1] + g.dir[1] * g.mouthCentre];
 };
 export { pipeMouth };

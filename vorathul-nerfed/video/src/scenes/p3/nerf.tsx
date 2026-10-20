@@ -3,7 +3,7 @@
 // so requests R3 (airborne rotation) and R5 (scale steps, squash) need nothing from the rig itself.
 import { forward } from '../../rig/fk.ts';
 import { apply } from '../../rig/math.ts';
-import { RIG } from '../../rig/model.ts';
+import { VORATHUL_RIG } from '../../rig/model.ts';
 import { pipeGeom, type PipeEvent } from '../../rig/pipes.ts';
 import { Rig } from '../../rig/Rig.tsx';
 import { rigAt, type Key, type RampKey, type Step, type Timeline } from '../../rig/timeline.ts';
@@ -75,12 +75,12 @@ export interface Place {
   hidden?: boolean;
 }
 
-export const stateAt = (tl: Timeline, frame: number): RigState => rigAt(RIG, tl, frame);
+export const stateAt = (tl: Timeline, frame: number): RigState => rigAt(VORATHUL_RIG, tl, frame);
 
 /** The figure on the stage. `renderBase` lifts every card above the backdrop. */
 export const Vorathul = ({ st, place, renderBase = 200 }: { st: RigState; place: Place; renderBase?: number }) => (
   <group position={place.pos} rotation={[place.pitch ?? 0, 0, ((place.rot ?? 0) * Math.PI) / 180]} scale={[1, place.squash ?? 1, 1]} visible={!place.hidden}>
-    <Rig cfg={{ model: RIG, pass: 'beauty', unit: FULL_H * place.scale, origin: [0, 0, 0], renderBase }} state={st} />
+    <Rig cfg={{ model: VORATHUL_RIG, pass: 'beauty', unit: FULL_H * place.scale, origin: [0, 0, 0], renderBase }} state={st} />
   </group>
 );
 
@@ -99,7 +99,7 @@ const toWorld = (st: RigState, place: Place, p: [number, number]): Vec3 => {
 
 /** World position of a rig node's joint (plus a local offset in H). */
 export const nodeAt = (st: RigState, place: Place, id: string, local: [number, number] = [0, 0]): Vec3 => {
-  const m = forward(RIG, st).get(id);
+  const m = forward(VORATHUL_RIG, st).get(id);
   if (!m) throw new Error(`p3: rig node ${id} missing`);
   return toWorld(st, place, apply(m, local[0], local[1]));
 };
@@ -108,15 +108,15 @@ export const nodeAt = (st: RigState, place: Place, id: string, local: [number, n
 export const helmAt = (st: RigState, place: Place): Vec3 => nodeAt(st, place, 'head', [0, 0.065]);
 export const slitAt = (st: RigState, place: Place): Vec3 => nodeAt(st, place, 'eye_slit');
 export const chestAt = (st: RigState, place: Place): Vec3 => nodeAt(st, place, 'torso', [0, 0.1]);
-export const swordTipAt = (st: RigState, place: Place): Vec3 => nodeAt(st, place, 'sword', [0, -RIG.json.bladeBelow]);
+export const swordTipAt = (st: RigState, place: Place): Vec3 => nodeAt(st, place, 'sword', [0, -VORATHUL_RIG.json.bladeBelow]);
 
 /** World position of pipe i's mouth on a wing. */
 export const pipeMouthAt = (st: RigState, place: Place, side: Side, i: number): Vec3 => {
-  const p = RIG.json.pipes;
+  const p = VORATHUL_RIG.json.pipes;
   const it = p.items[i]!;
   const ps = st.wings[side].pipes[i]!;
   const g = pipeGeom(p, it, ps.theta, ps.lengthScale, ps.fly);
-  const m = forward(RIG, st).get(`wing_root_${side}`)!;
+  const m = forward(VORATHUL_RIG, st).get(`wing_root_${side}`)!;
   return toWorld(st, place, apply(m, g.root[0] + g.dir[0] * g.rimTip, g.root[1] + g.dir[1] * g.rimTip));
 };
 

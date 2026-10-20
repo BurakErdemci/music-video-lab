@@ -1,6 +1,6 @@
 // Vorathul in part 5: the rig models used on the office stage and the state tracks every p5 shot shares
 // (pipes returning, crown, helm split, runes), so continuity holds across cuts. Pure data, no JSX.
-import { RIG } from '../../../rig/model.ts';
+import { VORATHUL_RIG } from '../../../rig/model.ts';
 import type { Key, LifeConfig, RampKey, Timeline } from '../../../rig/timeline.ts';
 import type { PipeEvent } from '../../../rig/pipes.ts';
 import type { PoseDef, RigModel, Side } from '../../../rig/types.ts';
@@ -18,16 +18,15 @@ export const MAGENTA = '#E0129A';
 export const UNIT = 8.5;
 export const OFFICE_FLOOR = -6.2;
 
-// The rig textures are still the rig lane's flat ID placeholders, so p5 draws him through the rig's id pass:
-// every card a flat colour. Ink everywhere, violet only where KARAKTER.md allows it (slit, gems, studs, eyes,
-// pipe mouths and their glow, sword runes): the solid black hole of the approved frames. When the final part
-// images land, LOOK switches to 'beauty' and the same timelines draw the painted cards.
-export const LOOK: 'silhouette' | 'beauty' = 'silhouette';
+// 'beauty' draws the drawn part cards. 'silhouette' is the placeholder-era look through the rig's id pass: ink
+// everywhere, violet only where KARAKTER.md allows it (slit, gems, studs, eyes, pipe mouths and glow, runes).
+// Echo copies always use the id pass (one flat colour each).
+export const LOOK: 'silhouette' | 'beauty' = 'beauty';
 
 const VIOLET_PARTS = /^(eye_slit|crown_gems|chest_studs|eye_\d|sword_runes|pipe_[RL]\d_(mouth|glow))$/;
 const recolor = (fn: (id: string) => string): RigModel => ({
-  ...RIG,
-  json: { ...RIG.json, idColors: Object.fromEntries(Object.keys(RIG.json.idColors).map((id) => [id, fn(id)])) },
+  ...VORATHUL_RIG,
+  json: { ...VORATHUL_RIG.json, idColors: Object.fromEntries(Object.keys(VORATHUL_RIG.json.idColors).map((id) => [id, fn(id)])) },
 });
 
 /** The figure itself. */
@@ -109,7 +108,7 @@ export const move = (at: number, pose: string | Partial<PoseDef>, dur: number): 
 export const strike = (at: number, pose: string | Partial<PoseDef>, dur: number): Key => ({ at, pose, dur: Math.max(12, dur), ease: 'strike', impact: true, hands: 'instant' });
 
 /** A pose from the library with overrides (keeps the named pose's arms unless replaced). */
-export const pose = (name: string, over: Partial<PoseDef> = {}): Partial<PoseDef> => ({ ...(RIG.json.poses[name] as PoseDef), ...over });
+export const pose = (name: string, over: Partial<PoseDef> = {}): Partial<PoseDef> => ({ ...(VORATHUL_RIG.json.poses[name] as PoseDef), ...over });
 
 // Missing rig poses (storyboard 2 R1, R2; rig lane still open): built here from the nearest library pose.
 /** R1 throne_sit -> sit_alone with arms on the armrests, head up, sword planted in front. */

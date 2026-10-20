@@ -2,7 +2,7 @@
 // He is in his nerfed state: root scale 0.35, small crown, sad slit, runes off, ten pipes gone and six folded and corked.
 import { forward } from '../../rig/fk.ts';
 import { apply } from '../../rig/math.ts';
-import { RIG, RIG_JSON } from '../../rig/model.ts';
+import { VORATHUL_RIG } from '../../rig/model.ts';
 import { rigAt, type Key, type Timeline } from '../../rig/timeline.ts';
 import type { PipeEvent } from '../../rig/pipes.ts';
 import type { PoseDef, RigState } from '../../rig/types.ts';
@@ -12,7 +12,7 @@ export const NERF_SCALE = 0.35;
 /** H units of forward root travel from the cathedral steps to the canvas plane (12 world units per H). */
 export const CANVAS_STEP = 0.5;
 
-const P = RIG_JSON.poses as Record<string, PoseDef>;
+const P = VORATHUL_RIG.json.poses as Record<string, PoseDef>;
 const pose = (name: string, extra: Partial<PoseDef> = {}): PoseDef => ({ ...(P[name] as PoseDef), rootScale: NERF_SCALE, ...extra });
 
 /** The seat is the top step: 1.1 world units, in H. */
@@ -78,12 +78,12 @@ export const TL: Timeline = {
   life: { scale: 1 },
 };
 
-export const vorathulAt = (frame: number): RigState => rigAt(RIG, TL, frame);
+export const vorathulAt = (frame: number): RigState => rigAt(VORATHUL_RIG, TL, frame);
 
 /** World position of a rig joint (units, at the hero's depth) for overlays that must sit on him; `origin` as in <Hero>. */
 export const jointWorld = (frame: number, id: string, unit = 12, origin: [number, number, number] = [0, 0, -15]): [number, number, number] => {
   const st = vorathulAt(frame);
-  const w = forward(RIG, st).get(id);
+  const w = forward(VORATHUL_RIG, st).get(id);
   const p = (w ? apply(w, 0, 0) : [0, 0]) as [number, number];
   const sc = st.ch.rootScale;
   return [origin[0] + (sc * p[0] + st.ch.rootX) * unit, origin[1] + (sc * p[1] + st.ch.rootY) * unit, origin[2] + st.ch.rootZ * unit];

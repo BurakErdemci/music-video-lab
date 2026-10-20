@@ -51,8 +51,11 @@ export const loadRig = (json: RigJson): RigModel => {
 
 export const RIG_JSON = raw as unknown as RigJson;
 export const RIG: RigModel = loadRig(RIG_JSON);
-/** The same rig with the drawn art cut from the rig sheets (tools/rig/cut_drawn.py): only texture paths, sizes, pivots and sockets differ. */
+/** The same rig with the drawn art cut from the rig sheets (tools/rig/cut_drawn.py): same parts and pose names, but its
+ * own unitPx, textures, sockets, pipe lengths, helm cut, blade length and a few pose values (sit_alone pelvis). */
 export const RIG_DRAWN: RigModel = loadRig(rawDrawn as unknown as RigJson);
+/** The rig every scene draws Vorathul with: the one switch between placeholder and final art. */
+export const VORATHUL_RIG: RigModel = RIG_DRAWN;
 
 export const texOf = (m: RigModel, slot: string) => m.json.textures[slot]!;
 /** Card centre offset from the joint (H, y up): where the card sits relative to its pivot. */

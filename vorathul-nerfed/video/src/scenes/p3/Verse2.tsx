@@ -4,7 +4,7 @@
 import type { ReactNode } from 'react';
 import { AbsoluteFill, Img, staticFile } from 'remotion';
 import { frameAt, handheld, hold, OFF_WIDE, withShake, SHAKE_PCT, type CameraPath, type CameraPose } from '../../camera/api.ts';
-import { RIG } from '../../rig/model.ts';
+import { VORATHUL_RIG } from '../../rig/model.ts';
 import type { RigState, Side } from '../../rig/types.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { Stage } from '../../stage/Stage.tsx';
@@ -80,7 +80,7 @@ const Bolts = ({ frame, pose, st0, place }: { frame: number; pose: CameraPose; s
   const out: ReactNode[] = [];
   for (const side of ['R', 'L'] as const) {
     const root = nodeAt(st0, place, `wing_root_${side}`);
-    for (const it of RIG.json.pipes.items) {
+    for (const it of VORATHUL_RIG.json.pipes.items) {
       const m = pipeMouthAt(st0, place, side, it.i);
       const d: Vec3 = [m[0] - root[0], m[1] - root[1], 0];
       const l = Math.hypot(d[0], d[1]) || 1;

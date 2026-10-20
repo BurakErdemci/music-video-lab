@@ -2,7 +2,7 @@
 // figure exactly: forward kinematics of the same RigState the stage draws.
 import { forward } from '../../../rig/fk.ts';
 import { apply } from '../../../rig/math.ts';
-import { RIG } from '../../../rig/model.ts';
+import { VORATHUL_RIG } from '../../../rig/model.ts';
 import { pipeGeom } from '../../../rig/pipes.ts';
 import { rigAt, type Timeline } from '../../../rig/timeline.ts';
 import type { RigState } from '../../../rig/types.ts';
@@ -36,13 +36,13 @@ export interface RigPoints {
 }
 
 export const rigPoints = (tl: Timeline, frame: number, place: Placement): RigPoints => {
-  const st = rigAt(RIG, tl, frame);
-  const fk = forward(RIG, st);
+  const st = rigAt(VORATHUL_RIG, tl, frame);
+  const fk = forward(VORATHUL_RIG, st);
   const joint = (id: string, x = 0, y = 0): Vec3 => {
     const m = fk.get(id);
     return m ? toWorld(st, apply(m, x, y), place) : toWorld(st, [0, 0.5], place);
   };
-  const b = RIG.json.bladeBelow;
+  const b = VORATHUL_RIG.json.bladeBelow;
   let swordTip: Vec3;
   let swordGrip: Vec3;
   if (st.sword.attach === 'ground') {
@@ -54,7 +54,7 @@ export const rigPoints = (tl: Timeline, frame: number, place: Placement): RigPoi
     swordGrip = joint('sword');
     swordTip = joint('sword', 0, -b);
   }
-  const p = RIG.json.pipes;
+  const p = VORATHUL_RIG.json.pipes;
   const mouths: RigPoints['mouths'] = [];
   for (const side of ['R', 'L'] as const) {
     const w = fk.get(`wing_root_${side}`);

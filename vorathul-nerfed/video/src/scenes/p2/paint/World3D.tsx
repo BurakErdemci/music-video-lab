@@ -1,7 +1,7 @@
 // The painting's 3D card stack (everything that is not a code-drawn overlay): sky, sun, cathedral, galleries, floor,
 // pillars and Vorathul's rig. Pure function of the frame.
 import { Rig, type RigConfig } from '../../../rig/Rig.tsx';
-import { RIG } from '../../../rig/model.ts';
+import { VORATHUL_RIG } from '../../../rig/model.ts';
 import { rigAt } from '../../../rig/timeline.ts';
 import { CropCard, SvgCard } from './cards.tsx';
 import { cathedralSvg, pillarSvg, skySvg, sunSvg, SUN_STEPS } from './art.ts';
@@ -29,12 +29,12 @@ const PLATE = 'plates/01-tarz-cizgi-roman.jpg';
 const RIG_UNIT = 6.8;
 const FEET_Y = -3.95;
 
-const RIG_CFG: RigConfig = { model: RIG, pass: 'beauty', unit: RIG_UNIT, origin: [0, FEET_Y, 0], renderBase: 100 };
+const RIG_CFG: RigConfig = { model: VORATHUL_RIG, pass: 'beauty', unit: RIG_UNIT, origin: [0, FEET_Y, 0], renderBase: 100 };
 
 const HEAD = /^(head|eye_slit|crown|crown_gems|void_head|eye_[1-7]|helm_half_[RL]|crown_half_[RL])$/;
 /** Every card id of the rig except the head family (pipe cards carry generated ids, so they are listed too). */
 const NO_HEAD: ReadonlySet<string> = new Set([
-  ...RIG.nodes.map((n) => n.id).filter((id) => !HEAD.test(id)),
+  ...VORATHUL_RIG.nodes.map((n) => n.id).filter((id) => !HEAD.test(id)),
   ...['R', 'L'].flatMap((side) => Array.from({ length: 8 }, (_, i) => [`pipe_${side}${i}_body`, `pipe_${side}${i}_mouth`, `pipe_${side}${i}_glow`, `pipe_${side}${i}_cork`, `wm_${side}${i}_body`, `wm_${side}${i}_mouth`]).flat()),
 ]);
 const RIG_NO_HEAD: RigConfig = { ...RIG_CFG, isolate: NO_HEAD };
@@ -52,7 +52,7 @@ const Layer = ({ z, x = 0, y = 0, children }: { z: number; x?: number; y?: numbe
 const nearestStep = (fill: number): number => SUN_STEPS.reduce((best, s) => (Math.abs(s - fill) < Math.abs(best - fill) ? s : best), SUN_STEPS[0] as number);
 
 export const World3D = ({ frame, sun, pillars, skyShake = [0, 0], skyViolet = false, rig = true, headUp = false }: World3DProps) => {
-  const state = rigAt(RIG, VORATHUL_TL, frame);
+  const state = rigAt(VORATHUL_RIG, VORATHUL_TL, frame);
   const sunStep = sun ? nearestStep(sun.fill) : -1;
   return (
     <>

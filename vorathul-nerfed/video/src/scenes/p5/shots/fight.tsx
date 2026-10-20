@@ -3,7 +3,7 @@
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
 import { handheld, hold, SHAKE_PCT, sequence, tween, withShake, type CameraPath, type CameraPose } from '../../../camera/api.ts';
-import { RIG, texOf } from '../../../rig/model.ts';
+import { VORATHUL_RIG, texOf } from '../../../rig/model.ts';
 import { Card, type Vec3 } from '../../../stage/Card.tsx';
 import { Stage } from '../../../stage/Stage.tsx';
 import { BossNameplate, Cursor, Desktop, HealthBar, RevertDialog } from '../../../ui/kit.ts';
@@ -129,9 +129,9 @@ const S98_TL = timeline([
 const MON: Vec3 = [0.9, F + 2.2, -8.6];
 const MON_W = 3.4;
 const S98_CAM: CameraPath = handheld(tween({ position: [-1.6, -2.4, -4.2], target: [1.4, -1.2, -18] }, { position: [-1.2, -2.2, -4.9], target: [1.7, -0.7, -18] }, { start: E('s98-cut'), frames: 37 }), { amp: 0.04, seed: 's98' });
-const PIPE_TEX = texOf(RIG, 'body_l');
-const MOUTH_TEX = texOf(RIG, 'mouth_l');
-const hpxU = RIG.hpx * UNIT;
+const PIPE_TEX = texOf(VORATHUL_RIG, 'body_l');
+const MOUTH_TEX = texOf(VORATHUL_RIG, 'mouth_l');
+const hpxU = VORATHUL_RIG.hpx * UNIT;
 
 /** One pipe flying from the monitor screen to its socket (the rig's own return flight takes over 8 frames out). */
 const FlyingPipe = ({ from, to, t }: { from: Vec3; to: Vec3; t: number }) => {
