@@ -1,0 +1,2872 @@
+{
+ "unitPx": 1380,
+ "textures": {
+  "pelvis": {
+   "src": "rig/placeholder/pelvis.png",
+   "w": 331,
+   "h": 221,
+   "pivot": [
+    166,
+    110
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#000033"
+  },
+  "leg": {
+   "src": "rig/placeholder/leg.png",
+   "w": 138,
+   "h": 731,
+   "pivot": [
+    69,
+    69
+   ],
+   "shape": {
+    "t": "capsule"
+   },
+   "idColor": "#000066"
+  },
+  "legs_seated": {
+   "src": "rig/placeholder/legs_seated.png",
+   "w": 414,
+   "h": 276,
+   "pivot": [
+    207,
+    55
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#0000cc"
+  },
+  "torso_base": {
+   "src": "rig/placeholder/torso_base.png",
+   "w": 469,
+   "h": 442,
+   "pivot": [
+    235,
+    386
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#0000ff"
+  },
+  "chest_studs": {
+   "src": "rig/placeholder/chest_studs.png",
+   "w": 469,
+   "h": 442,
+   "pivot": [
+    235,
+    386
+   ],
+   "shape": {
+    "t": "studs"
+   },
+   "idColor": "#003300"
+  },
+  "collar": {
+   "src": "rig/placeholder/collar.png",
+   "w": 331,
+   "h": 138,
+   "pivot": [
+    166,
+    138
+   ],
+   "shape": {
+    "t": "collar"
+   },
+   "idColor": "#003333"
+  },
+  "pauldron": {
+   "src": "rig/placeholder/pauldron.png",
+   "w": 221,
+   "h": 166,
+   "pivot": [
+    110,
+    83
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00ffcc"
+  },
+  "upper_arm": {
+   "src": "rig/placeholder/upper_arm.png",
+   "w": 97,
+   "h": 262,
+   "pivot": [
+    48,
+    48
+   ],
+   "shape": {
+    "t": "capsule"
+   },
+   "idColor": "#330000"
+  },
+  "forearm": {
+   "src": "rig/placeholder/forearm.png",
+   "w": 97,
+   "h": 248,
+   "pivot": [
+    48,
+    48
+   ],
+   "shape": {
+    "t": "capsule"
+   },
+   "idColor": "#330066"
+  },
+  "hand_open": {
+   "src": "rig/placeholder/hand_open.png",
+   "w": 124,
+   "h": 200,
+   "pivot": [
+    62,
+    62
+   ],
+   "shape": {
+    "t": "capsule",
+    "frac": 0.9
+   },
+   "idColor": "#3300cc"
+  },
+  "hand_grip": {
+   "src": "rig/placeholder/hand_grip.png",
+   "w": 124,
+   "h": 200,
+   "pivot": [
+    62,
+    62
+   ],
+   "shape": {
+    "t": "capsule",
+    "frac": 0.85
+   },
+   "idColor": "#3300cc"
+  },
+  "hand_fist": {
+   "src": "rig/placeholder/hand_fist.png",
+   "w": 124,
+   "h": 200,
+   "pivot": [
+    62,
+    62
+   ],
+   "shape": {
+    "t": "capsule",
+    "frac": 0.9
+   },
+   "idColor": "#3300cc"
+  },
+  "hand_palm": {
+   "src": "rig/placeholder/hand_palm.png",
+   "w": 124,
+   "h": 200,
+   "pivot": [
+    62,
+    62
+   ],
+   "shape": {
+    "t": "capsule",
+    "frac": 1
+   },
+   "idColor": "#3300cc"
+  },
+  "hand_spread": {
+   "src": "rig/placeholder/hand_spread.png",
+   "w": 124,
+   "h": 200,
+   "pivot": [
+    62,
+    62
+   ],
+   "shape": {
+    "t": "capsule",
+    "frac": 1
+   },
+   "idColor": "#3300cc"
+  },
+  "hand_clutch": {
+   "src": "rig/placeholder/hand_clutch.png",
+   "w": 124,
+   "h": 200,
+   "pivot": [
+    62,
+    62
+   ],
+   "shape": {
+    "t": "capsule",
+    "frac": 0.95
+   },
+   "idColor": "#3300cc"
+  },
+  "sword_base": {
+   "src": "rig/placeholder/sword_base.png",
+   "w": 276,
+   "h": 1073,
+   "pivot": [
+    138,
+    110
+   ],
+   "shape": {
+    "t": "sword"
+   },
+   "idColor": "#333300"
+  },
+  "sword_runes": {
+   "src": "rig/placeholder/sword_runes.png",
+   "w": 276,
+   "h": 1073,
+   "pivot": [
+    138,
+    110
+   ],
+   "shape": {
+    "t": "swordrunes"
+   },
+   "idColor": "#333333"
+  },
+  "cape_upper": {
+   "src": "rig/placeholder/cape_upper.png",
+   "w": 414,
+   "h": 469,
+   "pivot": [
+    207,
+    28
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#003366"
+  },
+  "cape_lower": {
+   "src": "rig/placeholder/cape_lower.png",
+   "w": 552,
+   "h": 580,
+   "pivot": [
+    276,
+    55
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#003399"
+  },
+  "cape_lower_seated": {
+   "src": "rig/placeholder/cape_lower_seated.png",
+   "w": 718,
+   "h": 276,
+   "pivot": [
+    359,
+    55
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#003399"
+  },
+  "hem_a": {
+   "src": "rig/placeholder/hem_a.png",
+   "w": 97,
+   "h": 166,
+   "pivot": [
+    48,
+    25
+   ],
+   "shape": {
+    "t": "hem",
+    "v": 0
+   },
+   "idColor": "#0033cc"
+  },
+  "hem_b": {
+   "src": "rig/placeholder/hem_b.png",
+   "w": 97,
+   "h": 166,
+   "pivot": [
+    48,
+    25
+   ],
+   "shape": {
+    "t": "hem",
+    "v": 1
+   },
+   "idColor": "#0033ff"
+  },
+  "hem_c": {
+   "src": "rig/placeholder/hem_c.png",
+   "w": 97,
+   "h": 166,
+   "pivot": [
+    48,
+    25
+   ],
+   "shape": {
+    "t": "hem",
+    "v": 2
+   },
+   "idColor": "#006600"
+  },
+  "wing_root": {
+   "src": "rig/placeholder/wing_root.png",
+   "w": 166,
+   "h": 166,
+   "pivot": [
+    83,
+    83
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#0066cc"
+  },
+  "body_s": {
+   "src": "rig/placeholder/body_s.png",
+   "w": 214,
+   "h": 44,
+   "pivot": [
+    0,
+    22
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#669966"
+  },
+  "mouth_s": {
+   "src": "rig/placeholder/mouth_s.png",
+   "w": 53,
+   "h": 47,
+   "pivot": [
+    26,
+    23
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#669999"
+  },
+  "glow_s": {
+   "src": "rig/placeholder/glow_s.png",
+   "w": 39,
+   "h": 28,
+   "pivot": [
+    19,
+    14
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#6699cc"
+  },
+  "body_m": {
+   "src": "rig/placeholder/body_m.png",
+   "w": 311,
+   "h": 44,
+   "pivot": [
+    0,
+    22
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#66ff66"
+  },
+  "mouth_m": {
+   "src": "rig/placeholder/mouth_m.png",
+   "w": 53,
+   "h": 47,
+   "pivot": [
+    26,
+    23
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#66ff99"
+  },
+  "glow_m": {
+   "src": "rig/placeholder/glow_m.png",
+   "w": 39,
+   "h": 28,
+   "pivot": [
+    19,
+    14
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#66ffcc"
+  },
+  "body_l": {
+   "src": "rig/placeholder/body_l.png",
+   "w": 414,
+   "h": 44,
+   "pivot": [
+    0,
+    22
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#996666"
+  },
+  "mouth_l": {
+   "src": "rig/placeholder/mouth_l.png",
+   "w": 53,
+   "h": 47,
+   "pivot": [
+    26,
+    23
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#996699"
+  },
+  "glow_l": {
+   "src": "rig/placeholder/glow_l.png",
+   "w": 39,
+   "h": 28,
+   "pivot": [
+    19,
+    14
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#9966cc"
+  },
+  "cork": {
+   "src": "rig/placeholder/cork.png",
+   "w": 41,
+   "h": 36,
+   "pivot": [
+    21,
+    18
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#6699ff"
+  },
+  "helm_closed": {
+   "src": "rig/placeholder/helm_closed.png",
+   "w": 414,
+   "h": 304,
+   "pivot": [
+    207,
+    248
+   ],
+   "shape": {
+    "t": "helm"
+   },
+   "idColor": "#009900"
+  },
+  "half_R": {
+   "src": "rig/placeholder/half_R.png",
+   "w": 207,
+   "h": 304,
+   "pivot": [
+    0,
+    304
+   ],
+   "shape": {
+    "t": "helmhalf",
+    "side": "R"
+   },
+   "idColor": "#00ff00"
+  },
+  "half_L": {
+   "src": "rig/placeholder/half_L.png",
+   "w": 207,
+   "h": 304,
+   "pivot": [
+    207,
+    304
+   ],
+   "shape": {
+    "t": "helmhalf",
+    "side": "L"
+   },
+   "idColor": "#00ff33"
+  },
+  "slit_lit": {
+   "src": "rig/placeholder/slit_lit.png",
+   "w": 138,
+   "h": 28,
+   "pivot": [
+    69,
+    14
+   ],
+   "shape": {
+    "t": "rrect"
+   },
+   "idColor": "#009933"
+  },
+  "slit_sad": {
+   "src": "rig/placeholder/slit_sad.png",
+   "w": 138,
+   "h": 41,
+   "pivot": [
+    69,
+    21
+   ],
+   "shape": {
+    "t": "slitsad"
+   },
+   "idColor": "#009933"
+  },
+  "crown_full": {
+   "src": "rig/placeholder/crown_full.png",
+   "w": 166,
+   "h": 110,
+   "pivot": [
+    83,
+    90
+   ],
+   "shape": {
+    "t": "crown",
+    "spikes": 5
+   },
+   "idColor": "#009966"
+  },
+  "crown_small": {
+   "src": "rig/placeholder/crown_small.png",
+   "w": 110,
+   "h": 69,
+   "pivot": [
+    55,
+    55
+   ],
+   "shape": {
+    "t": "crown",
+    "spikes": 3
+   },
+   "idColor": "#009966"
+  },
+  "gems_full": {
+   "src": "rig/placeholder/gems_full.png",
+   "w": 166,
+   "h": 110,
+   "pivot": [
+    83,
+    90
+   ],
+   "shape": {
+    "t": "gems",
+    "n": 3
+   },
+   "idColor": "#009999"
+  },
+  "gems_small": {
+   "src": "rig/placeholder/gems_small.png",
+   "w": 110,
+   "h": 69,
+   "pivot": [
+    55,
+    55
+   ],
+   "shape": {
+    "t": "gems",
+    "n": 2
+   },
+   "idColor": "#009999"
+  },
+  "crown_half_R": {
+   "src": "rig/placeholder/crown_half_R.png",
+   "w": 83,
+   "h": 110,
+   "pivot": [
+    83,
+    90
+   ],
+   "shape": {
+    "t": "crownhalf",
+    "side": "R"
+   },
+   "idColor": "#00ff66"
+  },
+  "crown_half_L": {
+   "src": "rig/placeholder/crown_half_L.png",
+   "w": 83,
+   "h": 110,
+   "pivot": [
+    0,
+    90
+   ],
+   "shape": {
+    "t": "crownhalf",
+    "side": "L"
+   },
+   "idColor": "#00ff99"
+  },
+  "void_head": {
+   "src": "rig/placeholder/void_head.png",
+   "w": 276,
+   "h": 276,
+   "pivot": [
+    138,
+    248
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#0099cc"
+  },
+  "eye_1": {
+   "src": "rig/placeholder/eye_1.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#0099ff"
+  },
+  "eye_2": {
+   "src": "rig/placeholder/eye_2.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00cc00"
+  },
+  "eye_3": {
+   "src": "rig/placeholder/eye_3.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00cc33"
+  },
+  "eye_4": {
+   "src": "rig/placeholder/eye_4.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00cc66"
+  },
+  "eye_5": {
+   "src": "rig/placeholder/eye_5.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00cc99"
+  },
+  "eye_6": {
+   "src": "rig/placeholder/eye_6.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00cccc"
+  },
+  "eye_7": {
+   "src": "rig/placeholder/eye_7.png",
+   "w": 35,
+   "h": 17,
+   "pivot": [
+    17,
+    8
+   ],
+   "shape": {
+    "t": "disk"
+   },
+   "idColor": "#00ccff"
+  }
+ },
+ "parts": [
+  {
+   "id": "pelvis",
+   "parent": "root",
+   "driver": "pelvis",
+   "texture": "pelvis",
+   "socket": [
+    0,
+    0
+   ],
+   "offsetH": [
+    0,
+    0.52
+   ],
+   "z": 62,
+   "limits": {
+    "rot": [
+     -10,
+     10
+    ],
+    "ty": [
+     -0.3,
+     0.06
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 69
+  },
+  {
+   "id": "leg",
+   "parent": "pelvis",
+   "sided": true,
+   "mirror": true,
+   "driver": "leg",
+   "texture": "leg",
+   "socket": [
+    90,
+    166
+   ],
+   "z": 60,
+   "limits": {
+    "rot": [
+     -8,
+     25
+    ]
+   },
+   "sign": -1,
+   "jointRadius": 55
+  },
+  {
+   "id": "legs_seated",
+   "parent": "pelvis",
+   "driver": "legs_seated",
+   "texture": "legs_seated",
+   "socket": [
+    166,
+    110
+   ],
+   "z": 61,
+   "limits": {
+    "rot": [
+     -5,
+     5
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 55
+  },
+  {
+   "id": "torso",
+   "parent": "pelvis",
+   "driver": "torso",
+   "texture": "torso_base",
+   "socket": [
+    166,
+    55
+   ],
+   "z": 70,
+   "limits": {
+    "rot": [
+     -15,
+     15
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 55
+  },
+  {
+   "id": "chest_studs",
+   "parent": "torso",
+   "driver": "studs",
+   "texture": "chest_studs",
+   "socket": [
+    235,
+    386
+   ],
+   "z": 71,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "collar",
+   "parent": "torso",
+   "driver": "fixed",
+   "texture": "collar",
+   "socket": [
+    235,
+    55
+   ],
+   "z": 82
+  },
+  {
+   "id": "cape_upper",
+   "parent": "torso",
+   "driver": "fixed",
+   "texture": "cape_upper",
+   "socket": [
+    235,
+    97
+   ],
+   "z": 5,
+   "dz": -0.06
+  },
+  {
+   "id": "cape_lower",
+   "parent": "cape_upper",
+   "driver": "cape_lower",
+   "texture": "cape_lower",
+   "variants": [
+    "cape_lower",
+    "cape_lower_seated"
+   ],
+   "socket": [
+    207,
+    414
+   ],
+   "z": 6,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -8,
+     8
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 55
+  },
+  {
+   "id": "hem_1",
+   "parent": "cape_lower",
+   "driver": "hem",
+   "hemIndex": 0,
+   "texture": "hem_a",
+   "flipX": false,
+   "socket": [
+    69,
+    552
+   ],
+   "z": 7,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -7,
+     7
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 25
+  },
+  {
+   "id": "hem_2",
+   "parent": "cape_lower",
+   "driver": "hem",
+   "hemIndex": 1,
+   "texture": "hem_b",
+   "flipX": false,
+   "socket": [
+    152,
+    552
+   ],
+   "z": 7,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -7,
+     7
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 25
+  },
+  {
+   "id": "hem_3",
+   "parent": "cape_lower",
+   "driver": "hem",
+   "hemIndex": 2,
+   "texture": "hem_c",
+   "flipX": false,
+   "socket": [
+    235,
+    552
+   ],
+   "z": 7,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -7,
+     7
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 25
+  },
+  {
+   "id": "hem_4",
+   "parent": "cape_lower",
+   "driver": "hem",
+   "hemIndex": 3,
+   "texture": "hem_c",
+   "flipX": true,
+   "socket": [
+    317,
+    552
+   ],
+   "z": 7,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -7,
+     7
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 25
+  },
+  {
+   "id": "hem_5",
+   "parent": "cape_lower",
+   "driver": "hem",
+   "hemIndex": 4,
+   "texture": "hem_b",
+   "flipX": true,
+   "socket": [
+    400,
+    552
+   ],
+   "z": 7,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -7,
+     7
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 25
+  },
+  {
+   "id": "hem_6",
+   "parent": "cape_lower",
+   "driver": "hem",
+   "hemIndex": 5,
+   "texture": "hem_a",
+   "flipX": true,
+   "socket": [
+    483,
+    552
+   ],
+   "z": 7,
+   "dz": -0.06,
+   "limits": {
+    "rot": [
+     -7,
+     7
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 25
+  },
+  {
+   "id": "wing_root",
+   "parent": "torso",
+   "sided": true,
+   "mirror": true,
+   "baseSide": "L",
+   "driver": "wing_root",
+   "texture": "wing_root",
+   "socket": [
+    373,
+    166
+   ],
+   "z": 52,
+   "dz": -0.04,
+   "limits": {
+    "rot": [
+     -25,
+     15
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 69
+  },
+  {
+   "id": "head",
+   "parent": "torso",
+   "driver": "head",
+   "texture": "helm_closed",
+   "socket": [
+    235,
+    69
+   ],
+   "z": 78,
+   "limits": {
+    "rot": [
+     -20,
+     20
+    ],
+    "sink": [
+     -0.01,
+     0.03
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 56
+  },
+  {
+   "id": "eye_slit",
+   "parent": "head",
+   "driver": "slit",
+   "texture": "slit_lit",
+   "variants": [
+    "slit_lit",
+    "slit_sad"
+   ],
+   "socket": [
+    207,
+    166
+   ],
+   "z": 79,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "crown",
+   "parent": "head",
+   "driver": "crown",
+   "texture": "crown_full",
+   "variants": [
+    "crown_full",
+    "crown_small"
+   ],
+   "socket": [
+    207,
+    97
+   ],
+   "z": 80,
+   "limits": {
+    "rot": [
+     -8,
+     8
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 20
+  },
+  {
+   "id": "crown_gems",
+   "parent": "head",
+   "driver": "gems",
+   "texture": "gems_full",
+   "variants": [
+    "gems_full",
+    "gems_small"
+   ],
+   "socket": [
+    207,
+    97
+   ],
+   "z": 81,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "void_head",
+   "parent": "head",
+   "driver": "void",
+   "texture": "void_head",
+   "socket": [
+    207,
+    248
+   ],
+   "z": 76
+  },
+  {
+   "id": "eye_1",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 0,
+   "texture": "eye_1",
+   "socket": [
+    97,
+    83
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "eye_2",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 1,
+   "texture": "eye_2",
+   "socket": [
+    179,
+    83
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "eye_3",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 2,
+   "texture": "eye_3",
+   "socket": [
+    62,
+    138
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "eye_4",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 3,
+   "texture": "eye_4",
+   "socket": [
+    138,
+    138
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "eye_5",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 4,
+   "texture": "eye_5",
+   "socket": [
+    214,
+    138
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "eye_6",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 5,
+   "texture": "eye_6",
+   "socket": [
+    97,
+    193
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "eye_7",
+   "parent": "void_head",
+   "driver": "eye",
+   "eyeIndex": 6,
+   "texture": "eye_7",
+   "socket": [
+    179,
+    193
+   ],
+   "z": 77,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  },
+  {
+   "id": "helm_half_R",
+   "parent": "head",
+   "driver": "helm_half",
+   "side": "R",
+   "texture": "half_R",
+   "socket": [
+    0,
+    304
+   ],
+   "z": 78,
+   "limits": {
+    "open": [
+     0,
+     1
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 55
+  },
+  {
+   "id": "helm_half_L",
+   "parent": "head",
+   "driver": "helm_half",
+   "side": "L",
+   "texture": "half_L",
+   "socket": [
+    414,
+    304
+   ],
+   "z": 78,
+   "limits": {
+    "open": [
+     0,
+     1
+    ]
+   },
+   "sign": -1,
+   "jointRadius": 55
+  },
+  {
+   "id": "crown_half_R",
+   "parent": "helm_half_R",
+   "driver": "crown_half",
+   "side": "R",
+   "texture": "crown_half_R",
+   "socket": [
+    207,
+    97
+   ],
+   "z": 80,
+   "jointRadius": 28
+  },
+  {
+   "id": "crown_half_L",
+   "parent": "helm_half_L",
+   "driver": "crown_half",
+   "side": "L",
+   "texture": "crown_half_L",
+   "socket": [
+    0,
+    97
+   ],
+   "z": 80,
+   "jointRadius": 28
+  },
+  {
+   "id": "pauldron",
+   "parent": "torso",
+   "sided": true,
+   "mirror": true,
+   "driver": "pauldron",
+   "texture": "pauldron",
+   "socket": [
+    55,
+    69
+   ],
+   "z": 74,
+   "limits": {
+    "rot": [
+     -40,
+     40
+    ]
+   },
+   "sign": -1,
+   "follow": {
+    "part": "upper_arm",
+    "factor": 0.35
+   },
+   "jointRadius": 55
+  },
+  {
+   "id": "upper_arm",
+   "parent": "torso",
+   "sided": true,
+   "mirror": true,
+   "driver": "upper_arm",
+   "texture": "upper_arm",
+   "socket": [
+    55,
+    69
+   ],
+   "z": 72,
+   "limits": {
+    "rot": [
+     -40,
+     160
+    ]
+   },
+   "sign": -1,
+   "jointRadius": 48
+  },
+  {
+   "id": "forearm",
+   "parent": "upper_arm",
+   "sided": true,
+   "mirror": true,
+   "driver": "forearm",
+   "texture": "forearm",
+   "socket": [
+    48,
+    214
+   ],
+   "z": 73,
+   "limits": {
+    "rot": [
+     -10,
+     150
+    ]
+   },
+   "sign": 1,
+   "jointRadius": 48
+  },
+  {
+   "id": "hand",
+   "parent": "forearm",
+   "sided": true,
+   "mirror": true,
+   "driver": "hand",
+   "texture": "hand_open",
+   "variants": [
+    "hand_open",
+    "hand_grip",
+    "hand_fist",
+    "hand_palm",
+    "hand_spread",
+    "hand_clutch"
+   ],
+   "socket": [
+    48,
+    200
+   ],
+   "zBySide": {
+    "R": 90,
+    "L": 91
+   },
+   "z": 90,
+   "limits": {
+    "rot": [
+     -45,
+     45
+    ]
+   },
+   "sign": -1,
+   "jointRadius": 48
+  },
+  {
+   "id": "sword",
+   "parent": "hand_R",
+   "driver": "sword",
+   "texture": "sword_base",
+   "socket": [
+    62,
+    166
+   ],
+   "z": 64,
+   "limits": {
+    "ground": [
+     -25,
+     25
+    ]
+   },
+   "sign": -1,
+   "jointRadius": 41,
+   "attachOffsetDeg": 95
+  },
+  {
+   "id": "sword_runes",
+   "parent": "sword",
+   "driver": "runes",
+   "texture": "sword_runes",
+   "socket": [
+    138,
+    110
+   ],
+   "z": 65,
+   "limits": {
+    "opacity": [
+     0,
+     1
+    ]
+   }
+  }
+ ],
+ "pipes": {
+  "r0": 0.02,
+  "widthH": 0.032,
+  "cascade": 0.3,
+  "mouthLenW": 1.2,
+  "mouthOverlapW": 0.25,
+  "corkSeatW": 0.15,
+  "corkStartH": 0.08,
+  "z": {
+   "base": 20,
+   "step": 4,
+   "mouth": 1,
+   "glow": 2,
+   "cork": 3
+  },
+  "missingZ": 10,
+  "dz": -0.04,
+  "thetaLimits": [
+   -45,
+   95
+  ],
+  "scaleLimits": [
+   0.85,
+   1.2
+  ],
+  "baseSide": "L",
+  "checkerCellH": 0.02,
+  "items": [
+   {
+    "i": 0,
+    "open": -38,
+    "fold": 76,
+    "len": 0.14,
+    "tex": "s",
+    "lengthScale": 0.9
+   },
+   {
+    "i": 1,
+    "open": -27,
+    "fold": 78,
+    "len": 0.17,
+    "tex": "s",
+    "lengthScale": 1.1
+   },
+   {
+    "i": 2,
+    "open": -16,
+    "fold": 80,
+    "len": 0.2,
+    "tex": "m",
+    "lengthScale": 0.89
+   },
+   {
+    "i": 3,
+    "open": -5,
+    "fold": 82,
+    "len": 0.23,
+    "tex": "m",
+    "lengthScale": 1.02
+   },
+   {
+    "i": 4,
+    "open": 6,
+    "fold": 84,
+    "len": 0.26,
+    "tex": "m",
+    "lengthScale": 1.16
+   },
+   {
+    "i": 5,
+    "open": 17,
+    "fold": 86,
+    "len": 0.29,
+    "tex": "l",
+    "lengthScale": 0.97
+   },
+   {
+    "i": 6,
+    "open": 28,
+    "fold": 88,
+    "len": 0.32,
+    "tex": "l",
+    "lengthScale": 1.07
+   },
+   {
+    "i": 7,
+    "open": 39,
+    "fold": 90,
+    "len": 0.34,
+    "tex": "l",
+    "lengthScale": 1.13
+   }
+  ],
+  "bodyLen": {
+   "s": 0.155,
+   "m": 0.225,
+   "l": 0.3
+  }
+ },
+ "poses": {
+  "base": {
+   "pelvis": [
+    0,
+    0
+   ],
+   "torso": 0,
+   "head": [
+    0,
+    0
+   ],
+   "armR": [
+    -25,
+    70,
+    0,
+    "grip"
+   ],
+   "armL": [
+    -25,
+    70,
+    0,
+    "fist"
+   ],
+   "legs": [
+    3,
+    3
+   ],
+   "wings": [
+    1,
+    0
+   ],
+   "sword": "hand_R",
+   "swordDir": 0,
+   "swordZ": 64
+  },
+  "raise_sword": {
+   "pelvis": [
+    0,
+    0.01
+   ],
+   "torso": 6,
+   "head": [
+    5,
+    -0.005
+   ],
+   "armR": [
+    155,
+    10,
+    -30,
+    "grip"
+   ],
+   "armL": [
+    40,
+    30,
+    0,
+    "fist"
+   ],
+   "legs": [
+    8,
+    12
+   ],
+   "wings": [
+    1,
+    10
+   ],
+   "sword": "hand_R",
+   "swordDir": 210,
+   "swordZ": 92
+  },
+  "strike_down": {
+   "pelvis": [
+    -4,
+    -0.02
+   ],
+   "torso": -10,
+   "head": [
+    -8,
+    0.01
+   ],
+   "armR": [
+    -30,
+    70,
+    -40,
+    "grip"
+   ],
+   "armL": [
+    70,
+    40,
+    20,
+    "spread"
+   ],
+   "legs": [
+    14,
+    14
+   ],
+   "wings": [
+    1,
+    -20
+   ],
+   "sword": "hand_R",
+   "swordDir": -45,
+   "swordZ": 64
+  },
+  "conduct_wide": {
+   "pelvis": [
+    0,
+    0
+   ],
+   "torso": 0,
+   "head": [
+    4,
+    -0.01
+   ],
+   "armR": [
+    100,
+    30,
+    20,
+    "spread"
+   ],
+   "armL": [
+    100,
+    30,
+    20,
+    "spread"
+   ],
+   "legs": [
+    5,
+    5
+   ],
+   "wings": [
+    1,
+    12
+   ],
+   "sword": "ground"
+  },
+  "slump": {
+   "pelvis": [
+    0,
+    -0.03
+   ],
+   "torso": -3,
+   "head": [
+    -6,
+    0.025
+   ],
+   "armR": [
+    -15,
+    55,
+    -25,
+    "fist"
+   ],
+   "armL": [
+    6,
+    10,
+    0,
+    "open"
+   ],
+   "legs": [
+    2,
+    2
+   ],
+   "wings": [
+    0,
+    -10
+   ],
+   "sword": "hand_R",
+   "swordDir": 0,
+   "swordZ": 64
+  },
+  "clutch_throat": {
+   "pelvis": [
+    0,
+    0
+   ],
+   "torso": -4,
+   "head": [
+    10,
+    -0.01
+   ],
+   "armR": [
+    -35,
+    140,
+    10,
+    "clutch"
+   ],
+   "armL": [
+    -30,
+    135,
+    5,
+    "clutch"
+   ],
+   "legs": [
+    4,
+    4
+   ],
+   "wings": [
+    null,
+    0
+   ],
+   "sword": "ground"
+  },
+  "sit_alone": {
+   "pelvis": [
+    0,
+    -0.3
+   ],
+   "torso": -3,
+   "head": [
+    -12,
+    0.025
+   ],
+   "armR": [
+    10,
+    50,
+    -20,
+    "open"
+   ],
+   "armL": [
+    10,
+    50,
+    -20,
+    "open"
+   ],
+   "legs": [
+    0,
+    0
+   ],
+   "wings": [
+    0.15,
+    -15
+   ],
+   "sword": "ground",
+   "plant": [
+    -0.3,
+    18
+   ],
+   "seated": true
+  },
+  "hand_on_canvas": {
+   "pelvis": [
+    0,
+    0
+   ],
+   "torso": 5,
+   "head": [
+    8,
+    0
+   ],
+   "armR": [
+    125,
+    -5,
+    40,
+    "palm"
+   ],
+   "armL": [
+    6,
+    10,
+    0,
+    "open"
+   ],
+   "legs": [
+    3,
+    3
+   ],
+   "wings": [
+    null,
+    0
+   ],
+   "sword": "ground",
+   "root": [
+    0,
+    0,
+    0.05
+   ]
+  },
+  "cleave_antic": {
+   "pelvis": [
+    2,
+    0.02
+   ],
+   "torso": 8,
+   "head": [
+    4,
+    -0.005
+   ],
+   "armR": [
+    160,
+    20,
+    -45,
+    "grip"
+   ],
+   "armL": [
+    100,
+    60,
+    0,
+    "fist"
+   ],
+   "legs": [
+    10,
+    10
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 190,
+   "swordZ": 92,
+   "lean": 4
+  },
+  "cleave_strike": {
+   "pelvis": [
+    -4,
+    -0.03
+   ],
+   "torso": -12,
+   "head": [
+    -10,
+    0.01
+   ],
+   "armR": [
+    -10,
+    75,
+    -10,
+    "grip"
+   ],
+   "armL": [
+    -5,
+    70,
+    0,
+    "fist"
+   ],
+   "legs": [
+    14,
+    14
+   ],
+   "wings": [
+    1,
+    -15
+   ],
+   "sword": "hand_R",
+   "swordDir": 0,
+   "swordZ": 64,
+   "lean": -6,
+   "root": [
+    0,
+    0,
+    0.1
+   ]
+  },
+  "cleave_follow": {
+   "pelvis": [
+    -6,
+    -0.04
+   ],
+   "torso": -14,
+   "head": [
+    -12,
+    0.02
+   ],
+   "armR": [
+    -35,
+    90,
+    -25,
+    "grip"
+   ],
+   "armL": [
+    -20,
+    80,
+    0,
+    "fist"
+   ],
+   "legs": [
+    16,
+    16
+   ],
+   "wings": [
+    1,
+    -20
+   ],
+   "sword": "hand_R",
+   "swordDir": -55,
+   "swordZ": 64,
+   "lean": -8,
+   "root": [
+    0,
+    0,
+    0.1
+   ]
+  },
+  "sweep_antic": {
+   "pelvis": [
+    -4,
+    -0.01
+   ],
+   "torso": -12,
+   "head": [
+    -6,
+    0
+   ],
+   "armR": [
+    -35,
+    130,
+    -45,
+    "grip"
+   ],
+   "armL": [
+    30,
+    50,
+    0,
+    "open"
+   ],
+   "legs": [
+    12,
+    12
+   ],
+   "wings": [
+    1,
+    -10
+   ],
+   "sword": "hand_R",
+   "swordDir": -115,
+   "swordZ": 64,
+   "lean": -5
+  },
+  "sweep_strike": {
+   "pelvis": [
+    6,
+    0
+   ],
+   "torso": 12,
+   "head": [
+    8,
+    0
+   ],
+   "armR": [
+    50,
+    55,
+    0,
+    "grip"
+   ],
+   "armL": [
+    70,
+    20,
+    0,
+    "spread"
+   ],
+   "legs": [
+    18,
+    10
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 90,
+   "swordZ": 64,
+   "lean": 5
+  },
+  "sweep_follow": {
+   "pelvis": [
+    8,
+    0
+   ],
+   "torso": 15,
+   "head": [
+    10,
+    0
+   ],
+   "armR": [
+    70,
+    40,
+    10,
+    "grip"
+   ],
+   "armL": [
+    90,
+    15,
+    0,
+    "spread"
+   ],
+   "legs": [
+    20,
+    8
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 135,
+   "swordZ": 92,
+   "lean": 8
+  },
+  "thrust_antic": {
+   "pelvis": [
+    0,
+    -0.02
+   ],
+   "torso": -8,
+   "head": [
+    0,
+    0
+   ],
+   "armR": [
+    -20,
+    110,
+    -20,
+    "grip"
+   ],
+   "armL": [
+    10,
+    60,
+    0,
+    "fist"
+   ],
+   "legs": [
+    12,
+    6
+   ],
+   "wings": [
+    1,
+    -10
+   ],
+   "sword": "hand_R",
+   "swordDir": -55,
+   "swordZ": 64,
+   "root": [
+    0,
+    0,
+    -0.05
+   ],
+   "lean": 4
+  },
+  "thrust_strike": {
+   "pelvis": [
+    4,
+    -0.01
+   ],
+   "torso": 10,
+   "head": [
+    6,
+    0
+   ],
+   "armR": [
+    50,
+    55,
+    0,
+    "grip"
+   ],
+   "armL": [
+    -20,
+    30,
+    0,
+    "open"
+   ],
+   "legs": [
+    20,
+    4
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 90,
+   "swordZ": 64,
+   "root": [
+    0,
+    0,
+    0.3
+   ],
+   "lean": 6
+  },
+  "thrust_follow": {
+   "pelvis": [
+    5,
+    -0.01
+   ],
+   "torso": 12,
+   "head": [
+    8,
+    0
+   ],
+   "armR": [
+    55,
+    45,
+    0,
+    "grip"
+   ],
+   "armL": [
+    -25,
+    40,
+    0,
+    "open"
+   ],
+   "legs": [
+    22,
+    4
+   ],
+   "wings": [
+    1,
+    12
+   ],
+   "sword": "hand_R",
+   "swordDir": 105,
+   "swordZ": 64,
+   "root": [
+    0,
+    0,
+    0.35
+   ],
+   "lean": 7
+  },
+  "slam_antic": {
+   "pelvis": [
+    3,
+    0.04
+   ],
+   "torso": 10,
+   "head": [
+    6,
+    -0.01
+   ],
+   "armR": [
+    150,
+    15,
+    -40,
+    "grip"
+   ],
+   "armL": [
+    140,
+    40,
+    0,
+    "fist"
+   ],
+   "legs": [
+    6,
+    6
+   ],
+   "wings": [
+    1,
+    12
+   ],
+   "sword": "hand_R",
+   "swordDir": 190,
+   "swordZ": 92,
+   "lean": 3
+  },
+  "slam_strike": {
+   "pelvis": [
+    -5,
+    -0.04
+   ],
+   "torso": -15,
+   "head": [
+    -10,
+    0.03
+   ],
+   "armR": [
+    -15,
+    80,
+    0,
+    "grip"
+   ],
+   "armL": [
+    -10,
+    75,
+    0,
+    "fist"
+   ],
+   "legs": [
+    25,
+    25
+   ],
+   "wings": [
+    1,
+    -25
+   ],
+   "sword": "hand_R",
+   "swordDir": 0,
+   "swordZ": 64,
+   "lean": -4,
+   "root": [
+    0,
+    0,
+    0.1
+   ]
+  },
+  "slam_follow": {
+   "pelvis": [
+    -3,
+    -0.03
+   ],
+   "torso": -8,
+   "head": [
+    -4,
+    0.02
+   ],
+   "armR": [
+    -15,
+    80,
+    0,
+    "grip"
+   ],
+   "armL": [
+    -10,
+    75,
+    0,
+    "fist"
+   ],
+   "legs": [
+    20,
+    20
+   ],
+   "wings": [
+    1,
+    -10
+   ],
+   "sword": "hand_R",
+   "swordDir": 0,
+   "swordZ": 64,
+   "lean": -2,
+   "root": [
+    0,
+    0,
+    0.1
+   ]
+  },
+  "blast_antic": {
+   "pelvis": [
+    0,
+    -0.01
+   ],
+   "torso": 6,
+   "head": [
+    4,
+    0
+   ],
+   "armR": [
+    20,
+    100,
+    0,
+    "fist"
+   ],
+   "armL": [
+    20,
+    100,
+    0,
+    "fist"
+   ],
+   "legs": [
+    6,
+    6
+   ],
+   "wings": [
+    0.3,
+    -5
+   ],
+   "sword": "ground",
+   "lean": 3
+  },
+  "blast_strike": {
+   "pelvis": [
+    0,
+    0
+   ],
+   "torso": -4,
+   "head": [
+    8,
+    -0.005
+   ],
+   "armR": [
+    110,
+    15,
+    15,
+    "spread"
+   ],
+   "armL": [
+    110,
+    15,
+    15,
+    "spread"
+   ],
+   "legs": [
+    8,
+    8
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "ground",
+   "root": [
+    0,
+    0,
+    0.1
+   ],
+   "lean": 0
+  },
+  "blast_follow": {
+   "pelvis": [
+    0,
+    0
+   ],
+   "torso": -2,
+   "head": [
+    4,
+    0
+   ],
+   "armR": [
+    70,
+    60,
+    0,
+    "spread"
+   ],
+   "armL": [
+    70,
+    60,
+    0,
+    "spread"
+   ],
+   "legs": [
+    6,
+    6
+   ],
+   "wings": [
+    1,
+    10
+   ],
+   "sword": "ground",
+   "root": [
+    0,
+    0,
+    0.05
+   ],
+   "lean": 0
+  },
+  "summon_antic": {
+   "pelvis": [
+    -2,
+    -0.02
+   ],
+   "torso": -6,
+   "head": [
+    -4,
+    0
+   ],
+   "armR": [
+    10,
+    90,
+    0,
+    "grip"
+   ],
+   "armL": [
+    30,
+    60,
+    0,
+    "spread"
+   ],
+   "legs": [
+    8,
+    8
+   ],
+   "wings": [
+    1,
+    -5
+   ],
+   "sword": "hand_R",
+   "swordDir": 15,
+   "swordZ": 64
+  },
+  "summon_strike": {
+   "pelvis": [
+    0,
+    0.04
+   ],
+   "torso": 10,
+   "head": [
+    15,
+    -0.01
+   ],
+   "armR": [
+    150,
+    20,
+    -45,
+    "grip"
+   ],
+   "armL": [
+    40,
+    20,
+    0,
+    "spread"
+   ],
+   "legs": [
+    10,
+    10
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 180,
+   "swordZ": 92
+  },
+  "summon_follow": {
+   "pelvis": [
+    0,
+    0.04
+   ],
+   "torso": 12,
+   "head": [
+    20,
+    -0.01
+   ],
+   "armR": [
+    160,
+    15,
+    -45,
+    "grip"
+   ],
+   "armL": [
+    60,
+    20,
+    0,
+    "spread"
+   ],
+   "legs": [
+    10,
+    10
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 195,
+   "swordZ": 92
+  },
+  "lunge_antic": {
+   "pelvis": [
+    3,
+    -0.03
+   ],
+   "torso": 12,
+   "head": [
+    6,
+    0.01
+   ],
+   "armR": [
+    60,
+    100,
+    -20,
+    "clutch"
+   ],
+   "armL": [
+    60,
+    100,
+    20,
+    "clutch"
+   ],
+   "legs": [
+    12,
+    12
+   ],
+   "wings": [
+    0.6,
+    -10
+   ],
+   "sword": "ground",
+   "root": [
+    0,
+    0,
+    -0.1
+   ],
+   "lean": 5
+  },
+  "lunge_strike": {
+   "pelvis": [
+    -5,
+    -0.02
+   ],
+   "torso": -12,
+   "head": [
+    -10,
+    0.02
+   ],
+   "armR": [
+    100,
+    10,
+    20,
+    "clutch"
+   ],
+   "armL": [
+    100,
+    10,
+    20,
+    "clutch"
+   ],
+   "legs": [
+    20,
+    20
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "ground",
+   "root": [
+    0,
+    0,
+    0.5
+   ],
+   "lean": -8
+  },
+  "lunge_follow": {
+   "pelvis": [
+    -6,
+    -0.03
+   ],
+   "torso": -15,
+   "head": [
+    -12,
+    0.025
+   ],
+   "armR": [
+    120,
+    30,
+    20,
+    "clutch"
+   ],
+   "armL": [
+    120,
+    30,
+    20,
+    "clutch"
+   ],
+   "legs": [
+    22,
+    22
+   ],
+   "wings": [
+    1,
+    12
+   ],
+   "sword": "ground",
+   "root": [
+    0,
+    0,
+    0.7
+   ],
+   "lean": -10
+  },
+  "burst": {
+   "flare": 7,
+   "pelvis": [
+    0,
+    0.04
+   ],
+   "torso": 0,
+   "head": [
+    0,
+    -0.01
+   ],
+   "armR": [
+    150,
+    15,
+    -25,
+    "grip"
+   ],
+   "armL": [
+    150,
+    15,
+    0,
+    "fist"
+   ],
+   "legs": [
+    22,
+    22
+   ],
+   "wings": [
+    1,
+    15
+   ],
+   "sword": "hand_R",
+   "swordDir": 205,
+   "swordZ": 92
+  }
+ },
+ "attacks": [
+  {
+   "id": "overhead_cleave",
+   "poses": [
+    "cleave_antic",
+    "cleave_strike",
+    "cleave_follow"
+   ],
+   "status": "rig",
+   "note": "sword arc is in the picture plane: reads fully"
+  },
+  {
+   "id": "horizontal_sweep",
+   "poses": [
+    "sweep_antic",
+    "sweep_strike",
+    "sweep_follow"
+   ],
+   "status": "rig",
+   "note": "blade swings across the picture plane; torso and pelvis lean carry it"
+  },
+  {
+   "id": "forward_thrust",
+   "poses": [
+    "thrust_antic",
+    "thrust_strike",
+    "thrust_follow"
+   ],
+   "status": "needs_still",
+   "note": "rig fallback is a sideways lunge with root z toward the camera; a true thrust into the lens needs a drawn foreshortened key still"
+  },
+  {
+   "id": "ground_slam",
+   "poses": [
+    "slam_antic",
+    "slam_strike",
+    "slam_follow"
+   ],
+   "status": "rig_partial",
+   "note": "crouch is limited to pelvis ty -0.04 H with rigid legs (wide stance 25 deg); a deep crouch needs a drawn still"
+  },
+  {
+   "id": "pipe_fan_blast",
+   "poses": [
+    "blast_antic",
+    "blast_strike",
+    "blast_follow"
+   ],
+   "status": "rig",
+   "note": "fan spread comes from the wing track, pipes fire one by one with the pipe fire event"
+  },
+  {
+   "id": "meteor_summon",
+   "poses": [
+    "summon_antic",
+    "summon_strike",
+    "summon_follow"
+   ],
+   "status": "rig",
+   "note": "sword to the sky inside the picture plane; meteors are the effects lane"
+  },
+  {
+   "id": "claw_lunge",
+   "poses": [
+    "lunge_antic",
+    "lunge_strike",
+    "lunge_follow"
+   ],
+   "status": "rig_partial",
+   "note": "helm split + claw hands + root z/lean lunge toward the camera; the hands cannot foreshorten, so a close-up of the claws needs a drawn still"
+  }
+ ],
+ "helmCut": [
+  [
+   207,
+   0
+  ],
+  [
+   200,
+   69
+  ],
+  [
+   214,
+   138
+  ],
+  [
+   203,
+   207
+  ],
+  [
+   207,
+   304
+  ]
+ ],
+ "idColors": {
+  "pelvis": "#000033",
+  "leg_R": "#000066",
+  "leg_L": "#000099",
+  "legs_seated": "#0000cc",
+  "torso": "#0000ff",
+  "chest_studs": "#003300",
+  "collar": "#003333",
+  "cape_upper": "#003366",
+  "cape_lower": "#003399",
+  "hem_1": "#0033cc",
+  "hem_2": "#0033ff",
+  "hem_3": "#006600",
+  "hem_4": "#006633",
+  "hem_5": "#006666",
+  "hem_6": "#006699",
+  "wing_root_R": "#0066cc",
+  "wing_root_L": "#0066ff",
+  "head": "#009900",
+  "eye_slit": "#009933",
+  "crown": "#009966",
+  "crown_gems": "#009999",
+  "void_head": "#0099cc",
+  "eye_1": "#0099ff",
+  "eye_2": "#00cc00",
+  "eye_3": "#00cc33",
+  "eye_4": "#00cc66",
+  "eye_5": "#00cc99",
+  "eye_6": "#00cccc",
+  "eye_7": "#00ccff",
+  "helm_half_R": "#00ff00",
+  "helm_half_L": "#00ff33",
+  "crown_half_R": "#00ff66",
+  "crown_half_L": "#00ff99",
+  "pauldron_R": "#00ffcc",
+  "pauldron_L": "#00ffff",
+  "upper_arm_R": "#330000",
+  "upper_arm_L": "#330033",
+  "forearm_R": "#330066",
+  "forearm_L": "#330099",
+  "hand_R": "#3300cc",
+  "hand_L": "#3300ff",
+  "sword": "#333300",
+  "sword_runes": "#333333",
+  "pipe_R0_body": "#333366",
+  "pipe_R0_mouth": "#333399",
+  "pipe_R0_glow": "#3333cc",
+  "pipe_R0_cork": "#3333ff",
+  "wm_R0_body": "#336600",
+  "wm_R0_mouth": "#336633",
+  "pipe_R1_body": "#336666",
+  "pipe_R1_mouth": "#336699",
+  "pipe_R1_glow": "#3366cc",
+  "pipe_R1_cork": "#3366ff",
+  "wm_R1_body": "#339900",
+  "wm_R1_mouth": "#339933",
+  "pipe_R2_body": "#339966",
+  "pipe_R2_mouth": "#339999",
+  "pipe_R2_glow": "#3399cc",
+  "pipe_R2_cork": "#3399ff",
+  "wm_R2_body": "#33cc00",
+  "wm_R2_mouth": "#33cc33",
+  "pipe_R3_body": "#33cc66",
+  "pipe_R3_mouth": "#33cc99",
+  "pipe_R3_glow": "#33cccc",
+  "pipe_R3_cork": "#33ccff",
+  "wm_R3_body": "#33ff00",
+  "wm_R3_mouth": "#33ff33",
+  "pipe_R4_body": "#33ff66",
+  "pipe_R4_mouth": "#33ff99",
+  "pipe_R4_glow": "#33ffcc",
+  "pipe_R4_cork": "#33ffff",
+  "wm_R4_body": "#660000",
+  "wm_R4_mouth": "#660033",
+  "pipe_R5_body": "#660066",
+  "pipe_R5_mouth": "#660099",
+  "pipe_R5_glow": "#6600cc",
+  "pipe_R5_cork": "#6600ff",
+  "wm_R5_body": "#663300",
+  "wm_R5_mouth": "#663333",
+  "pipe_R6_body": "#663366",
+  "pipe_R6_mouth": "#663399",
+  "pipe_R6_glow": "#6633cc",
+  "pipe_R6_cork": "#6633ff",
+  "wm_R6_body": "#666600",
+  "wm_R6_mouth": "#666633",
+  "pipe_R7_body": "#666666",
+  "pipe_R7_mouth": "#666699",
+  "pipe_R7_glow": "#6666cc",
+  "pipe_R7_cork": "#6666ff",
+  "wm_R7_body": "#669900",
+  "wm_R7_mouth": "#669933",
+  "pipe_L0_body": "#669966",
+  "pipe_L0_mouth": "#669999",
+  "pipe_L0_glow": "#6699cc",
+  "pipe_L0_cork": "#6699ff",
+  "wm_L0_body": "#66cc00",
+  "wm_L0_mouth": "#66cc33",
+  "pipe_L1_body": "#66cc66",
+  "pipe_L1_mouth": "#66cc99",
+  "pipe_L1_glow": "#66cccc",
+  "pipe_L1_cork": "#66ccff",
+  "wm_L1_body": "#66ff00",
+  "wm_L1_mouth": "#66ff33",
+  "pipe_L2_body": "#66ff66",
+  "pipe_L2_mouth": "#66ff99",
+  "pipe_L2_glow": "#66ffcc",
+  "pipe_L2_cork": "#66ffff",
+  "wm_L2_body": "#990000",
+  "wm_L2_mouth": "#990033",
+  "pipe_L3_body": "#990066",
+  "pipe_L3_mouth": "#990099",
+  "pipe_L3_glow": "#9900cc",
+  "pipe_L3_cork": "#9900ff",
+  "wm_L3_body": "#993300",
+  "wm_L3_mouth": "#993333",
+  "pipe_L4_body": "#993366",
+  "pipe_L4_mouth": "#993399",
+  "pipe_L4_glow": "#9933cc",
+  "pipe_L4_cork": "#9933ff",
+  "wm_L4_body": "#996600",
+  "wm_L4_mouth": "#996633",
+  "pipe_L5_body": "#996666",
+  "pipe_L5_mouth": "#996699",
+  "pipe_L5_glow": "#9966cc",
+  "pipe_L5_cork": "#9966ff",
+  "wm_L5_body": "#999900",
+  "wm_L5_mouth": "#999933",
+  "pipe_L6_body": "#999966",
+  "pipe_L6_mouth": "#999999",
+  "pipe_L6_glow": "#9999cc",
+  "pipe_L6_cork": "#9999ff",
+  "wm_L6_body": "#99cc00",
+  "wm_L6_mouth": "#99cc33",
+  "pipe_L7_body": "#99cc66",
+  "pipe_L7_mouth": "#99cc99",
+  "pipe_L7_glow": "#99cccc",
+  "pipe_L7_cork": "#99ccff",
+  "wm_L7_body": "#99ff00",
+  "wm_L7_mouth": "#99ff33"
+ },
+ "bladeBelow": 0.6974
+}
