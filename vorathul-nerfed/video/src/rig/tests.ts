@@ -58,14 +58,14 @@ const turntable: RigTest = {
 const turntableYaw: RigTest = { ...turntable, id: 'RigTurntableYaw', label: 'Pose turntable, camera yaw -12..+12', yaw: (n) => -12 + (24 * n) / turnFrames };
 
 // ---- 2. fan spread / fold and wing rotation ----
-const fanKeys = chain([{ pose: 'base' }, { pose: { wings: [null, -25] } }, { pose: { wings: [null, 15] }, hold: 30 }, { pose: { wings: [null, 0] } }], 130);
+const fanKeys = chain([{ pose: 'base' }, { pose: { wings: [null, -25] } }, { pose: { wings: [null, 15] }, hold: 30 }, { pose: { wings: [null, 0] } }], 380);
 const fan: RigTest = {
   id: 'RigFan', label: 'Fan spread and fold, wing rotation',
   tl: {
     keys: fanKeys,
     ramps: {
-      wingS_R: ramp([0, 0, 0], [30, 1, 30], [60, 0, 30], [120, 1, 30]),
-      wingS_L: ramp([0, 0, 0], [60, 0, 0], [90, 1, 30], [120, 0, 30], [130, 1, 10]),
+      wingS_R: ramp([0, 0, 0], [60, 1, 60], [120, 0, 60], [240, 1, 60]),
+      wingS_L: ramp([0, 0, 0], [120, 0, 0], [180, 1, 60], [240, 0, 60], [300, 1, 60]),
     },
   },
   offset: 0, frames: (fanKeys[fanKeys.length - 1] as Key).at + 20, impacts: [],
@@ -173,7 +173,7 @@ export interface SweepEntry {
   /** Parent card id that must stay joined to the child (null: no parent card, nothing to measure). */
   parent: string | null;
   child: string;
-  kind: 'ua' | 'f' | 'h' | 'leg' | 'torso' | 'head' | 'crown' | 'wing' | 'pipe' | 'hem' | 'cape' | 'half' | 'pelvis' | 'sword';
+  kind: 'ua' | 'f' | 'h' | 'leg' | 'torso' | 'head' | 'crown' | 'wing' | 'pipe' | 'hem' | 'cape' | 'half' | 'pelvis' | 'sword' | 'helmcheck';
   side: Side | null;
   index: number;
   value: number;
@@ -222,6 +222,9 @@ export const sweepList = (m: RigModel = RIG, quick = false): SweepEntry[] => {
     }
   }
   for (const v of range(-25, 25, 5)) add({ joint: 'sword', parent: null, child: 'sword', kind: 'sword', side: null, index: 0, value: v });
+  // check M: the closed helm and the split helm at t = 0, each rendered alone
+  add({ joint: 'helm_closed', parent: null, child: 'head', kind: 'helmcheck', side: null, index: 0, value: 0, iso: ['head', 'crown'], rPx: 0 });
+  add({ joint: 'helm_split_t0', parent: null, child: 'helm_half_R', kind: 'helmcheck', side: null, index: 0, value: 1, iso: ['helm_half_R', 'helm_half_L', 'crown_half_R', 'crown_half_L'], rPx: 0 });
   return out;
 };
 
@@ -247,6 +250,7 @@ export const sweepState = (m: RigModel, e: SweepEntry): RigState => {
   if (e.kind === 'cape') next.capeLower = e.value;
   if (e.kind === 'hem') next.hems[e.index] = e.value;
   if (e.kind === 'half') next.helm = { split: true, t: e.value };
+  if (e.kind === 'helmcheck') next.helm = { split: e.value === 1, t: 0 };
   if (e.kind === 'pipe') {
     const w = next.wings[side as Side];
     w.pipes[e.index] = { ...(w.pipes[e.index] as RigState['wings']['R']['pipes'][number]), theta: e.value };

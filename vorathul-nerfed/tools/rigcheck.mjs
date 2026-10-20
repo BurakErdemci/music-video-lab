@@ -255,7 +255,7 @@ const ensure = async (id, from, to) => {
     // one Chrome at a time repo-wide: hold the lock only while rendering, close the browser before measuring
     const ms = await withRenderLock(async () => {
       const rr = await makeRenderer();
-      try { return await rr.frames(id, 'id', dir, from, to); } finally { await rr.close(); }
+      try { return await rr.framesVoted(id, 'id', dir, from, to); } finally { await rr.close(); }
     });
     timings.push([id, to - from + 1, ms]);
     console.log(`rendered ${id} ${from}-${to}: ${ms} ms`);
@@ -395,7 +395,8 @@ const pipeChecks = async () => {
   // K render: at the vanish frame only that pipe's pixels change (life layer is off in this test)
   const dels = T.tl.pipes.filter((e) => e.op === 'delete');
   const pairs = dels.map((e) => ({ a: e.at + MISSING_FRAMES - 1 - T.offset, b: e.at + MISSING_FRAMES - T.offset }));
-  const [diff] = python([{ op: 'diff', dir, pairs }]);
+  const capeIds = ['cape_upper', 'cape_lower', ...Array.from({ length: 6 }, (_, i) => `hem_${i + 1}`)];
+  const [diff] = python([{ op: 'diff', dir, pairs, ignore: capeIds }]);
   let bad = 0;
   let mixed = 0;
   diff.forEach((d, i) => {
@@ -404,7 +405,7 @@ const pipeChecks = async () => {
     if (d.changed === 0) bad++;
     for (const [k, v] of Object.entries(d.by_before)) { if (!mine.has(k)) bad += v; if (k === 'mixed/none') mixed += v; }
   });
-  row('K', 'one deletion at a time (ID pass, 10 deletions): changed pixels all belong to the deleted pipe', `${bad} foreign pixels (${mixed} edge pixels)`, 'exact (0 foreign)', bad === 0);
+  row('K', 'one deletion at a time (ID pass, 10 deletions): changed pixels all belong to the deleted pipe (cape sway steps on its own track and is ignored)', `${bad} foreign pixels (${mixed} edge pixels)`, 'exact (0 foreign)', bad === 0);
   // L: cork seat
   const corks = T.tl.pipes.filter((e) => e.op === 'cork');
   const frames = corks.map((e) => ({ frame: e.at - T.offset, id: `pipe_${e.wing}${e.pipe}_cork` }));
@@ -427,10 +428,12 @@ const pipeChecks = async () => {
 };
 
 const helmChecks = async () => {
-  const T = TEST_BY_ID.get('RigHelm');
-  const dir = await ensure('RigHelm', 0, T.frames - 1);
-  const [xor] = python([{ op: 'maskxor', dir, a: 59, b: 60, idsA: ['head', 'crown', 'eye_slit', 'crown_gems'], idsB: ['helm_half_R', 'helm_half_L', 'crown_half_R', 'crown_half_L'] }]);
-  row('M', 'helm split: halves at t=0 vs the closed helm (silhouette of helm + crown, ID pass), xor pixels', `${xor.xor} px (of ${xor.areaA})`, 'identical', xor.xor === 0, 'no-hole check over t in [0,1] is row A (halves + void_head sweep)');
+  const all = sweepList(RIG, false);
+  const dir = await ensure('RigSweep', 0, all.length - 1);
+  const a = all.findIndex((e) => e.joint === 'helm_closed');
+  const b = all.findIndex((e) => e.joint === 'helm_split_t0');
+  const [xor] = python([{ op: 'alphaxor', dir, a, b }]);
+  row('M', 'helm split: halves + crown halves at t=0 vs the closed helm + crown (isolated renders, alpha), xor pixels', `${xor.xor} px (of ${xor.areaA})`, 'identical', xor.xor === 0, 'no-hole check over t in [0,1] is row A (halves + void_head sweep)');
 };
 
 const handsAndFloor = async () => {
@@ -477,6 +480,14 @@ const determinism = async () => {
   const [pd] = python([{ op: 'pixdiff', pairs: names.map((n) => [path.join(same1, n), path.join(main, n)]) }]);
   const diffC = pd.filter((d) => d.px > 0);
   const worst = Math.max(0, ...pd.map((d) => d.px));
+  let frames = 0, dis = 0, unres = 0;
+  for (const id of ['RigSweep', 'RigTurntable', 'RigTurntableYaw', 'RigFan', 'RigFanYaw', 'RigGlow', 'RigHelm', 'RigPipes', 'AttackGallery']) {
+    const f = path.join(OUT, id, 'stats.json');
+    if (!existsSync(f)) continue;
+    const st = JSON.parse(readFileSync(f, 'utf8'));
+    frames += st.frames; dis += st.disagreed ?? 0; unres += st.unresolved ?? 0;
+  }
+  row('P-capture', 'capture defects: frames whose two captures (4 tabs vs 2 tabs, reversed order) differ, before the majority vote', `${dis} of ${frames} (${((100 * dis) / frames).toFixed(2)} %), ${unres} never settled`, '0', dis === 0, 'torn/tiled Chrome captures under GPU load (docs: tools/locked.sh); every measurement above uses the voted frame');
   row('P-tabs', `determinism across tab layouts: 1 tab vs 4 parallel tabs, same ${names.length} frames`, `${diffC.length} frames differ, at most ${worst} px (${((100 * worst) / 280000).toFixed(4)} % of the silhouette), max channel step ${Math.max(0, ...pd.map((d) => d.max))}`, 'identical', diffC.length === 0,
     'Chrome/ANGLE edge-pixel noise that depends on which tab rendered the previous frame; reproducible for a fixed render command');
 };

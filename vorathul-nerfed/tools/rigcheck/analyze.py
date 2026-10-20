@@ -255,6 +255,12 @@ def op_centroid(o):
     return out
 
 
+def op_alphaxor(o):
+    a = load(o["dir"], o["a"])[..., 3] > 127
+    b = load(o["dir"], o["b"])[..., 3] > 127
+    return {"xor": int((a ^ b).sum()), "areaA": int(a.sum()), "areaB": int(b.sum())}
+
+
 def op_diff(o):
     """Between two frames: which cards' pixels changed (by the earlier frame's id), and how many mixed pixels changed."""
     out = []
@@ -262,6 +268,8 @@ def op_diff(o):
         a, _ = id_map(load(o["dir"], p["a"]))
         b, _ = id_map(load(o["dir"], p["b"]))
         ch = a != b
+        for i in o.get("ignore", []):
+            ch &= ~((a == IDX_OF[i]) | (b == IDX_OF[i]))
         by_before = {}
         for i in np.unique(a[ch]).tolist():
             by_before[PAL_IDS[i] if i >= 0 else "mixed/none"] = int(((a == i) & ch).sum())
@@ -336,5 +344,5 @@ def op_md5(o):
 
 
 OPS = {"joints": op_joints, "pieces": op_pieces, "iou": op_iou, "hidden": op_hidden, "near": op_near, "centroid": op_centroid,
-       "diff": op_diff, "maskxor": op_maskxor, "overlap": op_overlap, "md5": op_md5, "pixdiff": op_pixdiff}
+       "diff": op_diff, "alphaxor": op_alphaxor, "maskxor": op_maskxor, "overlap": op_overlap, "md5": op_md5, "pixdiff": op_pixdiff}
 json.dump([OPS[o["op"]](o) for o in SPEC["ops"]], sys.stdout)

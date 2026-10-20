@@ -58,6 +58,62 @@ export const makeRenderer = async ({ concurrency = 4, gl = 'angle' } = {}) => {
       const composition = await comp(id, pass);
       await renderStill({ composition, serveUrl, output, frame, puppeteerInstance: browser, chromiumOptions, imageFormat: 'png', inputProps: { pass }, overwrite: true });
     },
+    /**
+     * Like frames(), but every frame is captured at least twice (4 tabs in order, then 2 tabs in reversed 30-frame chunks).
+     * Under GPU load Chrome sometimes returns a torn or tiled frame; frames whose two captures differ are captured again in
+     * short warm runs and the majority wins. The share of frames that disagreed is the capture-defect rate (stats.json).
+     */
+    async framesVoted(id, pass, outDir, from, to) {
+      const composition = await comp(id, pass);
+      const s = Date.now();
+      const name = (f) => `frame-${String(f).padStart(5, '0')}.png`;
+      const md5 = (file) => createHash('md5').update(readFileSync(file)).digest('hex');
+      const run = async (dir, f0, f1, c) => {
+        mkdirSync(dir, { recursive: true });
+        await renderFrames({
+          composition, serveUrl, outputDir: dir, imageFormat: 'png', frameRange: [f0, f1], concurrency: c,
+          puppeteerInstance: browser, chromiumOptions, inputProps: { pass }, onStart: () => {}, onFrameUpdate: () => {},
+        });
+        for (const n of readdirSync(dir)) {
+          const m = /^element-(\d+)\.png$/.exec(n);
+          if (m) renameSync(path.join(dir, n), path.join(dir, name(Number(m[1]))));
+        }
+      };
+      await run(outDir, from, to, concurrency);
+      const dirB = outDir + '.b';
+      const chunks = [];
+      for (let f = from; f <= to; f += 30) chunks.push([f, Math.min(to, f + 29)]);
+      for (const [f0, f1] of chunks.reverse()) await run(dirB, f0, f1, 2);
+      const bad = [];
+      for (let f = from; f <= to; f++) if (md5(path.join(outDir, name(f))) !== md5(path.join(dirB, name(f)))) bad.push(f);
+      let unresolved = 0;
+      for (const f of bad) {
+        const votes = new Map();
+        const add = (file) => { if (isBlankPng(file)) return; const h = md5(file); votes.set(h, [...(votes.get(h) ?? []), file]); };
+        add(path.join(outDir, name(f)));
+        add(path.join(dirB, name(f)));
+        const tmp = outDir + '.t';
+        let winner = null;
+        for (let attempt = 0; attempt < 5 && !winner; attempt++) {
+          rmSync(tmp, { recursive: true, force: true });
+          await run(tmp, Math.max(0, f - 4), f, 1);
+          const file = path.join(tmp, name(f));
+          const keep = path.join(tmp + '.k', `${attempt}-${name(f)}`);
+          mkdirSync(tmp + '.k', { recursive: true });
+          copyFileSync(file, keep);
+          add(keep);
+          for (const [, files] of votes) if (files.length >= 2) winner = files[0];
+        }
+        if (winner) copyFileSync(winner, path.join(outDir, name(f)));
+        else unresolved++;
+        rmSync(tmp, { recursive: true, force: true });
+        rmSync(tmp + '.k', { recursive: true, force: true });
+      }
+      rmSync(dirB, { recursive: true, force: true });
+      writeFileSync(path.join(outDir, 'stats.json'), JSON.stringify({ frames: to - from + 1, disagreed: bad.length, unresolved }));
+      console.log(`  ${id}: ${bad.length} of ${to - from + 1} frames disagreed between two captures, ${unresolved} unresolved`);
+      return Date.now() - s;
+    },
     close: () => browser.close({ silent: true }),
   };
 };
