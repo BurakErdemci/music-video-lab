@@ -148,6 +148,7 @@ export const EVENTS: VideoEvent[] = [
   // S68 queue
   beat('s68-cut', 'cut', 463),
   word('s68-stamp', 'ui', 'Nerf', 2),
+  beat('s68-grab', 'key', 465),
   beat('s68-step', 'key', 466),
   // S69 A3 sweep
   word('s69-cut', 'cut', 'In', 1),
