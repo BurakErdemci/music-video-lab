@@ -72,20 +72,20 @@ then Burak picks.
 
 ### Round 1 — "Baroque oil painting, demon-king, organ-pipe wings"
 
-![](img/r1-a-demon-king.jpg) ![](img/r1-b-cathedral-body.jpg)
-![](img/r1-c-bone-king.jpg) ![](img/r1-d-dragon-demon.jpg)
+<img src="img/r1-a-demon-king.jpg" width="49%"> <img src="img/r1-b-cathedral-body.jpg" width="49%">
+<img src="img/r1-c-bone-king.jpg" width="49%"> <img src="img/r1-d-dragon-demon.jpg" width="49%">
 
 Epic, but gold-and-ember and generic. The office side, same round:
 
-![](img/r1-office-a-sterile.jpg) ![](img/r1-office-b-ui.jpg)
-![](img/r1-office-c-isometric.jpg) ![](img/r1-collision.jpg)
+<img src="img/r1-office-a-sterile.jpg" width="49%"> <img src="img/r1-office-b-ui.jpg" width="49%">
+<img src="img/r1-office-c-isometric.jpg" width="49%"> <img src="img/r1-collision.jpg" width="49%">
 
 The collision frame (right) proved the two-world idea in one image.
 
 ### Round 2 — Burak: "pitch black and dark purple, really frightening"
 
-![](img/r2-a-mask-king.jpg) ![](img/r2-e-hooded.jpg)
-![](img/r2-b-cathedral-body.jpg) ![](img/r2-office-painting.jpg)
+<img src="img/r2-a-mask-king.jpg" width="49%"> <img src="img/r2-e-hooded.jpg" width="49%">
+<img src="img/r2-b-cathedral-body.jpg" width="49%"> <img src="img/r2-office-painting.jpg" width="49%">
 
 Purple took over everything. Burak: the body should be **matte black, a black knight**; purple only
 on the crown, the weapon, small trims. And the key idea: paint his world in the **opposite colours**
@@ -93,8 +93,8 @@ so that he reads as a **black hole** in it.
 
 ### Round 3 — matte black knight in a golden world
 
-![](img/r3-a-helm.jpg) ![](img/r3-d-black-hole.jpg)
-![](img/r3-c-portrait.jpg) ![](img/r3-b-arms-open.jpg)
+<img src="img/r3-a-helm.jpg" width="49%"> <img src="img/r3-d-black-hole.jpg" width="49%">
+<img src="img/r3-c-portrait.jpg" width="49%"> <img src="img/r3-b-arms-open.jpg" width="49%">
 
 The black-hole effect worked (right: light bends toward him). The character design was approved.
 But Burak: *"too polished, too realistic — this is just ChatGPT's default image look."* He was
@@ -106,9 +106,9 @@ got a helm again.)
 Same character (round 3 d as reference), same pose, five named techniques, plus an explicit
 "NOT glossy digital painting, NOT cinematic lighting":
 
-![](img/r4-1-manuscript.jpg) ![](img/r4-2-engraving.jpg)
-![](img/r4-3-comic.jpg) ![](img/r4-4-stained-glass.jpg)
-![](img/r4-5-tarot.jpg)
+<img src="img/r4-1-manuscript.jpg" width="49%"> <img src="img/r4-2-engraving.jpg" width="49%">
+<img src="img/r4-3-comic.jpg" width="49%"> <img src="img/r4-4-stained-glass.jpg" width="49%">
+<img src="img/r4-5-tarot.jpg" width="49%">
 
 Illuminated manuscript, engraving, **graphic noir comic**, stained glass, Art Nouveau tarot.
 Burak picked the comic (r4-3). It keeps the black hole strongest — a solid flat black mass — and
@@ -117,24 +117,24 @@ impact panels suit a fight. Engraving was beautiful but fine hatching shimmers i
 
 ### Round 5 — the comic style, character states
 
-![](img/r5-1-turnaround.jpg) ![](img/r5-4-fight-phase3.jpg)
-![](img/r5-2-nerfed.jpg) ![](img/r5-5-office-painting.jpg)
+<img src="img/r5-1-turnaround.jpg" width="49%"> <img src="img/r5-4-fight-phase3.jpg" width="49%">
+<img src="img/r5-2-nerfed.jpg" width="49%"> <img src="img/r5-5-office-painting.jpg" width="49%">
 
 The second form was too weak the first time (left), then right on the second try:
 
-![](img/r5-3-second-form-weak.jpg) ![](img/r5-3b-second-form.jpg)
+<img src="img/r5-3-second-form-weak.jpg" width="49%"> <img src="img/r5-3b-second-form.jpg" width="49%">
 
 Burak: *"really frightening."* He also found the wings weak (they read as towers), so two wing
 designs, and a new nerfed state where the missing-texture checkerboard takes the **exact shape of
 the wings**:
 
-![](img/r5-6a-wing-fan.jpg) ![](img/r5-6b-wing-bone.jpg) ![](img/r5-7-nerfed-v2.jpg)
+<img src="img/r5-6a-wing-fan.jpg" width="49%"> <img src="img/r5-6b-wing-bone.jpg" width="49%"> <img src="img/r5-7-nerfed-v2.jpg" width="49%">
 
 Fan wings won: each pipe is a separate part that can be deleted, corked or relit.
 
 ### Round 6 — one canonical sheet
 
-![](img/r6-canonical-sheet.jpg)
+<img src="img/r6-canonical-sheet.jpg" width="49%">
 
 Burak flagged that the character drifted between images. The fix: one canonical turnaround sheet,
 a fixed feature list repeated in every prompt ([`stil/onayli/KARAKTER.md`](../../stil/onayli/KARAKTER.md)),
