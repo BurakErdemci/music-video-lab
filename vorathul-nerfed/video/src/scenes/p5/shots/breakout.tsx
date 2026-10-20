@@ -15,6 +15,7 @@ import { Inside, PinnedCards, Room } from '../lib/Room.tsx';
 import { conversionAt } from '../lib/Conversion.tsx';
 import { Asset } from '../lib/PlateCard.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
+import { BreachRing } from '../lib/Office.tsx';
 import { InFront, Shot } from '../lib/Shell.tsx';
 import { Vorathul } from '../lib/Vorathul.tsx';
 import { cut, GOLD, INK, IVORY, move, OFFICE_FLOOR, pose, timeline } from '../lib/vorathul.ts';
@@ -71,10 +72,11 @@ export const S91 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S91_CAM}>
-        <Room />
+        <Room conv={conversionAt(frame)} />
         <Inside />
         <CanvasShatter plate={CANVAS_FACE} t={t} punch={PUNCH} grow={GROW} />
         <Frame />
+        <BreachRing />
         <Vorathul tl={S91_TL} frame={frame} at={S91_AT} />
         {/* He is in the painting (p4's last picture): the whole figure on the canvas plane, gauntlets reaching past it. */}
         <InFront pose={cam} from={S91_Z} to={PAINT_Z + 0.02}>
@@ -139,10 +141,11 @@ export const S92 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S92_CAM}>
-        <Room />
+        <Room conv={conversionAt(frame)} />
         <Inside />
         <CanvasShatter plate={CANVAS_FACE} t={t} punch={PUNCH} grow={GROW} />
         <Frame />
+        <BreachRing />
         <Vorathul tl={S92_TL} frame={frame} at={at} />
         <InFront pose={cam} from={S92_Z} to={PAINT_Z + 0.5}>
           <Vorathul tl={S92_TL} frame={frame} at={at} isolate={front} renderBase={2000} />
@@ -174,8 +177,13 @@ const S93_TL = timeline([
   move(E('s93-crumple'), pose('burst', { armL: [80, 120, 20, 'fist'], armR: [110, 70, -10, 'fist'], head: [6, 0], torso: 4, wings: [null, 10], legs: [8, 8] }), 16),
 ]);
 // Low on the rim so his helm stays inside the frontal frame while he tears them off.
-const CARDS_AT: [number, number] = [-6.2, 0.6];
-const S93_AT = solveAt(S93_TL, E('s93-tear'), 'handL', CARDS_AT, S93_Z);
+// He stays in the breach (review: solving his root to the cards put his upper body on the bare wall left of the
+// canvas). Root under the punch point, as at the end of S92; the cards are pinned where his left hand reaches.
+const S93_AT: Vec3 = [PUNCH[0], F + 0.35, S93_Z];
+const CARDS_AT = ((): [number, number] => {
+  const h = rigPoints(S93_TL, E('s93-tear'), { at: S93_AT }).handL;
+  return [Math.max(-7.2, h[0]), Math.min(3.8, h[1])];
+})();
 const S93_CAM: CameraPath = withShake(handheld(tween({ position: [-1.0, -3.0, -4.0], target: [-0.8, -2.2, -20], fov: 52 }, { position: [-1.6, -2.9, -4.8], target: [-1.4, -2.0, -20], fov: 52 }, { start: E('s93-cut'), frames: 47 }), { amp: 0.06, seed: 's93' }), {
   hits: [{ start: E('s93-tear'), seed: 931, amp: { pct: SHAKE_PCT.small } }, { start: E('s93-crumple'), seed: 932, amp: { pct: SHAKE_PCT.small } }],
 });
@@ -192,15 +200,21 @@ export const S93 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S93_CAM}>
-        <Room />
+        <Room conv={conversionAt(frame)} />
         <Inside />
         <CanvasShatter plate={CANVAS_FACE} t={t} punch={PUNCH} grow={GROW} />
         <Frame />
+        <BreachRing />
         <Vorathul tl={S93_TL} frame={frame} at={S93_AT} />
         <InFront pose={cam} from={S93_Z} to={PAINT_Z + 0.5}>
           <Vorathul tl={S93_TL} frame={frame} at={S93_AT} isolate={CHEST} renderBase={2000} />
         </InFront>
         <HandCards frame={frame} tear={tear} crumple={crumple} cam={cam} />
+        {/* The paint starts here: ink and gold spill from the breach down the frame and over the floor. */}
+        <PaintDecal at={[PUNCH[0] - 3.6, -5.3, PAINT_Z + 0.08]} w={4.5} h={2.2} seed={95} drips order={62} />
+        <PaintDecal at={[PUNCH[0] + 3.2, -5.4, PAINT_Z + 0.08]} w={4} h={2} seed={96} drips order={63} />
+        <PaintDecal at={[-9.3, -2.2, PAINT_Z + 0.08]} w={2.6} h={6} seed={97} drips order={64} />
+        <PaintDecal at={[PUNCH[0], F + 0.02, PAINT_Z + 3]} rot={[-Math.PI / 2, 0, 0]} w={15} h={6.5} seed={92} order={60} />
         {/* The fleeing developer (drawn G46), full figure, hurrying out of frame left. */}
         <Dev46 pose="walk" at={[runX, F + bob, -11]} height={3.4} />
       </Stage>
@@ -251,7 +265,7 @@ export const S94 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S94_CAM}>
-        <Room />
+        <Room conv={conversionAt(frame)} />
         <Inside />
         <CanvasShatter plate={CANVAS_FACE} t={frame - SHATTER_AT} punch={PUNCH} grow={GROW} speed={1.1} />
         <Frame burst={tb} />
