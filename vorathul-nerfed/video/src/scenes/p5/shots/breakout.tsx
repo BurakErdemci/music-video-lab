@@ -6,6 +6,7 @@ import { Stage } from '../../../stage/Stage.tsx';
 import { RubberStamp } from '../../../ui/kit.ts';
 import { ImpactBurst, InkSplash, PaintSpread, Shards, SpeedLines } from '../../../vfx/effects.ts';
 import { AbsoluteFill } from 'remotion';
+import { AVAILABLE } from '../../../cast/available.ts';
 import { CanvasShatter } from '../lib/CanvasShatter.tsx';
 import { S91_WHITE_FRAMES } from '../lib/flash.ts';
 import { E, outCubic, project, prog, pxPerUnit, twos } from '../lib/geom.ts';
@@ -19,6 +20,9 @@ import { cut, GOLD, INK, IVORY, move, OFFICE_FLOOR, pose, timeline } from '../li
 
 const F = OFFICE_FLOOR;
 const PLATE01 = '01-tarz-cizgi-roman.jpg';
+// p4 ends on the empty drained cathedral (L4) inside the canvas: the canvas that shatters carries that picture.
+// Its 3:2 image maps onto the 16:9 card as the centre 864 rows (CanvasShatter's cover mapping).
+const CANVAS_FACE = AVAILABLE.has('L4-painting-empty') ? 'assets/L4-painting-empty.png' : PLATE01;
 const SHATTER_AT = E('s91-cut');
 const PUNCH: [number, number] = [-1.4, 0.9];
 // The breach widens as he pushes his shoulders through (S92), then the whole canvas goes with the burst (S94).
@@ -68,9 +72,13 @@ export const S91 = ({ frame }: { frame: number }) => {
       <Stage camera={S91_CAM}>
         <Room />
         <Inside />
-        <CanvasShatter t={t} punch={PUNCH} grow={GROW} />
+        <CanvasShatter plate={CANVAS_FACE} t={t} punch={PUNCH} grow={GROW} />
         <Frame />
         <Vorathul tl={S91_TL} frame={frame} at={S91_AT} />
+        {/* He is in the painting (p4's last picture): the whole figure on the canvas plane, gauntlets reaching past it. */}
+        <InFront pose={cam} from={S91_Z} to={PAINT_Z + 0.02}>
+          <Vorathul tl={S91_TL} frame={frame} at={S91_AT} renderBase={1800} />
+        </InFront>
         {front ? (
           <InFront pose={cam} from={S91_Z} to={PAINT_Z + 0.4}>
             <Vorathul tl={S91_TL} frame={frame} at={S91_AT} isolate={front} renderBase={2000} />
@@ -132,7 +140,7 @@ export const S92 = ({ frame }: { frame: number }) => {
       <Stage camera={S92_CAM}>
         <Room />
         <Inside />
-        <CanvasShatter t={t} punch={PUNCH} grow={GROW} />
+        <CanvasShatter plate={CANVAS_FACE} t={t} punch={PUNCH} grow={GROW} />
         <Frame />
         <Vorathul tl={S92_TL} frame={frame} at={at} />
         <InFront pose={cam} from={S92_Z} to={PAINT_Z + 0.5}>
@@ -185,7 +193,7 @@ export const S93 = ({ frame }: { frame: number }) => {
       <Stage camera={S93_CAM}>
         <Room />
         <Inside />
-        <CanvasShatter t={t} punch={PUNCH} grow={GROW} />
+        <CanvasShatter plate={CANVAS_FACE} t={t} punch={PUNCH} grow={GROW} />
         <Frame />
         <Vorathul tl={S93_TL} frame={frame} at={S93_AT} />
         <InFront pose={cam} from={S93_Z} to={PAINT_Z + 0.5}>
@@ -244,7 +252,7 @@ export const S94 = ({ frame }: { frame: number }) => {
       <Stage camera={S94_CAM}>
         <Room />
         <Inside />
-        <CanvasShatter t={frame - SHATTER_AT} punch={PUNCH} grow={GROW} speed={1.1} />
+        <CanvasShatter plate={CANVAS_FACE} t={frame - SHATTER_AT} punch={PUNCH} grow={GROW} speed={1.1} />
         <Frame burst={tb} />
         <Vorathul tl={S94_TL} frame={frame} at={[S94_X, F, S94_Z0]} spin={spin} echo={catchUp > 0 ? { copies: 3, delay: 2, offset: [-0.45 * catchUp, 0.1 * catchUp, -0.4 * catchUp] } : undefined} />
       </Stage>
@@ -281,7 +289,7 @@ export const S95 = ({ frame }: { frame: number }) => {
     <Shot>
       <Stage camera={S95_CAM}>
         <Room wave={wave} centre={[S95_AT[0], S95_AT[2]]} desks={(i) => (i >= 2 ? { off: [0, 0.9 * jump, 0], rot: [0, 0, (i === 2 ? 0.08 : -0.1) * jump] } : {})} />
-        <CanvasShatter t={400} punch={PUNCH} grow={GROW} />
+        <CanvasShatter plate={CANVAS_FACE} t={400} punch={PUNCH} grow={GROW} />
         {still ? (
           // K3: the deep-crouch key still on the impact frames (stand-in: frame 01, both hands on the planted sword).
           <Asset id="G44" standIn={{ plate: PLATE01, crop: K3_CROP, keying: 'ink' }} width={4.4} height={7.4} position={[S95_AT[0], F + 3.6, S95_AT[2]]} renderOrder={1500} />

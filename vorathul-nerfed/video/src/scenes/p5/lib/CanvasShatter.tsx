@@ -90,7 +90,7 @@ const rotate = (p: Vec3, axis: Vec3, ang: number): Vec3 => {
 const LAUNCH_SPREAD = 5;
 
 export const CanvasShatter = ({ t, punch = [-0.6, 0.8], radius = 4.6, grow = [], plate = '01-tarz-cizgi-roman.jpg', seed = 7, speed = 0.9, cols = 22, rows = 13 }: ShatterProps) => {
-  const texture = useCardTexture(`plates/${plate}`);
+  const texture = useCardTexture(plate.startsWith('assets/') ? plate : `plates/${plate}`);
   const tris = useMemo(() => build(seed, cols, rows), [seed, cols, rows]);
   const geo = useMemo(() => {
     const g = new BufferGeometry();
