@@ -3,6 +3,7 @@
 // through Pic (AssetCard once the final image lands; a code-drawn palette stand-in until then).
 import { seeded } from '../../vfx/effects.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
+import { AVAILABLE } from '../../cast/available.ts';
 import { GOLD, GOLD_DEEP, INK, inkFilterDef, IVORY, Pic, poly, r2, SKY, SvgCard, svgDoc } from './kit.tsx';
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -305,7 +306,7 @@ export const World = ({ sil = false, cloudShift = 0, rays = 0, rayBend = 0, bow,
     <>
       <Pic id="G01" color={SKY} svg={SKY_SVG} width={300} height={173} position={[0, 30, -80]} renderOrder={RO.sky} flat={back} />
       {[[-17, 34, 0], [15, 44, 1], [3, 56, 2], [-9, 52, 1], [21, 26, 0]].map(([x, y, k], i) => (
-        <Pic key={`c${i}`} id="G02" color={IVORY} svg={CLOUD_SVG[k as number] as string} width={22} height={10} position={[(x as number) + cloudShift * Math.sign(-(x as number)), (y as number) - cloudShift * 0.4, -78]} renderOrder={RO.cloud + i * 0.01} flat={back} />
+        <Pic key={`c${i}`} id={`G02-${(i % 5) + 1}`} color={IVORY} svg={CLOUD_SVG[k as number] as string} width={22} height={10} position={[(x as number) + cloudShift * Math.sign(-(x as number)), (y as number) - cloudShift * 0.4, -78]} renderOrder={RO.cloud + i * 0.01} flat={back} />
       ))}
       <Pic id="G06" color={GOLD} svg={FLOOR_SVG} width={FLOOR.w} height={FLOOR.d} position={[0, 0, FLOOR.z0 + FLOOR.d / 2]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={RO.floor} flat={back} />
       {rays > 0
@@ -318,20 +319,20 @@ export const World = ({ sil = false, cloudShift = 0, rays = 0, rayBend = 0, bow,
         <Pic key={`w${k}`} id="G03" color={IVORY} svg={WALL_SVG} width={WALL.w} height={WALL.h} position={[k * (WALL.w - 0.5), WALL.h / 2, WALL.z]} renderOrder={RO.wall + k * 0.01} flat={back} />
       ))}
       <Pic id="G04a" color={IVORY} svg={GALLERY_SVG} width={GALLERY.w} height={GALLERY.h} position={[-GALLERY.x, GALLERY.h / 2, GALLERY.z]} renderOrder={RO.gallery} flat={back} />
-      <Pic id="G04b" color={IVORY} svg={GALLERY_SVG} width={GALLERY.w} height={GALLERY.h} position={[GALLERY.x, GALLERY.h / 2, GALLERY.z]} scale={[-1, 1, 1]} renderOrder={RO.gallery} flat={back} />
+      <Pic id="G04b" color={IVORY} svg={GALLERY_SVG} width={GALLERY.w} height={GALLERY.h} position={[GALLERY.x, GALLERY.h / 2, GALLERY.z]} scale={AVAILABLE.has('G04b') ? 1 : [-1, 1, 1]} renderOrder={RO.gallery} flat={back} />
       {[11.6, 21.4, 30.6].map((y, i) => (
-        <Pic key={`cr${i}`} id="G05" color={INK} svg={CROWD_SVG} width={30} height={3.75} position={[-GALLERY.x - 1, y + 1.2 - duck * 1.6, GALLERY.z + 0.4]} renderOrder={RO.crowd + i * 0.01} flat={fig} />
+        <Pic key={`cr${i}`} id={`G05-${i + 1}`} color={INK} svg={CROWD_SVG} width={30} height={3.75} position={[-GALLERY.x - 1, y + 1.2 - duck * 1.6, GALLERY.z + 0.4]} renderOrder={RO.crowd + i * 0.01} flat={fig} />
       ))}
       {[11.6, 21.4, 30.6].map((y, i) => (
-        <Pic key={`cl${i}`} id="G05" color={INK} svg={CROWD_SVG} width={30} height={3.75} position={[GALLERY.x + 1, y + 1.2 - duck * 1.6, GALLERY.z + 0.4]} scale={[-1, 1, 1]} renderOrder={RO.crowd + i * 0.01} flat={fig} />
+        <Pic key={`cl${i}`} id={`G05-${3 - i}`} color={INK} svg={CROWD_SVG} width={30} height={3.75} position={[GALLERY.x + 1, y + 1.2 - duck * 1.6, GALLERY.z + 0.4]} scale={[-1, 1, 1]} renderOrder={RO.crowd + i * 0.01} flat={fig} />
       ))}
       {BANNERS.map((b, i) => (
-        <Pic key={`b${i}`} id="G08" color={GOLD} svg={BANNER_SVG} width={BANNER.w} height={BANNER.h} pivot={[0, BANNER.h / 2]} position={[b.x, BANNER.h + 0.6, b.z]} rotation={[0, 0, ((sway * Math.sin(b.ph * 2.1 + 1)) * Math.PI) / 180]} renderOrder={(b.z > -6 ? RO.near : RO.rank) + 0.5 + i * 0.01} flat={fig} hidden={!near && b.z > -6} />
+        <Pic key={`b${i}`} id={`G08-${(i % 3) + 1}`} color={GOLD} svg={BANNER_SVG} width={BANNER.w} height={BANNER.h} pivot={[0, BANNER.h / 2]} position={[b.x, BANNER.h + 0.6, b.z]} rotation={[0, 0, ((sway * Math.sin(b.ph * 2.1 + 1)) * Math.PI) / 180]} renderOrder={(b.z > -6 ? RO.near : RO.rank) + 0.5 + i * 0.01} flat={fig} hidden={!near && b.z > -6} />
       ))}
       {RANKS.filter((r) => (r.z > -6 ? near : army)).map((r, i) => {
         const b = bow ? bow(i, r.x) : 0;
         return (
-          <Pic key={`s${i}`} id="G07" color={INK} svg={SOLDIER_SVG[r.k] as string} width={SOLDIER.w} height={SOLDIER.h} pivot={[0, -SOLDIER.h / 2]} position={[r.x, 0, r.z]} scale={[1 + 0.04 * b, 1 - 0.14 * b, 1]} renderOrder={(r.z > -6 ? RO.near : RO.rank) - r.z * 0.001 + i * 1e-5} flat={fig} />
+          <Pic key={`s${i}`} id={`G07-${r.k + 1}`} color={INK} svg={SOLDIER_SVG[r.k] as string} width={SOLDIER.w} height={SOLDIER.h} pivot={[0, -SOLDIER.h / 2]} position={[r.x, 0, r.z]} scale={[1 + 0.04 * b, 1 - 0.14 * b, 1]} renderOrder={(r.z > -6 ? RO.near : RO.rank) - r.z * 0.001 + i * 1e-5} flat={fig} />
         );
       })}
     </>

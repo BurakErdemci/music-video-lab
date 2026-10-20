@@ -220,7 +220,7 @@ const S15 = ({ frame }: { frame: number }) => {
           <World sil={sil} rayBend={12} cloudShift={7} near={false} />
           <Vorathul state={st} frame={frame} echoes={echoesAt(S15_TL, frame, [S15_SLAM], { frames: 7 })} />
           {BANNER_NEAR.map((b, i) => (
-            <Pic key={i} id="G08" color={GOLD} svg={S15_BANNER_SVG} width={1.1} height={4.0} pivot={[0, 2]} position={[b[0], b[1] + 2, b[2]]} rotation={[0, 0, ((i ? -1 : 1) * sway * Math.PI) / 180]} renderOrder={420} flat={sil ? INK : null} />
+            <Pic key={i} id={`G08-${i + 1}`} color={GOLD} svg={S15_BANNER_SVG} width={1.1} height={4.0} pivot={[0, 2]} position={[b[0], b[1] + 2, b[2]]} rotation={[0, 0, ((i ? -1 : 1) * sway * Math.PI) / 180]} renderOrder={420} flat={sil ? INK : null} />
           ))}
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
