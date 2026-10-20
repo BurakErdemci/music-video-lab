@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./7-nerf-hali-v2.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+Character (keep exactly): Vorathul, colossal knight-king, closed great-helm with narrow violet eye slit, two long curved black horns, jagged black crown with violet gems, spiky black fur-like pauldrons, black organ pipes rising behind him like wings, long tattered black cape, huge greatsword with a violet-runed fuller and a spiked crossguard.
+
+Subject: Vorathul AFTER being nerfed by a patch. His wings have been DELETED: where each spread wing used to be there is now a flat magenta-and-black CHECKERBOARD shape in the EXACT SILHOUETTE of a large spread wing (a missing-texture placeholder from a video game), so the two wing outlines are still readable but filled only with the checkerboard. The few organ pipes left on his back have small round cork stoppers in their mouths. His crown is visibly smaller and lopsided, the sword runes are dark and dead, his shoulders slump, the cape hangs limp. Around him the knights look relieved, one points at him and laughs.
+Composition: Front view, full figure centred, the checkerboard wing silhouettes spread almost to the frame width, golden cathedral, landscape 1536x1024. The checkerboard may use flat magenta #E0129A as the only exception to the palette.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./3b-ikinci-form.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+Character (keep exactly): Vorathul, colossal knight-king, closed great-helm with narrow violet eye slit, two long curved black horns, jagged black crown with violet gems, spiky black fur-like pauldrons, black organ pipes rising behind him like wings, long tattered black cape, huge greatsword with a violet-runed fuller and a spiked crossguard.
+
+Subject: Vorathul SECOND FORM, close-up from the chest up: his black great-helm has SPLIT VERTICALLY DOWN THE MIDDLE and the two halves are swung open sideways like jaws or a broken shell, clearly separated by a wide gap; inside the open helm there is NO face at all, only a flat pure black void holding a cluster of seven small glowing violet eyes; the two horns now stand on the separated halves; jagged violet light cracks run across the armour; the organ-pipe wings flare wider behind him; one gauntlet raises the greatsword.
+Composition: Low-angle bust shot, the split-open helm is the focal point in the upper centre and must be readable at a glance, the golden cathedral cracking behind him, landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

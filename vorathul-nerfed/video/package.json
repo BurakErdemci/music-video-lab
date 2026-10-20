@@ -1,0 +1,29 @@
+{
+  "name": "vorathul-nerfed-video",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "sync-timing": "node -e \"require('fs').copyFileSync('../data/timing.json','src/data/timing.json')\"",
+    "check": "tsc --noEmit",
+    "render:test30": "remotion render src/index.ts Test30 out/test30.mp4 --gl=angle --concurrency=4",
+    "stills": "node ../tools/stills.mjs",
+    "beatcheck": "node ../tools/beatcheck.mjs",
+    "purity": "node ../tools/purity.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@remotion/cli": "4.0.536",
+    "@remotion/three": "4.0.536",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.536",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/three": "0.186.0",
+    "typescript": "7.0.2"
+  }
+}

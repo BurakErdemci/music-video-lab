@@ -1,0 +1,591 @@
+{
+ "equation_per_segment": [
+  {
+   "start": 0.0,
+   "end": 30.5,
+   "bpm": 185.24,
+   "bars": 23,
+   "bars_x4_x_period_s": 29.8,
+   "length_s": 30.5,
+   "diff_beats": 2.16
+  },
+  {
+   "start": 30.5,
+   "end": 53.44,
+   "bpm": 186.28,
+   "bars": 18,
+   "bars_x4_x_period_s": 23.19,
+   "length_s": 22.94,
+   "diff_beats": -0.78
+  },
+  {
+   "start": 53.44,
+   "end": 79.19,
+   "bpm": 186.39,
+   "bars": 20,
+   "bars_x4_x_period_s": 25.75,
+   "length_s": 25.75,
+   "diff_beats": -0.01
+  },
+  {
+   "start": 79.19,
+   "end": 93.26,
+   "bpm": 179.53,
+   "bars": 10,
+   "bars_x4_x_period_s": 13.37,
+   "length_s": 14.07,
+   "diff_beats": 2.1
+  },
+  {
+   "start": 93.26,
+   "end": 136.7,
+   "bpm": 186.45,
+   "bars": 34,
+   "bars_x4_x_period_s": 43.76,
+   "length_s": 43.44,
+   "diff_beats": -1.01
+  },
+  {
+   "start": 136.7,
+   "end": 146.83,
+   "bpm": 165.79,
+   "bars": 7,
+   "bars_x4_x_period_s": 10.13,
+   "length_s": 10.13,
+   "diff_beats": -0.01
+  },
+  {
+   "start": 146.83,
+   "end": 171.67,
+   "bpm": 185.99,
+   "bars": 20,
+   "bars_x4_x_period_s": 25.81,
+   "length_s": 24.84,
+   "diff_beats": -3.0
+  },
+  {
+   "start": 171.67,
+   "end": 197.22,
+   "bpm": 176.63,
+   "bars": 19,
+   "bars_x4_x_period_s": 25.82,
+   "length_s": 25.55,
+   "diff_beats": -0.79
+  },
+  {
+   "start": 197.22,
+   "end": 226.22,
+   "bpm": 186.22,
+   "bars": 22,
+   "bars_x4_x_period_s": 28.35,
+   "length_s": 29.0,
+   "diff_beats": 2.01
+  },
+  {
+   "start": 226.22,
+   "end": 243.35,
+   "bpm": 185.7,
+   "bars": 13,
+   "bars_x4_x_period_s": 16.8,
+   "length_s": 17.13,
+   "diff_beats": 1.02
+  },
+  {
+   "start": 243.35,
+   "end": 273.84,
+   "bpm": 181.6,
+   "bars": 22,
+   "bars_x4_x_period_s": 29.08,
+   "length_s": 30.49,
+   "diff_beats": 4.28
+  }
+ ],
+ "equation": {
+  "bars": 208,
+  "beats_total": 838,
+  "first_downbeat": 0.45,
+  "audio_end": 273.84,
+  "sum_of_bar_lengths_s": 273.39
+ },
+ "energy_steps": [
+  {
+   "t": 0.52,
+   "step_db": 37.1,
+   "dt_to_downbeat_ms": 75.0,
+   "dt_to_beat_ms": 75.0
+  },
+  {
+   "t": 10.35,
+   "step_db": 7.0,
+   "dt_to_downbeat_ms": 178.0,
+   "dt_to_beat_ms": -145.0
+  },
+  {
+   "t": 19.52,
+   "step_db": 6.9,
+   "dt_to_downbeat_ms": -44.0,
+   "dt_to_beat_ms": -44.0
+  },
+  {
+   "t": 21.29,
+   "step_db": 8.6,
+   "dt_to_downbeat_ms": 435.0,
+   "dt_to_beat_ms": 111.0
+  },
+  {
+   "t": 23.41,
+   "step_db": 8.1,
+   "dt_to_downbeat_ms": -32.0,
+   "dt_to_beat_ms": -32.0
+  },
+  {
+   "t": 33.86,
+   "step_db": -7.2,
+   "dt_to_downbeat_ms": 75.0,
+   "dt_to_beat_ms": 75.0
+  },
+  {
+   "t": 72.29,
+   "step_db": 13.1,
+   "dt_to_downbeat_ms": -135.0,
+   "dt_to_beat_ms": -135.0
+  },
+  {
+   "t": 73.72,
+   "step_db": 7.0,
+   "dt_to_downbeat_ms": 2.0,
+   "dt_to_beat_ms": 2.0
+  },
+  {
+   "t": 76.77,
+   "step_db": 12.9,
+   "dt_to_downbeat_ms": 476.0,
+   "dt_to_beat_ms": 154.0
+  },
+  {
+   "t": 78.74,
+   "step_db": 32.9,
+   "dt_to_downbeat_ms": -125.0,
+   "dt_to_beat_ms": -125.0
+  },
+  {
+   "t": 82.49,
+   "step_db": -12.5,
+   "dt_to_downbeat_ms": -332.0,
+   "dt_to_beat_ms": 2.0
+  },
+  {
+   "t": 83.54,
+   "step_db": 11.1,
+   "dt_to_downbeat_ms": -620.0,
+   "dt_to_beat_ms": 49.0
+  },
+  {
+   "t": 84.74,
+   "step_db": 7.5,
+   "dt_to_downbeat_ms": 580.0,
+   "dt_to_beat_ms": -88.0
+  },
+  {
+   "t": 87.69,
+   "step_db": 12.6,
+   "dt_to_downbeat_ms": -482.0,
+   "dt_to_beat_ms": -148.0
+  },
+  {
+   "t": 90.31,
+   "step_db": 7.8,
+   "dt_to_downbeat_ms": -532.0,
+   "dt_to_beat_ms": 137.0
+  },
+  {
+   "t": 92.86,
+   "step_db": 6.6,
+   "dt_to_downbeat_ms": 680.0,
+   "dt_to_beat_ms": 12.0
+  },
+  {
+   "t": 94.98,
+   "step_db": 6.2,
+   "dt_to_downbeat_ms": 123.0,
+   "dt_to_beat_ms": 123.0
+  },
+  {
+   "t": 135.34,
+   "step_db": -8.7,
+   "dt_to_downbeat_ms": 254.0,
+   "dt_to_beat_ms": -68.0
+  },
+  {
+   "t": 140.14,
+   "step_db": 10.4,
+   "dt_to_downbeat_ms": 207.0,
+   "dt_to_beat_ms": -155.0
+  },
+  {
+   "t": 141.99,
+   "step_db": 10.3,
+   "dt_to_downbeat_ms": 608.0,
+   "dt_to_beat_ms": -115.0
+  },
+  {
+   "t": 143.88,
+   "step_db": 10.1,
+   "dt_to_downbeat_ms": -388.0,
+   "dt_to_beat_ms": -26.0
+  },
+  {
+   "t": 146.11,
+   "step_db": 8.1,
+   "dt_to_downbeat_ms": 389.0,
+   "dt_to_beat_ms": 27.0
+  },
+  {
+   "t": 182.92,
+   "step_db": 7.0,
+   "dt_to_downbeat_ms": -633.0,
+   "dt_to_beat_ms": 47.0
+  },
+  {
+   "t": 186.24,
+   "step_db": 9.0,
+   "dt_to_downbeat_ms": -27.0,
+   "dt_to_beat_ms": -27.0
+  },
+  {
+   "t": 195.09,
+   "step_db": 7.1,
+   "dt_to_downbeat_ms": 666.0,
+   "dt_to_beat_ms": -13.0
+  },
+  {
+   "t": 199.11,
+   "step_db": 7.0,
+   "dt_to_downbeat_ms": -364.0,
+   "dt_to_beat_ms": -42.0
+  },
+  {
+   "t": 246.39,
+   "step_db": 6.3,
+   "dt_to_downbeat_ms": 523.0,
+   "dt_to_beat_ms": -138.0
+  },
+  {
+   "t": 247.54,
+   "step_db": 15.8,
+   "dt_to_downbeat_ms": 351.0,
+   "dt_to_beat_ms": 20.0
+  },
+  {
+   "t": 273.33,
+   "step_db": -7.0,
+   "dt_to_downbeat_ms": 1689.0,
+   "dt_to_beat_ms": 37.0
+  }
+ ],
+ "energy_steps_within_150ms_of_downbeat": "9/29",
+ "kick_vs_beat_per_30s": [
+  {
+   "window": "0-30",
+   "n": 29,
+   "median_ms": -13.1,
+   "p90_abs_ms": 139.1
+  },
+  {
+   "window": "30-60",
+   "n": 57,
+   "median_ms": -14.7,
+   "p90_abs_ms": 146.2
+  },
+  {
+   "window": "60-90",
+   "n": 24,
+   "median_ms": -14.2,
+   "p90_abs_ms": 142.5
+  },
+  {
+   "window": "90-120",
+   "n": 32,
+   "median_ms": -11.3,
+   "p90_abs_ms": 143.9
+  },
+  {
+   "window": "120-150",
+   "n": 33,
+   "median_ms": -22.2,
+   "p90_abs_ms": 142.0
+  },
+  {
+   "window": "150-180",
+   "n": 38,
+   "median_ms": -11.4,
+   "p90_abs_ms": 144.2
+  },
+  {
+   "window": "180-210",
+   "n": 44,
+   "median_ms": -20.7,
+   "p90_abs_ms": 141.7
+  },
+  {
+   "window": "210-240",
+   "n": 61,
+   "median_ms": 140.8,
+   "p90_abs_ms": 147.2
+  },
+  {
+   "window": "240-270",
+   "n": 40,
+   "median_ms": 2.7,
+   "p90_abs_ms": 144.0
+  },
+  {
+   "window": "270-300",
+   "n": 7,
+   "median_ms": -79.2,
+   "p90_abs_ms": 138.0
+  }
+ ],
+ "max_abs_window_median_ms": 140.8,
+ "downbeat_phase_by_section": [
+  {
+   "section": "Intro",
+   "bars": 37,
+   "chord_change_by_phase": [
+    0.04,
+    0.041,
+    0.044,
+    0.056
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    9.2,
+    16.5,
+    9.7,
+    15.9
+   ],
+   "best_phase_kick": 1
+  },
+  {
+   "section": "Verse 1",
+   "bars": 17,
+   "chord_change_by_phase": [
+    0.019,
+    0.013,
+    0.015,
+    0.051
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    4.3,
+    37.0,
+    5.6,
+    37.1
+   ],
+   "best_phase_kick": 3
+  },
+  {
+   "section": "Pre-Chorus",
+   "bars": 5,
+   "chord_change_by_phase": [
+    0.097,
+    0.038,
+    0.045,
+    0.13
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    2.1,
+    1.8,
+    1.6,
+    11.6
+   ],
+   "best_phase_kick": 3
+  },
+  {
+   "section": "Announcer 1",
+   "bars": 16,
+   "chord_change_by_phase": [
+    0.091,
+    0.093,
+    0.121,
+    0.145
+   ],
+   "best_phase_chord": 3,
+   "kick_by_phase": [
+    5.0,
+    5.0,
+    4.0,
+    4.7
+   ],
+   "best_phase_kick": 1
+  },
+  {
+   "section": "Chorus 1",
+   "bars": 15,
+   "chord_change_by_phase": [
+    0.057,
+    0.015,
+    0.03,
+    0.047
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    23.5,
+    3.7,
+    24.7,
+    4.3
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Verse 2",
+   "bars": 15,
+   "chord_change_by_phase": [
+    0.055,
+    0.033,
+    0.037,
+    0.053
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    27.3,
+    11.0,
+    29.1,
+    7.1
+   ],
+   "best_phase_kick": 2
+  },
+  {
+   "section": "Announcer 2",
+   "bars": 6,
+   "chord_change_by_phase": [
+    0.086,
+    0.122,
+    0.215,
+    0.096
+   ],
+   "best_phase_chord": 2,
+   "kick_by_phase": [
+    3.3,
+    7.5,
+    3.7,
+    5.4
+   ],
+   "best_phase_kick": 1
+  },
+  {
+   "section": "Chorus 2",
+   "bars": 16,
+   "chord_change_by_phase": [
+    0.041,
+    0.055,
+    0.02,
+    0.021
+   ],
+   "best_phase_chord": 1,
+   "kick_by_phase": [
+    5.4,
+    30.1,
+    9.0,
+    31.3
+   ],
+   "best_phase_kick": 3
+  },
+  {
+   "section": "Soft Interlude",
+   "bars": 20,
+   "chord_change_by_phase": [
+    0.059,
+    0.059,
+    0.026,
+    0.046
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    18.1,
+    25.8,
+    3.1,
+    18.6
+   ],
+   "best_phase_kick": 1
+  },
+  {
+   "section": "Build",
+   "bars": 19,
+   "chord_change_by_phase": [
+    0.064,
+    0.019,
+    0.021,
+    0.031
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    32.2,
+    8.0,
+    28.1,
+    9.5
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Final Chorus",
+   "bars": 16,
+   "chord_change_by_phase": [
+    0.053,
+    0.014,
+    0.011,
+    0.035
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    40.5,
+    6.1,
+    35.4,
+    4.8
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Announcer 3",
+   "bars": 4,
+   "chord_change_by_phase": [
+    0.056,
+    0.116,
+    0.083,
+    0.07
+   ],
+   "best_phase_chord": 1,
+   "kick_by_phase": [
+    10.5,
+    6.6,
+    3.9,
+    2.0
+   ],
+   "best_phase_kick": 0
+  },
+  {
+   "section": "Choir",
+   "bars": 17,
+   "chord_change_by_phase": [
+    0.064,
+    0.031,
+    0.037,
+    0.022
+   ],
+   "best_phase_chord": 0,
+   "kick_by_phase": [
+    12.8,
+    22.6,
+    17.5,
+    21.7
+   ],
+   "best_phase_kick": 1
+  }
+ ],
+ "phase0_wins": {
+  "sections": 13,
+  "chord_change": 6,
+  "kick": 3
+ }
+}

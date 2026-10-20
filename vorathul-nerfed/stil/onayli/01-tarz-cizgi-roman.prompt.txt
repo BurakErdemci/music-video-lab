@@ -1,0 +1,14 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./3-cizgi-roman.png
+
+Subject: The attached image is the CHARACTER REFERENCE. Keep the character design exactly: Vorathul, a towering matte pitch-black knight-king, closed great-helm with a narrow glowing violet eye slit, two long curved black horns, a jagged black crown with violet gems, black organ pipes rising from his back like wings, a tattered black cape, a huge greatsword with glowing violet runes. IGNORE the reference rendering style completely; only the design carries over.
+Pose and scene: he stands colossal at the end of a radiant cathedral nave, both gauntlets resting on the pommel of the greatsword planted point-down in front of him, head slightly lowered, menacing. Tiny knights at his feet raise shields. He must read as a pure black silhouette, a hole in the bright scene. Violet only on eye slit, crown gems and sword runes.
+Composition: Full figure, centred, he fills about 75 percent of the frame height, landscape 1536x1024.
+
+Art direction:
+- A bold GRAPHIC COMIC PANEL in a noir style: huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges, minimal detail, flat colour with no gradients, slight paper print texture.
+- Palette: bright ivory and warm gold for the cathedral, one flat pale sky colour, solid black for Vorathul, violet accents. Nothing else.
+- ABSOLUTELY NO text, letters, numbers, logos, signatures or watermarks (no fake script, no captions).
+- NOT glossy digital painting, NOT cinematic lighting, NOT hyper-detailed concept art, NOT photorealistic, NOT 3D render. It must look hand-made in the named technique.
+- Not Warhammer, not Diablo, not Dark Souls, not Sauron.
+
+After copying, print the output path and pixel size.
