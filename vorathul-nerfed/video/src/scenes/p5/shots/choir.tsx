@@ -422,6 +422,8 @@ const EMBERS = (() => {
   return Array.from({ length: 46 }, () => ({ x: rng.range(200, W - 200), y: rng.range(H * 0.5, H), v: rng.range(3, 9), w: rng.range(0.02, 0.07), r: rng.range(3, 8), c: rng() < 0.5 ? VIOLET : GOLD }));
 })();
 const CLONK = E('s114-clonk');
+/** Where the S113 blast sat on screen when its camera locked. */
+const BLAST_AT = project(S113_CAM(E('s114-cut') - 1), [0.5, F + 7, -19]);
 
 export const S114 = ({ frame }: { frame: number }) => {
   const cam = S114_CAM(frame);
@@ -460,6 +462,8 @@ export const S114 = ({ frame }: { frame: number }) => {
         <Overlay>
           {em >= 0 ? EMBERS.map((e, i) => <circle key={i} cx={e.x + Math.sin(ff * e.w * 3 + i) * 30} cy={e.y - e.v * em} r={e.r} fill={e.c} opacity={1 - clamp01(em / 90)} />) : null}
         </Overlay>
+        {/* The blast's ink carries over the cut and thins out (measured: a clean cut here was a 4th swing in the second). */}
+        <InkSplash frame={frame - WHITEOUT - 9} duration={44} seed={1135} x={BLAST_AT.x} y={BLAST_AT.y} size={620} variant="violet" fade={24} />
         <ImpactBurst frame={frame - CLONK} duration={8} seed={1142} x={head.x} y={head.y} size={110} flash={0} />
         <DamageNumber frame={frame} text="-1" at={CLONK} x={head.x} y={head.y - 40} size={84} />
       </BlastScene>

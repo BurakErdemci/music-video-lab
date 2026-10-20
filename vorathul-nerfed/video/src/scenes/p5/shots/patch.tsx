@@ -65,8 +65,8 @@ export const S105 = ({ frame }: { frame: number }) => {
         <Dev who="hoodie" at={[-1.6 + shiver, F, -8.4]} height={2.7} order={3000} />
       </Stage>
       <PatchNotesCard frame={frame} x={1180} y={90} width={640} title={patchTitle(frame)} enterAt={E('s105-cut') + 4} lines={[{ text: 'Boss behaviour: under review', appearAt: E('s105-two') + 4 }]} footer="Balance team (hiding)" />
-      <InkSplash frame={22} duration={1000} seed={105} x={1700} y={170} size={90} />
-      <InkSplash frame={22} duration={1000} seed={106} x={1240} y={300} size={60} variant="violet" />
+      <InkSplash frame={22} duration={1000} seed={105} x={1800} y={96} size={60} />
+      <InkSplash frame={22} duration={1000} seed={106} x={1196} y={330} size={44} variant="violet" />
     </Shot>
   );
 };
