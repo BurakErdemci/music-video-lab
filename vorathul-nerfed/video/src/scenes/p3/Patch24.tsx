@@ -149,7 +149,8 @@ const APPEAR = at('s65-slider');
 const FULL = at('s65-100');
 const SLIDE_A = at('s65-corks1') - 4;
 const SLIDE_B = at('s65-corks2') - 4;
-const CAM65 = hold(frameAt([0, 3.0, -15], 7.2));
+// Framed wide enough that the slider docks below his feet (a player bar) and never covers the helm.
+const CAM65 = hold(frameAt([0, 2.0, -15], 9.6));
 const PLACE65: Place = { pos: [0, 0, -15], scale: SCALE_C };
 const SLIDER = { x: 110, width: 1700 };
 const UI_S = SLIDER.width / 760;
@@ -209,7 +210,7 @@ export const S65 = ({ frame }: { frame: number }) => {
   }));
   const corkAt = Object.fromEntries(CORKS65.map((e) => [`${e.wing}${e.pipe}`, e.at]));
   const s = segmentAt(frame);
-  const sliderY = Math.max(...mouths.map((m) => m.y)) + 70;
+  const sliderY = 800;
   const pop = easeOutBack(prog(frame, APPEAR, 6));
   return (
     <ShotFrame frame={frame}>
