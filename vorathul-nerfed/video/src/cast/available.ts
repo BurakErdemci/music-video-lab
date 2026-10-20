@@ -27,6 +27,10 @@ const LIVE: readonly string[] = [
   'G35a', 'G35b',
   // p5 office cast and key stills
   'G14', 'G39-1', 'G39-2', 'G39-3', 'G39-7', 'G39-8', 'G41-1', 'G41-2', 'G41-4', 'G42', 'G43', 'G44', 'G45',
+  // drawn developer (office, replaces the code-drawn DevActor)
+  'G46-bored', 'G46-click', 'G46-dust', 'G46-glance', 'G46-pin', 'G46-sip', 'G46-spit', 'G46-tap', 'G46-walk',
+  // second-chorus stage props (p3; P1-stage-glow left out: near-flat cones)
+  'P1-mic', 'P1-mic-stand', 'P1-stage-lights',
   // organ loft (p1 S17-S24)
   'L1-bellows', 'L1-console', 'L1-floor', 'L1-pipes-near', 'L1-wall-a', 'L1-wall-b',
   // rooftop and open sky (p1 S25, p2)
