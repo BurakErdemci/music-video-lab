@@ -31,7 +31,17 @@ stay only in the (parentheses). The final chorus answers it with the v1 line "Tw
 - **Variety 0** (above 0 Suno rewrites the style prompt), Weirdness 40-50, Style Influence 75-85.
 - Vocal Gender: Female.
 
-## Style (master take, one female lead)
+## Style (v3.1 - the v1 heaviness back)
+
+Burak, 20 Oct 2026: v1's chorus, its screams and its heavy metal were the best; later versions lost them.
+v2/v3 had dropped "screams", "blast beats", "djent" and 185 BPM on research risk (mud, death growls);
+his ears overrule that. Kept from v3: "Kawaii heavy metal" as the first tag.
+
+```
+Kawaii heavy metal, 185 BPM, 4/4, E minor, chugging djent guitars, blast beats, tight double-kick drums, thick sub bass, crushing riffs, syncopated half-time breakdowns, aggressive dense production, fast guitar solo. Two female vocalists: one sweet high J-pop idol voice, one raspy aggressive rock voice with screams, rapid call and response, gang shouts on the choruses. Sudden hard stops before the choruses, a stripped piano interlude, huge final chorus, chaotic, anime battle energy.
+```
+
+Previous v3 style (152 BPM, no screams), for comparison:
 
 ```
 Kawaii heavy metal, 152 BPM, 4/4, E minor, drop-C chugging high-gain palm-muted guitars, scooped mids, thick sub bass, tight double-kick drums, syncopated half-time breakdowns, crushing riffs, aggressive dense production, fast guitar solo. Female lead vocal, sweet bright high-pitched idol voice singing over the heavy riffs, gang shouts on the choruses. Hard stops before the choruses, a stripped piano interlude, huge final chorus.
@@ -121,7 +131,9 @@ You wrote a comment that just says "don't touch"!
 I wrote that comment!
 [Raspy voice]
 I KNOW! I TOUCHED IT!
-(AAAAAH!)
+
+[Both voices scream]
+AAAAAH!
 
 [Chorus - same melody, both voices, bigger]
 Accept current change! (NO!)
@@ -148,9 +160,10 @@ The pipeline is red!
 The reviewers are gone!
 (And the standup's in five and nobody's on!)
 
-[Breakdown - half-time, heaviest]
-[Raspy voice]
-GIT! PUSH! FORCE!
+[Breakdown - slowest and heaviest, raspy voice screaming]
+GIT!
+PUSH!
+FORCE!
 
 [Break]
 
@@ -186,7 +199,9 @@ Merge conflict resolved inside my soul
 [Outro - chant, double-kick]
 (Accept both! Accept both! Ship it, ship it!)
 Accept both, accept both, SHIP IT!
-(AAAAAAAH!)
+
+[Both voices scream]
+AAAAAAAH!
 
 [End]
 ```
