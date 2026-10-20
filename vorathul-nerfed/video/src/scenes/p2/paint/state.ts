@@ -23,7 +23,7 @@ export const sunFillAt = (f: number): number => {
 };
 
 /** Apparent centre height of the sun bar (PS units): hidden behind the roofline until hit[45], clear of it on "dawn". */
-export const sunYAt = (f: number): number => 0.5 + 2.15 * easeOut((f - T.sunEdge) / (T.dawn - T.sunEdge + 6));
+export const sunYAt = (f: number): number => -2.5 + 5.4 * easeOut((f - T.sunEdge) / (T.dawn - T.sunEdge + 6));
 
 /** Camera shake of a list of hits, in PS units added to the view centre (pct of the visible height). */
 export const shakeView = (v: View, f: number, hits: readonly { start: number; seed: number; pct: number }[]): View => {

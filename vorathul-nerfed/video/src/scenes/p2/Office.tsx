@@ -3,7 +3,8 @@
 // painting plane (z -20) and the point (tx, ty) it looks at (ty measured UP, like the painting's own units).
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
-import { DeskArt, DeskCornerArt, FrameArt, OFFICE, PlantArt, StickyNotesArt, WallArt } from './art/office.tsx';
+import { FrameArt, OFFICE, StickyNotesArt, WallArt } from './art/office.tsx';
+import { Desk, DeskCorner, Plant } from './FinalOffice.tsx';
 import { PaintView, type PaintViewProps } from './paint/PaintView.tsx';
 import { sunFillAt } from './paint/state.ts';
 
@@ -60,7 +61,7 @@ export const OfficeScene = ({ frame, cam, paint, notes, dev, onFrame, drain = 0,
       </Layer>
       <Layer cam={cam} z={Z.plant}>
         <g transform={`translate(11.5 ${fl})`}>
-          <PlantArt />
+          <Plant />
         </g>
       </Layer>
       <PaintView {...paint} view={{ cx: 0, cy: 0, h: 9 }} place={{ tx: cam.tx, ty: cam.ty, sP: scaleAt(cam, Z.paint) }} drain={drain} />
@@ -76,15 +77,15 @@ export const OfficeScene = ({ frame, cam, paint, notes, dev, onFrame, drain = 0,
       ) : null}
       <Layer cam={cam} z={Z.desks}>
         <g transform={`translate(-7.6 ${fl})`}>
-          <DeskArt side="L" screen={screen} />
+          <Desk side="L" fill={fill} label={screen.label} />
         </g>
         <g transform={`translate(7.6 ${fl})`}>
-          <DeskArt side="R" />
+          <Desk side="R" fill={0} label="" />
         </g>
       </Layer>
       <Layer cam={cam} z={Z.corner}>
         <g transform={`translate(-6.4 ${fl})`}>
-          <DeskCornerArt />
+          <DeskCorner />
         </g>
       </Layer>
     </AbsoluteFill>

@@ -1,7 +1,8 @@
 // The shots that look at the painting from inside (S27-S30, S37-S39, S41, S43-S45): cameras, grades and decor over the
 // one continuing picture of paint/script.tsx.
 import type { ReactNode } from 'react';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, staticFile } from 'remotion';
+import { finalSize } from './paint/finals.tsx';
 import { DuotoneFlash, ImpactBurst, type DuotoneCue } from '../../vfx/effects.ts';
 import { shake } from '../../vfx/effects.ts';
 import { UiFonts } from '../../ui/kit.ts';
@@ -94,7 +95,7 @@ export const S43 = ({ frame }: { frame: number }) => (
 
 // ---- S44 four comic zoom panels: bar, tiles, note on the helm, dimming eye ---------------------------------------------------
 const PANELS: readonly { at: number; view: View }[] = [
-  { at: T.zoom1, view: { cx: -2.4, cy: 3.55, h: 2.7 } },
+  { at: T.zoom1, view: { cx: -3.6, cy: 3.5, h: 2.7 } },
   { at: T.zoom2, view: { cx: 3.3, cy: -3.35, h: 2.4 } },
   { at: T.zoom3, view: { cx: 0, cy: 1.4, h: 3.0 } },
   { at: T.zoom4, view: { cx: 0, cy: 1.35, h: 1.6 } },
@@ -133,7 +134,12 @@ const skyShakeAt = (f: number): [number, number] => {
 };
 
 /** The helm seen from below: collar in front, the lit slit foreshortened, horns and crown behind (stand-in for G13). */
-const HelmFromBelow = () => (
+const HelmFromBelow = () =>
+  finalSize('G13') ? (
+    <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
+      <image href={staticFile('assets/G13.png')} x={HELM[0] - 215} y={HELM[1] - 215} width={430} height={412} />
+    </svg>
+  ) : (
   <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
     <g transform={`translate(${HELM[0]} ${HELM[1] + 30}) scale(0.55)`} fill="#0A0908">
       <path d="M-210 -150 Q-300 -330 -170 -330 Q-250 -230 -150 -170Z" />
@@ -145,7 +151,7 @@ const HelmFromBelow = () => (
       <path d="M-70 -48 Q0 -66 70 -48 L62 -30 Q0 -44 -62 -30Z" fill="#C9A2F4" />
     </g>
   </svg>
-);
+  );
 
 const Flakes = ({ f }: { f: number }) => {
   const parts = [T.flakes1, T.flakes2].flatMap((start, k) => {

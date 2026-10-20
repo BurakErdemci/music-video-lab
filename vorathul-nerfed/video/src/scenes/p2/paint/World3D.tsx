@@ -5,6 +5,7 @@ import { RIG } from '../../../rig/model.ts';
 import { rigAt } from '../../../rig/timeline.ts';
 import { CropCard, SvgCard } from './cards.tsx';
 import { cathedralSvg, pillarSvg, skySvg, sunSvg, SUN_STEPS } from './art.ts';
+import { FinalCard, FinalCrop } from './finals.tsx';
 import { D0, depthScale } from './space.ts';
 import { VORATHUL_TL } from './vorathul.ts';
 
@@ -22,6 +23,8 @@ export interface World3DProps {
   headUp?: boolean;
 }
 
+/** Apparent x of the progress-bar sun (right of centre, clear of the health bar). */
+const SUN_X = 1.7;
 const PLATE = 'plates/01-tarz-cizgi-roman.jpg';
 const RIG_UNIT = 6.8;
 const FEET_Y = -3.95;
@@ -54,31 +57,64 @@ export const World3D = ({ frame, sun, pillars, skyShake = [0, 0], skyViolet = fa
   return (
     <>
       <Layer z={-10} x={skyShake[0]} y={skyShake[1]}>
-        <SvgCard svg={skySvg(false)} width={16.6} height={9.4} renderOrder={0} hidden={skyViolet} />
+        <FinalCrop id="G01" u0={0} u1={1} v0={0.078} v1={0.922} width={16.6} height={9.4} renderOrder={0} hidden={skyViolet} standIn={<SvgCard svg={skySvg(false)} width={16.6} height={9.4} renderOrder={0} hidden={skyViolet} />} />
         <SvgCard svg={skySvg(true)} width={16.6} height={9.4} renderOrder={1} hidden={!skyViolet} />
+        <FinalCard id="G02-1" height={2.4} position={[-5.6, 3.2, 0]} renderOrder={2} hidden={skyViolet} />
+        <FinalCard id="G02-3" height={2.1} position={[5.9, 2.6, 0]} renderOrder={2} hidden={skyViolet} />
       </Layer>
-      <Layer z={-8.5} y={sun?.y ?? 0}>
+      <Layer z={-6} x={SUN_X} y={sun?.y ?? 0}>
         {SUN_STEPS.map((s) => (
-          <SvgCard key={s} svg={sunSvg(s)} width={7.7} height={3.08} renderOrder={5} hidden={!sun || s !== sunStep} />
+          <SvgCard key={s} svg={sunSvg(s)} width={6.2} height={2.48} renderOrder={5} hidden={!sun || s !== sunStep} />
         ))}
       </Layer>
       <Layer z={-7}>
-        <SvgCard svg={cathedralSvg()} width={16} height={9} renderOrder={10} />
+        <FinalCard id="G03" height={7.6} position={[0, -0.1, 0]} renderOrder={10} standIn={<SvgCard svg={cathedralSvg()} width={16} height={9} renderOrder={10} />} />
+      </Layer>
+      <Layer z={-3.5}>
+        <FinalCard id="G08-1" height={4.6} position={[-6.9, 0.9, 0]} renderOrder={12} />
+        <FinalCard id="G08-3" height={4.6} position={[6.9, 0.9, 0]} renderOrder={12} />
       </Layer>
       <Layer z={-4.5}>
-        <CropCard src={PLATE} u0={0.04} u1={0.24} v0={0.078} v1={0.922} width={3.2} height={9} position={[-6.4, 0, 0]} renderOrder={15} />
-        <CropCard src={PLATE} u0={0.76} u1={0.96} v0={0.078} v1={0.922} width={3.2} height={9} position={[6.4, 0, 0]} renderOrder={15} />
+        <FinalCard
+          id="G04a"
+          height={8.2}
+          position={[-5.6, 0.2, 0]}
+          renderOrder={15}
+          standIn={<CropCard src={PLATE} u0={0.04} u1={0.24} v0={0.078} v1={0.922} width={3.2} height={9} position={[-6.4, 0, 0]} renderOrder={15} />}
+        />
+        <FinalCard
+          id="G04b"
+          height={8.2}
+          position={[5.7, 0.2, 0]}
+          renderOrder={15}
+          standIn={<CropCard src={PLATE} u0={0.76} u1={0.96} v0={0.078} v1={0.922} width={3.2} height={9} position={[6.4, 0, 0]} renderOrder={15} />}
+        />
       </Layer>
       <Layer z={-3}>
-        <CropCard src={PLATE} u0={0} u1={1} v0={0.8} v1={0.922} width={16} height={1.3} position={[0, -3.85, 0]} renderOrder={20} />
+        <FinalCrop
+          id="G06"
+          u0={0}
+          u1={1}
+          v0={0.72}
+          v1={1}
+          width={16.6}
+          height={3}
+          position={[0, -3, 0]}
+          renderOrder={20}
+          standIn={<CropCard src={PLATE} u0={0} u1={1} v0={0.8} v1={0.922} width={16} height={1.3} position={[0, -3.85, 0]} renderOrder={20} />}
+        />
       </Layer>
       {rig ? <Rig cfg={headUp ? RIG_NO_HEAD : RIG_CFG} state={state} /> : null}
       {pillars ? (
         <>
-          <SvgCard svg={pillarSvg('L')} width={0.5} height={6} position={[-2.65, 0, 8]} renderOrder={300} />
-          <SvgCard svg={pillarSvg('R')} width={0.5} height={6} position={[2.65, 0, 8]} renderOrder={300} />
+          <FinalCrop id="G09-1" u0={0.18} u1={0.82} v0={0} v1={1} width={1} height={6} position={[-2.4, 0, 8]} renderOrder={300} standIn={<SvgCard svg={pillarSvg('L')} width={0.5} height={6} position={[-2.65, 0, 8]} renderOrder={300} />} />
+          <FinalCrop id="G09-2" u0={0.18} u1={0.82} v0={0} v1={1} width={1} height={6} position={[2.4, 0, 8]} renderOrder={300} standIn={<SvgCard svg={pillarSvg('R')} width={0.5} height={6} position={[2.65, 0, 8]} renderOrder={300} />} />
         </>
       ) : null}
+      <Layer z={1.5}>
+        <FinalCard id="G07-1" height={2.5} position={[-6.2, -3.15, 0]} renderOrder={250} />
+        <FinalCard id="G07-2" height={2.5} position={[6.2, -3.15, 0]} renderOrder={250} />
+      </Layer>
     </>
   );
 };

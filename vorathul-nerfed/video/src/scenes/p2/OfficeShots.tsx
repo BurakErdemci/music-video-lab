@@ -6,6 +6,8 @@ import { DuotoneFlash, seeded, shake } from '../../vfx/effects.ts';
 import { UiFonts } from '../../ui/kit.ts';
 import { C } from '../../ui/theme.tsx';
 import { BigHand } from './art/hands.tsx';
+import { HandPiece } from './paint/handArt.tsx';
+import { finalSize } from './paint/finals.tsx';
 import { PadArt } from './art/props.tsx';
 import { ClickerArt } from './art/props.tsx';
 import { GamepadArt } from './art/gamepad.tsx';
@@ -181,7 +183,7 @@ export const S35 = ({ frame: f }: { frame: number }) => (
 
 // ---- S36 the pinch ---------------------------------------------------------------------------------------------------------
 
-const CLOSE_BAR: OfficeCam = { D: 6, tx: 5.3, ty: 2.9 };
+const CLOSE_BAR: OfficeCam = { D: 6, tx: 0.9, ty: 2.8 };
 /** Window px of the painting to screen px for the close camera (the painting plane). */
 const toScreen = (cam: OfficeCam, X: number, Y: number): [number, number] => {
   const s = scaleAt(cam, -20);
@@ -196,8 +198,18 @@ export const S36 = ({ frame: f }: { frame: number }) => {
     <Root>
       <OfficeScene frame={f} cam={CLOSE_BAR} paint={paintAt(f)} notes={notesAt(f)} />
       <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
-        <g transform={`translate(${sx + 380 * (1 - arrive)} ${sy + 420 * (1 - arrive)}) rotate(-138)`}>
-          <BigHand variant="pinch" size={330} pinch={1} sleeve={900} sleeveAngle={0} />
+        <g transform={`translate(${sx + 380 * (1 - arrive)} ${sy + 420 * (1 - arrive)})`}>
+          <HandPiece
+            variant="pinch"
+            height={430}
+            flip
+            sleeve={320}
+            fallback={
+              <g transform="rotate(-138)">
+                <BigHand variant="pinch" size={330} pinch={1} sleeve={900} sleeveAngle={0} />
+              </g>
+            }
+          />
         </g>
       </svg>
       <PatchCard frame={f} x={60} y={640} width={560} />
@@ -222,21 +234,40 @@ export const S40 = ({ frame: f }: { frame: number }) => {
             <rect x={-260} y={-260} width={520 * write} height={520} />
           </clipPath>
         </defs>
-        <g transform="translate(700 500)">
-          <PadArt size={420} peel={peel} />
-          <g clipPath="url(#p2write)">
-            <text x={-170} y={28} fontFamily="'UiInter', sans-serif" fontSize={96} fontWeight={700} fill={C.ink} fontStyle="italic">
-              Phase 3
-            </text>
-          </g>
-          <rect x={-190} y={-2} width={380 * cross} height={11} rx={5} fill={C.blue} />
-        </g>
-        <g transform="translate(700 712)">
-          <BigHand variant="pad" size={520} sleeve={900} sleeveAngle={-38} />
-        </g>
-        <g transform={`translate(${530 + 340 * write} ${520 + 8 * Math.sin(write * 9)})`}>
-          <BigHand variant="pen" size={380} sleeve={800} sleeveAngle={-18} flip />
-        </g>
+        {finalSize('G31-3') && finalSize('G31-4') ? (
+          <>
+            <g transform="translate(1010 560)">
+              <HandPiece variant="pad" height={620} sleeve={160} fallback={null} />
+              <g clipPath="url(#p2write)">
+                <text x={-130} y={28} fontFamily="'UiInter', sans-serif" fontSize={64} fontWeight={700} fill={C.ink} fontStyle="italic">
+                  Phase 3
+                </text>
+              </g>
+              <rect x={-140} y={-6} width={270 * cross} height={9} rx={4} fill={C.blue} />
+            </g>
+            <g transform={`translate(${1010 - 130 + 240 * write} ${560 + 34 + 6 * Math.sin(write * 9)})`}>
+              <HandPiece variant="pen" height={520} sleeve={120} fallback={null} />
+            </g>
+          </>
+        ) : (
+          <>
+            <g transform="translate(700 500)">
+              <PadArt size={420} peel={peel} />
+              <g clipPath="url(#p2write)">
+                <text x={-170} y={28} fontFamily="'UiInter', sans-serif" fontSize={96} fontWeight={700} fill={C.ink} fontStyle="italic">
+                  Phase 3
+                </text>
+              </g>
+              <rect x={-190} y={-2} width={380 * cross} height={11} rx={5} fill={C.blue} />
+            </g>
+            <g transform="translate(700 712)">
+              <BigHand variant="pad" size={520} sleeve={900} sleeveAngle={-38} />
+            </g>
+            <g transform={`translate(${530 + 340 * write} ${520 + 8 * Math.sin(write * 9)})`}>
+              <BigHand variant="pen" size={380} sleeve={800} sleeveAngle={-18} flip />
+            </g>
+          </>
+        )}
       </svg>
       <PatchCard frame={f} x={1300} y={640} width={560} />
     </Root>

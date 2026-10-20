@@ -1,7 +1,8 @@
 // A hero as the final cut-out (G15-G18 pose sheets, poses numbered in the storyboard's order) once the main loop has made
 // it live in AVAILABLE, else the code-drawn stand-in silhouette. The same call places both.
 import { staticFile } from 'remotion';
-import { AVAILABLE, assetSize } from '../../../cast/available.ts';
+import { assetSize } from '../../../cast/available.ts';
+import { finalSize } from './finals.tsx';
 import { Hero, type HeroKind, type HeroPose, type HeroProps } from '../art/heroes.tsx';
 
 const SHEET: Record<HeroKind, string> = { knight: 'G15', mage: 'G16', archer: 'G17', rogue: 'G18' };
@@ -17,7 +18,7 @@ const NUMBER: Record<HeroKind, Partial<Record<HeroPose, number>>> = {
 export const HeroPiece = (p: HeroProps) => {
   const id = `${SHEET[p.kind]}-${NUMBER[p.kind][p.pose] ?? 1}`;
   const size = assetSize(id);
-  if (!AVAILABLE.has(id) || !size) return <Hero {...p} />;
+  if (!finalSize(id) || !size) return <Hero {...p} />;
   const h = p.height * (p.pose === 'ko' || p.pose === 'pancake' ? 0.5 : 1);
   const w = (h * size[0]) / size[1];
   const flip = p.flip ? -1 : 1;

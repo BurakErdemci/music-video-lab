@@ -4,10 +4,12 @@
 import type { ReactNode } from 'react';
 import { StickyNote } from '../../../ui/kit.ts';
 import { C } from '../../../ui/theme.tsx';
-import { easeInQuad, ImpactBurst, InkSplash, Meteor, MissingTextureFillSafe, PaintSeep, seeded } from './fx.tsx';
-import { Dust, KoStars, type HeroKind, type HeroPose } from '../art/heroes.tsx';
+import { easeInQuad, ImpactBurst, InkSplash, MissingTextureFillSafe, PaintSeep, seeded } from './fx.tsx';
+import { KoStars, type HeroKind, type HeroPose } from '../art/heroes.tsx';
+import { LandingArt, RockArt } from './fxArt.tsx';
 import { HeroPiece } from './heroArt.tsx';
 import { BigHand } from '../art/hands.tsx';
+import { HandPiece } from './handArt.tsx';
 import { EraserArt } from '../art/props.tsx';
 import { BAR, CELLS, Caption, type HudState } from './hud.tsx';
 import { SHOT_FROM, T } from '../frames.ts';
@@ -247,7 +249,7 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
       <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={SVG_STYLE}>
         {rain
           ? [...fillers, ...landing, big].map((m) =>
-              f >= m.launch && f < m.launch + m.dur ? <Meteor key={m.seed} frame={f - m.launch} duration={m.dur} seed={m.seed} from={[...m.from]} to={[...m.to]} size={m.size} /> : null,
+              <RockArt key={m.seed} m={m} f={f} />,
             )
           : null}
         {landing.map((m) => {
@@ -255,7 +257,7 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
           return t >= 0 && t < 16 ? (
             <g key={`imp${m.seed}`}>
               <InkSplash frame={t} duration={16} seed={m.seed} x={m.to[0]} y={m.to[1] + 20} size={96} variant="violet" />
-              <Dust frame={t} x={m.to[0]} y={m.to[1] + 30} size={70} seed={m.seed} />
+              <LandingArt t={t} x={m.to[0]} y={m.to[1] + 30} seed={m.seed} />
             </g>
           ) : null;
         })}
@@ -285,13 +287,23 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
                 );
               }
               const t = f - m.launch;
-              return t >= 0 && t < m.dur ? <Meteor key={m.seed} frame={t} duration={m.dur} seed={m.seed} from={[...m.from]} to={[...m.to]} size={m.size} /> : null;
+              return <RockArt key={m.seed} m={m} f={f} />;
             })
           : null}
         {f >= T.removed + 18 && f < T.removed + 40 ? <Crumbs f={f} /> : null}
         {hand ? (
-          <g transform={`translate(${hand.x} ${hand.y}) rotate(${hand.rot})`}>
-            <BigHand variant="pinch" size={300} pinch={hand.pinch} sleeve={1100} sleeveAngle={0} />
+          <g transform={`translate(${hand.x} ${hand.y})`}>
+            <HandPiece
+              variant="pinch"
+              height={520}
+              rotate={180}
+              sleeve={520}
+              fallback={
+                <g transform={`rotate(${hand.rot})`}>
+                  <BigHand variant="pinch" size={300} pinch={hand.pinch} sleeve={1100} sleeveAngle={0} />
+                </g>
+              }
+            />
           </g>
         ) : null}
         {eraser ? (
