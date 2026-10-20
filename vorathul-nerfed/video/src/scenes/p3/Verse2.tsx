@@ -284,7 +284,8 @@ const C57 = at('s57-cut');
 const BOLT = at('s57-bolt');
 const TOG = at('s57-toggle');
 const GONE57 = at('s57-gone');
-const WIDE57: CameraPose = { position: [0, 2, 30], target: [0, 6, -15], fov: 40 };
+// Closer than WIDE and a nearer sky: the tilted-up view must stay inside the stage camera's far plane (200).
+const WIDE57: CameraPose = { position: [0, 2, 12], target: [0, 6, -15], fov: 40 };
 const CAM57: CameraPath = handheld((f) => turn(WIDE57, 0, keyed(f, [[C57, 30], [C57 + 22, 40]], easeOut)), { amp: 0.06, seed: 57 });
 const STORM = [...Array(9).keys()].map((i) => ({ x: 120 + i * 215 + ((i * 53) % 60), y: 120 + ((i * 97) % 300), w: 520 + ((i * 71) % 200) }));
 
@@ -304,7 +305,7 @@ export const S57 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM57}>
-        <Sky rect={[-260, -40, 260, 420]} />
+        <Sky rect={[-220, -40, 220, 240]} z={-68} />
         <Wall />
       </Stage>
       {storm ? (
