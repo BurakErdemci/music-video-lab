@@ -1,5 +1,8 @@
 // The office room used by the p5 shots: wall, ceiling, floor (gold tile wave), desks with monitors and chairs.
-import { Card, type Vec3 } from '../../../stage/Card.tsx';
+import { AssetCard } from '../../../cast/AssetCard.tsx';
+import { AVAILABLE } from '../../../cast/available.ts';
+import { PlateCard } from './PlateCard.tsx';
+import type { Vec3 } from '../../../stage/Card.tsx';
 import type { ReactNode } from 'react';
 import { Ceiling, Chair, Desk, Floor, LightStrip, Monitor3D, O, PaintDecal, Panel, Rect, Wall, PAINT_Z, WALL_Z } from './Office.tsx';
 import { OFFICE_FLOOR } from './vorathul.ts';
@@ -8,11 +11,11 @@ const F = OFFICE_FLOOR;
 const PLATE01 = '01-tarz-cizgi-roman.jpg';
 
 /** The office before the ruin: desks left and right, monitors, chairs, light strips. */
-export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true }: { wave?: number; centre?: [number, number]; desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean }) => {
+export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true, wallTop }: { wave?: number; centre?: [number, number]; desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number }) => {
   const D: Vec3[] = [[-11.5, F, -13], [-10.5, F, -6.5], [11.5, F, -13], [10.5, F, -6.5]];
   return (
     <>
-      <Wall />
+      <Wall top={wallTop} />
       <Ceiling hidden={!ceiling} />
       <Floor wave={wave} centre={centre} />
       {strips ? [-14, -4, 6].map((z, i) => <LightStrip key={i} at={[0, 4.9, z]} len={12} />) : null}
@@ -34,8 +37,16 @@ export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true }:
   );
 };
 
-/** The painted world behind the canvas, glimpsed through the breach (he comes from there). */
-export const Inside = () => <Card src={`plates/${PLATE01}`} width={33} height={22} position={[-1, 1, -27]} />;
+/** The empty painted world behind the breach. It must never show the old painting with him in it (he is out). */
+// L4-painting-empty is the drained cathedral with no figure; its 3:2 image is cropped to the 16:9 centre
+// (empty bands top and bottom). L3-wall-ruin stands in until it is live.
+export const EMPTY_PAINTING = 'L4-painting-empty';
+export const Inside = () =>
+  AVAILABLE.has(EMPTY_PAINTING) ? (
+    <PlateCard plate={`assets/${EMPTY_PAINTING}.png`} crop={[0, 80, 1536, 864]} width={26.7} height={15} position={[0, 0, -27]} />
+  ) : (
+    <AssetCard id="L3-wall-ruin" standIn={{ src: `plates/${PLATE01}` }} width={33} height={22} position={[-1, 1, -27]} />
+  );
 
 /** Paper patch-note print-outs pinned to the canvas rim (C40-style office paper). */
 export const PinnedCards = ({ at, scale, rot }: { at: (i: number) => Vec3; scale?: (i: number) => number; rot?: (i: number) => number }) => (
@@ -56,16 +67,20 @@ export const PinnedCards = ({ at, scale, rot }: { at: (i: number) => Vec3; scale
  * The office after the breakout: the floor is his gold tile, the empty frame shows his world, and ink and gold
  * paint run down the wall under the breach and pool on the floor. `extra` = shot props on the same stage.
  */
-export const AfterRoom = ({ desks, ceiling = true, strips = true, children }: { desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; children?: ReactNode }) => (
+export const AfterRoom = ({ desks, ceiling = true, strips = true, wallTop, floorPaint = true, topPaint = true, children }: { desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number; floorPaint?: boolean; topPaint?: boolean; children?: ReactNode }) => (
   <>
-    <Room wave={80} centre={[-3, -10]} desks={desks} ceiling={ceiling} strips={strips} />
+    <Room wave={80} centre={[-3, -10]} desks={desks} ceiling={ceiling} strips={strips} wallTop={wallTop} />
     <Inside />
     <PaintDecal at={[-5.5, -4.6, WALL_Z + 0.06]} w={7} h={5.5} seed={21} drips order={40} />
     <PaintDecal at={[4.5, -4.8, WALL_Z + 0.06]} w={6} h={5} seed={22} drips order={41} />
-    <PaintDecal at={[0.5, 5.6, WALL_Z + 0.06]} w={9} h={4} seed={23} order={42} />
-    <PaintDecal at={[-1.2, F + 0.02, -16.5]} rot={[-Math.PI / 2, 0, 0]} w={15} h={7} seed={92} order={43} />
-    <PaintDecal at={[-8.6, F + 0.03, -12.2]} rot={[-Math.PI / 2, 0, 0]} w={6.5} h={3.2} seed={93} order={44} />
-    <PaintDecal at={[7.6, F + 0.03, -12.6]} rot={[-Math.PI / 2, 0, 0]} w={6} h={3} seed={94} order={45} />
+    {topPaint ? <PaintDecal at={[0.5, 5.6, WALL_Z + 0.06]} w={9} h={4} seed={23} order={42} /> : null}
+    {floorPaint ? (
+      <>
+        <PaintDecal at={[-1.2, F + 0.02, -16.5]} rot={[-Math.PI / 2, 0, 0]} w={15} h={7} seed={92} order={43} />
+        <PaintDecal at={[-8.6, F + 0.03, -12.2]} rot={[-Math.PI / 2, 0, 0]} w={6.5} h={3.2} seed={93} order={44} />
+        <PaintDecal at={[7.6, F + 0.03, -12.6]} rot={[-Math.PI / 2, 0, 0]} w={6} h={3} seed={94} order={45} />
+      </>
+    ) : null}
     {children}
   </>
 );

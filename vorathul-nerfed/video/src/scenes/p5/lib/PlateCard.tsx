@@ -64,7 +64,8 @@ export interface PlateCardProps extends PlateCrop {
 
 /** One plate crop on the stage. Opaque with depth (keyed pixels are discarded), so it occludes like a real cut-out. */
 export const PlateCard = ({ plate, crop, keying = 'none', width, height, position, rotation, scale, renderOrder, hidden, flipX = false, tint = [1, 1, 1] }: PlateCardProps) => {
-  const texture = useCardTexture(`plates/${plate}`);
+  // `plate` is a file in public/plates/, or a public/assets/ path for a crop of a final image.
+  const texture = useCardTexture(plate.startsWith('assets/') ? plate : `plates/${plate}`);
   const [x, y, w, h] = crop;
   const rect: [number, number, number, number] = [x / SRC_W, 1 - (y + h) / SRC_H, (x + w) / SRC_W, 1 - y / SRC_H];
   const hh = height ?? (width * h) / w;

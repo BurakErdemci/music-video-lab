@@ -74,10 +74,9 @@ export const Floor = ({ wave = 0, centre = [0, -12] }: { wave?: number; centre?:
 };
 
 /** Back wall with a hole the size of the frame (the painting fills it), skirting, shelves and a window. */
-export const Wall = ({ hole = true, children }: { hole?: boolean; children?: ReactNode }) => {
+export const Wall = ({ hole = true, top = CEIL_Y, children }: { hole?: boolean; top?: number; children?: ReactNode }) => {
   const fw = CARD_W + 2 * FRAME_T;
   const fh = CARD_H + 2 * FRAME_T;
-  const top = CEIL_Y;
   const bot = OFFICE_FLOOR;
   const z = WALL_Z;
   return (
@@ -214,6 +213,14 @@ export const DEV_CROPS = {
   glasses: [0, 528, 238, 480] as [number, number, number, number],
   bun: [1300, 548, 236, 470] as [number, number, number, number],
 };
+
+/** G46: the drawn bored developer (storyboard 4), full figure cut-outs sized by height; ground point at the feet. */
+export type Dev46Pose = 'walk' | 'click' | 'bored' | 'tap' | 'pin' | 'dust' | 'glance' | 'sip' | 'spit';
+export const Dev46 = ({ pose, at, height = 3.4, flipX = false, order = 3000, rot }: { pose: Dev46Pose; at: Vec3; height?: number; flipX?: boolean; order?: number; rot?: Vec3 }) => (
+  <group position={at} rotation={rot}>
+    <Asset id={`G46-${pose}`} standIn={{ plate: OFFICE_PLATE, crop: DEV_CROPS.hoodie, keying: 'light' }} width={(height * 214) / 576} height={height} position={[0, height / 2, 0]} flipX={flipX} renderOrder={order} />
+  </group>
+);
 
 /** G41 poses (manifest labels): 1 front, 2 side, 3 tipped, 4 upside-down, 5 tilted-back, 6 spin-top. */
 export type ChairPose = 1 | 2 | 3 | 4 | 5 | 6;
