@@ -53,9 +53,9 @@ const SEGMENTS: { from: number; label: string }[] = [
   { from: 870, label: 'CrackGrow inside -> wall' },
   { from: 960, label: 'TimeRemap backward / 4x' },
   { from: 1020, label: 'grade V' },
-  { from: 1040, label: 'grade O-a (halftone)' },
-  { from: 1060, label: 'grade O-b (halftone + selection edge)' },
-  { from: 1080, label: 'grade O-c (MEMORY logic, office colours)' },
+  { from: 1040, label: 'grade O (= O-b: halftone + selection edge)' },
+  { from: 1060, label: 'grade O_A (alternative: no edge)' },
+  { from: 1080, label: 'grade O_C (alternative: MEMORY logic)' },
   { from: 1100, label: 'grade POSTER / GOLD' },
 ];
 
@@ -67,10 +67,10 @@ const DUOTONE = gradeCues(
     { at: { frame: 482 }, grade: 'V', hold: 8 },
     { at: { frame: 512 }, grade: 'GOLD' },
     { at: { frame: 522 }, grade: 'MEMORY', hold: 6 },
-    // O-a -> O-b keeps the same two colours (only the edge is added), so it is not a swing.
+    // O -> O_A keeps the same two colours (only the edge goes), so it is not a swing.
     { at: { frame: 1024 }, grade: 'V' },
     { at: { frame: 1040 }, grade: 'O' },
-    { at: { frame: 1060 }, grade: 'O_B' },
+    { at: { frame: 1060 }, grade: 'O_A' },
     { at: { frame: 1080 }, grade: 'O_C' },
     { at: { frame: 1100 }, grade: 'POSTER' },
     { at: { frame: 1116 }, grade: 'GOLD' },
