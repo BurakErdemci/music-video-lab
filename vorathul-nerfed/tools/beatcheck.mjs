@@ -94,7 +94,9 @@ for (const s of T.sections) {
     }
   }
   const limit = limitFor(s.name);
-  const bad = worst > limit + 1e-6;
+  // Events sit on whole frames, so a gap of exactly 2 beats measures 2.03-2.07 beats once both ends
+  // are rounded (storyboard 01 measurement). One frame of tolerance absorbs that rounding only.
+  const bad = worst > limit + 1 / FPS / T.beat_period;
   if (bad) violations.push(s.name);
   console.log(`${bad ? 'FAIL' : 'ok  '} ${s.name.padEnd(15)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(1).padStart(5)} beats (limit ${limit})  ${where}`);
 }
