@@ -4,7 +4,7 @@ import { AbsoluteFill, Img, staticFile } from 'remotion';
 import { handheld, tween, CLOSE, ECU, LOW, WIDE, type CameraPose } from '../../camera/api.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { beatFrame, TIMING } from '../../timing.ts';
-import { gradeCues, Meteor, seeded, Shards } from '../../vfx/effects.ts';
+import { gradeCues, Meteor, seeded, shake, Shards } from '../../vfx/effects.ts';
 import { at } from './events.ts';
 import { Caption, Glint, Hud, Panel, slamIn, type Impact } from './fx.tsx';
 import { Hero, type HeroKind } from './heroes.tsx';
@@ -110,46 +110,103 @@ const S20 = ({ frame }: { frame: number }) => {
 
 const S21_CRACK = at('s21-crack');
 const S21_WIDE = at('s21-widen');
-const S21_TL: Timeline = { keys: [{ at: 0, pose: { ...BOWED, head: [-2, 0.01] } as never, dur: 0 }] };
-const S21_CAM = handheld(tween({ ...ECU, position: [0, 10.4, -8.2] }, { ...ECU, position: [0, 10.3, -9.6] }, { start: S21_CRACK, frames: 28 }), { amp: 0.03, seed: 's21' });
+// The helm plate is drawn here in the shot's own pixels (not the rig's helm card), so the crack reads as a crack in
+// armour whatever the rig textures are: dark metal, a plate seam with rivets, the lit slit for scale, a jagged crack
+// that grows on the two hits with violet light leaking along it, chips flying off its tip.
+/** Locked camera: the stage is empty in this shot, the plate is drawn on screen. */
+const S21_CAM = (): CameraPose => ECU;
+const S21_RNG = seeded('p1-s21-crack');
+/** Trunk of the crack, top of the plate down towards the slit, in frame px; branches split off it. */
+const S21_TRUNK: [number, number][] = (() => {
+  const pts: [number, number][] = [[1010, 70]];
+  for (let i = 1; i <= 12; i++) pts.push([1010 + S21_RNG.range(-70, 70) - i * 6, 70 + i * 58]);
+  return pts;
+})();
+const S21_BRANCHES: { at: number; pts: [number, number][] }[] = [3, 6, 8, 10].map((k, j) => {
+  const o = S21_TRUNK[k] as [number, number];
+  const dir = j % 2 ? 1 : -1;
+  const pts: [number, number][] = [o];
+  for (let i = 1; i <= 4; i++) pts.push([o[0] + dir * i * S21_RNG.range(40, 70), o[1] + i * S21_RNG.range(10, 40)]);
+  return { at: k, pts };
+});
+const S21_RIVETS: [number, number][] = Array.from({ length: 13 }, (_, i) => [80 + i * 150, 250 + 40 * Math.sin(i * 0.5)] as [number, number]);
+const jag = (pts: readonly [number, number][]) => `M${pts.map(([x, y]) => `${x.toFixed(1)} ${y.toFixed(1)}`).join('L')}`;
+/** First n (fractional) points of a polyline. */
+const upTo = (pts: readonly [number, number][], n: number): [number, number][] => {
+  if (n <= 0) return [];
+  const k = Math.floor(n);
+  const out = pts.slice(0, Math.min(pts.length, k + 1));
+  const a = pts[k];
+  const b = pts[k + 1];
+  if (a && b && n > k) out.push([a[0] + (b[0] - a[0]) * (n - k), a[1] + (b[1] - a[1]) * (n - k)]);
+  return out;
+};
 
 const S21 = ({ frame }: { frame: number }) => {
-  const st = rigFor(S21_TL, frame);
-  const fk = rigFk(st);
-  const crackAt = rigWorld(st, fk, 'head', [0.02, 0.06]);
-  const stage = frame >= S21_WIDE ? 2 : 1;
+  const f2 = two(frame);
+  // trunk length: the hairline from S19 (3 segments), then grows on each hit
+  const len = 3 + 4.5 * outCubic(prog(f2, S21_CRACK, 6)) + 4.5 * outCubic(prog(f2, S21_WIDE, 6));
+  const trunk = upTo(S21_TRUNK, len);
+  const tip = trunk[trunk.length - 1] as [number, number];
+  const wide = frame >= S21_WIDE;
+  const glow = (wide ? 1 : 0.55) * (0.85 + 0.15 * Math.sin(f2 * 0.7));
+  const sh = [S21_CRACK, S21_WIDE].reduce((acc, h) => {
+    const q = shake(frame, h, 16, h, 14);
+    return { x: acc.x + q.x, y: acc.y + q.y };
+  }, { x: 0, y: 0 });
+  const push = lerp(1, 1.07, prog(frame, S21_CRACK, 28));
   const impacts: Impact[] = [
-    { at: S21_CRACK, size: 'small', point: crackAt, splash: null, burst: false, lines: null },
-    { at: S21_WIDE, size: 'small', point: crackAt, splash: null, burst: false, lines: null },
+    { at: S21_CRACK, size: 'small', point: { px: [tip[0], tip[1]] }, splash: null, burst: false, lines: null, push: false },
+    { at: S21_WIDE, size: 'small', point: { px: [tip[0], tip[1]] }, splash: null, burst: false, lines: null, push: false },
   ];
+  const branches = S21_BRANCHES.filter((b) => b.at < len - 0.5).map((b) => upTo(b.pts, Math.min(4, (len - b.at) * 1.4)));
+  const lines = [trunk, ...branches];
   return (
     <PaintingShot
       frame={frame} camera={S21_CAM} impacts={impacts}
-      stage={({ sil }) => (
-        <>
-          <World sil={sil} rayBend={12} cloudShift={7} near={false} />
-          <Vorathul state={st} frame={frame} crack={stage} />
-        </>
-      )}
-      overlay={({ pose }) => {
-        const f2 = two(frame);
-        const c = project(pose, crackAt);
-        const leak = prog(f2, S21_WIDE, 14);
-        const rng = seeded(`p1-leak:${Math.floor(f2 / 2)}`);
-        return (
+      stage={() => null}
+      overlay={() => (
+        <AbsoluteFill style={{ transform: `translate(${sh.x}px, ${sh.y}px) scale(${push})` }}>
           <Overlay>
-            {leak > 0
-              ? Array.from({ length: 7 }, (_, i) => {
-                  const a = -Math.PI / 2 + (i - 3) * 0.42 + rng.range(-0.05, 0.05);
-                  const L = c.s * (0.25 + 0.55 * outCubic(leak)) * rng.range(0.7, 1.2);
-                  const w = 0.06 + 0.04 * rng();
-                  return <path key={i} d={`M${c.x} ${c.y}L${c.x + Math.cos(a - w * 0.5) * L} ${c.y + Math.sin(a - w * 0.5) * L}L${c.x + Math.cos(a + w * 0.5) * L} ${c.y + Math.sin(a + w * 0.5) * L}Z`} fill={i % 2 ? VIOLET : VIOLET_LIGHT} />;
-                })
-              : null}
-            <Glint frame={frame} at={S21_WIDE} x={c.x} y={c.y} size={c.s * 0.3} hold />
+            <defs>
+              <filter id="p1-s21-glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="16" /></filter>
+              <filter id="p1-s21-glow2" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="5" /></filter>
+              <linearGradient id="p1-s21-metal" x1="0" y1="0" x2="1" y2="1">
+                <stop offset="0" stopColor="#2E2A25" /><stop offset="0.5" stopColor="#141210" /><stop offset="1" stopColor="#24201C" />
+              </linearGradient>
+            </defs>
+            {/* the face plate, a sheen of reflected gold along its upper edge, the plate seam and rivets */}
+            <rect x={-60} y={-60} width={2040} height={1200} fill="url(#p1-s21-metal)" />
+            {/* the brow plate above the seam is a separate, lighter-lit piece of armour */}
+            <path d="M-60 -60 H1980 V200 Q 960 120 -60 200 Z" fill="#3A342D" />
+            <path d="M-60 200 Q 960 120 1980 200" fill="none" stroke={GOLD} strokeWidth={9} />
+            <path d="M-60 222 Q 960 145 1980 222" fill="none" stroke={INK} strokeWidth={22} />
+            {/* centre ridge of the face plate, lit on one side */}
+            <path d="M940 240 L900 1100" stroke="#3A342D" strokeWidth={34} />
+            <path d="M958 240 L918 1100" stroke={GOLD} strokeWidth={4} opacity={0.7} />
+            {S21_RIVETS.map(([x, y], i) => (
+              <g key={i}>
+                <circle cx={x} cy={y - 4} r={24} fill="#3A342D" stroke={INK} strokeWidth={6} />
+                <path d={`M${x - 15} ${y - 14} A 18 18 0 0 1 ${x + 8} ${y - 22}`} fill="none" stroke={GOLD} strokeWidth={5} />
+              </g>
+            ))}
+            {Array.from({ length: 9 }, (_, i) => <path key={i} d={`M${120 + i * 210} 320 L${80 + i * 210} 1080`} stroke="#141210" strokeWidth={26} opacity={0.8} />)}
+            {/* the slit, lit, at the bottom of the frame */}
+            <path d="M380 820 L1540 790 L1540 850 L380 870 Z" fill={INK} />
+            <path d="M420 825 L1500 800 L1500 845 L420 862 Z" fill={VIOLET} />
+            <path d="M520 832 L1400 812 L1400 832 L520 848 Z" fill={VIOLET_LIGHT} />
+            {/* light leaking out along the crack: wide soft glow, a tighter glow, the bright core, then the dark lip */}
+            {lines.map((l, i) => <path key={`g${i}`} d={jag(l)} fill="none" stroke={VIOLET} strokeWidth={(i ? 34 : 70) * glow} strokeLinecap="round" strokeLinejoin="round" opacity={0.6} filter="url(#p1-s21-glow)" />)}
+            {lines.map((l, i) => <path key={`h${i}`} d={jag(l)} fill="none" stroke={VIOLET} strokeWidth={(i ? 10 : 22) * glow} strokeLinecap="round" strokeLinejoin="round" filter="url(#p1-s21-glow2)" />)}
+            {lines.map((l, i) => <path key={`c${i}`} d={jag(l)} fill="none" stroke={wide ? IVORY : VIOLET_LIGHT} strokeWidth={i ? 3 : 6} strokeLinecap="round" strokeLinejoin="round" />)}
+            {lines.map((l, i) => <path key={`e${i}`} d={jag(l.map(([x, y]) => [x + 7, y + 3] as [number, number]))} fill="none" stroke="#000000" strokeWidth={i ? 3 : 5} strokeLinecap="round" />)}
           </Overlay>
-        );
-      }}
+          {/* chips flying off the crack tip on each hit */}
+          {[S21_CRACK, S21_WIDE].map((h, i) => (
+            <Shards key={i} frame={f2 - h} duration={16} seed={2110 + i} origin={tip} count={16} size={18} speed={24} direction={-Math.PI / 2 + (i ? 0.5 : -0.5)} spread={1.8} gravity={2} fills={['#2A2622', '#1C1A18', VIOLET]} />
+          ))}
+        </AbsoluteFill>
+      )}
     />
   );
 };
