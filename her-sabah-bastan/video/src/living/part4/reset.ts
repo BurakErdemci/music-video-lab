@@ -7,6 +7,7 @@ import { paintLayers } from '../compose2d.ts';
 import { LIFT_PAD, paintDust, paintSky, paintSteam, type HairOpts } from '../life.ts';
 import * as P1 from '../part1/shots.ts';
 import * as CODA from './coda.ts';
+import { screenReset, type ScreenSet } from './halftoneReset.ts';
 import {
   beatPhase, canvasLayer, charLayer, easeInOut, getImg, placeAt, pose, sec, sine, span, sp, spriteUrls, url,
   type Cam, type Layer, type Painter, type Rect, type Shot,
@@ -63,7 +64,10 @@ const CAM_LOOP: Cam = { x: SCREEN_MID[0], y: SCREEN_MID[1], z: 165 }; // = Part 
 const typedCount = (f: number): number => (f >= FLASH_AT + FLASH_UP - 1 ? 0 : Math.min(WORD.length, Math.max(0, Math.floor((f - F_TYPE) / TYPE_STEP) + 1)));
 const flashAt = (f: number): number => (f < FLASH_AT ? 0 : f < FLASH_AT + FLASH_UP ? (f - FLASH_AT + 1) / FLASH_UP : 1 - easeInOut(span(f, FLASH_AT + FLASH_UP, FLASH_AT + FLASH_UP + FLASH_DOWN)));
 const FLASH_END = FLASH_AT + FLASH_UP + FLASH_DOWN;
-const paintScreen = (f: number) => (ctx: CanvasRenderingContext2D): void => {
+const paintScreen = (f: number, ht = false) => (ctx: CanvasRenderingContext2D): void => {
+  // TRIAL: the halftone reset replaces the white flash (only the *Halftone compositions pass ht)
+  const halftone = ht ? screenReset(f, SCREEN_SET) : undefined;
+  if (halftone) return halftone(ctx);
   const n = typedCount(f);
   const { c, u, v } = SCREEN_FRAME;
   const left = -(P1_WORD_LEN / 2) * ADVANCE * FONT_PX * SCR_RES;
@@ -97,6 +101,20 @@ const paintScreen = (f: number) => (ctx: CanvasRenderingContext2D): void => {
     ctx.fill();
     ctx.restore();
   }
+};
+
+const SCREEN_SET: ScreenSet = {
+  get quad() {
+    return SCREEN_Q.map((q) => [(q[0] - SCR_BOX.x0) * SCR_RES, (q[1] - SCR_BOX.y0) * SCR_RES] as const);
+  },
+  u: SCREEN_FRAME.u,
+  v: SCREEN_FRAME.v,
+  content: (g) => paintScreen(g),
+  get desk() {
+    return getImg(P1.url('desk2'));
+  },
+  deskW: DESK_META.w,
+  box: SCR_BOX,
 };
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -154,7 +172,7 @@ const seatedRect = (name: string): Rect => {
 /** Life clock: continues through the shot, then eases back to 0 so the dust equals Part 1's t = 0 on the loop frame. */
 const lifeT = (f: number): number => sec(f - F_ROOM) * (1 - easeInOut(span(f, F_PUSH, F_END)));
 
-const roomLayers = (f: number): Layer[] => {
+const roomLayers = (f: number, ht = false): Layer[] => {
   const t = lifeT(f);
   const book = f >= F_BOOK && f < FLASH_AT + FLASH_UP - 1;
   const name = book ? pose('h-desk-book') : 'h-mug2';
@@ -220,7 +238,7 @@ const roomLayers = (f: number): Layer[] => {
     }),
     { id: 'desk', src: { kind: 'image', url: P1.url('desk2') }, d: D_DESK, ...DESK_W },
     ...wash.filter((l) => l.id === 'veil-b'),
-    canvasLayer('screen', 'screen', Math.round((SCR_BOX.x1 - SCR_BOX.x0) * SCR_RES), Math.round((SCR_BOX.y1 - SCR_BOX.y0) * SCR_RES), D_DESK, scrW, paintScreen(f)),
+    canvasLayer('screen', 'screen', Math.round((SCR_BOX.x1 - SCR_BOX.x0) * SCR_RES), Math.round((SCR_BOX.y1 - SCR_BOX.y0) * SCR_RES), D_DESK, scrW, paintScreen(f, ht)),
     ...front,
     canvasLayer('dust', 'desk-dust', 1400, 900, D_DUST, placeAt({ x: 200, y: -100, w: 1700, h: 1100 }, D_DUST), (ctx, cw, ch) => paintDust(ctx, cw, ch, t, 'desk-dust', 30), { opacity: 0.75 }),
   );
@@ -257,10 +275,10 @@ const codaPainter = (f: number): Painter => {
 
 export const RESET_IMAGES: readonly string[] = [P1.url('room-morning'), P1.url('desk2'), ...spriteUrls(['h-mug2', pose('h-desk-book')]), url('h-mug2')];
 
-export const resetShot = (f: number): Shot => {
+export const resetShot = (f: number, ht = false): Shot => {
   if (f < F_ROOM) {
     return { kind: 'gl', fx: 'squeegee', p: printP(f), seconds: (F_ROOM - F_PRINT) / 30, time: (f - F_PRINT) / 30, from: codaPainter(f), to: roomPainter(f) };
   }
-  return { kind: 'stage', layers: roomLayers(f), cam: camAt(f) };
+  return { kind: 'stage', layers: roomLayers(f, ht), cam: camAt(f) };
 };
 void LOOP_AT;

@@ -7,7 +7,7 @@ import { Part2Scene } from './living/part2/Part2Scene.tsx';
 import { SONG_END as P2_END, SONG_START as P2_START } from './living/part2/shots.ts';
 import { Part3Scene } from './living/part3/Part3Scene.tsx';
 import { PART3_AT60_FRAMES, Part3At60 } from './living/fps60/Part3At60.tsx';
-import { PART4A_FRAMES, PART4B_FRAMES, Part4aScene, Part4bScene } from './living/part4/Part4Scene.tsx';
+import { PART4A_FRAMES, PART4B_FRAMES, Part4aHalftoneScene, Part4aScene, Part4bHalftoneScene, Part4bScene } from './living/part4/Part4Scene.tsx';
 import { FPS } from './timing.ts';
 import { H, W } from './layout.ts';
 import './style/fonts.ts';
@@ -21,6 +21,8 @@ export const LivingRoot = () => (
     <Composition id="Part2" component={Part2Scene} durationInFrames={P2_END - P2_START} fps={FPS} width={W} height={H} />
     <Composition id="Part4a" component={Part4aScene} durationInFrames={PART4A_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Part4b" component={Part4bScene} durationInFrames={PART4B_FRAMES} fps={FPS} width={W} height={H} />
+    <Composition id="Part4aHalftone" component={Part4aHalftoneScene} durationInFrames={PART4A_FRAMES} fps={FPS} width={W} height={H} />
+    <Composition id="Part4bHalftone" component={Part4bHalftoneScene} durationInFrames={PART4B_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Part3" component={Part3Scene} durationInFrames={4676 - 3340} fps={FPS} width={W} height={H} />
     <Composition id="Part3At60" component={Part3At60} durationInFrames={PART3_AT60_FRAMES} fps={60} width={W} height={H} />
   </>

@@ -50,6 +50,7 @@ import {
   TALLY_BOX,
   D_SKYROOM,
 } from './splitSet.ts';
+import { herSideReset } from './halftoneReset.ts';
 import { paintHerMark, paintBubble, paintSpread, paintTallyPop, palmsScreen, picPxOf, picScale, spreadCracks, trembleAt, TALLY_CANVAS } from './glassBFx.ts';
 
 const T = {
@@ -297,11 +298,13 @@ const layersOf = (f: number, v: View): { layers: Layer[]; cam: Cam } => {
 const rekey = (ls: Layer[], s: string): Layer[] => ls.map((l) => (l.src.kind === 'canvas' ? { ...l, src: { ...l.src, key: l.src.key + s } } : l));
 
 /** The plain picture at song frame f (no transition); the coda's shatter starts from glassBStage(6395). */
-export const glassBStage = (f: number): StageShot => {
+export const glassBStage = (f: number, ht = false): StageShot => {
   const v = viewAt(f);
   const { layers, cam } = layersOf(f, v);
   let overlay: Painter | undefined;
-  if (v.kind === 'day' && v.i >= 0) {
+  // TRIAL: the halftone reset replaces the white flash (only the *Halftone compositions pass ht)
+  if (ht) overlay = herSideReset(f, layers, cam, '');
+  else if (v.kind === 'day' && v.i >= 0) {
     const k = f - ((DAY_STARTS[v.i] as number) + PULL_LEN(v.i));
     if (k >= 0 && k < FLASH) {
       const sx = 960 + (SEAM - cam.x) * (1000 / (cam.z + 0));
@@ -317,13 +320,20 @@ export const glassBStage = (f: number): StageShot => {
   return { kind: 'stage', layers, cam, overlay };
 };
 
-const stageAs = (f: number, v: View, suffix: string): Painter => {
+const stageAs = (f: number, v: View, suffix: string, ht = false): Painter => {
   const { layers, cam } = layersOf(f, v);
   const ls = rekey(layers, suffix);
+  const her = ht ? herSideReset(f, ls, cam, suffix) : undefined;
+  if (her) {
+    return (ctx, w, h) => {
+      paintLayers(ctx, ls, cam, f, w, h);
+      her(ctx, w, h);
+    };
+  }
   return (ctx, w, h) => paintLayers(ctx, ls, cam, f, w, h);
 };
 
-export const glassBShot = (f: number): Shot => {
+export const glassBShot = (f: number, ht = false): Shot => {
   if (f >= T.days && f < T.merhaba) {
     const i = viewAt(f).kind === 'day' ? (viewAt(f) as { i: number }).i : 0;
     const k = f - (DAY_STARTS[i] as number);
@@ -336,12 +346,12 @@ export const glassBShot = (f: number): Shot => {
         p: (k + 1) / (len + 1),
         seconds: len / 30,
         time: k / 30,
-        from: stageAs(f, i === 0 ? ({ kind: 'press' } as View) : prev, ':from'),
-        to: stageAs(f, { kind: 'day', i }, ':to'),
+        from: stageAs(f, i === 0 ? ({ kind: 'press' } as View) : prev, ':from', ht),
+        to: stageAs(f, { kind: 'day', i }, ':to', ht),
       };
       return g;
     }
   }
-  return glassBStage(f);
+  return glassBStage(f, ht);
 };
 

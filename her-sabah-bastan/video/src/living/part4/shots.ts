@@ -28,11 +28,12 @@ export const SCENE_STARTS = {
   reset: ev('SqueegeePrint in white'),
 } as const;
 
-export const shotAt = (f: number): Shot => {
+/** `ht` turns on the halftone-reset TRIAL (glassB's days montage and the reset room's screen); off in Part4a/Part4b. */
+export const shotAt = (f: number, ht = false): Shot => {
   if (f < SCENE_STARTS.flood) return runShot(f);
   if (f < SCENE_STARTS.glassA) return floodShot(f);
   if (f < SCENE_STARTS.glassB) return glassAShot(f);
-  if (f < SCENE_STARTS.coda) return glassBShot(f);
+  if (f < SCENE_STARTS.coda) return glassBShot(f, ht);
   if (f < SCENE_STARTS.reset) return codaShot(f);
-  return resetShot(f);
+  return resetShot(f, ht);
 };

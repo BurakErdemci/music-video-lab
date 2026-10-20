@@ -30,9 +30,9 @@ const Gl = ({ s }: { s: GlShot }) => {
  * Part4 (song 2:35.88-4:00.76) as two compositions (Part4a from song 4676, Part4b from 6396). Every frame has at most
  * ONE WebGL canvas: the stage (ThreeStage), a print transition (both sides as 2D painters) or the shatter's canvas.
  */
-const Inner = ({ start }: { start: number }) => {
+const Inner = ({ start, ht }: { start: number; ht: boolean }) => {
   const f = start + useCurrentFrame();
-  const shot = shotAt(f);
+  const shot = shotAt(f, ht);
   return (
     <AbsoluteFill style={{ backgroundColor: palette.navy }}>
       {shot.kind === 'stage' && <ThreeStage layers={shot.layers} cam={shot.cam} frame={f} />}
@@ -46,12 +46,12 @@ const Inner = ({ start }: { start: number }) => {
   );
 };
 
-const scene = (start: number) => {
+const scene = (start: number, ht = false) => {
   const Scene = () => {
     if (!useImagesReady(IMAGE_URLS)) return null;
     return (
       <>
-        <Inner start={start} />
+        <Inner start={start} ht={ht} />
         <Audio src={staticFile('her-sabah-bastan.wav')} trimBefore={start} />
       </>
     );
@@ -60,5 +60,8 @@ const scene = (start: number) => {
 };
 export const Part4aScene = scene(4676);
 export const Part4bScene = scene(SPLIT_AT);
+// TRIAL: the same two halves with the halftone reset in place of the white reset flashes.
+export const Part4aHalftoneScene = scene(4676, true);
+export const Part4bHalftoneScene = scene(SPLIT_AT, true);
 export const PART4A_FRAMES = SPLIT_AT - 4676;
 export const PART4B_FRAMES = SONG_END - SPLIT_AT;
