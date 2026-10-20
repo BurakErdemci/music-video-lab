@@ -10,13 +10,13 @@ clip root (the parent of tools/):
   video/public/assets/office-plate.png  full-frame plate, copied unchanged
   video/public/rig/drawn/<id>.png       rig sheets: keyed but neither split nor cropped (the canvas
                                         stays registered so the rig lane can map parts across views)
-  video/public/assets/manifest.json     id -> files, sizes, pose count
+  video/public/assets/manifest.json     id -> files, sizes, count, count_source (merged with the existing file)
   video/out/cutout-contact*.jpg         contact sheets on dark / light backgrounds
 
 Keying: the background colour is measured from the image border, then flood-filled from every border
 pixel with a tolerance; enclosed key-coloured holes above HOLE_MIN px are removed too. Edge pixels
 are then pulled to the nearest interior colour (despill), the mask is eroded 1 px and feathered 1 px.
-A pose sheet whose figure count differs from POSES is NOT written; the sheet is reported instead.
+A pose sheet whose figure count differs from SPLITS is NOT written; the sheet is reported instead.
 """
 import argparse
 import json
@@ -32,11 +32,29 @@ ROOT = Path(__file__).resolve().parents[2]
 ASSETS = ROOT / "video" / "public" / "assets"
 RIG = ROOT / "video" / "public" / "rig" / "drawn"
 OUT = ROOT / "video" / "out"
-DEFAULT_ROUNDS = ["a-canonical-fix", "b-test", "c1-rig-master", "c2-rig-views"]
+DEFAULT_ROUNDS = ["a-canonical-fix", "b-test", "c1-rig-master", "c2-rig-views", "d-assets"]
 
-# Pose counts named by the storyboard asset tables / prompts ("seven separate poses", "two halves").
-POSES = {"G15": 7, "G16": 7, "G17": 7, "G18": 7, "G32": 7, "G11": 2}
-PLATES = {"office-plate"}
+# Item counts (and ordered labels where the text names them) taken from the storyboard asset tables and
+# prompts. COMPONENTS ids name no count: they split by components and the found count is recorded.
+SPLITS = {
+    "G15": (7, None), "G16": (7, None), "G17": (7, None), "G18": (7, None), "G32": (7, None),
+    "G11": (2, ["helm-left", "helm-right"]),
+    "G02": (5, None), "G05": (3, None), "G07": (2, ["group-left", "group-right"]), "G08": (3, None),
+    "G09": (2, ["pillar-left", "pillar-right"]),
+    "G12": (6, ["fist-grip-hilt", "palm-swat", "pinch-hood", "point", "flat-brush", "fist-frustrated"]),
+    "G19": (8, None), "G20": (4, None), "G21": (4, None),
+    "G22": (3, ["bolt", "beam", "sigil"]), "G23": (10, None), "G24": (5, None),
+    "G25": (3, ["cap-left", "segment", "cap-right"]),
+    "G28": (2, ["desk-left", "desk-right"]), "G29": (2, ["plant", "desk-corner"]),
+    "G30": (9, ["head-bored", "head-yawn", "torso", "upper-arm-L", "upper-arm-R", "forearm-L",
+                "forearm-R", "legs-standing", "legs-step"]),
+    "G31": (6, ["pinch", "grip", "pad", "pen", "thumbs-up", "dust"]),
+    "G33": (2, ["boot-side", "boot-sole"]), "G34": (12, None),
+    "G36": (4, ["banner-1", "banner-2", "banner-3", "steps"]),
+    "G38": (3, ["hunched", "cheering", "laughing"]), "G41": (6, ["front", "side", "tipped", "upside-down",
+                                                                  "tilted-back", "spin-top"]),
+}
+COMPONENTS = {"G39"}
 REFERENCE_ONLY = {"canon-sheet", "office-frame"}
 
 FLOOD_TOL = 42        # max channel distance from the measured background for the border flood fill
@@ -150,13 +168,53 @@ def split_figures(alpha, expect):
             keep = [int(i) + 1 for i in order[:expect]]
             return merge(lab, n, keep), expect, "components+islands"
     lab1, n1 = lab, n
-    for r in (4, 8, 12, 18, 26, 36, 50):
+    for r in (4, 8, 12, 18, 26, 36, 50, 70, 90, 120):
         grown = ndi.binary_dilation(solid, structure=ndi.generate_binary_structure(2, 2), iterations=r)
         gl, gn = ndi.label(grown, structure=np.ones((3, 3)))
         if gn == expect:
             out = np.where(solid, gl, 0)
             return out, gn, f"dilate-{r}"
+    # items laid out in one row whose parts sit one above the other (frame rails): group by x-range overlap
+    areas = ndi.sum(solid, lab, index=np.arange(1, n + 1))
+    comps = [i + 1 for i, a in enumerate(areas) if a >= 0.01 * areas.max()]
+    boxes = {c: ndi.find_objects((lab == c).astype(int))[0][1] for c in comps}
+    group = {c: c for c in comps}
+
+    def root(c):
+        while group[c] != c:
+            c = group[c]
+        return c
+    for a_ in comps:
+        for b_ in comps:
+            lo, hi = max(boxes[a_].start, boxes[b_].start), min(boxes[a_].stop, boxes[b_].stop)
+            if a_ < b_ and hi - lo > 0.5 * min(boxes[a_].stop - boxes[a_].start, boxes[b_].stop - boxes[b_].start):
+                group[root(b_)] = root(a_)
+    roots = sorted({root(c) for c in comps})
+    if len(roots) == expect:
+        remap = np.zeros(n + 1, dtype=int)
+        for c in comps:
+            remap[c] = roots.index(root(c)) + 1
+        grouped = remap[lab]
+        _, idx = ndi.distance_transform_edt(grouped == 0, return_indices=True)
+        out = grouped[idx[0], idx[1]]
+        out[~solid] = 0
+        return out, expect, "xrange"
     return lab1, n1, "unresolved"
+
+
+def split_components(alpha, share=0.15):
+    """No named count: figures are the components of at least `share` of the largest; the rest join the nearest."""
+    solid = alpha > 0.5
+    lab, n = ndi.label(solid, structure=np.ones((3, 3)))
+    areas = ndi.sum(solid, lab, index=np.arange(1, n + 1))
+    keep = [i + 1 for i, a in enumerate(areas) if a >= share * areas.max()]
+    _, idx = ndi.distance_transform_edt(~np.isin(lab, keep), return_indices=True)
+    filled = lab[idx[0], idx[1]]
+    filled[~solid] = 0
+    out = np.zeros_like(lab)
+    for new, old in enumerate(keep, 1):
+        out[filled == old] = new
+    return out, len(keep)
 
 
 def order_figures(lab, n):
@@ -193,10 +251,9 @@ def stats(rgba):
     return round(100 * float((a == 0).mean()), 1)
 
 
-def contact(files, path_base):
+def contact(files, path_base, th=360):
     """Contact sheets of every cut-out on dark / light backgrounds (thumbnails 360 px tall)."""
     OUT.mkdir(parents=True, exist_ok=True)
-    th = 360
     thumbs = []
     for name, f in files:
         im = Image.open(f).convert("RGBA")
@@ -253,7 +310,7 @@ def main():
     ASSETS.mkdir(parents=True, exist_ok=True)
     RIG.mkdir(parents=True, exist_ok=True)
 
-    manifest, report, produced = {}, [], []
+    manifest, report, produced, produced_d = {}, [], [], []
     for rnd in args.rounds.split(","):
         entries = json.loads((ROOT / "stil" / "prompts" / rnd / "round.json").read_text("utf-8"))
         for e in entries:
@@ -267,18 +324,15 @@ def main():
             if i in REFERENCE_ONLY:
                 report.append({"id": i, "status": "reference-only"})
                 continue
-            if i in PLATES:
+            if not e.get("key"):
                 dst = ASSETS / f"{i}.png"
                 shutil.copyfile(src, dst)
                 im = Image.open(dst)
                 manifest[i] = {"kind": "plate", "files": [f"assets/{dst.name}"], "sizes": [list(im.size)],
-                               "poses": 1, "mode": im.mode}
+                               "poses": 1, "count": 1, "count_source": "plate", "mode": im.mode}
                 report.append({"id": i, "status": "plate-copied", "mode": im.mode, "size": im.size})
                 continue
-            key = e.get("key")
-            if not key:
-                report.append({"id": i, "status": "no-key-skipped"})
-                continue
+            key = e["key"]
             im = Image.open(src)
             rgb, alpha = key_alpha(im, key)
             bg = measure_bg(np.asarray(im.convert("RGB")), key)
@@ -294,10 +348,17 @@ def main():
                            transparent_pct=stats(sheet), mode=sheet.mode)
                 report.append(rec)
                 continue
-            expect = POSES.get(i)
+            expect, labels = SPLITS.get(i, (None, None))
+            source = "storyboard"
+            if i in COMPONENTS:
+                lab0, expect = split_components(alpha)
+                labels, source = None, "components"
+                if i == "G39" and expect == 12:   # grid read row by row: 4 poses x 3 developers (bored, glasses, bun)
+                    labels = [f"{pose}-{dev}" for pose in ("run", "under-desk", "cower", "spit-take")
+                              for dev in ("bored", "glasses", "bun")]
             files, sizes, res, halo, tp = [], [], 0, 0, []
             if expect:
-                lab, n, method = split_figures(alpha, expect)
+                lab, n, method = (lab0, expect, "components") if source == "components" else split_figures(alpha, expect)
                 rec.update(expected=expect, found=n, method=method)
                 if n != expect:
                     rec.update(status="COUNT-MISMATCH-NOT-WRITTEN", poses=n)
@@ -328,14 +389,31 @@ def main():
                 sizes.insert(0, list(whole.size))
                 r = residue(whole, key, bg); res += r[0]; halo += r[1]
                 tp.insert(0, stats(whole))
-            manifest[i] = {"kind": "poses" if expect else "single", "files": files, "sizes": sizes,
-                           "poses": expect or 1, "mode": "RGBA"}
+            manifest[i] = {"kind": "items" if expect else "single", "files": files, "sizes": sizes,
+                           "poses": expect or 1, "count": expect or 1,
+                           "count_source": source if expect else "single", "mode": "RGBA"}
+            if labels:
+                manifest[i]["labels"] = labels
+                if i == "G11":
+                    manifest[i]["sheet"] = files.pop(0)
+                    sizes.pop(0)
             rec.update(status="ok", files=files, poses=expect or 1, residue=res, halo=halo, transparent_pct=tp, mode="RGBA")
             report.append(rec)
 
-    (ASSETS / "manifest.json").write_text(json.dumps(manifest, indent=2), "utf-8")
+    mpath = ASSETS / "manifest.json"
+    merged = json.loads(mpath.read_text("utf-8")) if mpath.exists() else {}
+    merged.update(manifest)
+    text = json.dumps(merged, indent=2)
+    mpath.write_text(text, "utf-8")
+    cast = ROOT / "video" / "src" / "cast"
+    cast.mkdir(parents=True, exist_ok=True)
+    (cast / "assets-manifest.json").write_text(text, "utf-8")
     if produced:
         contact([(n, p) for n, p in produced], OUT / "cutout-contact")
+    d_ids = {e["id"] for e in json.loads((ROOT / "stil/prompts/d-assets/round.json").read_text("utf-8"))}
+    dfiles = [(n, p) for n, p in produced if n.split("-")[0] in d_ids]
+    if dfiles:
+        contact(dfiles, OUT / "cutout-contact-d", th=300)
     json.dump(report, sys.stdout, indent=1, default=str)
     print()
 

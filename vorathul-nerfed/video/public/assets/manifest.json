@@ -1,4 +1,1039 @@
 {
+  "G02": {
+    "kind": "items",
+    "files": [
+      "assets/G02-1.png",
+      "assets/G02-2.png",
+      "assets/G02-3.png",
+      "assets/G02-4.png",
+      "assets/G02-5.png"
+    ],
+    "sizes": [
+      [
+        545,
+        430
+      ],
+      [
+        594,
+        308
+      ],
+      [
+        423,
+        399
+      ],
+      [
+        783,
+        388
+      ],
+      [
+        734,
+        347
+      ]
+    ],
+    "poses": 5,
+    "count": 5,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G03": {
+    "kind": "single",
+    "files": [
+      "assets/G03.png"
+    ],
+    "sizes": [
+      [
+        1522,
+        962
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G04a": {
+    "kind": "single",
+    "files": [
+      "assets/G04a.png"
+    ],
+    "sizes": [
+      [
+        1023,
+        1514
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G04b": {
+    "kind": "single",
+    "files": [
+      "assets/G04b.png"
+    ],
+    "sizes": [
+      [
+        948,
+        1337
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G05": {
+    "kind": "items",
+    "files": [
+      "assets/G05-1.png",
+      "assets/G05-2.png",
+      "assets/G05-3.png"
+    ],
+    "sizes": [
+      [
+        1514,
+        199
+      ],
+      [
+        1515,
+        206
+      ],
+      [
+        1515,
+        210
+      ]
+    ],
+    "poses": 3,
+    "count": 3,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G07": {
+    "kind": "items",
+    "files": [
+      "assets/G07-1.png",
+      "assets/G07-2.png"
+    ],
+    "sizes": [
+      [
+        629,
+        518
+      ],
+      [
+        629,
+        518
+      ]
+    ],
+    "poses": 2,
+    "count": 2,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "group-left",
+      "group-right"
+    ]
+  },
+  "G08": {
+    "kind": "items",
+    "files": [
+      "assets/G08-1.png",
+      "assets/G08-2.png",
+      "assets/G08-3.png"
+    ],
+    "sizes": [
+      [
+        362,
+        985
+      ],
+      [
+        372,
+        984
+      ],
+      [
+        368,
+        986
+      ]
+    ],
+    "poses": 3,
+    "count": 3,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G09": {
+    "kind": "items",
+    "files": [
+      "assets/G09-1.png",
+      "assets/G09-2.png"
+    ],
+    "sizes": [
+      [
+        409,
+        1519
+      ],
+      [
+        409,
+        1519
+      ]
+    ],
+    "poses": 2,
+    "count": 2,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "pillar-left",
+      "pillar-right"
+    ]
+  },
+  "G10": {
+    "kind": "single",
+    "files": [
+      "assets/G10.png"
+    ],
+    "sizes": [
+      [
+        1517,
+        627
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G12": {
+    "kind": "items",
+    "files": [
+      "assets/G12-1.png",
+      "assets/G12-2.png",
+      "assets/G12-3.png",
+      "assets/G12-4.png",
+      "assets/G12-5.png",
+      "assets/G12-6.png"
+    ],
+    "sizes": [
+      [
+        426,
+        548
+      ],
+      [
+        478,
+        544
+      ],
+      [
+        479,
+        416
+      ],
+      [
+        455,
+        304
+      ],
+      [
+        547,
+        292
+      ],
+      [
+        324,
+        382
+      ]
+    ],
+    "poses": 6,
+    "count": 6,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "fist-grip-hilt",
+      "palm-swat",
+      "pinch-hood",
+      "point",
+      "flat-brush",
+      "fist-frustrated"
+    ]
+  },
+  "G13": {
+    "kind": "single",
+    "files": [
+      "assets/G13.png"
+    ],
+    "sizes": [
+      [
+        1024,
+        981
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G19": {
+    "kind": "items",
+    "files": [
+      "assets/G19-1.png",
+      "assets/G19-2.png",
+      "assets/G19-3.png",
+      "assets/G19-4.png",
+      "assets/G19-5.png",
+      "assets/G19-6.png",
+      "assets/G19-7.png",
+      "assets/G19-8.png"
+    ],
+    "sizes": [
+      [
+        451,
+        489
+      ],
+      [
+        414,
+        501
+      ],
+      [
+        335,
+        467
+      ],
+      [
+        457,
+        484
+      ],
+      [
+        319,
+        368
+      ],
+      [
+        482,
+        253
+      ],
+      [
+        337,
+        467
+      ],
+      [
+        322,
+        336
+      ]
+    ],
+    "poses": 8,
+    "count": 8,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G20": {
+    "kind": "items",
+    "files": [
+      "assets/G20-1.png",
+      "assets/G20-2.png",
+      "assets/G20-3.png",
+      "assets/G20-4.png"
+    ],
+    "sizes": [
+      [
+        378,
+        459
+      ],
+      [
+        375,
+        479
+      ],
+      [
+        384,
+        480
+      ],
+      [
+        374,
+        459
+      ]
+    ],
+    "poses": 4,
+    "count": 4,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G21": {
+    "kind": "items",
+    "files": [
+      "assets/G21-1.png",
+      "assets/G21-2.png",
+      "assets/G21-3.png",
+      "assets/G21-4.png"
+    ],
+    "sizes": [
+      [
+        671,
+        534
+      ],
+      [
+        678,
+        500
+      ],
+      [
+        638,
+        511
+      ],
+      [
+        657,
+        538
+      ]
+    ],
+    "poses": 4,
+    "count": 4,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G22": {
+    "kind": "items",
+    "files": [
+      "assets/G22-1.png",
+      "assets/G22-2.png",
+      "assets/G22-3.png"
+    ],
+    "sizes": [
+      [
+        533,
+        240
+      ],
+      [
+        202,
+        975
+      ],
+      [
+        672,
+        802
+      ]
+    ],
+    "poses": 3,
+    "count": 3,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "bolt",
+      "beam",
+      "sigil"
+    ]
+  },
+  "G23": {
+    "kind": "items",
+    "files": [
+      "assets/G23-1.png",
+      "assets/G23-2.png",
+      "assets/G23-3.png",
+      "assets/G23-4.png",
+      "assets/G23-5.png",
+      "assets/G23-6.png",
+      "assets/G23-7.png",
+      "assets/G23-8.png",
+      "assets/G23-9.png",
+      "assets/G23-10.png"
+    ],
+    "sizes": [
+      [
+        374,
+        321
+      ],
+      [
+        199,
+        382
+      ],
+      [
+        345,
+        344
+      ],
+      [
+        188,
+        383
+      ],
+      [
+        343,
+        302
+      ],
+      [
+        297,
+        322
+      ],
+      [
+        342,
+        277
+      ],
+      [
+        206,
+        345
+      ],
+      [
+        340,
+        224
+      ],
+      [
+        298,
+        323
+      ]
+    ],
+    "poses": 10,
+    "count": 10,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G24": {
+    "kind": "items",
+    "files": [
+      "assets/G24-1.png",
+      "assets/G24-2.png",
+      "assets/G24-3.png",
+      "assets/G24-4.png",
+      "assets/G24-5.png"
+    ],
+    "sizes": [
+      [
+        290,
+        461
+      ],
+      [
+        302,
+        365
+      ],
+      [
+        256,
+        552
+      ],
+      [
+        314,
+        378
+      ],
+      [
+        246,
+        443
+      ]
+    ],
+    "poses": 5,
+    "count": 5,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G25": {
+    "kind": "items",
+    "files": [
+      "assets/G25-1.png",
+      "assets/G25-2.png",
+      "assets/G25-3.png"
+    ],
+    "sizes": [
+      [
+        333,
+        282
+      ],
+      [
+        631,
+        153
+      ],
+      [
+        399,
+        241
+      ]
+    ],
+    "poses": 3,
+    "count": 3,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "cap-left",
+      "segment",
+      "cap-right"
+    ]
+  },
+  "G28": {
+    "kind": "items",
+    "files": [
+      "assets/G28-1.png",
+      "assets/G28-2.png"
+    ],
+    "sizes": [
+      [
+        573,
+        612
+      ],
+      [
+        558,
+        596
+      ]
+    ],
+    "poses": 2,
+    "count": 2,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "desk-left",
+      "desk-right"
+    ]
+  },
+  "G29": {
+    "kind": "items",
+    "files": [
+      "assets/G29-1.png",
+      "assets/G29-2.png"
+    ],
+    "sizes": [
+      [
+        517,
+        780
+      ],
+      [
+        465,
+        619
+      ]
+    ],
+    "poses": 2,
+    "count": 2,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "plant",
+      "desk-corner"
+    ]
+  },
+  "G30": {
+    "kind": "items",
+    "files": [
+      "assets/G30-1.png",
+      "assets/G30-2.png",
+      "assets/G30-3.png",
+      "assets/G30-4.png",
+      "assets/G30-5.png",
+      "assets/G30-6.png",
+      "assets/G30-7.png",
+      "assets/G30-8.png",
+      "assets/G30-9.png"
+    ],
+    "sizes": [
+      [
+        218,
+        248
+      ],
+      [
+        219,
+        249
+      ],
+      [
+        380,
+        367
+      ],
+      [
+        139,
+        210
+      ],
+      [
+        139,
+        210
+      ],
+      [
+        102,
+        309
+      ],
+      [
+        102,
+        309
+      ],
+      [
+        331,
+        562
+      ],
+      [
+        528,
+        519
+      ]
+    ],
+    "poses": 9,
+    "count": 9,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "head-bored",
+      "head-yawn",
+      "torso",
+      "upper-arm-L",
+      "upper-arm-R",
+      "forearm-L",
+      "forearm-R",
+      "legs-standing",
+      "legs-step"
+    ]
+  },
+  "G31": {
+    "kind": "items",
+    "files": [
+      "assets/G31-1.png",
+      "assets/G31-2.png",
+      "assets/G31-3.png",
+      "assets/G31-4.png",
+      "assets/G31-5.png",
+      "assets/G31-6.png"
+    ],
+    "sizes": [
+      [
+        386,
+        300
+      ],
+      [
+        350,
+        308
+      ],
+      [
+        382,
+        326
+      ],
+      [
+        387,
+        309
+      ],
+      [
+        350,
+        344
+      ],
+      [
+        469,
+        392
+      ]
+    ],
+    "poses": 6,
+    "count": 6,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "pinch",
+      "grip",
+      "pad",
+      "pen",
+      "thumbs-up",
+      "dust"
+    ]
+  },
+  "G33": {
+    "kind": "items",
+    "files": [
+      "assets/G33-1.png",
+      "assets/G33-2.png"
+    ],
+    "sizes": [
+      [
+        1007,
+        972
+      ],
+      [
+        371,
+        985
+      ]
+    ],
+    "poses": 2,
+    "count": 2,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "boot-side",
+      "boot-sole"
+    ]
+  },
+  "G34": {
+    "kind": "items",
+    "files": [
+      "assets/G34-1.png",
+      "assets/G34-2.png",
+      "assets/G34-3.png",
+      "assets/G34-4.png",
+      "assets/G34-5.png",
+      "assets/G34-6.png",
+      "assets/G34-7.png",
+      "assets/G34-8.png",
+      "assets/G34-9.png",
+      "assets/G34-10.png",
+      "assets/G34-11.png",
+      "assets/G34-12.png"
+    ],
+    "sizes": [
+      [
+        184,
+        364
+      ],
+      [
+        190,
+        420
+      ],
+      [
+        179,
+        367
+      ],
+      [
+        168,
+        367
+      ],
+      [
+        209,
+        364
+      ],
+      [
+        185,
+        369
+      ],
+      [
+        175,
+        370
+      ],
+      [
+        194,
+        370
+      ],
+      [
+        336,
+        296
+      ],
+      [
+        329,
+        327
+      ],
+      [
+        274,
+        302
+      ],
+      [
+        352,
+        289
+      ]
+    ],
+    "poses": 12,
+    "count": 12,
+    "count_source": "storyboard",
+    "mode": "RGBA"
+  },
+  "G35a": {
+    "kind": "single",
+    "files": [
+      "assets/G35a.png"
+    ],
+    "sizes": [
+      [
+        1013,
+        1482
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G35b": {
+    "kind": "single",
+    "files": [
+      "assets/G35b.png"
+    ],
+    "sizes": [
+      [
+        1024,
+        1536
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "G36": {
+    "kind": "items",
+    "files": [
+      "assets/G36-1.png",
+      "assets/G36-2.png",
+      "assets/G36-3.png",
+      "assets/G36-4.png"
+    ],
+    "sizes": [
+      [
+        497,
+        564
+      ],
+      [
+        656,
+        589
+      ],
+      [
+        516,
+        591
+      ],
+      [
+        1482,
+        414
+      ]
+    ],
+    "poses": 4,
+    "count": 4,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "banner-1",
+      "banner-2",
+      "banner-3",
+      "steps"
+    ]
+  },
+  "G38": {
+    "kind": "items",
+    "files": [
+      "assets/G38-1.png",
+      "assets/G38-2.png",
+      "assets/G38-3.png"
+    ],
+    "sizes": [
+      [
+        473,
+        470
+      ],
+      [
+        454,
+        576
+      ],
+      [
+        489,
+        474
+      ]
+    ],
+    "poses": 3,
+    "count": 3,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "hunched",
+      "cheering",
+      "laughing"
+    ]
+  },
+  "G39": {
+    "kind": "items",
+    "files": [
+      "assets/G39-1.png",
+      "assets/G39-2.png",
+      "assets/G39-3.png",
+      "assets/G39-4.png",
+      "assets/G39-5.png",
+      "assets/G39-6.png",
+      "assets/G39-7.png",
+      "assets/G39-8.png",
+      "assets/G39-9.png",
+      "assets/G39-10.png",
+      "assets/G39-11.png",
+      "assets/G39-12.png"
+    ],
+    "sizes": [
+      [
+        335,
+        283
+      ],
+      [
+        329,
+        288
+      ],
+      [
+        302,
+        273
+      ],
+      [
+        337,
+        217
+      ],
+      [
+        332,
+        217
+      ],
+      [
+        335,
+        218
+      ],
+      [
+        187,
+        239
+      ],
+      [
+        184,
+        234
+      ],
+      [
+        180,
+        243
+      ],
+      [
+        330,
+        254
+      ],
+      [
+        336,
+        256
+      ],
+      [
+        324,
+        246
+      ]
+    ],
+    "poses": 12,
+    "count": 12,
+    "count_source": "components",
+    "mode": "RGBA",
+    "labels": [
+      "run-bored",
+      "run-glasses",
+      "run-bun",
+      "under-desk-bored",
+      "under-desk-glasses",
+      "under-desk-bun",
+      "cower-bored",
+      "cower-glasses",
+      "cower-bun",
+      "spit-take-bored",
+      "spit-take-glasses",
+      "spit-take-bun"
+    ]
+  },
+  "G41": {
+    "kind": "items",
+    "files": [
+      "assets/G41-1.png",
+      "assets/G41-2.png",
+      "assets/G41-3.png",
+      "assets/G41-4.png",
+      "assets/G41-5.png",
+      "assets/G41-6.png"
+    ],
+    "sizes": [
+      [
+        333,
+        431
+      ],
+      [
+        312,
+        431
+      ],
+      [
+        456,
+        333
+      ],
+      [
+        342,
+        400
+      ],
+      [
+        405,
+        415
+      ],
+      [
+        385,
+        376
+      ]
+    ],
+    "poses": 6,
+    "count": 6,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "front",
+      "side",
+      "tipped",
+      "upside-down",
+      "tilted-back",
+      "spin-top"
+    ]
+  },
   "office-plate": {
     "kind": "plate",
     "files": [
@@ -11,10 +1046,12 @@
       ]
     ],
     "poses": 1,
+    "count": 1,
+    "count_source": "plate",
     "mode": "RGB"
   },
   "G15": {
-    "kind": "poses",
+    "kind": "items",
     "files": [
       "assets/G15-1.png",
       "assets/G15-2.png",
@@ -55,10 +1092,12 @@
       ]
     ],
     "poses": 7,
+    "count": 7,
+    "count_source": "storyboard",
     "mode": "RGBA"
   },
   "G16": {
-    "kind": "poses",
+    "kind": "items",
     "files": [
       "assets/G16-1.png",
       "assets/G16-2.png",
@@ -99,10 +1138,12 @@
       ]
     ],
     "poses": 7,
+    "count": 7,
+    "count_source": "storyboard",
     "mode": "RGBA"
   },
   "G17": {
-    "kind": "poses",
+    "kind": "items",
     "files": [
       "assets/G17-1.png",
       "assets/G17-2.png",
@@ -143,10 +1184,12 @@
       ]
     ],
     "poses": 7,
+    "count": 7,
+    "count_source": "storyboard",
     "mode": "RGBA"
   },
   "G18": {
-    "kind": "poses",
+    "kind": "items",
     "files": [
       "assets/G18-1.png",
       "assets/G18-2.png",
@@ -187,20 +1230,17 @@
       ]
     ],
     "poses": 7,
+    "count": 7,
+    "count_source": "storyboard",
     "mode": "RGBA"
   },
   "G11": {
-    "kind": "poses",
+    "kind": "items",
     "files": [
-      "assets/G11.png",
       "assets/G11-1.png",
       "assets/G11-2.png"
     ],
     "sizes": [
-      [
-        1444,
-        961
-      ],
       [
         609,
         953
@@ -211,7 +1251,14 @@
       ]
     ],
     "poses": 2,
-    "mode": "RGBA"
+    "count": 2,
+    "count_source": "storyboard",
+    "mode": "RGBA",
+    "labels": [
+      "helm-left",
+      "helm-right"
+    ],
+    "sheet": "assets/G11.png"
   },
   "G42": {
     "kind": "single",
@@ -225,6 +1272,8 @@
       ]
     ],
     "poses": 1,
+    "count": 1,
+    "count_source": "single",
     "mode": "RGBA"
   },
   "G43": {
@@ -239,6 +1288,8 @@
       ]
     ],
     "poses": 1,
+    "count": 1,
+    "count_source": "single",
     "mode": "RGBA"
   },
   "G44": {
@@ -253,6 +1304,8 @@
       ]
     ],
     "poses": 1,
+    "count": 1,
+    "count_source": "single",
     "mode": "RGBA"
   },
   "G45": {
@@ -267,10 +1320,12 @@
       ]
     ],
     "poses": 1,
+    "count": 1,
+    "count_source": "single",
     "mode": "RGBA"
   },
   "G32": {
-    "kind": "poses",
+    "kind": "items",
     "files": [
       "assets/G32-1.png",
       "assets/G32-2.png",
@@ -311,6 +1366,8 @@
       ]
     ],
     "poses": 7,
+    "count": 7,
+    "count_source": "storyboard",
     "mode": "RGBA"
   },
   "rig-M": {
@@ -396,5 +1453,117 @@
     ],
     "poses": 1,
     "mode": "RGBA"
+  },
+  "G01": {
+    "kind": "plate",
+    "files": [
+      "assets/G01.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "G06": {
+    "kind": "plate",
+    "files": [
+      "assets/G06.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "G14": {
+    "kind": "plate",
+    "files": [
+      "assets/G14.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "G26": {
+    "kind": "plate",
+    "files": [
+      "assets/G26.png"
+    ],
+    "sizes": [
+      [
+        1024,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGBA"
+  },
+  "G27": {
+    "kind": "plate",
+    "files": [
+      "assets/G27.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "G37": {
+    "kind": "plate",
+    "files": [
+      "assets/G37.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "G40": {
+    "kind": "plate",
+    "files": [
+      "assets/G40.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
   }
 }
