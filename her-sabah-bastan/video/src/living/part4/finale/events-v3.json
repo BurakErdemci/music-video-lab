@@ -1,0 +1,22 @@
+{
+ "_doc": "Part4bV3 (the new finale) events in song frames; timeline.ts holds the same frames. Used by scripts/living-checks.mjs.",
+ "songStart": 6396,
+ "songEnd": 7223,
+ "events": [
+  { "f": 6396, "name": "SHATTER: deliberate hard cut, the flight through the shards", "on": "downbeat", "kind": "cut" },
+  { "f": 6451, "name": "the camera passes the glass plane", "on": "downbeat", "kind": "soft" },
+  { "f": 6506, "name": "step 1: wide, they step closer", "on": "downbeat", "kind": "cut" },
+  { "f": 6562, "name": "step 2: his medium, cream dots", "on": "downbeat", "kind": "cut" },
+  { "f": 6617, "name": "step 3: her medium, navy dots", "on": "downbeat", "kind": "cut" },
+  { "f": 6672, "name": "step 4: wide, the gap small", "on": "downbeat", "kind": "cut" },
+  { "f": 6727, "name": "step 5: the hands, the imprint gathers", "on": "downbeat", "kind": "cut" },
+  { "f": 6782, "name": "UNION: palms meet, flash, the bus heart grows into one moon-yellow field", "on": "downbeat", "kind": "cut" },
+  { "f": 6837, "name": "SqueegeePrint in white: the reset", "on": "downbeat", "kind": "soft" },
+  { "f": 6864, "name": "squeegee lands: the room; the yellow drains into the screen", "on": "beat", "kind": "soft" },
+  { "f": 7067, "name": "Merhaba. types itself on his screen", "on": "none", "kind": "soft" },
+  { "f": 7112, "name": "he opens the notebook", "on": "downbeat", "kind": "cut" },
+  { "f": 7139, "name": "push into the screen", "on": "beat", "kind": "soft" },
+  { "f": 7167, "name": "the screen flash; the yellow cursor stays", "on": "beat", "kind": "cut" },
+  { "f": 7222, "name": "loop: last frame = Part1 frame 468 with a yellow cursor", "on": "none", "kind": "soft" }
+ ]
+}
