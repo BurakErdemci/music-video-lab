@@ -195,6 +195,10 @@ const paintFingerPose = (f: number, unit: number): HTMLCanvasElement => {
   }
   return off;
 };
+/** Head centres (sprite px, measured on the drawings' widest head row) of a-finger and a-reach, and the length of her move into the reach. */
+const FINGER_HEAD: [number, number] = [249, 94];
+const REACH_HEAD: [number, number] = [460, 92];
+const REACH_MOVE = 26;
 const aiPlateRect = (n: AiPose, f: number): Rect => {
   const m = sp(n);
   const s = aiScale(n);
@@ -205,7 +209,16 @@ const aiPlateRect = (n: AiPose, f: number): Rect => {
     const note = pt(n, 'note');
     const nx = glassLeftX(560) - 70;
     const ny = 548;
-    return { x: nx - (note[0] as number) * s, y: ny - (note[1] as number) * s, w: m.w * s, h: m.h * s };
+    const rest = { x: nx - (note[0] as number) * s, y: ny - (note[1] as number) * s };
+    // she starts the reach where the heart-drawing pose left her (head centre matched, same head size), then moves
+    // there as one body over REACH_MOVE frames (a beat is 14), so the pose cut is not a teleport
+    const fp = fingerPose(F.reach);
+    const fs = aiScale('a-finger');
+    const hx = fp.ox + (FINGER_HEAD[0] + fp.rig.b[0]) * fs;
+    const hy = fp.oy + (FINGER_HEAD[1] + fp.rig.b[1]) * fs;
+    const from = { x: hx - REACH_HEAD[0] * s, y: hy - REACH_HEAD[1] * s };
+    const u = sine(span(f, F.reach, F.reach + REACH_MOVE));
+    return { x: from.x + (rest.x - from.x) * u, y: from.y + (rest.y - from.y) * u, w: m.w * s, h: m.h * s };
   }
   return { x: BACK_X - (bb[2] as number) * s, y: SIT_Y - (bb[3] as number) * s, w: m.w * s, h: m.h * s };
 };
