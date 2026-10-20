@@ -5,7 +5,7 @@ Run (from anywhere):
 Needs the Kenney CC0 packs unzipped under KENNEY_DIR, one dir per pack (impact-sounds, interface-sounds,
 ui-audio, rpg-audio, sci-fi-sounds; URLs in sfx/candidates/SOURCES.md) and audio/Vorathul.Nerfed.wav
 (gitignored, from the vorathul-audio-input release). Reads the song, never modifies it.
-Everything is mono: mono halves the WAV size and the video mix places it itself.
+Candidates are mono (halves the WAV size; the video mix places them); the song in previews stays stereo.
 Outputs in sfx/candidates/: <id>.wav (alone, peak -6 dBFS), <id>-song.mp3 (~6 s of the song with the
 candidate mixed in at its gain), manifest.json, index.html, SOURCES.md, _measurements.json.
 """
@@ -24,7 +24,8 @@ T = json.load(open(f"{CLIP}/data/timing.json"))
 
 song, _sr = sf.read(SONG, always_2d=True)
 assert _sr == SR
-song = song.mean(1)
+song_st = song
+song = song.mean(1)    # mono copy for level measurement; previews keep the song stereo
 
 
 # ---------------------------------------------------------------- helpers
@@ -359,10 +360,10 @@ def render(sl, c):
     end = len(song) / SR
     a = max(0.0, sl["anchors"][0] - sl["win"][0]); b = min(end, sl["anchors"][-1] + sl["win"][1])
     if sl["code"] == "L": b = end; a = end - 6.0
-    seg = song[int(a * SR):int(b * SR)].copy(); m = seg.copy()
+    seg = song_st[int(a * SR):int(b * SR)].copy(); m = seg.copy()
     s = int((sl["anchors"][0] - a) * SR) - lead
     add = alone * 10 ** (gain / 20); lo = max(0, -s); hi = min(len(add), len(m) - s)
-    m[s + lo:s + hi] += add[lo:hi]
+    m[s + lo:s + hi] += add[lo:hi, None]
     return dict(alone=alone, gain=gain, a=a, b=b, seg=seg, mix=m, ref_db=ref_db, sfx_db=sfx_db, lead=lead, t0=t0, dur=len(tr) / SR)
 
 def main():

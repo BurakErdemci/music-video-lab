@@ -1,273 +1,273 @@
 [
  {
   "id": "A1",
-  "event_mean_song": -22.5,
-  "event_mean_mix": -22.4,
-  "delta_mean": 0.1,
-  "event_max_song": -7.1,
-  "event_max_mix": -5.2,
-  "excerpt_max_mix": -5.2
+  "event_mean_song": -21.3,
+  "event_mean_mix": -21.3,
+  "delta_mean": 0.0,
+  "event_max_song": -6.7,
+  "event_max_mix": -4.5,
+  "excerpt_max_mix": -4.5
  },
  {
   "id": "A2",
-  "event_mean_song": -22.4,
-  "event_mean_mix": -22.4,
-  "delta_mean": 0.0,
-  "event_max_song": -7.1,
-  "event_max_mix": -7.1,
-  "excerpt_max_mix": -7.1
+  "event_mean_song": -21.3,
+  "event_mean_mix": -21.2,
+  "delta_mean": 0.1,
+  "event_max_song": -6.7,
+  "event_max_mix": -6.7,
+  "excerpt_max_mix": -6.7
  },
  {
   "id": "A3",
-  "event_mean_song": -22.5,
-  "event_mean_mix": -22.5,
+  "event_mean_song": -21.3,
+  "event_mean_mix": -21.3,
   "delta_mean": 0.0,
-  "event_max_song": -7.1,
-  "event_max_mix": -7.1,
-  "excerpt_max_mix": -7.1
+  "event_max_song": -6.7,
+  "event_max_mix": -6.7,
+  "excerpt_max_mix": -6.7
  },
  {
   "id": "A4",
-  "event_mean_song": -22.4,
-  "event_mean_mix": -22.4,
-  "delta_mean": 0.0,
-  "event_max_song": -7.1,
-  "event_max_mix": -6.9,
-  "excerpt_max_mix": -6.9
+  "event_mean_song": -21.3,
+  "event_mean_mix": -21.2,
+  "delta_mean": 0.1,
+  "event_max_song": -6.7,
+  "event_max_mix": -6.0,
+  "excerpt_max_mix": -6.0
  },
  {
   "id": "A5",
-  "event_mean_song": -22.4,
-  "event_mean_mix": -22.4,
+  "event_mean_song": -21.2,
+  "event_mean_mix": -21.2,
   "delta_mean": 0.0,
-  "event_max_song": -7.1,
-  "event_max_mix": -7.1,
-  "excerpt_max_mix": -7.1
+  "event_max_song": -6.7,
+  "event_max_mix": -6.7,
+  "excerpt_max_mix": -6.7
  },
  {
   "id": "B1",
-  "event_mean_song": -21.8,
-  "event_mean_mix": -21.7,
+  "event_mean_song": -21.2,
+  "event_mean_mix": -21.1,
   "delta_mean": 0.1,
-  "event_max_song": -6.0,
-  "event_max_mix": -6.0,
-  "excerpt_max_mix": -6.0
+  "event_max_song": -5.8,
+  "event_max_mix": -5.8,
+  "excerpt_max_mix": -5.8
  },
  {
   "id": "B2",
-  "event_mean_song": -21.5,
-  "event_mean_mix": -21.5,
-  "delta_mean": 0.0,
-  "event_max_song": -6.0,
-  "event_max_mix": -6.0,
-  "excerpt_max_mix": -6.0
+  "event_mean_song": -21.0,
+  "event_mean_mix": -20.9,
+  "delta_mean": 0.1,
+  "event_max_song": -5.8,
+  "event_max_mix": -5.8,
+  "excerpt_max_mix": -5.8
  },
  {
   "id": "B3",
-  "event_mean_song": -21.8,
-  "event_mean_mix": -21.7,
-  "delta_mean": 0.1,
-  "event_max_song": -6.6,
-  "event_max_mix": -6.6,
-  "excerpt_max_mix": -6.0
+  "event_mean_song": -21.3,
+  "event_mean_mix": -21.1,
+  "delta_mean": 0.2,
+  "event_max_song": -6.2,
+  "event_max_mix": -6.2,
+  "excerpt_max_mix": -5.8
  },
  {
   "id": "B4",
-  "event_mean_song": -21.8,
-  "event_mean_mix": -21.7,
+  "event_mean_song": -21.1,
+  "event_mean_mix": -21.0,
   "delta_mean": 0.1,
-  "event_max_song": -6.6,
-  "event_max_mix": -6.1,
-  "excerpt_max_mix": -6.0
+  "event_max_song": -6.2,
+  "event_max_mix": -5.9,
+  "excerpt_max_mix": -5.8
  },
  {
   "id": "B5",
-  "event_mean_song": -21.8,
-  "event_mean_mix": -21.7,
+  "event_mean_song": -21.2,
+  "event_mean_mix": -21.1,
   "delta_mean": 0.1,
-  "event_max_song": -6.6,
-  "event_max_mix": -5.9,
-  "excerpt_max_mix": -5.9
+  "event_max_song": -6.2,
+  "event_max_mix": -5.7,
+  "excerpt_max_mix": -5.7
  },
  {
   "id": "C1",
-  "event_mean_song": -32.0,
-  "event_mean_mix": -30.4,
+  "event_mean_song": -31.9,
+  "event_mean_mix": -30.3,
   "delta_mean": 1.6,
-  "event_max_song": -10.6,
-  "event_max_mix": -10.6,
+  "event_max_song": -9.9,
+  "event_max_mix": -9.9,
   "excerpt_max_mix": -5.4
  },
  {
   "id": "C2",
-  "event_mean_song": -51.7,
-  "event_mean_mix": -34.7,
-  "delta_mean": 17.0,
-  "event_max_song": -38.5,
-  "event_max_mix": -19.6,
+  "event_mean_song": -48.0,
+  "event_mean_mix": -34.6,
+  "delta_mean": 13.4,
+  "event_max_song": -33.8,
+  "event_max_mix": -19.4,
   "excerpt_max_mix": -5.4
  },
  {
   "id": "C3",
-  "event_mean_song": -52.1,
-  "event_mean_mix": -34.0,
-  "delta_mean": 18.1,
-  "event_max_song": -38.5,
-  "event_max_mix": -26.8,
+  "event_mean_song": -48.3,
+  "event_mean_mix": -33.9,
+  "delta_mean": 14.4,
+  "event_max_song": -33.8,
+  "event_max_mix": -25.4,
   "excerpt_max_mix": -5.4
  },
  {
   "id": "C4",
-  "event_mean_song": -33.4,
-  "event_mean_mix": -31.7,
+  "event_mean_song": -33.3,
+  "event_mean_mix": -31.6,
   "delta_mean": 1.7,
-  "event_max_song": -10.6,
-  "event_max_mix": -10.6,
+  "event_max_song": -9.9,
+  "event_max_mix": -9.9,
   "excerpt_max_mix": -5.4
  },
  {
   "id": "C5",
-  "event_mean_song": -50.7,
-  "event_mean_mix": -33.4,
-  "delta_mean": 17.3,
-  "event_max_song": -38.5,
-  "event_max_mix": -20.8,
+  "event_mean_song": -47.0,
+  "event_mean_mix": -33.3,
+  "delta_mean": 13.7,
+  "event_max_song": -33.8,
+  "event_max_mix": -20.4,
   "excerpt_max_mix": -5.4
  },
  {
   "id": "D1",
-  "event_mean_song": -23.4,
-  "event_mean_mix": -23.3,
-  "delta_mean": 0.1,
-  "event_max_song": -8.9,
-  "event_max_mix": -8.9,
-  "excerpt_max_mix": -5.0
+  "event_mean_song": -23.2,
+  "event_mean_mix": -23.2,
+  "delta_mean": 0.0,
+  "event_max_song": -8.4,
+  "event_max_mix": -8.4,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "D2",
-  "event_mean_song": -26.0,
-  "event_mean_mix": -25.9,
-  "delta_mean": 0.1,
-  "event_max_song": -8.9,
-  "event_max_mix": -9.1,
-  "excerpt_max_mix": -5.0
+  "event_mean_song": -25.8,
+  "event_mean_mix": -25.6,
+  "delta_mean": 0.2,
+  "event_max_song": -8.4,
+  "event_max_mix": -8.6,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "D3",
-  "event_mean_song": -23.6,
-  "event_mean_mix": -23.4,
+  "event_mean_song": -23.5,
+  "event_mean_mix": -23.3,
   "delta_mean": 0.2,
-  "event_max_song": -8.9,
-  "event_max_mix": -8.7,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.4,
+  "event_max_mix": -8.2,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "D4",
-  "event_mean_song": -23.4,
-  "event_mean_mix": -23.3,
+  "event_mean_song": -23.3,
+  "event_mean_mix": -23.2,
   "delta_mean": 0.1,
-  "event_max_song": -8.9,
-  "event_max_mix": -8.8,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.4,
+  "event_max_mix": -8.3,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "D5",
-  "event_mean_song": -26.0,
-  "event_mean_mix": -25.9,
+  "event_mean_song": -25.7,
+  "event_mean_mix": -25.6,
   "delta_mean": 0.1,
-  "event_max_song": -8.9,
-  "event_max_mix": -8.9,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.4,
+  "event_max_mix": -8.4,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "E1",
-  "event_mean_song": -23.6,
-  "event_mean_mix": -23.4,
+  "event_mean_song": -23.5,
+  "event_mean_mix": -23.3,
   "delta_mean": 0.2,
-  "event_max_song": -9.0,
-  "event_max_mix": -9.0,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.6,
+  "event_max_mix": -8.6,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "E2",
-  "event_mean_song": -23.0,
-  "event_mean_mix": -22.9,
+  "event_mean_song": -22.9,
+  "event_mean_mix": -22.8,
   "delta_mean": 0.1,
-  "event_max_song": -9.0,
-  "event_max_mix": -7.3,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.6,
+  "event_max_mix": -7.0,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "E3",
-  "event_mean_song": -23.1,
-  "event_mean_mix": -23.1,
+  "event_mean_song": -23.0,
+  "event_mean_mix": -23.0,
   "delta_mean": 0.0,
-  "event_max_song": -9.0,
-  "event_max_mix": -8.3,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.8,
+  "event_max_mix": -8.2,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "E4",
-  "event_mean_song": -22.5,
-  "event_mean_mix": -22.3,
+  "event_mean_song": -22.4,
+  "event_mean_mix": -22.2,
   "delta_mean": 0.2,
-  "event_max_song": -9.0,
-  "event_max_mix": -8.5,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -8.8,
+  "event_max_mix": -8.4,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "E5",
-  "event_mean_song": -23.8,
-  "event_mean_mix": -23.6,
-  "delta_mean": 0.2,
-  "event_max_song": -9.0,
-  "event_max_mix": -8.7,
-  "excerpt_max_mix": -5.0
+  "event_mean_song": -23.6,
+  "event_mean_mix": -23.5,
+  "delta_mean": 0.1,
+  "event_max_song": -8.6,
+  "event_max_mix": -8.3,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "F1",
-  "event_mean_song": -21.0,
-  "event_mean_mix": -20.9,
+  "event_mean_song": -20.8,
+  "event_mean_mix": -20.7,
   "delta_mean": 0.1,
-  "event_max_song": -7.6,
-  "event_max_mix": -7.6,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -7.3,
+  "event_max_mix": -7.3,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "F2",
-  "event_mean_song": -21.0,
-  "event_mean_mix": -20.8,
+  "event_mean_song": -20.8,
+  "event_mean_mix": -20.6,
   "delta_mean": 0.2,
-  "event_max_song": -7.6,
-  "event_max_mix": -7.5,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -7.3,
+  "event_max_mix": -7.1,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "F3",
-  "event_mean_song": -21.1,
-  "event_mean_mix": -21.0,
+  "event_mean_song": -20.9,
+  "event_mean_mix": -20.8,
   "delta_mean": 0.1,
-  "event_max_song": -7.6,
-  "event_max_mix": -7.6,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -7.3,
+  "event_max_mix": -7.3,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "F4",
-  "event_mean_song": -21.0,
-  "event_mean_mix": -20.9,
+  "event_mean_song": -20.8,
+  "event_mean_mix": -20.7,
   "delta_mean": 0.1,
-  "event_max_song": -7.6,
-  "event_max_mix": -7.6,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -7.3,
+  "event_max_mix": -7.3,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "F5",
-  "event_mean_song": -21.0,
-  "event_mean_mix": -20.8,
+  "event_mean_song": -20.8,
+  "event_mean_mix": -20.6,
   "delta_mean": 0.2,
-  "event_max_song": -7.6,
-  "event_max_mix": -7.4,
-  "excerpt_max_mix": -5.0
+  "event_max_song": -7.3,
+  "event_max_mix": -7.0,
+  "excerpt_max_mix": -4.8
  },
  {
   "id": "G1",
@@ -276,7 +276,7 @@
   "delta_mean": 0.1,
   "event_max_song": -9.7,
   "event_max_mix": -8.9,
-  "excerpt_max_mix": -5.8
+  "excerpt_max_mix": -5.7
  },
  {
   "id": "G2",
@@ -285,7 +285,7 @@
   "delta_mean": 0.2,
   "event_max_song": -9.7,
   "event_max_mix": -9.3,
-  "excerpt_max_mix": -5.8
+  "excerpt_max_mix": -5.7
  },
  {
   "id": "G3",
@@ -293,26 +293,26 @@
   "event_mean_mix": -21.1,
   "delta_mean": 0.1,
   "event_max_song": -9.7,
-  "event_max_mix": -8.8,
-  "excerpt_max_mix": -5.8
+  "event_max_mix": -8.7,
+  "excerpt_max_mix": -5.7
  },
  {
   "id": "G4",
-  "event_mean_song": -22.1,
-  "event_mean_mix": -22.0,
+  "event_mean_song": -22.0,
+  "event_mean_mix": -21.9,
   "delta_mean": 0.1,
   "event_max_song": -7.9,
   "event_max_mix": -7.8,
-  "excerpt_max_mix": -5.8
+  "excerpt_max_mix": -5.7
  },
  {
   "id": "G5",
   "event_mean_song": -21.2,
   "event_mean_mix": -21.1,
   "delta_mean": 0.1,
-  "event_max_song": -9.4,
-  "event_max_mix": -9.4,
-  "excerpt_max_mix": -5.8
+  "event_max_song": -9.3,
+  "event_max_mix": -9.3,
+  "excerpt_max_mix": -5.7
  },
  {
   "id": "H1",
@@ -321,267 +321,267 @@
   "delta_mean": 0.1,
   "event_max_song": -9.0,
   "event_max_mix": -9.0,
-  "excerpt_max_mix": -5.5
+  "excerpt_max_mix": -5.0
  },
  {
   "id": "H2",
-  "event_mean_song": -19.8,
-  "event_mean_mix": -19.7,
+  "event_mean_song": -19.7,
+  "event_mean_mix": -19.6,
   "delta_mean": 0.1,
   "event_max_song": -9.0,
   "event_max_mix": -8.0,
-  "excerpt_max_mix": -5.5
+  "excerpt_max_mix": -5.0
  },
  {
   "id": "H3",
-  "event_mean_song": -19.6,
+  "event_mean_song": -19.5,
   "event_mean_mix": -19.5,
-  "delta_mean": 0.1,
+  "delta_mean": 0.0,
   "event_max_song": -9.0,
-  "event_max_mix": -7.5,
-  "excerpt_max_mix": -5.5
+  "event_max_mix": -7.4,
+  "excerpt_max_mix": -5.0
  },
  {
   "id": "H4",
-  "event_mean_song": -19.7,
+  "event_mean_song": -19.6,
   "event_mean_mix": -19.5,
-  "delta_mean": 0.2,
+  "delta_mean": 0.1,
   "event_max_song": -9.5,
   "event_max_mix": -9.1,
-  "excerpt_max_mix": -5.5
+  "excerpt_max_mix": -5.0
  },
  {
   "id": "H5",
-  "event_mean_song": -20.6,
-  "event_mean_mix": -20.5,
+  "event_mean_song": -20.5,
+  "event_mean_mix": -20.4,
   "delta_mean": 0.1,
   "event_max_song": -9.0,
-  "event_max_mix": -8.9,
-  "excerpt_max_mix": -5.5
+  "event_max_mix": -8.8,
+  "excerpt_max_mix": -5.0
  },
  {
   "id": "I1",
-  "event_mean_song": -18.8,
-  "event_mean_mix": -18.8,
+  "event_mean_song": -18.0,
+  "event_mean_mix": -18.0,
   "delta_mean": 0.0,
-  "event_max_song": -6.8,
-  "event_max_mix": -6.6,
-  "excerpt_max_mix": -6.1
+  "event_max_song": -6.6,
+  "event_max_mix": -6.5,
+  "excerpt_max_mix": -6.0
  },
  {
   "id": "I2",
-  "event_mean_song": -18.9,
-  "event_mean_mix": -18.9,
+  "event_mean_song": -18.1,
+  "event_mean_mix": -18.1,
   "delta_mean": 0.0,
-  "event_max_song": -6.8,
-  "event_max_mix": -6.8,
-  "excerpt_max_mix": -6.1
+  "event_max_song": -6.6,
+  "event_max_mix": -6.6,
+  "excerpt_max_mix": -6.0
  },
  {
   "id": "I3",
-  "event_mean_song": -18.8,
-  "event_mean_mix": -18.8,
+  "event_mean_song": -18.0,
+  "event_mean_mix": -18.0,
   "delta_mean": 0.0,
-  "event_max_song": -6.8,
-  "event_max_mix": -5.4,
-  "excerpt_max_mix": -5.4
+  "event_max_song": -6.6,
+  "event_max_mix": -5.0,
+  "excerpt_max_mix": -5.0
  },
  {
   "id": "I4",
-  "event_mean_song": -18.8,
-  "event_mean_mix": -18.8,
+  "event_mean_song": -18.0,
+  "event_mean_mix": -18.0,
   "delta_mean": 0.0,
-  "event_max_song": -6.8,
+  "event_max_song": -6.6,
   "event_max_mix": -6.5,
-  "excerpt_max_mix": -6.1
+  "excerpt_max_mix": -6.0
  },
  {
   "id": "I5",
-  "event_mean_song": -18.9,
-  "event_mean_mix": -18.8,
-  "delta_mean": 0.1,
-  "event_max_song": -6.8,
-  "event_max_mix": -6.8,
-  "excerpt_max_mix": -6.1
+  "event_mean_song": -18.1,
+  "event_mean_mix": -18.1,
+  "delta_mean": 0.0,
+  "event_max_song": -6.6,
+  "event_max_mix": -6.5,
+  "excerpt_max_mix": -6.0
  },
  {
   "id": "J1",
-  "event_mean_song": -18.7,
-  "event_mean_mix": -16.7,
-  "delta_mean": 2.0,
-  "event_max_song": -5.3,
+  "event_mean_song": -17.9,
+  "event_mean_mix": -16.2,
+  "delta_mean": 1.7,
+  "event_max_song": -4.9,
   "event_max_mix": -1.4,
-  "excerpt_max_mix": -1.4
+  "excerpt_max_mix": -0.9
  },
  {
   "id": "J2",
-  "event_mean_song": -18.6,
-  "event_mean_mix": -16.6,
-  "delta_mean": 2.0,
-  "event_max_song": -6.7,
-  "event_max_mix": -2.7,
-  "excerpt_max_mix": -2.4
+  "event_mean_song": -17.9,
+  "event_mean_mix": -16.2,
+  "delta_mean": 1.7,
+  "event_max_song": -6.5,
+  "event_max_mix": -2.4,
+  "excerpt_max_mix": -2.2
  },
  {
   "id": "J3",
-  "event_mean_song": -18.9,
-  "event_mean_mix": -17.9,
-  "delta_mean": 1.0,
-  "event_max_song": -5.2,
-  "event_max_mix": -1.8,
-  "excerpt_max_mix": -1.8
+  "event_mean_song": -18.0,
+  "event_mean_mix": -17.2,
+  "delta_mean": 0.8,
+  "event_max_song": -4.8,
+  "event_max_mix": -0.9,
+  "excerpt_max_mix": -0.9
  },
  {
   "id": "J4",
-  "event_mean_song": -18.6,
-  "event_mean_mix": -17.6,
-  "delta_mean": 1.0,
-  "event_max_song": -7.0,
-  "event_max_mix": -5.9,
-  "excerpt_max_mix": -1.1
+  "event_mean_song": -17.9,
+  "event_mean_mix": -17.0,
+  "delta_mean": 0.9,
+  "event_max_song": -6.5,
+  "event_max_mix": -4.9,
+  "excerpt_max_mix": -0.7
  },
  {
   "id": "J5",
-  "event_mean_song": -18.8,
-  "event_mean_mix": -15.0,
-  "delta_mean": 3.8,
-  "event_max_song": -5.3,
-  "event_max_mix": -2.3,
-  "excerpt_max_mix": -2.3
+  "event_mean_song": -17.9,
+  "event_mean_mix": -14.6,
+  "delta_mean": 3.3,
+  "event_max_song": -4.9,
+  "event_max_mix": -1.2,
+  "excerpt_max_mix": -1.2
  },
  {
   "id": "K1",
-  "event_mean_song": -26.2,
-  "event_mean_mix": -26.1,
+  "event_mean_song": -25.9,
+  "event_mean_mix": -25.8,
   "delta_mean": 0.1,
-  "event_max_song": -11.7,
-  "event_max_mix": -11.7,
+  "event_max_song": -11.5,
+  "event_max_mix": -11.5,
   "excerpt_max_mix": -7.6
  },
  {
   "id": "K2",
-  "event_mean_song": -25.9,
-  "event_mean_mix": -25.8,
-  "delta_mean": 0.1,
-  "event_max_song": -9.3,
-  "event_max_mix": -9.3,
+  "event_mean_song": -25.6,
+  "event_mean_mix": -25.6,
+  "delta_mean": 0.0,
+  "event_max_song": -9.1,
+  "event_max_mix": -9.1,
   "excerpt_max_mix": -7.6
  },
  {
   "id": "K3",
-  "event_mean_song": -25.7,
-  "event_mean_mix": -25.5,
-  "delta_mean": 0.2,
-  "event_max_song": -9.3,
-  "event_max_mix": -9.3,
+  "event_mean_song": -25.4,
+  "event_mean_mix": -25.3,
+  "delta_mean": 0.1,
+  "event_max_song": -9.1,
+  "event_max_mix": -9.1,
   "excerpt_max_mix": -7.6
  },
  {
   "id": "K4",
-  "event_mean_song": -25.7,
-  "event_mean_mix": -25.6,
+  "event_mean_song": -25.4,
+  "event_mean_mix": -25.3,
   "delta_mean": 0.1,
-  "event_max_song": -9.3,
-  "event_max_mix": -9.3,
+  "event_max_song": -9.1,
+  "event_max_mix": -9.1,
   "excerpt_max_mix": -7.6
  },
  {
   "id": "K5",
-  "event_mean_song": -26.2,
-  "event_mean_mix": -25.8,
-  "delta_mean": 0.4,
-  "event_max_song": -11.7,
-  "event_max_mix": -11.7,
+  "event_mean_song": -25.9,
+  "event_mean_mix": -25.6,
+  "delta_mean": 0.3,
+  "event_max_song": -11.5,
+  "event_max_mix": -11.5,
   "excerpt_max_mix": -7.6
  },
  {
   "id": "L1",
-  "event_mean_song": -29.6,
-  "event_mean_mix": -29.4,
+  "event_mean_song": -27.0,
+  "event_mean_mix": -26.8,
   "delta_mean": 0.2,
-  "event_max_song": -11.6,
-  "event_max_mix": -10.7,
-  "excerpt_max_mix": -7.4
+  "event_max_song": -9.4,
+  "event_max_mix": -7.8,
+  "excerpt_max_mix": -5.9
  },
  {
   "id": "L2",
-  "event_mean_song": -29.6,
-  "event_mean_mix": -29.4,
-  "delta_mean": 0.2,
-  "event_max_song": -11.6,
-  "event_max_mix": -11.6,
-  "excerpt_max_mix": -7.4
- },
- {
-  "id": "L3",
-  "event_mean_song": -29.6,
-  "event_mean_mix": -29.4,
-  "delta_mean": 0.2,
-  "event_max_song": -11.6,
-  "event_max_mix": -11.6,
-  "excerpt_max_mix": -7.4
- },
- {
-  "id": "L4",
-  "event_mean_song": -29.6,
-  "event_mean_mix": -29.3,
-  "delta_mean": 0.3,
-  "event_max_song": -11.6,
-  "event_max_mix": -11.7,
-  "excerpt_max_mix": -7.4
- },
- {
-  "id": "L5",
-  "event_mean_song": -29.6,
-  "event_mean_mix": -29.3,
-  "delta_mean": 0.3,
-  "event_max_song": -11.6,
-  "event_max_mix": -11.5,
-  "excerpt_max_mix": -7.4
- },
- {
-  "id": "M1",
-  "event_mean_song": -25.5,
-  "event_mean_mix": -25.4,
-  "delta_mean": 0.1,
-  "event_max_song": -7.6,
-  "event_max_mix": -8.4,
-  "excerpt_max_mix": -6.2
- },
- {
-  "id": "M2",
   "event_mean_song": -27.0,
   "event_mean_mix": -26.9,
   "delta_mean": 0.1,
+  "event_max_song": -9.4,
+  "event_max_mix": -9.4,
+  "excerpt_max_mix": -5.9
+ },
+ {
+  "id": "L3",
+  "event_mean_song": -27.0,
+  "event_mean_mix": -26.8,
+  "delta_mean": 0.2,
+  "event_max_song": -9.4,
+  "event_max_mix": -8.8,
+  "excerpt_max_mix": -5.9
+ },
+ {
+  "id": "L4",
+  "event_mean_song": -27.0,
+  "event_mean_mix": -26.8,
+  "delta_mean": 0.2,
+  "event_max_song": -9.4,
+  "event_max_mix": -9.2,
+  "excerpt_max_mix": -5.9
+ },
+ {
+  "id": "L5",
+  "event_mean_song": -27.0,
+  "event_mean_mix": -26.8,
+  "delta_mean": 0.2,
+  "event_max_song": -9.4,
+  "event_max_mix": -9.4,
+  "excerpt_max_mix": -5.9
+ },
+ {
+  "id": "M1",
+  "event_mean_song": -25.4,
+  "event_mean_mix": -25.4,
+  "delta_mean": 0.0,
   "event_max_song": -7.6,
-  "event_max_mix": -7.7,
-  "excerpt_max_mix": -6.2
+  "event_max_mix": -8.3,
+  "excerpt_max_mix": -5.9
+ },
+ {
+  "id": "M2",
+  "event_mean_song": -26.9,
+  "event_mean_mix": -26.8,
+  "delta_mean": 0.1,
+  "event_max_song": -7.6,
+  "event_max_mix": -7.6,
+  "excerpt_max_mix": -5.9
  },
  {
   "id": "M3",
-  "event_mean_song": -25.8,
+  "event_mean_song": -25.7,
   "event_mean_mix": -25.7,
-  "delta_mean": 0.1,
+  "delta_mean": 0.0,
   "event_max_song": -7.6,
   "event_max_mix": -7.1,
-  "excerpt_max_mix": -6.2
+  "excerpt_max_mix": -5.9
  },
  {
   "id": "M4",
-  "event_mean_song": -26.6,
-  "event_mean_mix": -26.5,
+  "event_mean_song": -26.5,
+  "event_mean_mix": -26.4,
   "delta_mean": 0.1,
   "event_max_song": -7.6,
   "event_max_mix": -6.9,
-  "excerpt_max_mix": -6.2
+  "excerpt_max_mix": -5.9
  },
  {
   "id": "M5",
-  "event_mean_song": -27.2,
-  "event_mean_mix": -27.1,
+  "event_mean_song": -27.1,
+  "event_mean_mix": -27.0,
   "delta_mean": 0.1,
   "event_max_song": -7.6,
-  "event_max_mix": -8.4,
-  "excerpt_max_mix": -6.2
+  "event_max_mix": -8.3,
+  "excerpt_max_mix": -5.9
  }
 ]
