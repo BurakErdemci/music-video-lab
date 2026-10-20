@@ -66,7 +66,7 @@ export const shardSpecs = (seed: number, o: ShardOptions): ShardSpec[] => {
 };
 
 /** Ballistic pose of a shard `t` frames after launch (y down, `gravity` in px per frame squared). */
-export const shardPose = (s: ShardSpec, t: number, origin: Pt, gravity: number): { x: number; y: number; rot: number } => ({
+export const shardPose = (s: Pick<ShardSpec, 'vx' | 'vy' | 'rot0' | 'spin'>, t: number, origin: Pt, gravity: number): { x: number; y: number; rot: number } => ({
   x: origin[0] + s.vx * t,
   y: origin[1] + s.vy * t + 0.5 * gravity * t * t,
   rot: s.rot0 + s.spin * t,
