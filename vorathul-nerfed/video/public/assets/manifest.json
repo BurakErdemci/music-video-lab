@@ -1,0 +1,400 @@
+{
+  "office-plate": {
+    "kind": "plate",
+    "files": [
+      "assets/office-plate.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGB"
+  },
+  "G15": {
+    "kind": "poses",
+    "files": [
+      "assets/G15-1.png",
+      "assets/G15-2.png",
+      "assets/G15-3.png",
+      "assets/G15-4.png",
+      "assets/G15-5.png",
+      "assets/G15-6.png",
+      "assets/G15-7.png"
+    ],
+    "sizes": [
+      [
+        226,
+        241
+      ],
+      [
+        205,
+        326
+      ],
+      [
+        222,
+        278
+      ],
+      [
+        262,
+        99
+      ],
+      [
+        177,
+        225
+      ],
+      [
+        302,
+        233
+      ],
+      [
+        173,
+        270
+      ]
+    ],
+    "poses": 7,
+    "mode": "RGBA"
+  },
+  "G16": {
+    "kind": "poses",
+    "files": [
+      "assets/G16-1.png",
+      "assets/G16-2.png",
+      "assets/G16-3.png",
+      "assets/G16-4.png",
+      "assets/G16-5.png",
+      "assets/G16-6.png",
+      "assets/G16-7.png"
+    ],
+    "sizes": [
+      [
+        265,
+        465
+      ],
+      [
+        462,
+        389
+      ],
+      [
+        488,
+        551
+      ],
+      [
+        385,
+        469
+      ],
+      [
+        486,
+        192
+      ],
+      [
+        359,
+        368
+      ],
+      [
+        278,
+        410
+      ]
+    ],
+    "poses": 7,
+    "mode": "RGBA"
+  },
+  "G17": {
+    "kind": "poses",
+    "files": [
+      "assets/G17-1.png",
+      "assets/G17-2.png",
+      "assets/G17-3.png",
+      "assets/G17-4.png",
+      "assets/G17-5.png",
+      "assets/G17-6.png",
+      "assets/G17-7.png"
+    ],
+    "sizes": [
+      [
+        407,
+        447
+      ],
+      [
+        343,
+        479
+      ],
+      [
+        496,
+        431
+      ],
+      [
+        359,
+        333
+      ],
+      [
+        445,
+        369
+      ],
+      [
+        418,
+        330
+      ],
+      [
+        381,
+        409
+      ]
+    ],
+    "poses": 7,
+    "mode": "RGBA"
+  },
+  "G18": {
+    "kind": "poses",
+    "files": [
+      "assets/G18-1.png",
+      "assets/G18-2.png",
+      "assets/G18-3.png",
+      "assets/G18-4.png",
+      "assets/G18-5.png",
+      "assets/G18-6.png",
+      "assets/G18-7.png"
+    ],
+    "sizes": [
+      [
+        391,
+        322
+      ],
+      [
+        478,
+        334
+      ],
+      [
+        179,
+        472
+      ],
+      [
+        442,
+        398
+      ],
+      [
+        631,
+        135
+      ],
+      [
+        465,
+        364
+      ],
+      [
+        323,
+        429
+      ]
+    ],
+    "poses": 7,
+    "mode": "RGBA"
+  },
+  "G11": {
+    "kind": "poses",
+    "files": [
+      "assets/G11.png",
+      "assets/G11-1.png",
+      "assets/G11-2.png"
+    ],
+    "sizes": [
+      [
+        1444,
+        961
+      ],
+      [
+        609,
+        953
+      ],
+      [
+        603,
+        957
+      ]
+    ],
+    "poses": 2,
+    "mode": "RGBA"
+  },
+  "G42": {
+    "kind": "single",
+    "files": [
+      "assets/G42.png"
+    ],
+    "sizes": [
+      [
+        1512,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "G43": {
+    "kind": "single",
+    "files": [
+      "assets/G43.png"
+    ],
+    "sizes": [
+      [
+        1515,
+        1000
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "G44": {
+    "kind": "single",
+    "files": [
+      "assets/G44.png"
+    ],
+    "sizes": [
+      [
+        1507,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "G45": {
+    "kind": "single",
+    "files": [
+      "assets/G45.png"
+    ],
+    "sizes": [
+      [
+        1400,
+        1013
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "G32": {
+    "kind": "poses",
+    "files": [
+      "assets/G32-1.png",
+      "assets/G32-2.png",
+      "assets/G32-3.png",
+      "assets/G32-4.png",
+      "assets/G32-5.png",
+      "assets/G32-6.png",
+      "assets/G32-7.png"
+    ],
+    "sizes": [
+      [
+        210,
+        409
+      ],
+      [
+        247,
+        385
+      ],
+      [
+        332,
+        370
+      ],
+      [
+        237,
+        357
+      ],
+      [
+        154,
+        374
+      ],
+      [
+        244,
+        383
+      ],
+      [
+        176,
+        368
+      ]
+    ],
+    "poses": 7,
+    "mode": "RGBA"
+  },
+  "rig-M": {
+    "kind": "rig-sheet",
+    "files": [
+      "rig/drawn/rig-M.png"
+    ],
+    "sizes": [
+      [
+        1024,
+        1536
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "rig-V1": {
+    "kind": "rig-sheet",
+    "files": [
+      "rig/drawn/rig-V1.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "rig-V2": {
+    "kind": "rig-sheet",
+    "files": [
+      "rig/drawn/rig-V2.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "rig-V3": {
+    "kind": "rig-sheet",
+    "files": [
+      "rig/drawn/rig-V3.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "rig-V4": {
+    "kind": "rig-sheet",
+    "files": [
+      "rig/drawn/rig-V4.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  },
+  "rig-V5": {
+    "kind": "rig-sheet",
+    "files": [
+      "rig/drawn/rig-V5.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "mode": "RGBA"
+  }
+}
