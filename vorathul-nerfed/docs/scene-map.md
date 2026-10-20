@@ -66,6 +66,14 @@ in this order:
   randomness is seeded.
 - **Lyrics** are bound only to measured words; never to a guessed time.
 - Comedy is cartoon violence: no blood, the developers flee.
+- **No JSX constants at module level** (the bundle compiles JSX to `React.createElement` and `React`
+  is undefined while modules load — such a constant crashes the bundle).
+- **Final renders are rendered twice and compared** with `tools/glitchcheck.py`: a full render once
+  captured mosaic-tiled frames while other heavy renders ran on the machine. Render with no other
+  Remotion process running.
+- **Character motion = two layers:** big pose changes on twos (15 fps), a continuous small "life"
+  layer every frame (breathing, cape, glow flicker); 2D overlays (ink, scribbles, collage) on twos —
+  the recipe measured in the Arcane "Enemy" reference.
 
 ## Decided (Burak, 20 Oct 2026)
 
