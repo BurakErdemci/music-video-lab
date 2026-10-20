@@ -67,8 +67,18 @@ in this order:
 - **Lyrics** are bound only to measured words; never to a guessed time.
 - Comedy is cartoon violence: no blood, the developers flee.
 
-## Open
+## Decided (Burak, 20 Oct 2026)
 
-- Whether the film keeps the full 4:33.8 or trims the intro chant (0:00–0:19.5).
-- End card text.
-- Whether the theme-song "volume reduced" gag also ducks the real audio for a moment.
+- The full 4:33.8 stays, intro chant included: 0:00–0:19.5 builds how epic and frightening he is.
+- The audio is never ducked. "Volume reduced" is shown visually: he clutches his throat, only a
+  thin wisp of smoke leaves the corked pipes.
+- End card: "Patch 2.6 notes:" starts typing and is cut off.
+
+## Rendering stage
+
+- Three.js is used as a **2.5D card stage**: every drawing stays a flat 2D texture on an unlit
+  plane (`meshBasicMaterial`, `toneMapped: false`), layered in depth for parallax and real camera
+  moves (pull-back through the frame, the breakout shards). No 3D models, no lights, no shadows.
+- One WebGL canvas per frame (a second canvas rendered black in parallel renders before).
+- Post effects, if any, use `postprocessing` directly, not `@react-three/postprocessing`.
+- The rig is the same stage: each Vorathul part is a card that rotates around its joint.
