@@ -174,6 +174,18 @@ export const S69 = ({ frame }: { frame: number }) => {
   );
 };
 
+/** A push broom held at the top of its handle (gold pole, ivory bristle head, ink lines); `h` is its length, px. */
+const Broom = ({ x, y, h, rot }: { x: number; y: number; h: number; rot: number }) => (
+  <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
+    <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${h / 120})`}>
+      <path d="M0 -10 L0 90" stroke={INK} strokeWidth={8} strokeLinecap="round" />
+      <path d="M0 -10 L0 90" stroke={GOLD} strokeWidth={4} strokeLinecap="round" />
+      <path d="M-18 88 L18 88 L28 116 L-28 116 Z" fill="#F4ECD8" stroke={INK} strokeWidth={3} strokeLinejoin="round" />
+      <path d="M-14 96 L-19 114 M-5 96 L-6 115 M5 96 L6 115 M14 96 L19 114" stroke={INK} strokeWidth={2} />
+    </g>
+  </svg>
+);
+
 // ---------------------------------------------------------------- S70 stamp 4 on the HP label, swept aside with a broom
 const C70 = at('s70-cut');
 const WOBBLE = at('s70-wobble');
@@ -220,7 +232,18 @@ export const S70 = ({ frame }: { frame: number }) => {
         <HeldMic st={st} place={place} side="L" />
         <HeldStand st={st} place={place} side="R" bare={SWUNG_BARE} />
       </Stage>
-      {frame >= at('s70-broom') ? <Knight x={knight.x} y={knight.y} h={1.4 * knight.s} pose={{ item: 'broom', itemRot: broomRot, armR: frame >= at('s70-ready') ? 70 : 20, armL: 40, lean: frame >= at('s70-sweep') ? 8 : 0, hop: frame < at('s70-ready') ? hopCurve(frame, at('s70-broom') + ((frame - at('s70-broom')) - ((frame - at('s70-broom')) % 6)), 6) * 0.15 : 0 }} seed={701} /> : null}
+      {/* The broom hero is a G34 cut-out (never the code-drawn stand-in figure); the broom is a prop in his hands. */}
+      {frame >= at('s70-broom') ? (() => {
+        const hop = frame < at('s70-ready') ? hopCurve(frame, at('s70-broom') + ((frame - at('s70-broom')) - ((frame - at('s70-broom')) % 6)), 6) * 0.15 : 0;
+        const h = 1.4 * knight.s;
+        const lean = frame >= at('s70-sweep') ? 8 : 0;
+        return (
+          <>
+            <Knight asset="G34-7" x={knight.x} y={knight.y - hop * 0.2 * h} h={h} rot={lean} pose={{}} seed={701} />
+            <Broom x={knight.x + 0.18 * h} y={knight.y - 0.55 * h - hop * 0.2 * h} h={0.9 * h} rot={broomRot} />
+          </>
+        );
+      })() : null}
       <DustPuff x={feet.x} y={feet.y} size={160} t={prog(frame, SWEPT, 16)} seed={702} />
       <DustPuff x={feet.x} y={feet.y} size={220} t={prog(frame, SKID, 16)} seed={703} />
       <Crumble frame={frame} xs={[700, 1300, 1000]} />
