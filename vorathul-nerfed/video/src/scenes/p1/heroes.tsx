@@ -4,6 +4,8 @@
 // animation, never a morph).
 import type { CSSProperties } from 'react';
 import { Img } from 'remotion';
+import { AssetCard } from '../../cast/AssetCard.tsx';
+import { AVAILABLE } from '../../cast/available.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { GOLD, INK, inkFilterDef, IVORY, poly, r2, SvgCard, svgDoc } from './kit.tsx';
 
@@ -11,6 +13,16 @@ export type HeroKind = 'knight' | 'mage' | 'archer' | 'rogue';
 export type HeroPose = 'ready' | 'attack' | 'fly' | 'ko' | 'tiptoe' | 'charge' | 'dangle' | 'up' | 'sit';
 export const HERO_POSES: HeroPose[] = ['ready', 'attack', 'fly', 'ko', 'tiptoe', 'charge', 'dangle', 'up', 'sit'];
 export const HERO_ASSET: Record<HeroKind, string> = { knight: 'G15', mage: 'G16', archer: 'G17', rogue: 'G18' };
+/** Puppet pose -> pose number on the hero's G15-G18 sheet (storyboard 1 §5.2 order, left to right). */
+const SHEET: Record<HeroKind, Record<HeroPose, number>> = {
+  knight: { ready: 1, attack: 2, fly: 3, ko: 4, tiptoe: 5, charge: 1, dangle: 3, up: 1, sit: 4 },
+  mage: { ready: 1, attack: 2, charge: 3, fly: 4, ko: 5, tiptoe: 6, dangle: 4, up: 1, sit: 5 },
+  archer: { ready: 1, attack: 2, charge: 1, fly: 3, ko: 4, tiptoe: 5, dangle: 3, up: 1, sit: 4 },
+  rogue: { ready: 1, attack: 2, dangle: 3, fly: 4, ko: 4, tiptoe: 6, charge: 1, up: 1, sit: 1 },
+};
+export const heroAssetId = (kind: HeroKind, pose: HeroPose): string => `${HERO_ASSET[kind]}-${SHEET[kind][pose]}`;
+/** Height of the figure in world units (the cut-out card is sized by height). */
+const FIGURE_H = 1.9;
 
 /** Angles in degrees from straight down, positive towards screen right (the way the hero faces). */
 interface Skel {
@@ -198,11 +210,20 @@ export interface HeroProps {
   bare?: boolean;
 }
 
-// The final G15-G18 pose sheets need a per-pose crop that the card stage does not have yet; until the main loop
-// adds one, the heroes stay code-drawn even when their sheet is AVAILABLE.
 export const Hero = ({ kind, pose, position, rot = 0, flip, scale = 1, squash = [1, 1], centre, renderOrder = 300, flat, hidden, poses, bare }: HeroProps) => {
   const list = poses ?? HERO_POSES;
   const pv: [number, number] = [0, centre ? BODY : FEET];
+  // Final cut-outs (once the main loop sets them live): one card per sheet pose, sized by height, feet at the bottom.
+  if (list.every((p) => AVAILABLE.has(heroAssetId(kind, p)))) {
+    const pz: [number, number] = [0, centre ? 0 : -FIGURE_H / 2];
+    return (
+      <group visible={!hidden} position={position} rotation={[0, 0, (rot * Math.PI) / 180]} scale={[(flip ? -1 : 1) * scale * squash[0], scale * squash[1], 1]}>
+        {list.map((p) => (
+          <AssetCard key={p} id={heroAssetId(kind, p)} standIn={{ color: INK }} width={FIGURE_H} height={FIGURE_H} position={[-pz[0], -pz[1], 0]} renderOrder={renderOrder} hidden={heroAssetId(kind, p) !== heroAssetId(kind, pose)} />
+        ))}
+      </group>
+    );
+  }
   return (
     <group visible={!hidden}>
       {list.map((p) => (
