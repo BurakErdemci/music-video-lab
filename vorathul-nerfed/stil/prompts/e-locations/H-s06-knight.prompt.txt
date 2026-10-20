@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./H-s06-knight.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+6 images are attached. The FIRST attached image is the approved STYLE frame (style and palette). The SECOND attached image is the approved FIGHT frame (how the heroes and the action read in this style). The THIRD attached image is the KNIGHT model sheet (sun shield, sword): keep his design exactly. The FOURTH attached image is the MAGE model sheet (hooded, sun-ring staff): keep her design exactly. The FIFTH attached image is the ARCHER model sheet (long hair, bow): keep her design exactly. The SIXTH attached image is the ROGUE model sheet (hood, twin daggers): keep his design exactly.
+
+Subject: a full comic panel: the knight charges into battle toward the viewer, sun shield raised high in front of him, short sword drawn back, cape snapping behind him, one boot stamping forward; behind him a burst of bold gold and ivory radial speed lines and the ivory arches of the golden cathedral in flat shapes; black ink silhouette with ivory and gold.
+Composition: landscape 1536x1024, the knight large in the centre from the knees up, the background fills the whole frame to every edge.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

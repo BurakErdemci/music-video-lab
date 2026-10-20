@@ -1,0 +1,392 @@
+[
+  {
+    "id": "L1-wall-a",
+    "prompt": "stil/prompts/e-locations/L1-wall-a.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L1-wall-a.png"
+  },
+  {
+    "id": "L1-wall-b",
+    "prompt": "stil/prompts/e-locations/L1-wall-b.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L1-wall-a.png"
+    ],
+    "out": "stil/prompts/e-locations/out/L1-wall-b.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L1-wall-a.png"
+    ]
+  },
+  {
+    "id": "L1-console",
+    "prompt": "stil/prompts/e-locations/L1-console.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L1-console.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L1-pipes-near",
+    "prompt": "stil/prompts/e-locations/L1-pipes-near.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L1-pipes-near.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L1-floor",
+    "prompt": "stil/prompts/e-locations/L1-floor.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L1-floor.png"
+  },
+  {
+    "id": "L1-bellows",
+    "prompt": "stil/prompts/e-locations/L1-bellows.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L1-bellows.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L2-sky-a",
+    "prompt": "stil/prompts/e-locations/L2-sky-a.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-sky-a.png"
+  },
+  {
+    "id": "L2-sky-b",
+    "prompt": "stil/prompts/e-locations/L2-sky-b.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L2-sky-a.png"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-sky-b.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L2-sky-a.png"
+    ]
+  },
+  {
+    "id": "L2-land",
+    "prompt": "stil/prompts/e-locations/L2-land.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-land.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L2-spires",
+    "prompt": "stil/prompts/e-locations/L2-spires.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-spires.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L2-buttress",
+    "prompt": "stil/prompts/e-locations/L2-buttress.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-buttress.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L2-roof",
+    "prompt": "stil/prompts/e-locations/L2-roof.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-roof.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L2-gargoyle",
+    "prompt": "stil/prompts/e-locations/L2-gargoyle.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L2-gargoyle.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L3-wall",
+    "prompt": "stil/prompts/e-locations/L3-wall.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-wall.png"
+  },
+  {
+    "id": "L3-wall-ruin",
+    "prompt": "stil/prompts/e-locations/L3-wall-ruin.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-wall-ruin.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ]
+  },
+  {
+    "id": "L3-cracks",
+    "prompt": "stil/prompts/e-locations/L3-cracks.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-cracks.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L3-column",
+    "prompt": "stil/prompts/e-locations/L3-column.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-column.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L3-column-broken",
+    "prompt": "stil/prompts/e-locations/L3-column-broken.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L3-column.png"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-column-broken.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L3-column.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "L3-floor",
+    "prompt": "stil/prompts/e-locations/L3-floor.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-floor.png"
+  },
+  {
+    "id": "L3-rubble",
+    "prompt": "stil/prompts/e-locations/L3-rubble.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/L3-rubble.png",
+    "key": "#808080"
+  },
+  {
+    "id": "LX-rays",
+    "prompt": "stil/prompts/e-locations/LX-rays.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/e-locations/out/LX-rays.png"
+  },
+  {
+    "id": "H-s06-knight",
+    "prompt": "stil/prompts/e-locations/H-s06-knight.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s06-knight.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s06-mage",
+    "prompt": "stil/prompts/e-locations/H-s06-mage.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s06-mage.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s06-archer",
+    "prompt": "stil/prompts/e-locations/H-s06-archer.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s06-archer.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s06-rogue",
+    "prompt": "stil/prompts/e-locations/H-s06-rogue.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s06-rogue.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s14-double",
+    "prompt": "stil/prompts/e-locations/H-s14-double.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s14-double.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s17-knight",
+    "prompt": "stil/prompts/e-locations/H-s17-knight.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s17-knight.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s17-mage",
+    "prompt": "stil/prompts/e-locations/H-s17-mage.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s17-mage.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s17-archer",
+    "prompt": "stil/prompts/e-locations/H-s17-archer.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s17-archer.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s17-rogue",
+    "prompt": "stil/prompts/e-locations/H-s17-rogue.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s17-rogue.png",
+    "depends_on": [
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  },
+  {
+    "id": "H-s19-charge",
+    "prompt": "stil/prompts/e-locations/H-s19-charge.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/06-dovus-faz3.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ],
+    "out": "stil/prompts/e-locations/out/H-s19-charge.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/b-test/out/G15.png",
+      "stil/prompts/b-test/out/G16.png",
+      "stil/prompts/b-test/out/G17.png",
+      "stil/prompts/b-test/out/G18.png"
+    ]
+  }
+]

@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./L3-cracks.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+Subject: a network of jagged black ink cracks only, as if drawn on a wall: three large crack systems that branch outward from three points, thick black lines with dry-brush edges and a thin cold grey #ADB5BD inner edge, nothing else; everything that is not a crack is plain #808080.
+Composition: the crack systems spread over the whole frame, left, centre and right, landscape 1536x1024.
+
+The subject is isolated on a plain flat #808080 mid-grey background with nothing else in the image; parts are separated by wide empty gaps and do not overlap. The grey will be removed and is the only colour allowed outside the palette.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

@@ -4,7 +4,7 @@ Run from the clip root (vorathul-nerfed/):
     python -I tools/imagegen/build_prompts.py
 
 Writes stil/prompts/<round>/<id>.prompt.txt and stil/prompts/<round>/round.json for the rounds
-a-canonical-fix, b-test, c-rig-parts and d-assets. Every verbatim block (STYLE-P, FIXED, STYLE-O,
+a-canonical-fix, b-test, c-rig-parts, d-assets and e-locations (docs/storyboard-03-locations.md). Every verbatim block (STYLE-P, FIXED, STYLE-O,
 cut-out lines, NEGATIVE) is read from the approved prompt files or from the storyboards at build
 time, never retyped, and every asset paragraph is parsed from the storyboard asset lists. The
 script is idempotent: it rewrites the prompt files and round.json files and nothing else.
@@ -327,6 +327,85 @@ def office_plate_prompt():
     return head + "\n\n" + body
 
 
+# ---------------------------------------------------------------- round e: locations + hero panels
+SB3 = ROOT / "docs" / "storyboard-03-locations.md"
+REF_FIGHT = "stil/onayli/06-dovus-faz3.jpg"
+HERO_REFS = [f"stil/prompts/b-test/out/G{n}.png" for n in (15, 16, 17, 18)]
+REF_LABELS = {
+    REF_STYLE: "the approved STYLE frame (style and palette)",
+    REF_FIGHT: "the approved FIGHT frame (how the heroes and the action read in this style)",
+    REF_CANON: "the canonical turnaround sheet of Vorathul (use its FRONT view)",
+    HERO_REFS[0]: "the KNIGHT model sheet (sun shield, sword): keep his design exactly",
+    HERO_REFS[1]: "the MAGE model sheet (hooded, sun-ring staff): keep her design exactly",
+    HERO_REFS[2]: "the ARCHER model sheet (long hair, bow): keep her design exactly",
+    HERO_REFS[3]: "the ROGUE model sheet (hood, twin daggers): keep his design exactly",
+}
+ORDINALS = ["FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH", "SIXTH", "SEVENTH"]
+
+
+def parse_locations():
+    """Table rows `| id | size | alpha | ... | refs |` plus `- **id** — Subject: ... Composition: ...`."""
+    text = read(SB3)
+    table = {}
+    for row in re.finditer(r"^\| `?((?:L\d|H|LX)-[a-z0-9-]+)`? \|(.+)\|\s*$", text, re.M):
+        cells = [c.strip() for c in row.group(2).split("|")]
+        table[row.group(1)] = dict(size=cells[0], alpha=cells[1], refs=cells[-1])
+    assets = {}
+    for b in re.finditer(r"^- \*\*((?:L\d|H|LX)-[a-z0-9-]+)\*\* — (.+)$", text, re.M):
+        aid, body = b.group(1), b.group(2)
+        sm = re.search(r"Subject: (.*?) Composition: (.*)$", body)
+        if not sm:
+            die(f"{aid}: no Subject/Composition")
+        if aid not in table:
+            die(f"{aid}: no row in the asset table")
+        assets[aid] = dict(subject=sm.group(1).strip(), comp=sm.group(2).strip(), **table[aid])
+    missing = set(table) - set(assets)
+    if missing:
+        die(f"table rows without a prompt paragraph: {sorted(missing)}")
+    return assets
+
+
+def location_refs(a):
+    """refs cell: comma list of `style`, `fight`, `canon`, `heroes`, or another asset id (its out/)."""
+    refs = []
+    for r in (x.strip() for x in a["refs"].split(",")):
+        if r == "style":
+            refs.append(REF_STYLE)
+        elif r == "fight":
+            refs.append(REF_FIGHT)
+        elif r == "canon":
+            refs.append(REF_CANON)
+        elif r == "heroes":
+            refs += HERO_REFS
+        elif re.match(r"^(L\d|H|LX)-", r):
+            refs.append(f"stil/prompts/e-locations/out/{r}.png")
+        else:
+            die(f"unknown ref {r!r}")
+    if not refs or refs[0] != REF_STYLE:
+        die(f"refs must start with style: {a['refs']!r}")
+    return refs
+
+
+def location_entry(aid, a):
+    refs = location_refs(a)
+    cut = a["alpha"].startswith("cut-out")
+    parts = [LINE1.format(id=aid), STYLE_P]
+    if len(refs) > 1:
+        lines = []
+        for k, r in enumerate(refs):
+            label = REF_LABELS.get(r) or (f"the already generated image {Path(r).stem} (see the Subject "
+                                          "for how this image relates to it)")
+            lines.append(f"The {ORDINALS[k]} attached image is {label}.")
+        parts.append(f"{len(refs)} images are attached. " + " ".join(lines))
+    if REF_CANON in refs:
+        parts.append(FIXED)
+    parts.append(f"Subject: {a['subject']}\nComposition: {a['comp']}")
+    if cut:
+        parts.append(CUT_P)
+    parts += [NEGATIVE, LAST]
+    return dict(id=aid, text="\n\n".join(parts) + "\n", refs=refs, key="#808080" if cut else None)
+
+
 # ---------------------------------------------------------------- write rounds
 def write_round(name, entries):
     d = OUT / name
@@ -369,6 +448,8 @@ def main():
     d_ids = sorted((g for g in ASSETS if g not in set(b_ids)),
                    key=lambda g: (int(re.match(r"G(\d+)", g).group(1)), g))
     rounds["d-assets"] = [asset_entry(g) for g in d_ids]
+    if SB3.is_file():
+        rounds["e-locations"] = [location_entry(i, a) for i, a in parse_locations().items()]
     for name, entries in rounds.items():
         rows = write_round(name, entries)
         print(f"{name}: {len(rows)} prompts")
