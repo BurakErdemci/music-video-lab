@@ -289,7 +289,6 @@ const CAFE_K = CAFE_SCR.w / 1672;
 const GLASS_SCR_X = CAFE_SCR.x + num('st-cafe', 'glassX') * CAFE_K;
 const CONTACT_X = GLASS_SCR_X + 46;
 const D_HER_GLASS = 20;
-const D_HER_BACK = 110;
 const TILT_DEG = 5;
 
 const palmScr = (name: 'h-palm' | 'a-palm', head: number): Rect => {
@@ -300,30 +299,11 @@ const palmScr = (name: 'h-palm' | 'a-palm', head: number): Rect => {
   return { x: CONTACT_X + (name === 'h-palm' ? -2 : 2) - g * s, y: PALM_Y - (palm[1] as number) * s, w: sp(name).w * s, h: sp(name).h * s };
 };
 /** v2: both waist-up drawings end in a straight cut at the hips. The palm row and the scale are chosen so that cut lies
- * below the frame bottom under every café camera (bottoms at 1110 / 1108 px under the widest one, 1080 + 28);
+ * below the frame bottom under every café camera (bottoms at 1170 / 1170 px under the café camera's widest framing, 1080 + 90);
  * in v1 it ended at ~950 px and the two read as floating torsos. */
 const PALM_Y = 560;
 const HIS_PALM = (): Rect => palmScr('h-palm', 242);
 const HER_PALM = (): Rect => palmScr('a-palm', 240);
-/** Where she stands a few steps back inside (full figure), and the same spot for the "Merhaba" reset. */
-const HER_BACK = (name: string): Rect => {
-  const m = sp(name);
-  const s = 0.98;
-  const bb = m.bbox as number[];
-  const cx = 1330;
-  const feet = 1030;
-  return { x: cx - (((bb[0] as number) + (bb[2] as number)) / 2) * s, y: feet - (bb[3] as number) * s, w: m.w * s, h: m.h * s };
-};
-
-/** Her pose inside the café at frame f. */
-const herCafePose = (f: number): 'palm' | 'merhaba' => {
-  if (f < F.reset0) return 'palm';
-  if (f < F.daha1) return f < F.reach0 ? 'merhaba' : 'palm';
-  if (f < F.reach1) return 'merhaba';
-  if (f < F.daha2) return 'palm';
-  if (f < F.reach2) return 'merhaba';
-  return 'palm';
-};
 /** His notes: one more on every sung "daha" (beyond those drawn). Fractions of his sprite's bbox. */
 const EXTRA_NOTES: readonly [number, number, number][] = [
   [0.2, 0.62, -12],
@@ -341,19 +321,14 @@ const cafeCam = (f: number): Cam => {
 
 const cafeLayers = (f: number, cam: Cam): Layer[] => {
   const layers: Layer[] = [imageLayer('cafe', url('st-cafe'), D_CAFE, CAFE_W)];
-  const pose = herCafePose(f);
   const blinks = [3600, 3640, 3700, 3760, 3830];
-  if (pose === 'merhaba') {
-    const r = placeAt(HER_BACK('a-raise'), D_HER_BACK);
-    layers.push(...aiLayers('ai', 'a-raise', r, D_HER_BACK, f, { blinks }));
-  } else {
-    const r = placeAt(HER_PALM(), D_HER_GLASS);
-    // "Bilmiyorum": her head tilts (the whole drawing leans about her palm, which stays on the glass), then rights itself
-    const tilt = TILT_DEG * sine(span(f, F.tilt - 4, F.tilt + 8)) * (1 - sine(span(f, F.palms - 14, F.palms)));
-    const s = r.w / sp('a-palm').w;
-    const palm = pt('a-palm', 'palm');
-    layers.push(...aiLayers('ai', 'a-palm', r, D_HER_GLASS, f, { blinks, rot: tilt, pivot: [r.x + (palm[0] as number) * s, r.y + (palm[1] as number) * s] }));
-  }
+  // she never changes pose: a "daha" reset is the chorus wave wiping her and her identical palm print right behind it
+  const r = placeAt(HER_PALM(), D_HER_GLASS);
+  // "Bilmiyorum": her head tilts (the whole drawing leans about her palm, which stays on the glass), then rights itself
+  const tilt = TILT_DEG * sine(span(f, F.tilt - 4, F.tilt + 8)) * (1 - sine(span(f, F.palms - 14, F.palms)));
+  const s = r.w / sp('a-palm').w;
+  const palm = pt('a-palm', 'palm');
+  layers.push(...aiLayers('ai', 'a-palm', r, D_HER_GLASS, f, { blinks, rot: tilt, pivot: [r.x + (palm[0] as number) * s, r.y + (palm[1] as number) * s] }));
   // the glass between: faint glare over her side
   const glassW = placeAt({ x: GLASS_SCR_X, y: -60, w: 2040 - GLASS_SCR_X, h: 1200 }, D_HER_GLASS - 2);
   layers.push(canvasLayer('cafe-glare', 'p3:cafe-glare', 512, 640, D_HER_GLASS - 2, glassW, (ctx, cw, ch) => paintGlare(ctx, cw, ch, 'cafe-glass')));
@@ -386,13 +361,12 @@ const cafeLayers = (f: number, cam: Cam): Layer[] => {
   void cam;
   return layers;
 };
-// v2: two beats per wave (front one beat, retreat one beat), so the cream never sits on the glass for more than about
-// a beat; each wave changes her pose while the glass is covered (3740, 3768) and is gone before the sung "daha" cut
-// (3782), which stays a crisp cut with nothing over it.
+// One wave per reset (wave 1 end, daha 1, daha 2): two beats each (front one beat, retreat one beat). The glass is fully
+// covered at the window's midpoint, which is the reset frame; she is the same palm print before and after it.
 const CAFE_WAVES: readonly [number, number, string][] = [
-  // the glass is fully covered at the window's midpoint (painter p 0.75): exactly the pose change frame
   [F.reset0 - 14, F.reset0 + 14, 'cafe-w1'],
-  [F.reach0 - 14, F.reach0 + 14, 'cafe-w2'],
+  [F.daha1 - 14, F.daha1 + 14, 'cafe-w2'],
+  [F.daha2 - 14, F.daha2 + 14, 'cafe-w3'],
 ];
 /** Window progress -> painter progress: the front crosses in the first half, the cream retreats in the second half
  * (the painter's own split is 75/25, whose retreat crossed the glass in ~10 frames: an unlisted jump). */
