@@ -2,6 +2,9 @@
 import { AssetCard } from '../../../cast/AssetCard.tsx';
 import { AVAILABLE } from '../../../cast/available.ts';
 import { PlateCard } from './PlateCard.tsx';
+import { conversionAt, PaletteCtx, paletteAt, RisingPipes, WallConversion } from './Conversion.tsx';
+import { CARD_H, CARD_W, CEIL_Y, FRAME_T } from './Office.tsx';
+import { clamp01 } from './geom.ts';
 import type { Vec3 } from '../../../stage/Card.tsx';
 import type { ReactNode } from 'react';
 import { Ceiling, Chair, Desk, Floor, LightStrip, Monitor3D, O, PaintDecal, Panel, Rect, Wall, PAINT_Z, WALL_Z } from './Office.tsx';
@@ -11,10 +14,17 @@ const F = OFFICE_FLOOR;
 const PLATE01 = '01-tarz-cizgi-roman.jpg';
 
 /** The office before the ruin: desks left and right, monitors, chairs, light strips. */
-export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true, wallTop }: { wave?: number; centre?: [number, number]; desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number }) => {
+export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true, wallTop, conv = 0 }: { wave?: number; centre?: [number, number]; desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number; conv?: number }) => {
   const D: Vec3[] = [[-11.5, F, -13], [-10.5, F, -6.5], [11.5, F, -13], [10.5, F, -6.5]];
+  const rise = clamp01((conv - 0.4) / 0.4);
   return (
-    <>
+    <PaletteCtx.Provider value={paletteAt(conv)}>
+      <WallConversion conv={conv} z={WALL_Z + 0.1} top={wallTop ?? CEIL_Y} hole={[CARD_W / 2 + FRAME_T, CARD_H / 2 + FRAME_T]} />
+      {/* Organ pipes grow up behind the back desks and beside the frame. */}
+      <RisingPipes at={[-12.5, F, -14.6]} rise={rise} />
+      <RisingPipes at={[12.5, F, -14.6]} rise={rise} />
+      <RisingPipes at={[-11, F, -19.4]} rise={clamp01(rise * 1.3)} height={12} />
+      <RisingPipes at={[11, F, -19.4]} rise={clamp01(rise * 1.3)} height={12} />
       <Wall top={wallTop} />
       <Ceiling hidden={!ceiling} />
       <Floor wave={wave} centre={centre} />
@@ -33,7 +43,7 @@ export const Room = ({ wave = 0, centre, desks, ceiling = true, strips = true, w
           </group>
         );
       })}
-    </>
+    </PaletteCtx.Provider>
   );
 };
 
@@ -67,9 +77,9 @@ export const PinnedCards = ({ at, scale, rot }: { at: (i: number) => Vec3; scale
  * The office after the breakout: the floor is his gold tile, the empty frame shows his world, and ink and gold
  * paint run down the wall under the breach and pool on the floor. `extra` = shot props on the same stage.
  */
-export const AfterRoom = ({ desks, ceiling = true, strips = true, wallTop, floorPaint = true, topPaint = true, children }: { desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number; floorPaint?: boolean; topPaint?: boolean; children?: ReactNode }) => (
+export const AfterRoom = ({ desks, ceiling = true, strips = true, wallTop, floorPaint = true, topPaint = true, frame, children }: { desks?: (i: number) => { off?: Vec3; rot?: Vec3; hidden?: boolean }; ceiling?: boolean; strips?: boolean; wallTop?: number; floorPaint?: boolean; topPaint?: boolean; frame?: number; children?: ReactNode }) => (
   <>
-    <Room wave={80} centre={[-3, -10]} desks={desks} ceiling={ceiling} strips={strips} wallTop={wallTop} />
+    <Room wave={80} centre={[-3, -10]} desks={desks} ceiling={ceiling} strips={strips} wallTop={wallTop} conv={frame === undefined ? 1 : conversionAt(frame)} />
     <Inside />
     {/* Drips end above the skirting: a decal running below the floor line showed as a black blob at low cameras. */}
     <PaintDecal at={[-5.5, -3.4, WALL_Z + 0.06]} w={7} h={5} seed={21} drips order={40} />

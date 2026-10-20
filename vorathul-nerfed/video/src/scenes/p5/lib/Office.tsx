@@ -7,6 +7,7 @@ import { CanvasTexture, DoubleSide, LinearFilter, SRGBColorSpace } from 'three';
 import type { Vec3 } from '../../../stage/Card.tsx';
 import { seeded } from '../../../vfx/effects.ts';
 import { Asset } from './PlateCard.tsx';
+import { paintColor, usePalette } from './Conversion.tsx';
 import { GOLD, INK, IVORY, OFFICE_FLOOR } from './vorathul.ts';
 
 export const O = { bg: '#E9ECEF', mid: '#CED4DA', dark: '#ADB5BD', slate: '#868E96', ink: '#343A40', white: '#FFFFFF', blue: '#3B82F6', ceil: '#F1F3F5' } as const;
@@ -19,12 +20,15 @@ export const CARD_H = 9;
 export const FRAME_T = 0.42;
 
 /** Flat opaque rectangle (writes depth). */
-export const Rect = ({ w, h, at, rot, color, order }: { w: number; h: number; at: Vec3; rot?: Vec3; color: string; order?: number }) => (
-  <mesh position={at} rotation={rot} renderOrder={order}>
-    <planeGeometry args={[w, h]} />
-    <meshBasicMaterial color={color} toneMapped={false} side={DoubleSide} />
-  </mesh>
-);
+export const Rect = ({ w, h, at, rot, color, order }: { w: number; h: number; at: Vec3; rot?: Vec3; color: string; order?: number }) => {
+  const t = usePalette();
+  return (
+    <mesh position={at} rotation={rot} renderOrder={order}>
+      <planeGeometry args={[w, h]} />
+      <meshBasicMaterial color={paintColor(color, t)} toneMapped={false} side={DoubleSide} />
+    </mesh>
+  );
+};
 
 /** A rectangle with a thin uniform outline in front of it (office line style). */
 export const Panel = ({ w, h, at, rot, fill, line = O.dark, lw = 0.05 }: { w: number; h: number; at: Vec3; rot?: Vec3; fill: string; line?: string; lw?: number }) => (
