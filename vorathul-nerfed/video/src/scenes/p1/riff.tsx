@@ -45,7 +45,7 @@ const S07_TL: Timeline = {
   keys: [{ at: 0, pose: 'base', dur: 0 }, { at: at('s07-clash'), pose: BLOCK as never, dur: 12, ease: 'strike', hands: 'instant', impact: true }, { at: at('s07-bolt-1') + 4, pose: SETTLE as never, dur: 16 }],
   ramps: FOLDED,
 };
-const S07_CAM = handheld(tween({ position: [-9.5, 2.0, 21], target: [0.2, 5.8, -15] }, { position: [-8.4, 2.3, 17.5], target: [0.2, 6, -15] }, { start: at('s07-clash'), frames: 39 }), { amp: 0.05, seed: 's07' });
+const S07_CAM = handheld(tween({ position: [-7.5, 2.0, 21], target: [0.2, 5.8, -15] }, { position: [-6.6, 2.3, 17.5], target: [0.2, 6, -15] }, { start: at('s07-clash'), frames: 39 }), { amp: 0.05, seed: 's07' });
 
 const S07 = ({ frame }: { frame: number }) => {
   const st = rigFor(S07_TL, frame);
@@ -98,7 +98,7 @@ const S07 = ({ frame }: { frame: number }) => {
 // ---------------------------------------------------------------------------------------------------------------
 
 const S08_TL: Timeline = { keys: [{ at: 0, pose: SETTLE as never, dur: 0 }], ramps: FOLDED, pipes: [{ at: at('s08-tremble'), wing: 'both', pipe: 'all', op: 'fire' }, { at: at('s08-tremble') + 3, wing: 'L', pipe: 'all', op: 'fire' }] as PipeEvent[] };
-const S08_CAM = handheld(tween({ position: [5.2, 9.6, -2], target: [0.9, 10, -15] }, { position: [4.6, 9.8, -3.2], target: [0.9, 10.1, -15] }, { start: at('s08-ping'), frames: 14 }), { amp: 0.04, seed: 's08' });
+const S08_CAM = handheld(tween({ position: [3.2, 9.6, -2], target: [0.7, 10, -15] }, { position: [2.8, 9.8, -3.2], target: [0.7, 10.1, -15] }, { start: at('s08-ping'), frames: 14 }), { amp: 0.04, seed: 's08' });
 
 const S08 = ({ frame }: { frame: number }) => {
   const st = rigFor(S08_TL, frame);
@@ -207,17 +207,15 @@ const S10_P2 = at('s10-piston-mage');
 const S10_TL: Timeline = {
   keys: [
     { at: 0, pose: FAN as never, dur: 0 },
-    { at: S10_P1, pose: PISTON_L as never, dur: 12, ease: 'strike', hands: 'instant', impact: true },
-    { at: S10_P1 + 9, pose: RECOIL as never, dur: 9 },
-    { at: S10_P2, pose: PISTON_R as never, dur: 11, ease: 'strike', hands: 'instant', impact: true },
+    // Mid-shot strikes run 18 frames (6 of anticipation, 12 of travel): with the rig on twos a 12-frame strike put
+    // 70 % of an arm's swing into one 2-frame step (S10 f699 -> f701, review 20 Oct).
+    { at: S10_P1, pose: PISTON_L as never, dur: 18, ease: 'strike', hands: 'instant', impact: true },
+    { at: S10_P2, pose: PISTON_R as never, dur: 18, ease: 'strike', hands: 'instant', impact: true },
     { at: S10_P2 + 16, pose: { ...RECOIL, wings: [null, 6], armR: [-35, 130, -45, 'grip'], armL: [30, 50, 0, 'open'], torso: -6, lean: -3 } as never, dur: 16 },
   ],
-  // Seen from behind: the front glows (slit, gems, studs, runes) would draw through his back, so they are off.
-  ramps: { slitOpacity: ramp([0, 0, 0]), gems: ramp([0, 0, 0]), studs: ramp([0, 0, 0]), runes: ramp([0, 0, 0]) },
 };
-// High over his left shoulder from behind, looking down on the party: his black shoulder and pipes own the
-// foreground and the heroes are launched away from us. Steep enough that no horizon (no unbuilt world) shows.
-const S10_CAM = handheld(tween({ position: [3.2, 15.5, -25.5], target: [-2.2, 0.4, -8] }, { position: [2.4, 14.8, -24.5], target: [-1.2, 0.8, -8] }, { start: at('s10-shatter'), frames: 58 }), { amp: 0.05, seed: 's10' });
+// High and frontal, framed left: the knight's launch fills the left of frame, his fan the right; a slow crane down.
+const S10_CAM = handheld(tween({ position: [-4.5, 13, 15], target: [-1.6, 5.4, -13] }, { position: [-3.8, 10.5, 12], target: [-1.2, 5.8, -13] }, { start: at('s10-shatter'), frames: 58 }), { amp: 0.05, seed: 's10' });
 
 const S10 = ({ frame }: { frame: number }) => {
   const st = rigFor(S10_TL, frame);
@@ -242,8 +240,7 @@ const S10 = ({ frame }: { frame: number }) => {
       stage={({ sil }) => (
         <>
           <World sil={sil} rayBend={12} cloudShift={7} />
-          {/* seen from behind he is nearer than the heroes, so he draws over them */}
-          <Vorathul state={st} frame={frame} renderBase={450} echoes={echoesAt(S10_TL, frame, [S10_P1, S10_P2], { frames: 6 })} />
+          <Vorathul state={st} frame={frame} echoes={echoesAt(S10_TL, frame, [S10_P1, S10_P2], { frames: 6 })} />
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
       )}
@@ -335,13 +332,13 @@ const GUARD = { ...FAN, wings: [null, -25], torso: 4, armL: [70, 120, 0, 'fist']
 const S12_TL: Timeline = {
   keys: [
     { at: 0, pose: { ...FAN, wings: [null, 4], armL: [-25, 70, 0, 'fist'] } as never, dur: 0 },
-    { at: S12_BEAM, pose: GUARD as never, dur: 13, ease: 'strike', hands: 'instant', impact: true },
+    { at: S12_BEAM, pose: GUARD as never, dur: 18, ease: 'strike', hands: 'instant', impact: true },
     { at: S12_SPL + 12, pose: { ...FAN, wings: [null, 10], armL: [-25, 70, 0, 'fist'], torso: 0, lean: 0 } as never, dur: 14 },
   ],
   ramps: { wingS_R: ramp([S12_BEAM, 0.55, 10], [S12_SPL + 14, 1, 12]), wingS_L: ramp([S12_BEAM, 0.55, 10], [S12_SPL + 14, 1, 12]) },
 };
 // Down on the tiles, wide lens: the knight's bash and the mage's beam happen at lens height, his bulk overhead.
-const S12_CAM = handheld(tween({ position: [-2.6, 0.32, -4.6], target: [0.6, 3.8, -15], fov: 58 }, { position: [-1.4, 0.36, -5.4], target: [1.2, 4.6, -15], fov: 58 }, { start: S12_BASH, frames: 78 }), { amp: 0.03, seed: 's12' });
+const S12_CAM = handheld(tween({ position: [-0.6, 0.32, -4.6], target: [0.6, 3.8, -15], fov: 58 }, { position: [0.2, 0.36, -5.4], target: [1.0, 4.6, -15], fov: 58 }, { start: S12_BASH, frames: 78 }), { amp: 0.03, seed: 's12' });
 
 const S12 = ({ frame }: { frame: number }) => {
   const st = rigFor(S12_TL, frame);

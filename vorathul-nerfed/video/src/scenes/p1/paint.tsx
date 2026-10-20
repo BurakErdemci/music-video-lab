@@ -1,7 +1,7 @@
 // One painting-stage shot: the impact camera, the single Stage, the recipe overlays, the HUD and the shot frame.
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
-import type { CameraPath, CameraPose } from '../../camera/api.ts';
+import { anglesFromDir, type CameraPath, type CameraPose } from '../../camera/api.ts';
 import { Stage } from '../../stage/Stage.tsx';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { gradeCues, type DuotoneCue } from '../../vfx/effects.ts';
@@ -39,7 +39,17 @@ export const HUD_EVENTS = {
   fall2: at('s19-strike'), pip1: at('s23-pip-1'), pip2: at('s23-pip-2'), pip3: at('s23-pip-3'), fall3: at('s25-phase3'), pulse: 20,
 };
 
+/** Every card faces +z: seen from the side or behind, their flatness shows (director, 20 Oct). Cameras look within
+ * this many degrees of straight down -z; variety comes from height, lens, distance, framing and dolly/truck. */
+export const MAX_YAW = 15;
+const assertFrontal = (pose: CameraPose, frame: number) => {
+  const d: [number, number, number] = [pose.target[0] - pose.position[0], pose.target[1] - pose.position[1], pose.target[2] - pose.position[2]];
+  const yaw = anglesFromDir(d).yaw;
+  if (Math.abs(yaw) > MAX_YAW + 0.5) throw new Error(`p1 f${frame}: camera yaw ${yaw.toFixed(1)} deg, limit ${MAX_YAW}`);
+};
+
 export const PaintingShot = ({ frame, camera, impacts = [], cues, stage, overlay, top, hud = true, dutch = 0 }: PaintingShotProps) => {
+  assertFrontal(camera(frame), frame);
   const cam = impactCamera(camera, impacts);
   const pose = cam(frame);
   // The impact-frame silhouette (N, N+1) is the collision table's hard ink/ivory DuotoneFlash cue. Toggling the

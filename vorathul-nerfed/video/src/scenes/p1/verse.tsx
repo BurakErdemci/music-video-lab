@@ -319,7 +319,7 @@ const S24_TL: Timeline = {
   ramps: { helmSplit: ramp([0, 0.72, 0]), ...eyeRamps([0, 0, 0]) },
 };
 const S24_CUES = gradeCues([{ at: { frame: S24_SLAM }, grade: 'V', hold: nextBeat(S24_SLAM) - S24_SLAM }], 'p1 S24');
-const S24_CAM = handheld(tween({ position: [10, 1.3, 17], target: [-1.2, 6.2, -15], fov: 46 }, { position: [8.6, 1.6, 14], target: [-1, 6.6, -15], fov: 46 }, { start: S24_SLAM, frames: 78 }), { amp: 0.06, seed: 's24' });
+const S24_CAM = handheld(tween({ position: [4.5, 1.3, 17], target: [-1.2, 6.2, -15], fov: 46 }, { position: [3.8, 1.6, 14], target: [-1, 6.6, -15], fov: 46 }, { start: S24_SLAM, frames: 78 }), { amp: 0.06, seed: 's24' });
 
 const S24 = ({ frame }: { frame: number }) => {
   const st = rigFor(S24_TL, frame);
@@ -399,7 +399,7 @@ const S25_TL: Timeline = {
   keys: [
     { at: 0, pose: 'summon_antic', dur: 0 },
     { at: S25_IN, pose: { ...(BUST as object), armR: [150, 20, -45, 'grip'], armL: [40, 20, 0, 'spread'], torso: 10, head: [0, -0.005], pelvis: [0, 0.04], swordZ: 92, wings: [null, 15] } as never, dur: 12, ease: 'strike', hands: 'instant', impact: true },
-    { at: S25_RAIN, pose: { ...(BUST as object), armR: [160, 15, -45, 'grip'], armL: [60, 20, 0, 'spread'], torso: 12, head: [2, -0.005], pelvis: [0, 0.04], swordZ: 92, wings: [null, 15], lean: 2 } as never, dur: 14, ease: 'strike', impact: true },
+    { at: S25_RAIN, pose: { ...(BUST as object), armR: [160, 15, -45, 'grip'], armL: [60, 20, 0, 'spread'], torso: 12, head: [2, -0.005], pelvis: [0, 0.04], swordZ: 92, wings: [null, 15], lean: 2 } as never, dur: 18, ease: 'strike', impact: true },
   ],
   helm: [{ at: 0, value: 'split' }],
   ramps: { helmSplit: ramp([0, 0.72, 0]), ...eyeRamps([0, 0, 0]) },

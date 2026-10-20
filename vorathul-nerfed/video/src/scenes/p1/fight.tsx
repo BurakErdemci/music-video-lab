@@ -2,13 +2,13 @@
 // shockwave, the gold explosion and the wing gust, four charge-up panels and the combo, the dagger flurry, the swat
 // and the combined strike that finally sticks.
 import { AbsoluteFill } from 'remotion';
-import { anglesFromDir, handheld, sequence, tween, whip, whipBlur, MED, WIDE, type CameraPose } from '../../camera/api.ts';
+import { handheld, tween, type CameraPose } from '../../camera/api.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { Shards, SpeedLines } from '../../vfx/effects.ts';
 import { at } from './events.ts';
 import { Glint, Panel, slamIn, type Impact } from './fx.tsx';
 import { HeroImg, type HeroKind, type HeroPose } from './heroes.tsx';
-import { count, GOLD, INK, IVORY, lerp, outCubic, prog, project, two, VIOLET } from './kit.tsx';
+import { count, GOLD, INK, IVORY, lerp, outCubic, prog, project, two, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 import { bob, PaintingShot } from './paint.tsx';
 import { GoldBlast, Inked, KoStars, Overlay, Puffs, Sigil, Slash, Sweat } from './props.tsx';
 import { chest, FAN, flight, Party, type HeroTrack } from './riff.tsx';
@@ -57,11 +57,11 @@ const S13_TL: Timeline = {
   keys: [
     { at: 0, pose: REST as never, dur: 0 },
     { at: S13_TURN, pose: { ...REST, head: [-12, 0] } as never, dur: 14 },
-    { at: S13_GRAB, pose: GRAB as never, dur: 12, ease: 'strike', hands: 'instant', impact: true },
+    { at: S13_GRAB, pose: GRAB as never, dur: 18, ease: 'strike', hands: 'instant', impact: true },
     { at: S13_WIND, pose: WIND as never, dur: 16 },
   ],
 };
-const S13_CAM = handheld(tween({ position: [5.4, 4.2, -6], target: [0.8, 7.8, -15] }, { position: [5, 4.6, -7], target: [1.2, 7.8, -15] }, { start: S13_STAB, frames: 67 }), { amp: 0.04, seed: 's13' });
+const S13_CAM = handheld(tween({ position: [3.2, 4.4, -6.5], target: [1.0, 7.8, -15] }, { position: [3.0, 4.6, -7.2], target: [1.2, 7.8, -15] }, { start: S13_STAB, frames: 67 }), { amp: 0.04, seed: 's13' });
 /** Freeze-hold of 4 frames on the grab (storyboard ladder): everything but the shake holds. */
 const held = (f: number) => (f >= S13_GRAB && f < S13_GRAB + 4 ? S13_GRAB : f);
 
@@ -115,7 +115,7 @@ const S13 = ({ frame }: { frame: number }) => {
 };
 
 // ---------------------------------------------------------------------------------------------------------------
-// S14 - the throw into the gallery (whip-pan out and back); the double attack bounces off
+// S14 - the throw into the gallery; the double attack bounces off
 // ---------------------------------------------------------------------------------------------------------------
 
 const S14_THROW = at('s14-throw');
@@ -132,21 +132,9 @@ const S14_TL: Timeline = {
   ],
 };
 const GALLERY_HIT: Vec3 = [27, 22.4, -29.4];
-// High in the left gallery, looking down across the nave; the whip turns from him to the crowd he throws the
-// rogue into on the far side, and back. The whip angles are measured from the two look directions.
-const WIDE_A: CameraPose = { position: [-23, 17, -22], target: [0, 4.5, -13.5], fov: 44 };
-const lookAngles = (from: Vec3, to: Vec3) => anglesFromDir([to[0] - from[0], to[1] - from[1], to[2] - from[2]]);
-const S14_A = lookAngles(WIDE_A.position, WIDE_A.target);
-const S14_B = lookAngles(WIDE_A.position, GALLERY_HIT);
-const S14_YAW = S14_B.yaw - S14_A.yaw;
-const S14_PITCH = S14_B.pitch - S14_A.pitch;
-const S14_CAM = handheld(
-  sequence([
-    { from: 0, path: whip(WIDE_A, { start: S14_THROW + 3, yaw: S14_YAW, pitch: S14_PITCH, frames: 7 }) },
-    { from: S14_DUCK + 6, path: whip(whip(WIDE_A, { start: 0, yaw: S14_YAW, pitch: S14_PITCH, frames: 1 })(1), { start: S14_DUCK + 6, yaw: -S14_YAW, pitch: -S14_PITCH, frames: 7 }) },
-  ]),
-  { amp: 0.05, seed: 's14' },
-);
+// High and frontal, far back on a wide lens, framed right so the throw carries the rogue into the right gallery's
+// crowd inside the same frame; a slow truck right (no pan: every card stays seen from the front).
+const S14_CAM = handheld(tween({ position: [3, 21, 40], target: [6, 10, -16], fov: 48 }, { position: [7, 20, 36], target: [10, 10.5, -16], fov: 48 }, { start: S14_THROW, frames: 77 }), { amp: 0.05, seed: 's14' });
 
 const S14 = ({ frame }: { frame: number }) => {
   const st = rigFor(S14_TL, frame);
@@ -179,11 +167,9 @@ const S14 = ({ frame }: { frame: number }) => {
       )}
       overlay={({ pose }) => {
         const f2 = two(frame);
-        const blur = Math.max(whipBlur(frame, S14_THROW + 3, 7), whipBlur(frame, S14_DUCK + 6, 7));
         const g = project(pose, GALLERY_HIT);
         return (
           <>
-            {blur > 0.2 ? <SpeedLines mode="parallel" frame={f2} duration={9999} seed={1401} angle={frame < S14_DUCK ? Math.PI : 0} count={Math.round(60 * blur)} thickness={60} speed={80} /> : null}
             <Overlay>
               <Puffs c={[g.x, g.y]} s={g.s * 2.2} age={f2 - S14_DUCK} count={7} seed={1402} life={30} />
               {f2 >= S14_DUCK + 4 && f2 < S14_DUCK + 26 ? <KoStars c={[g.x, g.y - g.s * 1.2]} s={g.s * 1.4} f={f2} /> : null}
@@ -309,13 +295,13 @@ const S16_TL: Timeline = {
   keys: [
     { at: 0, pose: { ...REST, torso: 3, head: [-6, 0.01], wings: [null, 4] } as never, dur: 0 },
     { at: S16_CLEAR + 4, pose: { ...REST, head: [6, 0], torso: -2, armL: [10, 60, 0, 'open'] } as never, dur: 14 },
-    { at: S16_GUST, pose: { ...REST, wings: [null, -25], torso: 6, lean: 0, head: [0, 0] } as never, dur: 12, ease: 'strike', impact: true },
+    { at: S16_GUST, pose: { ...REST, wings: [null, -25], torso: 6, lean: 0, head: [0, 0] } as never, dur: 14, ease: 'strike', impact: true },
     { at: S16_GUST + 16, pose: { ...REST, wings: [null, 12] } as never, dur: 14 },
   ],
   ramps: { wingS_R: ramp([S16_GUST - 6, 0.5, 8], [S16_GUST, 1, 5]), wingS_L: ramp([S16_GUST - 6, 0.5, 8], [S16_GUST, 1, 5]) },
 };
 // A balcony view from the left gallery: the explosion, the smoke and the blown-back heroes read from above.
-const S16_CAM = handheld(tween({ position: [-15, 15, 14], target: [0, 4.2, -13] }, { position: [-13.5, 14, 11], target: [0, 4.6, -13] }, { start: S16_EXP, frames: 77 }), { amp: 0.06, seed: 's16' });
+const S16_CAM = handheld(tween({ position: [-4, 15, 16], target: [0, 4.2, -13] }, { position: [-3.4, 14, 13], target: [0, 4.6, -13] }, { start: S16_EXP, frames: 77 }), { amp: 0.06, seed: 's16' });
 
 const S16 = ({ frame }: { frame: number }) => {
   const st = rigFor(S16_TL, frame);
@@ -433,19 +419,6 @@ const S17 = ({ frame }: { frame: number }) => {
         const target = project(pose, c);
         return (
           <>
-            {launched ? (
-              <Overlay>
-                {S17_START.map((s, i) => {
-                  const a = project(pose, s);
-                  const reach = outCubic(prog(f2, S17_COMBO, 46));
-                  const ex = lerp(a.x, target.x, reach);
-                  const ey = lerp(a.y, target.y, reach);
-                  const mid: [number, number] = [lerp(a.x, ex, 0.5), lerp(a.y, ey, 0.5) - 120 * (1 - reach) * (i % 2 ? 1 : -1)];
-                  return <Slash key={i} pts={[[a.x, a.y], mid, [ex, ey]]} width={a.s * (0.5 + 0.5 * reach)} color={GOLD} />;
-                })}
-                {f2 >= at('s17-combo-near') ? <circle cx={target.x} cy={target.y} r={target.s * (0.6 + 0.4 * Math.sin(f2))} fill={IVORY} stroke={GOLD} strokeWidth={target.s * 0.2} /> : null}
-              </Overlay>
-            ) : null}
             {S17_KINDS.map((kind, i) => {
               if (i >= n || out >= 1) return null;
               const hitAt = S17_PANELS[i] as number;
@@ -462,16 +435,47 @@ const S17 = ({ frame }: { frame: number }) => {
                 </AbsoluteFill>
               );
             })}
-            {/* insert: the eye slit narrows */}
-            {f2 >= S17_EYE && f2 < S17_EYE + 26 ? (
-              <Panel pts={[[1300, 90], [1840, 70], [1840, 330], [1290, 350]]} slam={slamIn(frame, S17_EYE)} border={12}>
-                <AbsoluteFill style={{ background: INK }} />
-                <Overlay>
-                  <path d={`M1360 ${215}L1780 ${205}L1780 ${205 + 30 * (1 - 0.7 * outCubic(prog(f2, S17_EYE + 2, 8)))}L1360 ${215 + 30 * (1 - 0.7 * outCubic(prog(f2, S17_EYE + 2, 8)))}Z`} fill={VIOLET} />
-                  <path d="M1290 350L1400 250L1460 330L1560 230L1660 320L1760 240L1840 330L1840 350Z" fill="#14100c" />
-                </Overlay>
-              </Panel>
-            ) : null}
+            {/* insert: the eye slit narrows. The helm plate is drawn here (as in S21), framed as a comic panel; it holds
+                to the cut so the panel never uncovers the frame two frames before it. */}
+            {f2 >= S17_EYE ? (() => {
+              const k = outCubic(prog(f2, S17_EYE + 2, 10));
+              const lid = 268 + 22 * k;
+              const lo = 330 - 16 * k;
+              return (
+                <Panel pts={[[1180, 70], [1860, 50], [1860, 420], [1170, 450]]} slam={slamIn(frame, S17_EYE)} border={14}>
+                  <Overlay>
+                    <defs>
+                      <linearGradient id="p1-s17-metal" x1="0" y1="0" x2="1" y2="1">
+                        <stop offset="0" stopColor="#2E2A25" /><stop offset="0.5" stopColor="#141210" /><stop offset="1" stopColor="#24201C" />
+                      </linearGradient>
+                      <filter id="p1-s17-glow" x="-30%" y="-200%" width="160%" height="500%"><feGaussianBlur stdDeviation="9" /></filter>
+                    </defs>
+                    <rect x={1160} y={40} width={720} height={420} fill="#8EC5E8" />
+                    {/* horn roots and crown spikes against the sky above the brow */}
+                    <path d="M1170 60 L1250 60 L1230 150 L1170 200 Z" fill={INK} />
+                    <path d="M1860 50 L1780 50 L1800 140 L1860 190 Z" fill={INK} />
+                    <path d="M1300 175 L1300 150 L1730 140 L1730 165 Z" fill={INK} />
+                    {[1340, 1430, 1515, 1600, 1690].map((x, i) => <path key={i} d={`M${x - 30} 160 L${x} ${70 - (i % 2 ? 0 : 22)} L${x + 30} 158 Z`} fill={INK} />)}
+                    <circle cx={1515} cy={128} r={11} fill={VIOLET} />
+                    {/* the brow plate comes down as he narrows his eye: the slit closes between brow and cheek plates */}
+                    <path d={`M1160 ${lid} L1880 ${lid - 14} L1880 ${lid - 124} L1160 ${lid - 110} Z`} fill="url(#p1-s17-metal)" />
+                    <path d={`M1160 ${lid - 110} L1880 ${lid - 124}`} stroke={GOLD} strokeWidth={5} />
+                    <path d={`M1160 ${lid} L1880 ${lid - 14}`} stroke={GOLD} strokeWidth={7} />
+                    {[1250, 1380, 1510, 1640, 1770].map((x, i) => (
+                      <g key={i}>
+                        <circle cx={x} cy={lid - 46 - i * 2.8} r={15} fill="#3A342D" stroke={INK} strokeWidth={5} />
+                        <path d={`M${x - 9} ${lid - 52 - i * 2.8} A 11 11 0 0 1 ${x + 5} ${lid - 57 - i * 2.8}`} fill="none" stroke={GOLD} strokeWidth={3.5} />
+                      </g>
+                    ))}
+                    <path d={`M1300 ${lid + 4} L1740 ${lid - 8} L1740 ${lo - 10} L1300 ${lo}`} fill={VIOLET} opacity={0.9} filter="url(#p1-s17-glow)" />
+                    <path d={`M1300 ${lid + 4} L1740 ${lid - 8} L1740 ${lo - 10} L1300 ${lo} Z`} fill={VIOLET} />
+                    <path d={`M1340 ${(lid + lo) / 2} L1700 ${(lid + lo) / 2 - 10}`} stroke={VIOLET_LIGHT} strokeWidth={Math.max(3, (lo - lid) * 0.3)} strokeLinecap="round" />
+                    <path d={`M1160 ${lo + 2} L1880 ${lo - 12} L1880 460 L1160 460 Z`} fill="#24201C" />
+                    <path d={`M1160 ${lo + 2} L1880 ${lo - 12}`} stroke={INK} strokeWidth={10} />
+                  </Overlay>
+                </Panel>
+              );
+            })() : null}
           </>
         );
       }}
@@ -495,12 +499,8 @@ const S18_TL: Timeline = {
   ],
   ramps: { wingS_R: ramp([S18_HIT, 0.6, 6], [S18_HIT + 22, 1, 10]), wingS_L: ramp([S18_HIT, 0.6, 6], [S18_HIT + 22, 1, 10]) },
 };
-// Off-axis three-quarter on a long lens from his left, trucking left; a near entrance pillar wipes across the
-// frame and reveals the combo hitting the fan.
-const S18_CAM = handheld(tween({ position: [11.5, 5.2, -0.5], target: [0, 7.4, -15], fov: 32 }, { position: [7.2, 5.6, -2.4], target: [0, 8.4, -15], fov: 32 }, { start: S18_HIT, frames: 49 }), { amp: 0.04, seed: 's18' });
-const S18_PILLAR: Vec3 = [8.6, 0, -5.2];
-/** G09 pass-by pillar stand-in: an ivory and gold column, ink shadow on its inner side, a carved capital. */
-const PILLAR_SVG = svgDoc(400, 2400, `<g filter="url(#k)"><rect x="60" y="0" width="280" height="2400" fill="${IVORY}"/><rect x="250" y="0" width="90" height="2400" fill="${INK}"/><rect x="60" y="0" width="40" height="2400" fill="${GOLD}"/><rect x="20" y="300" width="360" height="90" fill="${GOLD}" stroke="${INK}" stroke-width="14"/><rect x="40" y="390" width="320" height="40" fill="${INK}"/><rect x="20" y="2200" width="360" height="200" fill="${GOLD}" stroke="${INK}" stroke-width="14"/><path d="M150 450V2150M200 450V2150" stroke="${GOLD}" stroke-width="10"/></g>`, inkFilterDef('k', 1891, 10, 0.2));
+// Frontal on a long lens, tight on his chest and fan, trucking left as the combo hits the fan.
+const S18_CAM = handheld(tween({ position: [4.5, 7.6, 10], target: [2.4, 8.2, -15], fov: 26 }, { position: [0.2, 7.8, 9], target: [-0.6, 8.4, -15], fov: 26 }, { start: S18_HIT, frames: 49 }), { amp: 0.04, seed: 's18' });
 
 const S18 = ({ frame }: { frame: number }) => {
   const st = rigFor(S18_TL, frame);
@@ -526,7 +526,6 @@ const S18 = ({ frame }: { frame: number }) => {
           <World sil={sil} rayBend={12} cloudShift={7} />
           <Vorathul state={st} frame={frame} />
           <Party heroes={heroes} flat={sil ? INK : null} />
-          <Pic id="G09-1" color={IVORY} svg={PILLAR_SVG} width={2.4} height={14.4} pivot={[0, -7.2]} position={S18_PILLAR} renderOrder={RO.near + 50} flat={sil ? INK : null} />
         </>
       )}
       overlay={({ pose }) => {
@@ -566,11 +565,11 @@ const S19_TL: Timeline = {
     { at: 0, pose: COCK as never, dur: 0 },
     { at: S19_SWAT, pose: SWAT as never, dur: 12, ease: 'strike', hands: 'instant', impact: true },
     { at: S19_SWAT + 26, pose: REST as never, dur: 18 },
-    { at: S19_STRIKE, pose: STAGGER as never, dur: 12, ease: 'strike', impact: true },
+    { at: S19_STRIKE, pose: STAGGER as never, dur: 18, ease: 'strike', impact: true },
     { at: S19_DOWN, pose: { ...STAGGER, head: [-6, 0.028], torso: -4, lean: -1 } as never, dur: 18 },
   ],
 };
-const S19_CAM = handheld(tween({ position: [7.5, 3, 25], target: [0, 6, -15] }, { position: [2.2, 4, 12], target: [0, 6.6, -15] }, { start: S19_SWAT, frames: 106 }), { amp: 0.05, seed: 's19' });
+const S19_CAM = handheld(tween({ position: [6, 3, 25], target: [0, 6, -15] }, { position: [2.2, 4, 12], target: [0, 6.6, -15] }, { start: S19_SWAT, frames: 106 }), { amp: 0.05, seed: 's19' });
 const S19_SPOTS: [HeroKind, Vec3, Vec3, boolean][] = [
   ['knight', [-3.6, 0.5, -10.6], [-8.4, 0.35, -9.4], false],
   ['mage', [3.6, 0.5, -10.2], [8.6, 0.35, -9], true],
