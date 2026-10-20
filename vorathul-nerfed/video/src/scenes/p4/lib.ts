@@ -67,7 +67,9 @@ export const PAINTING_PLATE: Box = [338, 58, 857, 584];
 export const paintingWorld = (): { cx: number; cy: number; w: number; h: number } => {
   const [x0, y0] = plateToWorld(PAINTING_PLATE[0], PAINTING_PLATE[1]);
   const [x1, y1] = plateToWorld(PAINTING_PLATE[0] + PAINTING_PLATE[2], PAINTING_PLATE[1] + PAINTING_PLATE[3]);
-  return { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, w: x1 - x0, h: y0 - y1 };
+  // The painting is hung 16:9 so the live window onto the painting world maps the canvas one to one (crack UV stays valid).
+  const w = x1 - x0;
+  return { cx: (x0 + x1) / 2, cy: (y0 + y1) / 2, w, h: (w * 9) / 16 };
 };
 /** Office camera looking straight at the wall from `distance`, centred on (x, y). */
 export const officeCam = (distance: number, x: number, y: number): CameraPose => ({

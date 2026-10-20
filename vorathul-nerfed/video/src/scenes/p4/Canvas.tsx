@@ -8,7 +8,7 @@ import { CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
 import { jointWorld } from './rigline.ts';
 import { assetSize } from '../../cast/available.ts';
-import { OfficeStage, WallItems } from './office.tsx';
+import { OfficeWall, WallItems } from './office.tsx';
 import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog } from './lib.ts';
 
 const DRAIN = 'none';
@@ -152,7 +152,7 @@ export const S80 = ({ frame }: { frame: number }) => {
   const amount = 1 - 0.65 * easeInOut(prog(frame, CUE.s80relax.frame, 10));
   return (
     <AbsoluteFill style={{ background: '#E9ECEF' }}>
-      <OfficeStage camera={hold(pose)} frame={frame} />
+      <OfficeWall frame={frame} pose={pose} />
       {/* only the bulge's drawn marks (shadow, light crescent, contour, strain): a displacement filter stacked on the
           halftone office grade rendered as mosaic-tiled capture frames in every pass */}
       <CanvasBulge frame={frame - (frame % 10)} amount={amount} x={x} y={y} size={box[2] * 0.2} rotate={-8} seed={4} id="p4-bulge-b">

@@ -2,17 +2,18 @@
 // the wall around it (posters, sticky notes, a petition bar). All positions are world coordinates on the wall plane, so the
 // same items sit right under any office camera.
 import type { ReactNode } from 'react';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, Img, staticFile } from 'remotion';
 import { assetSize } from '../../cast/available.ts';
-import { Asset, Final } from './cards.tsx';
+import { Cathedral, Hero } from './inside.tsx';
 import { InkCrack } from './cracks.tsx';
-import { Stage, type CameraPath, type CameraPose } from '../../stage/Stage.tsx';
+import { hold } from '../../camera/api.ts';
+import { Stage, type CameraPose } from '../../stage/Stage.tsx';
 import { C, Poster, ProgressSun, StickyNote, UiFonts } from '../../ui/kit.ts';
 import { UI_FONT } from '../../ui/theme.tsx';
-import { crackGraph, crackStep, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects.ts';
+import { crackGraph, crackStep, Overlay } from '../../vfx/effects.ts';
 import { TIMING } from '../../timing.ts';
 import { CUE, CRACK_STEPS } from './cues.ts';
-import { OFFICE_Z, PALM_UV, PLATE_CY, PLATE_H, PLATE_W, canvasBox, clamp01, paintingBox, paintingWorld, plateToWorld, project } from './lib.ts';
+import { CANVAS_CAM, OFFICE_Z, PALM_UV, PLATE_CY, PLATE_H, PLATE_W, canvasBox, clamp01, paintingBox, paintingWorld, project, rectBox } from './lib.ts';
 import type { Box } from './lib.ts';
 
 export const CRACK = { seed: 21, escapeAt: 16, escapeDir: 0 } as const;
@@ -76,7 +77,6 @@ export const OfficeCracks = ({ frame, pose, layer }: { frame: number; pose: Came
   );
 };
 
-const O_ALWAYS = gradeCues([{ at: { frame: 0 }, grade: 'O' }], 'p4 office grade');
 
 /** World units per pixel of a developer cut-out: his figure is 9.7 units tall, like the one in the old wall plate. */
 const DEV_K = 9.7 / 1440;
@@ -89,36 +89,41 @@ const DEV_POSES = [
   { id: 'G46-glance', from: CUE.s89a.frame, to: 1e9 },
 ] as const;
 
-/** The bored developer standing in front of the painting: one drawn pose at a time, swapped on the event frames. */
-const Developer = ({ frame, x = DEV_X }: { frame: number; x?: number }) => (
-  <>
-    {DEV_POSES.map((p) => {
-      const size = assetSize(p.id) ?? [430, 1447];
-      const h = size[1] * DEV_K;
-      return <Final key={p.id} id={p.id} standIn={{ color: '#ADB5BD' }} height={h} position={[x, DEV_FEET + h / 2, OFFICE_Z + 0.5]} hidden={!(frame >= p.from && frame < p.to)} renderOrder={20} />;
-    })}
-  </>
-);
+const boxStyle = (b: Box) => ({ position: 'absolute' as const, left: b[0], top: b[1], width: b[2], height: b[3] });
 
-const FRAME_PLATE: [number, number, number, number] = [308, 33, 914, 635];
-
-/** The office wall (the empty office plate), the black frame and the painting in it, and the developer. Office grade on all of it. */
-export const OfficeStage = ({ camera, frame = 0, dev = true, children }: { camera: CameraPath; frame?: number; dev?: boolean; children?: ReactNode }) => {
+/**
+ * The office wall for the camera `pose`: the empty office plate, a black frame, a live window onto the painting world (the
+ * same drawn cathedral and Vorathul as the inside shots, seen through the canonical canvas camera, so the crack's canvas UV
+ * lands on the same place), and the developer in front of it. The window is the one Stage of its shot.
+ */
+export const OfficeWall = ({ frame, pose, dev = true }: { frame: number; pose: CameraPose; dev?: boolean }) => {
   const p = paintingWorld();
-  const [fx0, fy0] = plateToWorld(FRAME_PLATE[0], FRAME_PLATE[1]);
-  const [fx1, fy1] = plateToWorld(FRAME_PLATE[0] + FRAME_PLATE[2], FRAME_PLATE[1] + FRAME_PLATE[3]);
+  const plate = rectBox(pose, OFFICE_Z, 0, PLATE_CY, PLATE_W, PLATE_H);
+  const frameBox = rectBox(pose, OFFICE_Z, p.cx, p.cy, p.w + 0.7, p.h + 0.7);
+  const win = paintingBox(pose);
+  const k = pxPerUnit(pose);
+  const feet = project(pose, [DEV_X, DEV_FEET, OFFICE_Z]) as [number, number];
   return (
-    <DuotoneFlash frame={0} cues={O_ALWAYS} id="p4-office">
-      <AbsoluteFill>
-        <Stage camera={camera}>
-          <Final id="office-plate" standIn={{ src: 'plates/07-ofis-tablo.jpg' }} height={PLATE_H} position={[0, PLATE_CY, OFFICE_Z - 0.05]} />
-          <Asset id="p4-frame" look={{ color: '#2B3038' }} width={fx1 - fx0} height={fy0 - fy1} position={[(fx0 + fx1) / 2, (fy0 + fy1) / 2, OFFICE_Z - 0.04]} renderOrder={1} />
-          <Asset id="p4-wall-painting" look={{ src: 'plates/01-tarz-cizgi-roman.jpg' }} width={p.w} height={p.h} position={[p.cx, p.cy, OFFICE_Z - 0.03]} renderOrder={2} />
-          {dev ? <Developer frame={frame} /> : null}
-          {children}
-        </Stage>
-      </AbsoluteFill>
-    </DuotoneFlash>
+    <AbsoluteFill>
+      <Img src={staticFile('assets/office-plate.png')} style={boxStyle(plate)} />
+      <div style={{ ...boxStyle(frameBox), background: '#2B3038' }} />
+      <div style={{ ...boxStyle(win), overflow: 'hidden', background: '#F4ECD8' }}>
+        <div style={{ width: 1920, height: 1080, transform: `scale(${win[2] / 1920})`, transformOrigin: '0 0' }}>
+          <Stage camera={hold(CANVAS_CAM)}>
+            <Cathedral frame={frame} />
+            <Hero frame={frame} />
+          </Stage>
+        </div>
+      </div>
+      {dev
+        ? DEV_POSES.filter((d) => frame >= d.from && frame < d.to).map((d) => {
+            const size = assetSize(d.id) ?? [430, 1447];
+            const w = size[0] * DEV_K * k;
+            const h = size[1] * DEV_K * k;
+            return <Img key={d.id} src={staticFile(`assets/${d.id}.png`)} style={{ position: 'absolute', left: feet[0] - w / 2, top: feet[1] - h, width: w, height: h }} />;
+          })
+        : null}
+    </AbsoluteFill>
   );
 };
 

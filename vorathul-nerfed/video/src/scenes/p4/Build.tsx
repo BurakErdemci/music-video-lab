@@ -9,7 +9,7 @@ import { ImpactBurst, Overlay, SpeedLines, VIOLET, IVORY, GOLD, INK } from '../.
 import { seeded } from '../../vfx/seeded.ts';
 import { CRACK_STEPS, CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
-import { InsideCracks, OfficeCracks, OfficeStage, WallItems } from './office.tsx';
+import { InsideCracks, OfficeCracks, OfficeWall, WallItems } from './office.tsx';
 import { jointWorld } from './rigline.ts';
 import { CANVAS, CANVAS_CAM, H, PALM_UV, W, clamp01, easeInOut, officeCam, paintingWorld, project, prog, twos } from './lib.ts';
 
@@ -58,7 +58,7 @@ const Office = ({ frame, camera, children, wall = true }: OfficeProps) => {
   const pose = camera(frame);
   return (
     <AbsoluteFill style={{ background: '#E9ECEF' }}>
-      <OfficeStage camera={camera} frame={frame} />
+      <OfficeWall frame={frame} pose={pose} />
       <OfficeCracks frame={frame} pose={pose} layer="painting" />
       {wall ? <WallItems frame={frame} pose={pose} /> : null}
       <OfficeCracks frame={frame} pose={pose} layer="wall" />
