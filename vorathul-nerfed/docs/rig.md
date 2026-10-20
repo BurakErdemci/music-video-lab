@@ -629,8 +629,9 @@ rigState(frame) = {
 - **Python tooling uses temporary environments** (`uv run --with pillow --with numpy python ...`),
   exactly like `tools/timing/`. Nothing is added to the repo's dependencies, so no new dependency
   is introduced.
-- **Checkerboard wing shape:** asked to the director (open until answered). Recommendation: the
-  outline of the deleted pipe fan itself, because it reads as "the missing texture of exactly what
-  was deleted" and it is derived from the rig, not drawn.
+- **Checkerboard wing shape = the outline of the deleted pipe fan itself** (the union of the 16
+  pipes at s = 1), filled with the code-drawn magenta checkerboard. Decided by Burak, 20 Oct 2026:
+  it reads as "the missing texture of exactly what was deleted", is derived from the rig, and always
+  matches the fan.
 - **Stage changes for later:** `Card` renders `DoubleSide` (mirrored subtrees) and gets an
   `idColor` for the measurement tests — part of the rig code lane.
