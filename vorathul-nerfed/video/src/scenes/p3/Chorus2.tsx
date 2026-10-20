@@ -52,7 +52,7 @@ export const S68 = ({ frame }: { frame: number }) => {
         const hop = hopCurve(frame, STEP68 + j, 8) * 0.6;
         return (
           <div key={j}>
-            <Knight x={p.x} y={p.y} h={1.45 * p.s} pose={{ hop, armL: j % 2 ? 160 : 20, armR: j % 3 ? 25 : 150, lean: j % 2 ? -3 : 4, item: j === 2 ? 'spear' : 'none' }} seed={680 + j} />
+            <Knight asset="G15-1" x={p.x} y={p.y} h={1.45 * p.s} pose={{ hop, armL: j % 2 ? 160 : 20, armR: j % 3 ? 25 : 150, lean: j % 2 ? -3 : 4, item: j === 2 ? 'spear' : 'none' }} seed={680 + j} />
             <TicketPill frame={frame} text={`#${47 + j}`} appearAt={C68 - 20} x={p.x - 0.4 * p.s} y={p.y - 2.05 * p.s - hop * 30} width={0.8 * p.s} />
           </div>
         );
@@ -115,7 +115,7 @@ export const S69 = ({ frame }: { frame: number }) => {
         const hop = j < 4 ? hopCurve(frame, HOPS[j]! - 4, 10) : 0;
         return (
           <div key={j}>
-            <Knight x={p.x} y={p.y} h={1.4 * p.s} flip pose={{ hop, armL: 30 + hop * 120, armR: 30 + hop * 120, laugh, lean: j === 4 ? 0 : -4 }} seed={690 + j} />
+            <Knight asset={frame >= LAUGH ? 'G15-7' : hop > 0.1 ? 'G15-2' : 'G15-1'} x={p.x} y={p.y} h={1.4 * p.s} flip pose={{ hop, armL: 30 + hop * 120, armR: 30 + hop * 120, laugh, lean: j === 4 ? 0 : -4 }} seed={690 + j} />
             {frame >= LAUGH && frame < LAUGH + 40 && j % 2 === 0 ? (
               <div style={{ position: 'absolute', left: p.x - 30, top: p.y - 1.9 * p.s - laugh * 30, fontFamily: ANTON, fontSize: 0.45 * p.s, color: GOLD, WebkitTextStroke: `3px ${INK}`, transform: `rotate(${j * 7 - 10}deg)` }}>HA</div>
             ) : null}
@@ -132,7 +132,7 @@ export const S69 = ({ frame }: { frame: number }) => {
         );
       })()}
       {/* The first hero's back, out of focus, fills the left third. */}
-      <Knight x={170} y={1320} h={1050} flip pose={{ armL: 10, armR: 10 }} seed={699} style={{ filter: 'blur(6px)' }} />
+      <Knight asset="G15-1" x={170} y={1320} h={1050} flip pose={{ armL: 10, armR: 10 }} seed={699} style={{ filter: 'blur(6px)' }} />
     </ShotFrame>
   );
 };
@@ -200,7 +200,7 @@ const aim = (s: number): CameraPose => {
   const d: Vec3 = [lerp(d0[0] / n0, d1[0], s), lerp(d0[1] / n0, d1[1], s), lerp(d0[2] / n0, d1[2], s)];
   return { ...LOW71, target: [LOW71.position[0] + d[0] * 10, LOW71.position[1] + d[1] * 10, LOW71.position[2] + d[2] * 10] };
 };
-const PUSHES: [number, number][] = [[at('s71-push1'), 0.35], [at('s71-push2'), 0.6], [at('s71-push3'), 0.8], [ECU71, 0.985]];
+const PUSHES: [number, number][] = [[at('s71-push1'), 0.35], [at('s71-push2'), 0.6], [at('s71-push3'), 0.8], [ECU71, 0.93]];
 const CAM71: CameraPath = (f) => {
   const p = aim(easeInOut(prog(f, TILT, CORNER - TILT)));
   let k = 0;
@@ -213,12 +213,12 @@ const CAM71: CameraPath = (f) => {
  *  until every point is in front of the camera, plus the 1 px office-grey edge line. A flat weave card sits behind. */
 const Weave = ({ pose }: { pose: CameraPose }) => {
   const [cx, cy] = [CORNER_W[0], CORNER_W[1]];
-  for (const L of [160, 80, 40, 20, 10, 5]) {
+  for (const L of [160, 80, 40, 20, 10, 5, 2, 1, 0.5]) {
     const ring: [number, number][] = [[cx, cy], [cx - L, cy], [cx - L, cy + L], [cx + L, cy + L], [cx + L, cy - L], [cx, cy - L]];
     const q = ring.map(([x, y]) => project(pose, [x, y, -89.9]));
     if (q.some((p) => p.z <= 0.5)) continue;
     const c = q[0]!;
-    const cell = Math.max(3, 0.6 * c.s);
+    const cell = Math.min(60, Math.max(6, 0.6 * c.s));
     return (
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
         <defs>
@@ -229,7 +229,7 @@ const Weave = ({ pose }: { pose: CameraPose }) => {
           </pattern>
         </defs>
         <path d={`M${q.map((p) => `${p.x} ${p.y}`).join('L')}Z`} fill="url(#p3-weave)" />
-        <path d={`M${q[1]!.x} ${q[1]!.y} L${c.x} ${c.y} L${q[5]!.x} ${q[5]!.y}`} stroke="#ADB5BD" strokeWidth={1.5} fill="none" />
+        <path d={`M${q[1]!.x} ${q[1]!.y} L${c.x} ${c.y} L${q[5]!.x} ${q[5]!.y}`} stroke="#ADB5BD" strokeWidth={2} fill="none" />
       </svg>
     );
   }
@@ -241,20 +241,25 @@ export const S71 = ({ frame }: { frame: number }) => {
   const pose = CAM71(frame);
   const st = stateAt(TL71, frame);
   const cloudOff = easeInOut(prog(frame, at('s71-cloud'), EDGE - at('s71-cloud')));
-  const cloud = project(pose, [CORNER_W[0] - 6 + cloudOff * 46, CORNER_W[1] - 7, -89]);
+  const corner = project(pose, CORNER_W);
   const other = [[-30, 60], [-90, 110], [-10, 125], [-60, 30]].map(([x, y]) => project(pose, [x!, y!, -89]));
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM71}>
         <AssetCard id="C35" standIn={{ color: WEAVE }} width={600} height={500} position={[0, 100, -90.5]} renderOrder={-101} />
-        <Sky rect={SKY71} />
+        <Sky rect={SKY71} z={-90} />
         <Wall />
         <Floor />
         <Vorathul st={st} place={{ pos: [0, 0, -15], scale: SCALE_C }} />
       </Stage>
       <Weave pose={pose} />
       {other.map((p, i) => (p.z > 0 ? <Cloud key={i} x={p.x} y={p.y} w={26 * p.s} seed={711 + i} /> : null))}
-      {cloud.z > 0 && cloudOff < 1 ? <Cloud x={cloud.x} y={cloud.y} w={34 * cloud.s} seed={710} /> : null}
+      {/* A bank of cloud hides the corner until it slides off on "no" (the reveal frame). */}
+      {cloudOff < 1 && corner.z > 0
+        ? [[-260, 120, 1500], [380, -260, 1700], [520, 300, 1300]].map(([dx, dy, w], i) => (
+            <Cloud key={i} x={corner.x + dx! + cloudOff * 2200} y={corner.y + dy! - cloudOff * 200} w={w!} seed={715 + i} />
+          ))
+        : null}
     </ShotFrame>
   );
 };
@@ -324,9 +329,9 @@ export const S73 = ({ frame }: { frame: number }) => {
       </Stage>
       {[0, 1, 2].map((j) => {
         const p = project(pose, [-5.5 + j * 0.9 + walk * (j % 2 ? -7 : 9), 0, -18 - j]);
-        return <Knight key={j} x={p.x} y={p.y} h={1.4 * p.s} flip={j % 2 === 1} pose={{ hop: walk > 0 ? Math.abs(Math.sin(twos(frame) * 0.5 + j)) * 0.12 : 0, armL: 20, armR: 20 }} seed={730 + j} />;
+        return <Knight key={j} asset={walk > 0 ? 'G15-5' : 'G15-1'} x={p.x} y={p.y} h={1.4 * p.s} flip={j % 2 === 1} pose={{ hop: walk > 0 ? Math.abs(Math.sin(twos(frame) * 0.5 + j)) * 0.12 : 0, armL: 20, armR: 20 }} seed={730 + j} />;
       })}
-      <Kid x={kid.x} y={kid.y} h={1.9 * kid.s} flip pose={{ ...k.pose, armL: (k.pose.armL ?? 20) + shrug * 60, armR: (k.pose.armR ?? 20) + shrug * 60 }} />
+      <Kid asset={frame >= EXIT ? 'G32-6' : after ? 'G32-5' : 'G32-2'} x={kid.x} y={kid.y} h={1.9 * kid.s} flip pose={{ ...k.pose, armL: (k.pose.armL ?? 20) + shrug * 60, armR: (k.pose.armR ?? 20) + shrug * 60 }} />
       {SMACKS73.map((s, i) => <DamageNumber key={i} frame={frame} text={'−1'} at={s} x={helm.x + 40 - i * 34} y={helm.y - 110} size={76} />)}
       <ImpactBurst frame={frame - SHOE73} duration={12} seed={735} x={helm.x + 30} y={helm.y} size={200} flash={S73_SHOE_FLASH} />
       <Dim amount={0.3 * easeInOut(prog(frame, EXIT, at('s73-exit') + 19 - EXIT))} />

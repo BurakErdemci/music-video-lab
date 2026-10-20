@@ -196,11 +196,14 @@ const PLACE56: Place = { pos: [0, 0, -15], scale: SCALE_C };
 const SLIT56 = slitAt(stateAt(TL56, C56), PLACE56);
 const ECU56 = frameAt(SLIT56, 1.25);
 const WHIP = DASH - 15;
-const CAM56: CameraPath = (f) => turn(ECU56, keyed(f, [[WHIP, 0], [WHIP + 6, 36], [SAD - 8, 36], [SAD - 2, 0]], easeInOut), keyed(f, [[WHIP, 0], [WHIP + 6, 12], [SAD - 8, 12], [SAD - 2, 0]]));
+const CAM56: CameraPath = (f) => turn(ECU56, keyed(f, [[WHIP - 2, 0], [WHIP + 9, 36], [SAD - 12, 36], [SAD - 1, 0]], easeInOut), keyed(f, [[WHIP - 2, 0], [WHIP + 9, 12], [SAD - 12, 12], [SAD - 1, 0]]));
 /** Beam end on the gallery wall: sweeps across the right gallery, then droops and falls once disabled. */
 const beamEnd = (f: number, k: number): Vec3 => {
   const s = easeInOut(prog(f, FIRE, DASH - FIRE));
-  return [lerp(14, 40, s) + k * 3, lerp(10, 22, s) - k * 4, -50];
+  const end: Vec3 = [lerp(14, 40, s) + k * 3, lerp(10, 22, s) - k * 4, -50];
+  // The beams grow out of the slit over 5 frames: appearing at full length in one frame measured as a flash.
+  const g = easeIn(prog(f, FIRE, 5));
+  return [lerp(SLIT56[0], end[0], g), lerp(SLIT56[1], end[1], g), lerp(SLIT56[2], end[2], g)];
 };
 
 const Lasers = ({ frame }: { frame: number }) => {
@@ -226,8 +229,8 @@ const Lasers = ({ frame }: { frame: number }) => {
               const b = project(p, beamEnd(f, k));
               return (
                 <g key={k}>
-                  <path d={beamPath(a.x, a.y, b.x, b.y, 60)} fill={VIOLET} />
-                  <path d={beamPath(a.x, a.y, b.x, b.y, 20)} fill={VIOLET_LIGHT} />
+                  <path d={beamPath(a.x, a.y, b.x, b.y, 44)} fill={VIOLET} />
+                  <path d={beamPath(a.x, a.y, b.x, b.y, 14)} fill={VIOLET_LIGHT} />
                 </g>
               );
             })}
@@ -478,12 +481,12 @@ export const S60 = ({ frame }: { frame: number }) => {
         <Cathedral />
         <Vorathul st={st} place={place} />
       </Stage>
-      <LightRays x={rays.x} y={rays.y} frame={f * 16} opacity={0.5} n={18} />
+      <LightRays x={rays.x} y={rays.y} frame={C60} opacity={0.4} n={18} />
       {!done ? (
         <>
           <ScribbleBoil frame={f - C60} duration={200} seed={60} x={960} y={540} rx={420} ry={330} color={INK} width={8} loops={2} ticks={10} />
           <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-            {[0, 1, 2].map((i) => <rect key={i} x={0} y={vhs.range(150, 930)} width={1920} height={vhs.range(4, 14)} fill={C.white} opacity={0.55} />)}
+            {[0].map((i) => <rect key={i} x={0} y={vhs.range(150, 930)} width={1920} height={vhs.range(3, 8)} fill={C.white} opacity={0.4} />)}
           </svg>
         </>
       ) : null}

@@ -58,7 +58,8 @@ const WALL_H = 78;
 const WALL_W = WALL_H * ((0.345 * 1536) / (0.56 * 1024));
 
 /** P0 sky as one flat card; `rect` = [x0, y0, x1, y1] so a shot can place its corner (S71). */
-export const Sky = ({ rect = [-240, -40, 240, 200], z = -90, color = '#8EC5E8' }: { rect?: [number, number, number, number]; z?: number; color?: string }) => (
+// Default z -68: a tilted-up view of a farther sky reached past the stage camera's far plane (200) and showed black.
+export const Sky = ({ rect = [-220, -40, 220, 240], z = -68, color = '#8EC5E8' }: { rect?: [number, number, number, number]; z?: number; color?: string }) => (
   <AssetCard
     id="G01" standIn={{ color }} width={rect[2] - rect[0]} height={rect[3] - rect[1]}
     position={[(rect[0] + rect[2]) / 2, (rect[1] + rect[3]) / 2, z]} renderOrder={-100}

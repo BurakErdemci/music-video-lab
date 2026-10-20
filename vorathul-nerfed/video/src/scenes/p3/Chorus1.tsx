@@ -98,7 +98,7 @@ const tiltUp = (base: CameraPose, deg: number): CameraPose => {
   const flat = Math.hypot(d[0], d[2]);
   return { ...base, target: [base.position[0] + (d[0] / flat) * Math.cos(pitch) * len, base.position[1] + Math.sin(pitch) * len, base.position[2] + (d[2] / flat) * Math.cos(pitch) * len] };
 };
-const S47_PATH: CameraPath = (f) => tiltUp(LOW47, keyed(f, [[at('s47-cut'), 0], [at('s47-cut') + 6, 40], [T1 - 4, 40], [T1, 0]]));
+const S47_PATH: CameraPath = (f) => tiltUp(LOW47, keyed(f, [[at('s47-cut'), 0], [at('s47-cut') + 8, 24], [T1 - 5, 24], [T1 + 3, 0]]));
 const CAM47 = withShake(S47_PATH, { hits: shakeHits([[T1, 'medium'], [T2, 'medium'], [T3, 'big'], [at('s47-crack'), 'small']]) });
 const TABLETS: { x: number; z: number; land: number; h: number; text: string[]; rot: number }[] = [
   { x: -4.6, z: -12.5, land: T1, h: 3.4, text: ['HEALTH', '−40 %'], rot: -4 },
@@ -275,7 +275,7 @@ export const S49 = ({ frame }: { frame: number }) => {
         <>
           <SpeedLines mode="radial" frame={frame - BURST} duration={18} seed={491} focus={[960, 560]} inner={300} />
           <Shards frame={frame - BURST} duration={34} seed={492} origin={[960, 560]} spread={Math.PI * 2} speed={34} size={60} count={30} fills={[IVORY, IVORY, GOLD]} />
-          <Kid x={960} y={560 + lerp(260, 900, easeOut(kidT))} h={lerp(420, 1250, easeOut(kidT))} pose={{ armL: 120, armR: 120, boot: 20, lean: 0 }} />
+          <Kid asset="G32-3" x={960} y={560 + lerp(260, 900, easeOut(kidT))} h={lerp(420, 1250, easeOut(kidT))} pose={{ armL: 120, armR: 120, boot: 20, lean: 0 }} />
           <Flakes frame={frame} start={at('s49-shreds') - 30} seed={493} count={36} fall={3} />
         </>
       ) : null}
@@ -303,7 +303,7 @@ export const S50 = ({ frame }: { frame: number }) => {
         <Vorathul st={st} place={{ pos: [-5, 0, -19], scale: SCALE_C }} />
       </Stage>
       <LightRays x={kx} y={ky - kh * 0.62} frame={frame} opacity={0.75} />
-      <Kid x={kx} y={ky} h={kh} pose={{ armL: 150, armR: 165, head: -6, twirl: twos(frame) === frame ? twirl : twirl - speed, lean: -2 }} />
+      <Kid asset="G32-1" x={kx} y={ky} h={kh} pose={{ armL: 150, armR: 165, head: -6, twirl: twos(frame) === frame ? twirl : twirl - speed, lean: -2 }} />
       <Nameplate frame={frame} text="LV 12" appearAt={at('s50-lv')} framesPerChar={(at('s50-12') - at('s50-lv')) / 3} x={kx - 170} y={ky - kh - 110} width={330} />
     </ShotFrame>
   );
@@ -338,7 +338,7 @@ export const S51 = ({ frame }: { frame: number }) => {
         <Cathedral wallPitch={-PITCH51 * 0.5} />
         <Vorathul st={st} place={place} />
       </Stage>
-      <Kid x={kid.x} y={kid.y} h={1.4 * kid.s} pose={{ armL: 40, armR: 60, lean: side * 12 - 4, step: side, head: 10, boot: 30 }} />
+      <Kid asset="G32-4" x={kid.x} y={kid.y} h={1.4 * kid.s} pose={{ armL: 40, armR: 60, lean: side * 12 - 4, step: side, head: 10, boot: 30 }} />
       <InkSplash frame={frame - STRIKE51} duration={16} seed={511} x={tip.x} y={tip.y} size={70} fade={6} />
       <DamageNumber frame={frame} text="MISS" at={STRIKE51} x={tip.x} y={tip.y - 40} size={96} />
     </ShotFrame>
@@ -378,7 +378,7 @@ export const S52 = ({ frame }: { frame: number }) => {
         <Vorathul st={st} place={place} />
       </Stage>
       <HelmNote frame={frame} st={st} place={place} pose={pose} />
-      <Kid x={kid.x} y={kid.y} h={1.9 * kid.s} flip pose={k.pose} />
+      <Kid asset="G32-2" x={kid.x} y={kid.y} h={1.9 * kid.s} flip pose={k.pose} />
       {SMACKS52.map((s, i) => (
         <div key={i}>
           <InkSplash frame={frame - s} duration={10} seed={520 + i} x={helm.x + 40} y={helm.y - 30} size={60} fade={4} direction={Math.PI} />
@@ -417,7 +417,7 @@ export const S53 = ({ frame }: { frame: number }) => {
       <SpeedLines mode="radial" frame={t} duration={14} seed={531} focus={[960, 560]} inner={420} />
       <KoStars x={helm.x} y={helm.y - 40} r={70} frame={frame} />
       <ImpactBurst frame={t} duration={10} seed={532} x={960} y={600} size={300} flash={0} />
-      {sole > 0.55 ? <Kid x={1560} y={1200} h={900} pose={{ armL: 30, armR: 95, boot: 'none', lean: -14 }} /> : null}
+      {sole > 0.55 ? <Kid asset="G32-2" x={1560} y={1200} h={900} pose={{ armL: 30, armR: 95, boot: 'none', lean: -14 }} /> : null}
       <BootSole x={lerp(960, 1340, sole)} y={lerp(560, 820, sole)} h={lerp(1250, 560, sole)} rot={lerp(-6, 14, sole)} />
     </ShotFrame>
   );

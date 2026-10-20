@@ -2,7 +2,8 @@
 // the painting props drawn in code (C24 tablets, C07 KO stars, C08 flakes, C09 HP bar, clouds, dust).
 // DOM SVG in screen pixels, placed through lib.project; a flat colour card cannot read as a figure.
 import type { CSSProperties, ReactNode } from 'react';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { assetSize, AVAILABLE } from '../../cast/available.ts';
 import { InkFilter, inkFilterId, seeded, GOLD, INK, IVORY, VIOLET } from '../../vfx/effects.ts';
 import { clamp01, easeOut, lerp } from './lib.ts';
 
@@ -19,9 +20,19 @@ interface FigBox {
   rot?: number;
   opacity?: number;
   style?: CSSProperties;
+  /** Pose cut-out id (G32-1, G15-5, ...): drawn instead of the code stand-in once the main loop puts it live. */
+  asset?: string;
 }
 
-const Fig = ({ x, y, h, flip, rot = 0, opacity = 1, style, vw, vh, seed, children }: FigBox & { vw: number; vh: number; seed: number; children: ReactNode }) => {
+const Fig = ({ x, y, h, flip, rot = 0, opacity = 1, style, vw, vh, seed, asset, children }: FigBox & { vw: number; vh: number; seed: number; children: ReactNode }) => {
+  const size = asset && AVAILABLE.has(asset) ? assetSize(asset) : undefined;
+  if (asset && size) {
+    // Final cut-out: sized by height, feet (bottom centre) on the anchor.
+    const iw = (h * size[0]) / size[1];
+    return (
+      <Img src={staticFile(`assets/${asset}.png`)} style={{ position: 'absolute', left: x - iw / 2, top: y - h, width: iw, height: h, opacity, transform: `rotate(${rot}deg) scaleX(${flip ? -1 : 1})`, transformOrigin: '50% 100%', ...style }} />
+    );
+  }
   const w = (h * vw) / vh;
   return (
     <svg
@@ -61,6 +72,7 @@ export interface KidPose {
 
 /** The level-12 kid (G32 stand-in): oversized ivory hood, black body, mismatched gold armour, one foot in a sock. */
 export const Kid = ({ pose = {}, seed = 31, ...box }: FigBox & { pose?: KidPose; seed?: number }) => {
+  // G32 poses: 1 twirl, 2 smack, 3 burst, 4 side-step, 5 look up, 6 shrug, 7 walk away.
   const { armL = 20, armR = 20, lean = 0, head = 0, boot = 0, twirl, step = 0, squash = 0 } = pose;
   const shL: [number, number] = [38, 90];
   const shR: [number, number] = [82, 90];
