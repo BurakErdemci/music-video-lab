@@ -42,7 +42,8 @@ const CAM46 = withShake(handheld(hold({ position: [0, 3.2, 26], target: [0, 5.5,
 
 export const S46 = ({ frame }: { frame: number }) => {
   const pose = CAM46(frame);
-  const place: Place = { pos: [-0.5 + 0.012 * (frame - at('s46-cut')), 0, -15], scale: SCALE_A };
+  // Left of the black carpet, on the cream tiles, so the black figure reads against the floor.
+  const place: Place = { pos: [-8 + 0.012 * (frame - at('s46-cut')), 0, -15], scale: SCALE_A };
   const st = stateAt(TL46, frame);
   const helm = project(pose, helmAt(st, place));
   // One last gold flake settles on the crown on beat 310.
