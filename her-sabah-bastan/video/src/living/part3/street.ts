@@ -17,7 +17,6 @@ import {
   charLayer,
   clamp01,
   easeInOut,
-  easeOut,
   headOf,
   imageLayer,
   lerp,
@@ -291,6 +290,7 @@ const GLASS_SCR_X = CAFE_SCR.x + num('st-cafe', 'glassX') * CAFE_K;
 const CONTACT_X = GLASS_SCR_X + 46;
 const D_HER_GLASS = 20;
 const D_HER_BACK = 110;
+const TILT_DEG = 5;
 
 const palmScr = (name: 'h-palm' | 'a-palm', head: number): Rect => {
   const s = head / headOf(name).h;
@@ -316,8 +316,7 @@ const HER_BACK = (name: string): Rect => {
 };
 
 /** Her pose inside the café at frame f. */
-const herCafePose = (f: number): 'back' | 'palm' | 'merhaba' | 'gone' => {
-  if (f < F.palms) return 'back';
+const herCafePose = (f: number): 'palm' | 'merhaba' => {
   if (f < F.reset0) return 'palm';
   if (f < F.daha1) return f < F.reach0 ? 'merhaba' : 'palm';
   if (f < F.reach1) return 'merhaba';
@@ -333,27 +332,27 @@ const EXTRA_NOTES: readonly [number, number, number][] = [
 ];
 const notesFor = (f: number): number => [F.daha1, F.daha2, F.wide].filter((x) => f >= x).length;
 
+/** The shot opens on the palms two-shot (both palms on the glass from the first frame) and drifts slowly closer. */
 const cafeCam = (f: number): Cam => {
-  const a: Cam = { x: 960, y: 540, z: 1000 };
   const b: Cam = { x: 990, y: 520, z: 930 };
   const c: Cam = { x: 1020, y: 505, z: 880 };
-  if (f < F.palms) return mixCam(a, b, sine(span(f, F.cafe, F.palms)));
-  return mixCam(b, c, easeOut(span(f, F.palms, F.wide)));
+  return mixCam(b, c, span(f, F.cafe, F.wide));
 };
 
 const cafeLayers = (f: number, cam: Cam): Layer[] => {
   const layers: Layer[] = [imageLayer('cafe', url('st-cafe'), D_CAFE, CAFE_W)];
   const pose = herCafePose(f);
   const blinks = [3600, 3640, 3700, 3760, 3830];
-  if (pose === 'back' || pose === 'merhaba') {
-    const name = pose === 'back' ? 'ai-stand' : 'a-raise';
-    const r = placeAt(HER_BACK(name), D_HER_BACK);
-    // "Bilmiyorum": her head tilts (the whole drawing leans 3 degrees about her feet), then rights itself
-    const tilt = pose === 'back' ? 3.2 * sine(span(f, F.tilt - 4, F.tilt + 8)) * (1 - sine(span(f, F.palms - 14, F.palms))) : 0;
-    layers.push(...aiLayers('ai', name, r, D_HER_BACK, f, { blinks, rot: tilt, pivot: [r.x + r.w / 2, r.y + r.h] }));
+  if (pose === 'merhaba') {
+    const r = placeAt(HER_BACK('a-raise'), D_HER_BACK);
+    layers.push(...aiLayers('ai', 'a-raise', r, D_HER_BACK, f, { blinks }));
   } else {
     const r = placeAt(HER_PALM(), D_HER_GLASS);
-    layers.push(...aiLayers('ai', 'a-palm', r, D_HER_GLASS, f, { blinks }));
+    // "Bilmiyorum": her head tilts (the whole drawing leans about her palm, which stays on the glass), then rights itself
+    const tilt = TILT_DEG * sine(span(f, F.tilt - 4, F.tilt + 8)) * (1 - sine(span(f, F.palms - 14, F.palms)));
+    const s = r.w / sp('a-palm').w;
+    const palm = pt('a-palm', 'palm');
+    layers.push(...aiLayers('ai', 'a-palm', r, D_HER_GLASS, f, { blinks, rot: tilt, pivot: [r.x + (palm[0] as number) * s, r.y + (palm[1] as number) * s] }));
   }
   // the glass between: faint glare over her side
   const glassW = placeAt({ x: GLASS_SCR_X, y: -60, w: 2040 - GLASS_SCR_X, h: 1200 }, D_HER_GLASS - 2);
