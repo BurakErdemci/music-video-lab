@@ -87,7 +87,7 @@ const TL69 = nerfTimeline(
   { phase: 'corked' },
 );
 const PLACE69: Place = { pos: [3.4, 0, -15], scale: SCALE_C };
-const OTS69: CameraPose = { position: [-0.6, 1.5, -5], target: [2.2, 2.0, -15], fov: 40 };
+const OTS69: CameraPose = { position: [-0.6, 1.5, -5], target: [1.9, 2.0, -15], fov: 40 };
 const CAM69 = withShake(handheld(hold(OTS69), { amp: 0.02, seed: 69 }), { hits: shakeHits([[HOPS[0]!, 'small'], [BONK, 'small']]) });
 // The heroes stand where the blade tip passes, in the order it meets them (pure: tip of the rig at each hop frame).
 const TIP = (f: number): Vec3 => swordTipAt(stateAt(TL69, f), PLACE69);
@@ -180,7 +180,7 @@ const TILT = at('s71-tilt');
 const CORNER = at('s71-corner');
 const EDGE = at('s71-edge');
 const ECU71 = at('s71-ecu');
-const SKY71: [number, number, number, number] = [-220, -40, 40, 150];
+const SKY71: [number, number, number, number] = [-220, -40, 20, 150];
 const CORNER_W: Vec3 = [SKY71[2], SKY71[3], -90];
 const TL71 = nerfTimeline(
   [

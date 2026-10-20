@@ -196,11 +196,11 @@ const PLACE56: Place = { pos: [0, 0, -15], scale: SCALE_C };
 const SLIT56 = slitAt(stateAt(TL56, C56), PLACE56);
 const ECU56 = frameAt(SLIT56, 1.25);
 const WHIP = DASH - 15;
-const CAM56: CameraPath = (f) => turn(ECU56, keyed(f, [[WHIP - 2, 0], [WHIP + 9, 36], [SAD - 12, 36], [SAD - 1, 0]], easeInOut), keyed(f, [[WHIP - 2, 0], [WHIP + 9, 12], [SAD - 12, 12], [SAD - 1, 0]]));
+const CAM56: CameraPath = (f) => turn(ECU56, keyed(f, [[WHIP - 2, 0], [WHIP + 9, 15], [SAD - 12, 15], [SAD - 1, 0]], easeInOut), keyed(f, [[WHIP - 2, 0], [WHIP + 9, 12], [SAD - 12, 12], [SAD - 1, 0]]));
 /** Beam end on the gallery wall: sweeps across the right gallery, then droops and falls once disabled. */
 const beamEnd = (f: number, k: number): Vec3 => {
   const s = easeInOut(prog(f, FIRE, DASH - FIRE));
-  const end: Vec3 = [lerp(14, 40, s) + k * 3, lerp(10, 22, s) - k * 4, -50];
+  const end: Vec3 = [lerp(14, 30, s) + k * 3, lerp(10, 22, s) - k * 4, -50];
   // The beams grow out of the slit over 5 frames: appearing at full length in one frame measured as a flash.
   const g = easeIn(prog(f, FIRE, 5));
   return [lerp(SLIT56[0], end[0], g), lerp(SLIT56[1], end[1], g), lerp(SLIT56[2], end[2], g)];
