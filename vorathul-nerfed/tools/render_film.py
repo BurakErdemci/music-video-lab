@@ -89,7 +89,7 @@ def splice(src, stills, out, width, height, fps):
 
 def glitched(clean, other):
     """Count of capture glitches glitchcheck.py finds in `clean` (its 'A' line)."""
-    r = subprocess.run(['python', '-I', str(TOOLS / 'glitchcheck.py'), str(clean), str(other)],
+    r = subprocess.run([sys.executable, '-I', str(TOOLS / 'glitchcheck.py'), str(clean), str(other)],
                        capture_output=True, text=True)
     print(r.stdout.strip(), r.stderr.strip(), flush=True)
     first = r.stdout.splitlines()[0].split() if r.stdout else []
