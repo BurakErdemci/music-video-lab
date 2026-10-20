@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 // Render a list of frames from one bundle into video/out/stills/ and build a labelled contact sheet.
 //
-//   node tools/stills.mjs --frames 0,100,468 [--comp Test30] [--out video/out/stills]
+//   node tools/stills.mjs --frames 0,100,468 [--comp Nerfed] [--out video/out/stills]
 //                         [--cols 3] [--tile 640] [--gl angle]
 //
 // Uses @remotion/bundler and @remotion/renderer from video/node_modules (they ship with
@@ -26,7 +26,7 @@ const opt = (name, def) => {
   const v = args[i + 1];
   return v === undefined || v.startsWith('--') ? true : v;
 };
-const comp = opt('comp', 'Test30');
+const comp = opt('comp', 'Nerfed');
 const outDir = path.resolve(ROOT, opt('out', 'video/out/stills'));
 const cols = Number(opt('cols', 3));
 const tile = Number(opt('tile', 640));

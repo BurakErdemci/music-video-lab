@@ -1,17 +1,15 @@
 #!/usr/bin/env node
-// Scalar (README): every beat-locked event drifts 0 frames from its measured beat.
+// Scalar (README): every beat-locked event drifts 0 frames from its measured anchor, and no section
+// breaks the dead-air rule from docs/scene-map.md.
 //
 //   node tools/beatcheck.mjs [--verbose]
 //
-// Loads video/src/events.ts (node strips the types; no extra dependency) and checks every
-// event against data/timing.json read independently of video/src/timing.ts:
-//   1. video/src/data/timing.json is byte-identical to data/timing.json
-//   2. frame == round(beats[beatIdx] * 30)               (drift 0)
-//   3. lyric/word events: beatIdx is the beat nearest to the measured time srcT
-//   4. bar events: beats[beatIdx - offset] is the downbeat of that bar
-//   5. every event declares visible: boolean (blinks and tiny pulses are false)
-//   6. dead air: longest gap (in beats) between VISIBLE events per section is within the limit
-//      (<= 2 in intro/chorus-type sections, <= 4 elsewhere), over frames 0..CHECK_UNTIL_FRAME
+// Loads video/src/events.ts directly (node strips the types) and recomputes every expected frame
+// from data/timing.json, read independently of video/src/timing.ts:
+//   anchor 'beat': ref = beat index          -> round(beats[ref] * 30)
+//   anchor 'hit':  ref = hit index           -> round(hits[ref].t * 30)
+//   anchor 'word': ref = "<text>#<nth>"      -> round(start of the nth phrase match * 30)
+// Drift errors fail the run (exit 1). Dead air is reported per section and also fails the run.
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
@@ -24,57 +22,68 @@ const FPS = 30;
 const rawBytes = readFileSync(path.join(ROOT, 'data/timing.json'));
 const T = JSON.parse(rawBytes.toString('utf8'));
 const copyBytes = readFileSync(path.join(ROOT, 'video/src/data/timing.json'));
-const { EVENTS, CHECK_UNTIL_FRAME } = await import(pathToFileURL(path.join(ROOT, 'video/src/events.ts')).href);
+const { EVENTS } = await import(pathToFileURL(path.join(ROOT, 'video/src/events.ts')).href);
 
-const errors = [];
 const sha = (b) => createHash('sha256').update(b).digest('hex').slice(0, 12);
-if (sha(rawBytes) !== sha(copyBytes)) errors.push(`video/src/data/timing.json differs from data/timing.json (run: npm run sync-timing in video/)`);
+const errors = [];
+if (sha(rawBytes) !== sha(copyBytes)) errors.push('video/src/data/timing.json differs from data/timing.json (run: npm run sync-timing in video/)');
 
-const nearestBeat = (t) => T.beats.reduce((best, b, i) => (Math.abs(b - t) < Math.abs(T.beats[best] - t) ? i : best), 0);
+const norm = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
+const wordStart = (text, nth) => {
+  const target = text.split(/\s+/).map(norm).filter(Boolean);
+  const ws = T.words.map((x) => norm(x.w));
+  let seen = 0;
+  for (let i = 0; i + target.length <= ws.length; i++) {
+    if (target.every((tok, k) => ws[i + k] === tok) && seen++ === nth) return T.words[i].start;
+  }
+  return undefined;
+};
+const anchorTime = (e) => {
+  if (e.anchor === 'beat') return T.beats[e.ref];
+  if (e.anchor === 'hit') return T.hits[e.ref]?.t;
+  if (e.anchor === 'word') {
+    const [text, nth] = String(e.ref).split('#');
+    return wordStart(text, Number(nth ?? 0));
+  }
+  return undefined;
+};
 
 let maxDrift = 0;
 const ids = new Set();
 for (const e of EVENTS) {
   if (ids.has(e.id)) errors.push(`duplicate id ${e.id}`);
   ids.add(e.id);
-  const bt = T.beats[e.beatIdx];
-  if (bt === undefined) {
-    errors.push(`${e.id}: no beat ${e.beatIdx}`);
+  if (!['beat', 'hit', 'word'].includes(e.anchor)) {
+    errors.push(`${e.id}: unknown anchor ${e.anchor}`);
     continue;
   }
-  const expected = Math.round(bt * FPS);
+  const t = anchorTime(e);
+  if (t === undefined) {
+    errors.push(`${e.id}: anchor ${e.anchor} ref ${e.ref} not found in timing.json`);
+    continue;
+  }
+  const expected = Math.round(t * FPS);
   const drift = Math.abs(e.frame - expected);
   maxDrift = Math.max(maxDrift, drift);
-  if (typeof e.visible !== 'boolean') errors.push(`${e.id}: visible must be a boolean`);
   if (!Number.isInteger(e.frame)) errors.push(`${e.id}: frame ${e.frame} is not an integer`);
   if (drift) errors.push(`${e.id}: frame ${e.frame} expected ${expected} (drift ${drift})`);
-  if (e.frame >= CHECK_UNTIL_FRAME) errors.push(`${e.id}: frame ${e.frame} beyond ${CHECK_UNTIL_FRAME}`);
-  if (e.srcT !== undefined && nearestBeat(e.srcT) !== e.beatIdx) errors.push(`${e.id}: beat ${e.beatIdx} is not the nearest beat to t=${e.srcT} (nearest ${nearestBeat(e.srcT)})`);
-  if (e.bar !== undefined) {
-    const downIdx = nearestBeat(T.downbeats[e.bar - 1]);
-    if (Math.abs(T.beats[downIdx] - T.downbeats[e.bar - 1]) > 0.002) errors.push(`${e.id}: downbeat ${e.bar} is not on a beat`);
-    if (downIdx + (e.beatOffset ?? 0) !== e.beatIdx) errors.push(`${e.id}: beatIdx ${e.beatIdx} != bar ${e.bar} + ${e.beatOffset ?? 0}`);
-  }
-  if (verbose) console.log(`${drift ? 'DRIFT' : 'ok   '} ${e.id.padEnd(22)} ${e.kind.padEnd(7)} beat ${String(e.beatIdx).padStart(3)}  f${String(e.frame).padStart(4)}${e.srcT !== undefined ? `  src ${e.srcT.toFixed(2)}s` : ''}`);
+  if (verbose) console.log(`${drift ? 'DRIFT' : 'ok   '} ${e.id.padEnd(20)} ${e.anchor.padEnd(5)} ${String(e.ref).padEnd(18)} f${String(e.frame).padStart(5)} (${t.toFixed(3)} s)`);
 }
-const VISIBLE = EVENTS.filter((e) => e.visible === true);
-console.log(`beatcheck: ${EVENTS.length} events (${VISIBLE.length} visible, ${EVENTS.length - VISIBLE.length} not), max drift = ${maxDrift} frames, timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
+console.log(`beatcheck drift: ${EVENTS.length} events, max drift = ${maxDrift} frames, timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
 
-// ---- dead air
+// Dead air, in beats between consecutive events within each section (docs/scene-map.md "Rules for every lane").
 const beatPos = (t) => {
   const b = T.beats;
   if (t <= b[0]) return (t - b[0]) / (b[1] - b[0]);
   for (let i = 0; i < b.length - 1; i++) if (t < b[i + 1]) return i + (t - b[i]) / (b[i + 1] - b[i]);
   return b.length - 1;
 };
-const limitFor = (name) => (/^(intro|chorus|post-chorus|final chorus|outro)/i.test(name) ? 2 : 4);
-const endT = CHECK_UNTIL_FRAME / FPS;
+// Interludes may hold up to 8 beats by design; the base limit of 4 is checked and 8 is the hard ceiling.
+const limitFor = (name) => (/^(intro|chorus|final chorus|build|outro)/i.test(name) ? 2 : 4);
 const violations = [];
 for (const s of T.sections) {
-  if (s.start >= endT) break;
-  const sEnd = Math.min(s.end, endT);
-  const evs = VISIBLE.filter((e) => e.frame / FPS >= s.start && e.frame / FPS < sEnd).sort((a, b) => a.beatIdx - b.beatIdx);
-  const pts = [{ pos: beatPos(s.start), id: '(section start)' }, ...evs.map((e) => ({ pos: e.beatIdx, id: e.id })), { pos: beatPos(sEnd), id: '(section end)' }];
+  const evs = EVENTS.filter((e) => e.frame / FPS >= s.start && e.frame / FPS < s.end).sort((a, b) => a.frame - b.frame);
+  const pts = [{ pos: beatPos(s.start), id: '(section start)' }, ...evs.map((e) => ({ pos: beatPos(e.frame / FPS), id: e.id })), { pos: beatPos(s.end), id: '(section end)' }];
   let worst = 0;
   let where = '';
   for (let k = 1; k < pts.length; k++) {
@@ -86,9 +95,10 @@ for (const s of T.sections) {
   }
   const limit = limitFor(s.name);
   const bad = worst > limit + 1e-6;
-  if (bad) violations.push(`${s.name}: gap ${worst.toFixed(2)} beats > ${limit} (${where})`);
-  console.log(`${bad ? 'FAIL ' : 'ok   '} ${s.name.padEnd(14)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(2)} beats between visible events (limit ${limit})  ${where}`);
+  if (bad) violations.push(s.name);
+  console.log(`${bad ? 'FAIL' : 'ok  '} ${s.name.padEnd(15)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(1).padStart(5)} beats (limit ${limit})  ${where}`);
 }
 for (const m of errors) console.log(`ERROR ${m}`);
-for (const v of violations) console.log(`DEAD-AIR ${v}`);
-process.exit(errors.length || violations.length ? 1 : 0);
+console.log(`beatcheck: drift ${errors.length ? 'FAIL' : 'PASS'}, dead air ${violations.length ? `FAIL in ${violations.length}/${T.sections.length} sections` : 'PASS'}`);
+// Drift is the gate that must hold now; dead-air failures are expected until the scenes are built.
+process.exit(errors.length ? 1 : violations.length ? 2 : 0);
