@@ -1,0 +1,105 @@
+[
+  {
+    "id": "L4-wall-a",
+    "prompt": "stil/prompts/h-empty/L4-wall-a.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/d-assets/out/G03.png"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-wall-a.png",
+    "depends_on": [
+      "stil/prompts/d-assets/out/G03.png"
+    ]
+  },
+  {
+    "id": "L4-wall-b",
+    "prompt": "stil/prompts/h-empty/L4-wall-b.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/d-assets/out/G03.png",
+      "stil/prompts/h-empty/out/L4-wall-a.png"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-wall-b.png",
+    "depends_on": [
+      "stil/prompts/d-assets/out/G03.png",
+      "stil/prompts/h-empty/out/L4-wall-a.png"
+    ]
+  },
+  {
+    "id": "L4-dais",
+    "prompt": "stil/prompts/h-empty/L4-dais.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-dais.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L4-floor",
+    "prompt": "stil/prompts/h-empty/L4-floor.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/d-assets/out/G06.png"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-floor.png",
+    "depends_on": [
+      "stil/prompts/d-assets/out/G06.png"
+    ]
+  },
+  {
+    "id": "L4-pillar",
+    "prompt": "stil/prompts/h-empty/L4-pillar.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/d-assets/out/G09.png"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-pillar.png",
+    "depends_on": [
+      "stil/prompts/d-assets/out/G09.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "L4-helm",
+    "prompt": "stil/prompts/h-empty/L4-helm.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-helm.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L4-banner",
+    "prompt": "stil/prompts/h-empty/L4-banner.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-banner.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L4-candelabra",
+    "prompt": "stil/prompts/h-empty/L4-candelabra.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-candelabra.png",
+    "key": "#808080"
+  },
+  {
+    "id": "L4-dust",
+    "prompt": "stil/prompts/h-empty/L4-dust.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-dust.png"
+  },
+  {
+    "id": "L4-painting-empty",
+    "prompt": "stil/prompts/h-empty/L4-painting-empty.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/h-empty/out/L4-painting-empty.png"
+  }
+]

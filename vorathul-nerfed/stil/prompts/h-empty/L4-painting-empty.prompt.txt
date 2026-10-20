@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./L4-painting-empty.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+Subject: the composition of the attached image (the colossal knight-king in the golden cathedral) with Vorathul and EVERY figure removed: the same cathedral nave, the same galleries, arches and spires, the same floor and the same centred point of view, but EMPTY and drained: no knight, no sword, no soldiers, no crowd on the balconies, banners fallen on the floor; bare ivory stone with faint gold, flat ivory sky with no blue, long black ink shadows, a few motes of dust; at the centre of the nave floor, exactly where he stood, an empty patch of floor with a faint dark outline, so the absence is the focal point.
+Composition: landscape 1536x1024 drawn so that it reads as a 16:9 painting: all important content between 7 and 93 percent of the image height (the top and bottom bands are plain wall and plain floor and will be cropped to 16:9), frontal and symmetric.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

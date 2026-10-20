@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./L4-dust.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+Subject: dust in still air: hundreds of small ivory #F4ECD8 dust motes of different sizes drawn as dry-brush dots and specks, denser in three faint soft diagonal shafts falling from the upper left made of sparse ivory halftone dots; the background is solid flat black #0A0A0A everywhere else; no buildings, no figures.
+Composition: landscape 1536x1024, the motes spread over the whole frame.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

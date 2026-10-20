@@ -5,7 +5,7 @@ Run from the clip root (vorathul-nerfed/):
 
 Writes stil/prompts/<round>/<id>.prompt.txt and stil/prompts/<round>/round.json for the rounds
 a-canonical-fix, b-test, c-rig-parts, d-assets and e-locations (docs/storyboard-03-locations.md), f-developer and g-props
-(docs/storyboard-04-developer-and-props.md). Every verbatim block (STYLE-P, FIXED, STYLE-O,
+(docs/storyboard-04-developer-and-props.md), h-empty (docs/storyboard-05-empty-cathedral.md). Every verbatim block (STYLE-P, FIXED, STYLE-O,
 cut-out lines, NEGATIVE) is read from the approved prompt files or from the storyboards at build
 time, never retyped, and every asset paragraph is parsed from the storyboard asset lists. The
 script is idempotent: it rewrites the prompt files and round.json files and nothing else.
@@ -347,6 +347,8 @@ ORDINALS = ["FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH", "SIXTH", "SEVENTH"]
 SB4 = ROOT / "docs" / "storyboard-04-developer-and-props.md"
 ID_SB3 = r"(?:L\d|H|LX)-[a-z0-9-]+"
 ID_SB4 = r"(?:G46|P1)-[a-z0-9-]+"
+SB5 = ROOT / "docs" / "storyboard-05-empty-cathedral.md"
+ID_SB5 = r"L4-[a-z0-9-]+"
 REF_G39 = "stil/prompts/d-assets/out/G39.png"
 REF_LABELS[REF_OFFICE_NEW] = ("the approved OFFICE frame (office style, palette, and the bored developer in the grey "
                               "hoodie seen from behind)")
@@ -380,16 +382,16 @@ def parse_locations(path=SB3, idpat=ID_SB3):
 
 def location_refs(a, rnd="e-locations"):
     """refs cell: comma list of `style`, `office`, `fight`, `canon`, `heroes`, `g39`, or an asset id
-    (`e:<id>` = an e-locations image, a bare id = an image of this round)."""
+    (`e:<id>` / `d:<id>` = an e-locations / d-assets image, a bare id = an image of this round)."""
     named = {"style": [REF_STYLE], "office": [REF_OFFICE_NEW], "fight": [REF_FIGHT], "canon": [REF_CANON],
              "heroes": HERO_REFS, "g39": [REF_G39]}
     refs = []
     for r in (x.strip() for x in a["refs"].split(",")):
         if r in named:
             refs += named[r]
-        elif r.startswith("e:"):
-            refs.append(f"stil/prompts/e-locations/out/{r[2:]}.png")
-        elif re.match(rf"^({ID_SB3}|{ID_SB4})$", r):
+        elif r[:2] in ("e:", "d:"):
+            refs.append(f"stil/prompts/{'e-locations' if r[0] == 'e' else 'd-assets'}/out/{r[2:]}.png")
+        elif re.match(rf"^({ID_SB3}|{ID_SB4}|{ID_SB5})$", r):
             refs.append(f"stil/prompts/{rnd}/out/{r}.png")
         else:
             die(f"unknown ref {r!r}")
@@ -470,6 +472,8 @@ def main():
         sb4 = parse_locations(SB4, ID_SB4)
         for rnd, prefix in (("f-developer", "G46-"), ("g-props", "P1-")):
             rounds[rnd] = [location_entry(i, a, rnd) for i, a in sb4.items() if i.startswith(prefix)]
+    if SB5.is_file():
+        rounds["h-empty"] = [location_entry(i, a, "h-empty") for i, a in parse_locations(SB5, ID_SB5).items()]
     for name, entries in rounds.items():
         rows = write_round(name, entries)
         print(f"{name}: {len(rows)} prompts")

@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./L4-wall-a.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+2 images are attached. The FIRST attached image is the approved STYLE frame (style and palette). The SECOND attached image is the already generated image G03 (see the Subject for how this image relates to it).
+
+Subject: the far end of the same golden gothic cathedral as the SECOND attached image, now EMPTY and drained after a long fight: the same tiers of pointed arches, empty gallery balconies with balustrades and black spires, seen perfectly straight on, but mostly bare ivory and cream stone with only faint thin touches of gold, long black ink shadows, a few chipped and cracked stones; every opening where the sky shows is flat plain ivory (no blue sky); no people, no crowd, no banners, no figures, no organ pipes. This is the LEFT half of a wide panorama.
+Composition: landscape 1536x1024, frontal and flat, no perspective, the gallery tiers continue past both side edges, the bottom edge is the base of the wall.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.
