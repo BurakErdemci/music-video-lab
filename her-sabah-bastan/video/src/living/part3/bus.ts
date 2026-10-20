@@ -1,12 +1,13 @@
 // Scene 11 (bridge, female, the quietest part, song 4341-4676): the night bus. One held seated pose with breathing
-// (two pose cuts at the end: he reads the note, he looks up); she exists only as a cream reflection in the window,
-// back to back with his reflection; his breath fogs the glass; her fingertip draws a small heart in it; she reaches
-// through the window and leaves a yellow note (her arm turns navy past the glass); he reads it and looks up: his stop.
+// (one pose cut at the end: he looks up); she exists only as a cream reflection in the window, back to back with his
+// reflection; his breath fogs the glass; her fingertip draws a small heart in it, lowers her hand and watches while the
+// heart slowly evaporates into halftone dots (she fades with its last dots: she forgets); he looks up: his stop.
 import { palette } from '../../style/palette.ts';
 import { paintBusWindow, paintGlassRain, heartTip } from './busWindow.ts';
 import { aiLayers, HUMAN_BREATH, tintedSprite } from './figures.ts';
 import { skin, solveArm, TIP as FINGER_TIP, type Rig } from './fingerRig.ts';
-import { F, H, W, canvasLayer, charLayer, clamp01, easeInOut, getImg, imageLayer, mixCam, placeAt, pt, sec, sine, sp, span, url, type Cam, type Layer, type Rect } from './common.ts';
+import { paintCharacter } from '../life.ts';
+import { F, H, W, LIFT_PAD, canvasLayer, charLayer, clamp01, easeInOut, getImg, imageLayer, mixCam, placeAt, pt, sec, sine, sp, span, url, type Cam, type Layer, type Rect } from './common.ts';
 
 const D_BUS = 0;
 /** The plate fills the frame with a little margin for the camera. */
@@ -42,8 +43,8 @@ const glassLeftX = (y: number): number => {
 
 // ---- him
 
-type Pose = 'hb-lean' | 'hb-read' | 'hb-lookup';
-const poseAt = (f: number): Pose => (f < F.read ? 'hb-lean' : f < F.lookUp ? 'hb-read' : 'hb-lookup');
+type Pose = 'hb-lean' | 'hb-lookup';
+const poseAt = (f: number): Pose => (f < F.lookUp ? 'hb-lean' : 'hb-lookup');
 const humanRect = (pose: Pose): Rect => {
   const fit = sp(pose).fit as { scale: number; dx: number; dy: number };
   const [x, y] = P(fit.dx, fit.dy);
@@ -61,7 +62,40 @@ const humanLayer = (f: number): Layer => {
   const r = humanRect(pose);
   const sway = 0.5 * Math.sin(sec(f) * 1.7) + 0.3 * Math.sin(sec(f) * 0.6 + 1);
   const rr = placeAt(r, D_MAN);
-  return charLayer('human', pose, rr, D_MAN, sec(f), { breath: { ...HUMAN_BREATH, amp: 0.012, period: 4.4 }, notes: true }, { rot: sway, pivot: [rr.x + rr.w * 0.25, rr.y + rr.h * 0.65] });
+  const o = { breath: { ...HUMAN_BREATH, amp: 0.012, period: 4.4 }, notes: true };
+  const extra = { rot: sway, pivot: [rr.x + rr.w * 0.25, rr.y + rr.h * 0.65] as [number, number] };
+  if (pose !== 'hb-lookup') return charLayer('human', pose, rr, D_MAN, sec(f), o, extra);
+  const m = sp(pose);
+  const t = sec(f);
+  return { id: 'human', src: { kind: 'canvas', key: 'human:hb-lookup-empty', cw: m.w, ch: m.h + LIFT_PAD, paint: (ctx, cw, ch) => paintCharacter(ctx, cw, ch, emptyHandLookup(), { t, ...o }) }, d: D_MAN, ...rr, ...extra };
+};
+/** hb-lookup without the card in his hand (the drawing holds the note she no longer hands over): its yellow pixels near
+ * the hand are cleared once; the sticky notes on his back are far from that box and stay. */
+let lookupEmpty: HTMLImageElement | null = null;
+const emptyHandLookup = (): HTMLImageElement => {
+  if (lookupEmpty) return lookupEmpty;
+  const img = getImg(url('hb-lookup'));
+  const c = document.createElement('canvas');
+  c.width = img.naturalWidth;
+  c.height = img.naturalHeight;
+  const g = c.getContext('2d') as CanvasRenderingContext2D;
+  g.drawImage(img, 0, 0);
+  const n = pt('hb-lookup', 'note');
+  const x0 = Math.max(0, (n[0] as number) - 4);
+  const y0 = Math.max(0, (n[1] as number) - 8);
+  const w = (n[2] as number) + 14;
+  const h = (n[3] as number) + 16;
+  const d = g.getImageData(x0, y0, w, h);
+  for (let i = 0; i < d.data.length; i += 4) {
+    const r = d.data[i] as number;
+    const b = d.data[i + 2] as number;
+    if (r > 150 && r - b > 55) d.data[i + 3] = 0;
+  }
+  g.putImageData(d, x0, y0);
+  Object.defineProperty(c, 'naturalWidth', { value: c.width });
+  Object.defineProperty(c, 'naturalHeight', { value: c.height });
+  lookupEmpty = c as unknown as HTMLImageElement;
+  return lookupEmpty;
 };
 
 // ---- the window: outside, reflections, fog, heart, rain
@@ -83,10 +117,10 @@ const travelAt = (f: number): number => {
 };
 const speedAt = (f: number): number => SPEED * (1 - clamp01((f - BRAKE0) / (BRAKE1 - BRAKE0)));
 
-type AiPose = 'a-read' | 'a-finger' | 'a-reach' | 'a-lookup';
-const aiPoseAt = (f: number): AiPose => (f < F.heart ? 'a-read' : f < F.reach ? 'a-finger' : f < F.read ? 'a-reach' : f < F.lookUp ? 'a-read' : 'a-lookup');
-/** Her reflection's scale: head ~ 104 plate px. Heads: a-read/a-lookup ~240 (part 1), finger 163, reach 152. */
-const AI_HEAD: Record<AiPose, number> = { 'a-read': 240, 'a-lookup': 165, 'a-finger': 163, 'a-reach': 152 };
+type AiPose = 'a-read' | 'a-finger';
+const aiPoseAt = (f: number): AiPose => (f < F.heart ? 'a-read' : 'a-finger');
+/** Her reflection's scale: head ~ 104 plate px. Heads: a-read ~240 (part 1), finger 163. */
+const AI_HEAD: Record<AiPose, number> = { 'a-read': 240, 'a-finger': 163 };
 const aiScale = (n: AiPose): number => 104 / AI_HEAD[n];
 const SIT_Y = 690; // the sill line under the reflections (plate px)
 /** Her rect in plate px. Sitting back to back: her back (right edge) against his reflection's back at BACK_X. */
@@ -111,7 +145,7 @@ const fingerPose = (f: number): { ox: number; oy: number; rig: Rig; tipPlate: [n
   const s = aiScale('a-finger');
   const rest: [number, number] = [HEART_C[0], HEART_C[1] - 20 * s];
   const p = clamp01((f - F.heart) / (F.heartDone - F.heart));
-  const lift = sine(span(f, F.heartDone, F.heartDone + 14));
+  const lift = sine(span(f, F.heartDone, F.heartDone + 8));
   const pen = heartTip(HEART, p);
   const tgt: [number, number] = [pen[0] + (rest[0] - pen[0]) * lift, pen[1] + (rest[1] - pen[1]) * lift];
   const dx = (tgt[0] - rest[0]) / s;
@@ -195,37 +229,25 @@ const paintFingerPose = (f: number, unit: number): HTMLCanvasElement => {
   }
   return off;
 };
-/** Head centres (sprite px, measured on the drawings' widest head row) of a-finger and a-reach, and the length of her move into the reach. */
-const FINGER_HEAD: [number, number] = [249, 94];
-const REACH_HEAD: [number, number] = [460, 92];
-const REACH_MOVE = 26;
 const aiPlateRect = (n: AiPose, f: number): Rect => {
   const m = sp(n);
   const s = aiScale(n);
   const bb = m.bbox as number[];
   if (n === 'a-finger') return { x: fingerPose(f).ox, y: fingerPose(f).oy, w: m.w * s, h: m.h * s };
-  if (n === 'a-reach') {
-    // the note lands beyond the glass's left edge, by his elbow on the sill
-    const note = pt(n, 'note');
-    const nx = glassLeftX(560) - 70;
-    const ny = 548;
-    const rest = { x: nx - (note[0] as number) * s, y: ny - (note[1] as number) * s };
-    // she starts the reach where the heart-drawing pose left her (head centre matched, same head size), then moves
-    // there as one body over REACH_MOVE frames (a beat is 14), so the pose cut is not a teleport
-    const fp = fingerPose(F.reach);
-    const fs = aiScale('a-finger');
-    const hx = fp.ox + (FINGER_HEAD[0] + fp.rig.b[0]) * fs;
-    const hy = fp.oy + (FINGER_HEAD[1] + fp.rig.b[1]) * fs;
-    const from = { x: hx - REACH_HEAD[0] * s, y: hy - REACH_HEAD[1] * s };
-    const u = sine(span(f, F.reach, F.reach + REACH_MOVE));
-    return { x: from.x + (rest.x - from.x) * u, y: from.y + (rest.y - from.y) * u, w: m.w * s, h: m.h * s };
-  }
   return { x: BACK_X - (bb[2] as number) * s, y: SIT_Y - (bb[3] as number) * s, w: m.w * s, h: m.h * s };
 };
-/** v2: she is a reflection IN the glass: faint while she sits (0.42), clearer while she draws the heart (0.6) and
- * reaches (0.7); v1's 0.86 read as a figure sitting inside the bus on the sill. */
-const REFL_ALPHA: Record<AiPose, number> = { 'a-read': 0.42, 'a-lookup': 0.42, 'a-finger': 0.6, 'a-reach': 0.7 };
-const herAlpha = (f: number): number => REFL_ALPHA[aiPoseAt(f)] * sine(span(f, F.fade, F.fog));
+/** v2: she is a reflection IN the glass: faint while she sits (0.42), clearer while she draws the heart (0.6);
+ * v1's 0.86 read as a figure sitting inside the bus on the sill. She fades out with the heart's last dots. */
+const REFL_ALPHA: Record<AiPose, number> = { 'a-read': 0.42, 'a-finger': 0.6 };
+/** The heart evaporates slowly from just after her hand is down to just before his look-up (a beat is 14 frames);
+ * the AI's reflection fades over the last 40% of it. */
+const ERASE0 = F.heartDone + 3;
+const ERASE1 = F.lookUp - 4;
+const HER_FADE0 = ERASE0 + 0.6 * (ERASE1 - ERASE0);
+const HER_FADE1 = ERASE1;
+/** Eased in (slow start), so the heart is still half there when the stop's lit panel slides in behind it. */
+const eraseAt = (f: number): number => sine(Math.pow(span(f, ERASE0, ERASE1), 1.6));
+const herAlpha = (f: number): number => REFL_ALPHA[aiPoseAt(f)] * sine(span(f, F.fade, F.fog)) * (1 - sine(span(f, HER_FADE0, HER_FADE1)));
 
 const paintReflections = (f: number) => (ctx: CanvasRenderingContext2D): void => {
   // his reflection: a faint cream ghost of a seated side view, back to back with hers
@@ -274,7 +296,8 @@ const paintPageTurn = (ctx: CanvasRenderingContext2D, f: number, x: number, y: n
   ctx.restore();
 };
 
-const fogAt = (f: number): number => sine(span(f, F.fog, F.fog + 40)) * (1 - 0.35 * span(f, F.reach, F.lookUp));
+/** The fog holds for over half of the heart's erase (the haze is what makes the wiped heart readable), then thins out with it. */
+const fogAt = (f: number): number => sine(span(f, F.fog, F.fog + 40)) * (1 - sine(span(f, ERASE0 + 0.55 * (ERASE1 - ERASE0), ERASE1)));
 /** v2 parallax: the city is a separate deeper plane (D_CITY, 1.6x the window so no camera move reaches its edge);
  * the glass (reflections, fog, heart, rain) stays just behind the plate's window hole; he sits in front (D_MAN). */
 const D_CITY = 600;
@@ -286,64 +309,76 @@ const cityLayer = (f: number): Layer =>
   canvasLayer('bus-city', 'p3:bus-city', Math.round(CW * (1 + 2 * CITY_PAD)), Math.round(CH * (1 + 2 * CITY_PAD)), D_CITY, CITY_RECT, (ctx, cw, ch) =>
     paintBusWindow(ctx, cw, ch, { t: sec(f - F.bus), travel: travelAt(f), speed: speedAt(f), stop: sine(span(f, BRAKE0, BRAKE1)), rain: 0, fog: null, heart: null, seed: 'p3-bus', part: 'outside' }),
   );
+/** Small integer hash -> [0,1): the per-dot randomness of the evaporation (fixed per grid cell, so frame-pure). */
+const cellHash = (a: number, b: number): number => {
+  let h = Math.imul(a | 0, 374761393) ^ Math.imul(b | 0, 668265263);
+  h = Math.imul(h ^ (h >>> 13), 1274126177);
+  return ((h ^ (h >>> 16)) >>> 0) / 4294967296;
+};
+/**
+ * The heart evaporating: the window is painted twice (without the heart = the canvas, with it = `full`); where the dots
+ * of a hex grid are, the canvas is replaced by `full`. The dots shrink and vanish cell by cell (the outer lobes first,
+ * with some scatter), so the stroke breaks into fine halftone dots that thin out; at u=1 only the heart-free window is left.
+ */
+const evaporate = (ctx: CanvasRenderingContext2D, full: HTMLCanvasElement, cw: number, ch: number, u: number, cx: number, cy: number, size: number): void => {
+  const step = Math.max(5, 7 * (cw / 1600));
+  const m = size * 0.8;
+  const x0 = Math.max(0, Math.floor(cx - m));
+  const y0 = Math.max(0, Math.floor(cy - m));
+  const x1 = Math.min(cw, Math.ceil(cx + m));
+  const y1 = Math.min(ch, Math.ceil(cy + m));
+  const rowH = step * 0.866;
+  ctx.save();
+  ctx.beginPath();
+  for (let row = Math.floor(y0 / rowH) - 1; row <= Math.ceil(y1 / rowH) + 1; row++) {
+    const y = row * rowH;
+    const off = (((row % 2) + 2) % 2) * step * 0.5;
+    for (let col = Math.floor((x0 - off) / step) - 1; col <= Math.ceil((x1 - off) / step) + 1; col++) {
+      const x = col * step + off;
+      const outer = clamp01(Math.hypot(x - cx, y - cy) / (size * 0.62));
+      const c = 0.55 * (1 - outer) + 0.45 * cellHash(col, row);
+      const local = clamp01((u * 1.3 - c) / 0.3);
+      const rad = step * 0.62 * Math.pow(1 - local, 0.9);
+      if (rad < 0.35) continue;
+      ctx.moveTo(x + rad, y);
+      ctx.arc(x, y, rad, 0, Math.PI * 2);
+    }
+  }
+  ctx.clip();
+  ctx.clearRect(x0, y0, x1 - x0, y1 - y0);
+  ctx.drawImage(full, x0, y0, x1 - x0, y1 - y0, x0, y0, x1 - x0, y1 - y0);
+  ctx.restore();
+};
 const windowLayer = (f: number): Layer => {
   const [fx, fy] = C(FOG.x, FOG.y);
   const [hx, hy] = C(HEART.x, HEART.y);
   const fog = fogAt(f);
   const heartP = clamp01((f - F.heart) / (F.heartDone - F.heart));
-  return canvasLayer('bus-window', 'p3:bus-window', CW, CH, D_GLASS, placeAt(WIN_RECT, D_GLASS), (ctx, cw, ch) =>
-    paintBusWindow(ctx, cw, ch, {
-      t: sec(f - F.bus),
-      travel: travelAt(f),
-      speed: speedAt(f),
-      stop: sine(span(f, BRAKE0, BRAKE1)),
-      rain: 1 - 0.4 * span(f, F.bus, F.fade + 30),
-      fog: fog > 0 ? { x: fx, y: fy, r: FOG.r * WK, a: fog } : null,
-      heart: f >= F.heart ? { x: hx, y: hy, size: HEART.size * WK, p: heartP } : null,
-      reflection: paintReflections(f),
-      seed: 'p3-bus',
-      part: 'glass',
-    }),
-  );
-};
-
-/** Her arm past the glass: the part of her reaching drawing outside the window turns navy (the note stays yellow). */
-const crossingLayer = (f: number): Layer | null => {
-  if (aiPoseAt(f) !== 'a-reach') return null;
-  const r = aiPlateRect('a-reach', f);
-  const s = aiScale('a-reach');
-  const note = pt('a-reach', 'note');
-  const [x0, y0] = P(r.x - 10, r.y - 10);
-  const [x1, y1] = P(r.x + r.w + 10, r.y + r.h + 10);
-  const box: Rect = { x: x0, y: y0, w: x1 - x0, h: y1 - y0 };
-  const cw = Math.round((r.w + 20) * WK);
-  const ch = Math.round((r.h + 20) * WK);
-  return canvasLayer('crossing', 'p3:crossing', cw, ch, D_BUS - 1, box, (ctx) => {
-    const ox = (px: number): number => (px - r.x + 10) * WK;
-    const oy = (py: number): number => (py - r.y + 10) * WK;
-    // clip: the region left of the glass's left edge
-    ctx.save();
-    ctx.beginPath();
-    ctx.moveTo(ox(r.x - 20), oy(r.y - 20));
-    ctx.lineTo(ox(glassLeftX(r.y - 20)), oy(r.y - 20));
-    ctx.lineTo(ox(glassLeftX(r.y + r.h + 20)), oy(r.y + r.h + 20));
-    ctx.lineTo(ox(r.x - 20), oy(r.y + r.h + 20));
-    ctx.closePath();
-    ctx.clip();
-    const appear = clamp01((f - F.reach) / 4);
-    ctx.globalAlpha = appear;
-    ctx.drawImage(tintedSprite('a-reach', palette.navy), ox(r.x), oy(r.y), r.w * WK, r.h * WK);
-    // a thin cream rim around the navy arm so it reads against the dark interior
-    ctx.restore();
-    // the note itself (yellow), drawn from the original drawing
-    ctx.save();
-    ctx.globalAlpha = appear;
-    const nx = note[0] as number;
-    const ny = note[1] as number;
-    const nw = note[2] as number;
-    const nh = note[3] as number;
-    ctx.drawImage(getImg(url('a-reach')), nx, ny, nw, nh, ox(r.x + nx * s), oy(r.y + ny * s), nw * s * WK, nh * s * WK);
-    ctx.restore();
+  const u = eraseAt(f);
+  const opts = (heart: boolean): Parameters<typeof paintBusWindow>[3] => ({
+    t: sec(f - F.bus),
+    travel: travelAt(f),
+    speed: speedAt(f),
+    stop: sine(span(f, BRAKE0, BRAKE1)),
+    rain: 1 - 0.4 * span(f, F.bus, F.fade + 30),
+    fog: fog > 0 ? { x: fx, y: fy, r: FOG.r * WK, a: fog } : null,
+    heart: heart && f >= F.heart ? { x: hx, y: hy, size: HEART.size * WK, p: heartP } : null,
+    reflection: paintReflections(f),
+    seed: 'p3-bus',
+    part: 'glass',
+  });
+  return canvasLayer('bus-window', 'p3:bus-window', CW, CH, D_GLASS, placeAt(WIN_RECT, D_GLASS), (ctx, cw, ch) => {
+    if (u <= 0) {
+      paintBusWindow(ctx, cw, ch, opts(true));
+      return;
+    }
+    paintBusWindow(ctx, cw, ch, opts(false));
+    if (u >= 1) return;
+    const full = document.createElement('canvas');
+    full.width = cw;
+    full.height = ch;
+    paintBusWindow(full.getContext('2d') as CanvasRenderingContext2D, cw, ch, opts(true));
+    evaporate(ctx, full, cw, ch, u, hx, hy, HEART.size * WK);
   });
 };
 
@@ -392,8 +427,6 @@ export const busCam = (f: number): Cam => {
 export const busLayers = (f: number): Layer[] => {
   const cam = busCam(f);
   const layers: Layer[] = [cityLayer(f), windowLayer(f), imageLayer('bus', url('bus-int'), D_BUS, BUS_W), humanLayer(f)];
-  const cross = crossingLayer(f);
-  if (cross) layers.push(cross);
   const mr = matchRainLayer(f, cam, -200);
   if (mr) layers.push(mr);
   return layers;

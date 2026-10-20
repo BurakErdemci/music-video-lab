@@ -608,6 +608,15 @@ const paintFogAndHeart = (
 
   let fogAtHeart = 0;
   if (showFog && fog) {
+    // a soft cream haze under the stipple: fog over light (the stop's yellow panel) reads paler and hazier, and the wipe
+    // of the heart clears it, so the stroke shows what is behind the glass clean and sharp
+    const vg = g.createRadialGradient(fog.x - x0, fog.y - y0, 0, fog.x - x0, fog.y - y0, R);
+    vg.addColorStop(0, 'rgba(243,239,228,1)');
+    vg.addColorStop(0.4, 'rgba(243,239,228,0.85)');
+    vg.addColorStop(1, 'rgba(243,239,228,0)');
+    g.fillStyle = vg;
+    g.globalAlpha = Math.min(1, fog.a * 0.3);
+    g.fillRect(0, 0, bw, bh);
     // halftone stipple on a fixed hex grid; dot size and dropout fall off toward the edge
     const step = Math.max(5, 7 * s);
     g.fillStyle = palette.cream;
