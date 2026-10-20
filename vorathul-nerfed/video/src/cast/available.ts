@@ -25,6 +25,8 @@ const LIVE: readonly string[] = [
   'G32-1', 'G32-2', 'G32-3', 'G32-4', 'G32-5', 'G32-6', 'G33-2', 'G34-1', 'G34-2', 'G34-3', 'G34-4', 'G34-5', 'G34-6', 'G34-7', 'G34-8', 'G34-9', 'G34-10', 'G34-11', 'G34-12',
   // p4 inside arcades
   'G35a', 'G35b',
+  // p4 cheering playtester and the empty office wall
+  'G38-2', 'office-plate',
   // p5 office cast and key stills
   'G14', 'G39-1', 'G39-2', 'G39-3', 'G39-7', 'G39-8', 'G41-1', 'G41-2', 'G41-4', 'G42', 'G43', 'G44', 'G45',
   // drawn developer (office, replaces the code-drawn DevActor)
