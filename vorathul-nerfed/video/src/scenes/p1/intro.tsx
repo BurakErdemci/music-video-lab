@@ -131,7 +131,7 @@ const S02 = ({ frame }: { frame: number }) => {
       hud={false}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rays={1} rayBend={bend} cloudShift={shift} />
+          <World sil={sil} rayBend={bend} cloudShift={shift} />
           <Vorathul state={st} frame={frame} />
         </>
       )}
@@ -171,7 +171,7 @@ const S03 = ({ frame }: { frame: number }) => {
       hud={false}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rays={1} rayBend={12} cloudShift={7} bow={bow} sway={sway} />
+          <World sil={sil} rayBend={12} cloudShift={7} bow={bow} sway={sway} />
           <Vorathul state={st} frame={frame} />
         </>
       )}
@@ -211,7 +211,7 @@ const S04 = ({ frame }: { frame: number }) => {
       hud={false}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rays={1} rayBend={12} cloudShift={7} />
+          <World sil={sil} rayBend={12} cloudShift={7} />
           <Vorathul state={st} frame={frame} />
         </>
       )}
@@ -267,7 +267,7 @@ const S05 = ({ frame }: { frame: number }) => {
       hud={false}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rays={1} rayBend={12} cloudShift={7} />
+          <World sil={sil} rayBend={12} cloudShift={7} />
           <Vorathul state={st} frame={frame} />
         </>
       )}
