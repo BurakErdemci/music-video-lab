@@ -4,6 +4,8 @@ import { W, H } from './layout.ts';
 import { Test30Scene } from './scenes/Test30Scene.tsx';
 import { LineupScene, PartsScene } from './scenes/PartsScene.tsx';
 import { CharMaskScene } from './scenes/CharMaskScene.tsx';
+import { BLENDER_TEST_FRAMES, BlenderTestScene } from './scenes/BlenderTestScene.tsx';
+import { CUTOUT_TEST_FRAMES, CutoutTestScene } from './scenes/CutoutTestScene.tsx';
 import './style/fonts.ts';
 import './style/assets.ts';
 
@@ -33,6 +35,12 @@ const Test2Video = () => {
   );
 };
 
+/** Blender character test (blender/README.md): the Blender-rendered rigs over the room plates. */
+const BlenderTest = ({ bgOnly }: { bgOnly?: boolean }) => <BlenderTestScene frame={useCurrentFrame()} bgOnly={bgOnly} />;
+
+/** 2D cut-out puppet test (blender/cutout/). */
+const CutoutTest = ({ bgOnly }: { bgOnly?: boolean }) => <CutoutTestScene frame={useCurrentFrame()} bgOnly={bgOnly} />;
+
 const Parts = () => {
   const frame = useCurrentFrame();
   return <PartsScene frame={frame} />;
@@ -47,6 +55,8 @@ export const Root = () => (
     <Composition id="CharMask2" component={CharMaskScene} defaultProps={{ who: 'human' as 'human' | 'ai' }} durationInFrames={3960} fps={FPS} width={W} height={H} />
     <Composition id="Lineup" component={LineupScene} durationInFrames={1} fps={FPS} width={W} height={H} />
     <Composition id="CharMask" component={CharMaskScene} defaultProps={{ who: 'human' as 'human' | 'ai' }} durationInFrames={2700} fps={FPS} width={W} height={H} />
+    <Composition id="BlenderTest" component={BlenderTest} defaultProps={{ bgOnly: false }} durationInFrames={BLENDER_TEST_FRAMES} fps={FPS} width={W} height={H} />
+    <Composition id="CutoutTest" component={CutoutTest} defaultProps={{ bgOnly: false }} durationInFrames={CUTOUT_TEST_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Parts" component={Parts} durationInFrames={130} fps={FPS} width={W} height={H} />
   </>
 );
