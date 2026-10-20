@@ -2285,5 +2285,165 @@
     "count": 1,
     "count_source": "plate",
     "mode": "RGB"
+  },
+  "L4-wall-a": {
+    "kind": "plate",
+    "files": [
+      "assets/L4-wall-a.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L4-wall-b": {
+    "kind": "plate",
+    "files": [
+      "assets/L4-wall-b.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L4-dais": {
+    "kind": "single",
+    "files": [
+      "assets/L4-dais.png"
+    ],
+    "sizes": [
+      [
+        1500,
+        579
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L4-floor": {
+    "kind": "plate",
+    "files": [
+      "assets/L4-floor.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L4-pillar": {
+    "kind": "single",
+    "files": [
+      "assets/L4-pillar.png"
+    ],
+    "sizes": [
+      [
+        490,
+        1536
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L4-helm": {
+    "kind": "single",
+    "files": [
+      "assets/L4-helm.png"
+    ],
+    "sizes": [
+      [
+        966,
+        541
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L4-banner": {
+    "kind": "single",
+    "files": [
+      "assets/L4-banner.png"
+    ],
+    "sizes": [
+      [
+        1500,
+        673
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L4-candelabra": {
+    "kind": "single",
+    "files": [
+      "assets/L4-candelabra.png"
+    ],
+    "sizes": [
+      [
+        960,
+        827
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L4-dust": {
+    "kind": "plate",
+    "files": [
+      "assets/L4-dust.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L4-painting-empty": {
+    "kind": "plate",
+    "files": [
+      "assets/L4-painting-empty.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
   }
 }
