@@ -579,3 +579,20 @@ that produced §1.3, so every frame equals `round(anchor × 30)`.
    choir chant one frame early).
 6. **Open for the director's listening check:** no measured onsets under the choruses and the final
    fight; strikes sit on beats/words. Confirm they land by ear.
+
+### Flash budget audit (20 Oct 2026, after the strict-count fix)
+
+[`flash-audit.md`](flash-audit.md) counts every planned swing in both storyboards: 94 sources, six
+zones over the limit (Z1 S22, Z2 S24, Z3 S53+S54, Z4 S90+S91, Z5 S99+S100, Z6 S113). Binding for
+the scene lanes:
+
+- Apply the audit's proposed fix for each zone (the "After" column); `gradeCues` and
+  `assertFlashBudget` throw otherwise.
+- The 2-frame posterise belongs to the 10 impacts listed in the collision table only, not to every
+  fight impact (§0.2 is read that way).
+- A panel cut and its grade cue land on the same frame (X04, X14, X27 pass only then).
+- A "one beat" grade returns on the next beat unless the shot says otherwise.
+- S107's TimeRemap must not replay DuotoneFlash tracks.
+- S57 (lightning) and S60 (25 pose cuts in 50 frames) are measured with flashcheck on their render.
+- `timing.json` `hits[].frame` differs by 1 from `round(t * 30)` on 20 hits; anchor on `t`, as
+  `events.ts` does.
