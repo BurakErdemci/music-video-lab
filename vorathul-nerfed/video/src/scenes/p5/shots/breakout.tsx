@@ -5,7 +5,9 @@ import type { Vec3 } from '../../../stage/Card.tsx';
 import { Stage } from '../../../stage/Stage.tsx';
 import { RubberStamp } from '../../../ui/kit.ts';
 import { ImpactBurst, InkSplash, PaintSpread, Shards, SpeedLines } from '../../../vfx/effects.ts';
+import { AbsoluteFill } from 'remotion';
 import { CanvasShatter } from '../lib/CanvasShatter.tsx';
+import { S91_WHITE_FRAMES } from '../lib/flash.ts';
 import { E, outCubic, project, prog, pxPerUnit, twos } from '../lib/geom.ts';
 import { Dev, Frame, O, PaintDecal, PAINT_Z } from '../lib/Office.tsx';
 import { Inside, PinnedCards, Room } from '../lib/Room.tsx';
@@ -78,6 +80,8 @@ export const S91 = ({ frame }: { frame: number }) => {
       <SpeedLines mode="radial" frame={ff - SHATTER_AT} duration={16} seed={91} focus={[punch.x, punch.y]} inner={260} count={46} />
       <Shards frame={frame - SHATTER_AT} duration={34} seed={91} origin={[punch.x, punch.y]} spread={Math.PI * 2} direction={0} speed={46} size={40} count={30} fills={[GOLD, IVORY, IVORY]} />
       <ImpactBurst frame={frame - SHATTER_AT} duration={9} seed={91} x={punch.x} y={punch.y} size={240} flash={0} />
+      {/* X19: the white-out on the downbeat, then the canvas is already flying at the lens. */}
+      {frame < SHATTER_AT + S91_WHITE_FRAMES ? <AbsoluteFill style={{ background: IVORY }} /> : null}
       {/* Shards hit the lens: ink flecks land on the glass at the corners. */}
       <InkSplash frame={frame - E('s91-shards-lens')} duration={40} seed={912} x={150} y={930} size={130} fade={10} direction={-0.6} />
       <InkSplash frame={frame - E('s91-shards-lens') - 1} duration={38} seed={913} x={1790} y={150} size={95} fade={10} direction={2.4} />

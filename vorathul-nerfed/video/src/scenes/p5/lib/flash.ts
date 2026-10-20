@@ -28,12 +28,18 @@ export const BLAST_CUES = gradeCues(
   'p5 S113 blast grades',
 );
 
-/** Every swing of part 5, plus the p4 tail that shares its first second (S90 strobe f6661, white-out f6671). */
+/** Ivory white-out at the head of S91 (p4 ends on the office frame and leaves the white-out to p5). */
+export const S91_WHITE_FRAMES = 2;
+
+/**
+ * Every swing of part 5, plus the p4 tail that shares its first second. p4 hand-off: its last cut swings are
+ * at most one in f6650-6679 (modelled on beat 679); there is no white-out in p4.
+ */
 export const SWINGS: Swing[] = [
   { frame: beatFrame(679), swings: 1 },
-  { frame: beatFrame(680), swings: 1 },
-  // S91: the held ivory white-out ends on the cut to the shatter; ImpactBurst flash 0 (Z4 fix).
+  // S91 (Z4 fix): cut to the ivory white-out on beat 681, out of it into the shatter 2 frames later; ImpactBurst flash 0.
   { frame: E('s91-cut'), swings: 1 },
+  { frame: E('s91-cut') + S91_WHITE_FRAMES, swings: 1 },
   // S95 A5: the only posterise of the fight (one of the ten collision-table impacts).
   ...impactSwings(E('s95-cut'), 2),
   // S99 (Z5 fix): cut to the dark ECU of the void, A7 with flash 0, cut back to the bright office.
