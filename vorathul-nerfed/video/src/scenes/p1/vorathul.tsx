@@ -254,6 +254,9 @@ export const echoesAt = (tl: Timeline, frame: number, strikes: readonly number[]
   const delay = opts.delay ?? 2;
   const span = opts.frames ?? 7;
   const off = opts.offset ?? [-0.18, 0.08, -0.02];
+  // On the drawn rig a flat copy of an arm reads as a second, ghost limb next to the real one (review, 20 Oct):
+  // the echoes only belong to the one-colour placeholder pass; strikes on the drawn rig are sold by speed lines.
+  if (!PLACEHOLDER) return [];
   const live = strikes.find((s) => frame >= s - 2 && frame < s + span);
   if (live === undefined) return [];
   return ['#9B5CE0', '#0A0A0A', '#F4ECD8'].map((color, i) => ({ state: rigAt(VORA, tl, frame - (i + 1) * delay), color, offset: [off[0] * (i + 1), off[1] * (i + 1), off[2] * (i + 1)] as Vec3 }));
