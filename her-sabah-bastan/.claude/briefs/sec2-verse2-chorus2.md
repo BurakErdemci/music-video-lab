@@ -1,6 +1,6 @@
 # Brief: verse 2 + pre-chorus 2 + chorus 2 (1:28.7–2:09.8)
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the
 architect commits). Files in English. Sub-agents you spawn must be `sonnet` (bulk reading, measuring, contact
 sheets); you keep design and code. RESUME RULE: if this brief is re-sent after an interruption, read `git status`
 and `git diff` first and continue; do not restart.

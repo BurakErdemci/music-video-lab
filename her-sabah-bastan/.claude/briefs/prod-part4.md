@@ -1,6 +1,6 @@
 # Brief: production part 4 — song 2:35.88–4:00.76 (scene map v2 scenes 12–17) in the living-illustration language
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
 commits). Files in English. You are the designer and integrator; run independent tracks in parallel through `sonnet`
 helpers (they may spawn their own `sonnet` helpers), each with a narrow brief and its own files (drawings A/B, the run +
 crack painter, the navy flood, the re-forming/pixel/pen effects, the cracked-glass split + tally callback, the shatter

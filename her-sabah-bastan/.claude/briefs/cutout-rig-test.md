@@ -1,6 +1,6 @@
 # Brief: 2D cut-out rig test in Blender (our drawings, bones, smooth bending)
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
 commits). Files in English. Sub-agents you spawn must be `sonnet`; Burak wants parallel work — split independent tracks
 (e.g. human rig, AI rig, checks/compositing) across sonnet helpers, keep design and the final look yourself. RESUME RULE:
 if re-sent, read `git status`/`git diff` first and continue.

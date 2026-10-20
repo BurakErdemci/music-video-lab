@@ -1,6 +1,6 @@
 # Brief: cut-out puppet parts for both characters (2D bone animation)
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit). Files in English.
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit). Files in English.
 Sub-agents you spawn must be `sonnet`. RESUME RULE: if re-sent, read `git status`/`git diff` first and continue.
 
 ## Why

@@ -1,6 +1,6 @@
 # Brief: scene map v2 — break the single split screen, flow like water, stay with the lyrics
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit). Files in English.
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit). Files in English.
 Sub-agents you spawn must be `sonnet` (e.g. extracting the lyric/time table). This is design work: no video code.
 
 ## Burak's direction (verbatim, Turkish; this is the brief's authority)

@@ -1,6 +1,6 @@
 # Brief: transition test — make three scene changes flow like water
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
 commits). Files in English. Sub-agents you spawn must be `sonnet`. RESUME RULE: if re-sent, read `git status`/`git diff`
 first and continue.
 

@@ -1,6 +1,6 @@
 # Brief: production part 1 — transition plan for the whole clip, then 0:00–0:56.86 in the living-illustration language
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
 commits). Files in English. Sub-agents you spawn must be `sonnet`; Burak wants speed: run independent tracks in parallel
 (drawings, Three.js shots, small life/pen, typography/stamps, checks), each with a narrow brief and its own files. You
 keep shot design, integration and the final full-rate look. RESUME RULE: if re-sent, read `git status`/`git diff` first.

@@ -1,6 +1,6 @@
 # Brief: production part 2 — song 0:56.86–1:51.6 (scene map v2 scenes 5–8) in the living-illustration language
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
 commits). Files in English. You are the designer and integrator. Burak wants speed AND quality ("bu kalitede devam et"):
 run independent tracks in parallel through `sonnet` helpers (they may spawn their own `sonnet` helpers), each with a
 narrow brief and its own files: e.g. drawings A (human), drawings B (AI + props), the "bir daha" accumulation painter

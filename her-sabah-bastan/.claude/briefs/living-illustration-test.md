@@ -1,6 +1,6 @@
 # Brief: "living illustration" test — full drawn poses, small life, camera and print transitions
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash; local git, NEVER push; do not commit — the architect
 commits). Files in English. Sub-agents you spawn must be `sonnet`; work in parallel where tracks are independent
 (e.g. one sonnet generates and verifies pose drawings with Codex while another builds the Remotion scene), you keep the
 design and the final look. RESUME RULE: if re-sent, read `git status`/`git diff` first and continue.

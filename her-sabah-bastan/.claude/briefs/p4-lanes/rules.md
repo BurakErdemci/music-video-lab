@@ -1,6 +1,6 @@
 # Part 4 scene-code lanes — shared rules (architect: the part-4 main lane)
 
-Repo C:\Users\burcu\Documents\klip-her-sabah (Windows, Git Bash, absolute paths). Do not commit, do not push. Any sub-agent
+Repo ~\Documents\klip-her-sabah (Windows, Git Bash, absolute paths). Do not commit, do not push. Any sub-agent
 you spawn uses model "sonnet".
 
 ## Read first
@@ -46,7 +46,7 @@ frame. Stamps/captions are the typography lane's; keep faces clear of the top ~1
 (male captions top-left, female top-right).
 
 ## Look at your work
-`cd /c/Users/burcu/Documents/klip-her-sabah/video`; typecheck `npx tsc --noEmit -p .` (must pass). Stills:
+`cd ~/Documents/klip-her-sabah/video`; typecheck `npx tsc --noEmit -p .` (must pass). Stills:
 `npx remotion still src/living-index.ts Part4a out/part4-dev/<lane>/f<SONG>.png --frame=<SONG-4676> --log=error --timeout=120000`
 (Part4b: `--frame=<SONG-6396>`). Short ranges as video for motion: `npx remotion render src/living-index.ts Part4a
 out/part4-dev/<lane>/seg.mp4 --frames=<a>-<b> --concurrency=2 --log=error --timeout=120000` then frame sheets with
