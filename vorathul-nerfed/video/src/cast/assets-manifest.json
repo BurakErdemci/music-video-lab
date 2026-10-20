@@ -1565,5 +1565,501 @@
     "count": 1,
     "count_source": "plate",
     "mode": "RGB"
+  },
+  "L1-wall-a": {
+    "kind": "plate",
+    "files": [
+      "assets/L1-wall-a.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L1-console": {
+    "kind": "single",
+    "files": [
+      "assets/L1-console.png"
+    ],
+    "sizes": [
+      [
+        1465,
+        976
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L1-pipes-near": {
+    "kind": "single",
+    "files": [
+      "assets/L1-pipes-near.png"
+    ],
+    "sizes": [
+      [
+        1024,
+        1536
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L1-floor": {
+    "kind": "plate",
+    "files": [
+      "assets/L1-floor.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L1-bellows": {
+    "kind": "single",
+    "files": [
+      "assets/L1-bellows.png"
+    ],
+    "sizes": [
+      [
+        1442,
+        945
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L2-sky-a": {
+    "kind": "plate",
+    "files": [
+      "assets/L2-sky-a.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L2-sky-b": {
+    "kind": "plate",
+    "files": [
+      "assets/L2-sky-b.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L2-land": {
+    "kind": "single",
+    "files": [
+      "assets/L2-land.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        447
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L2-spires": {
+    "kind": "single",
+    "files": [
+      "assets/L2-spires.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1021
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L2-buttress": {
+    "kind": "single",
+    "files": [
+      "assets/L2-buttress.png"
+    ],
+    "sizes": [
+      [
+        1020,
+        1536
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L2-roof": {
+    "kind": "single",
+    "files": [
+      "assets/L2-roof.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1007
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L2-gargoyle": {
+    "kind": "single",
+    "files": [
+      "assets/L2-gargoyle.png"
+    ],
+    "sizes": [
+      [
+        970,
+        1009
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L3-wall": {
+    "kind": "plate",
+    "files": [
+      "assets/L3-wall.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L3-cracks": {
+    "kind": "single",
+    "files": [
+      "assets/L3-cracks.png"
+    ],
+    "sizes": [
+      [
+        1488,
+        944
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L3-column": {
+    "kind": "single",
+    "files": [
+      "assets/L3-column.png"
+    ],
+    "sizes": [
+      [
+        433,
+        1536
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L3-column-broken": {
+    "kind": "single",
+    "files": [
+      "assets/L3-column-broken.png"
+    ],
+    "sizes": [
+      [
+        374,
+        965
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "L3-floor": {
+    "kind": "plate",
+    "files": [
+      "assets/L3-floor.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L3-rubble": {
+    "kind": "single",
+    "files": [
+      "assets/L3-rubble.png"
+    ],
+    "sizes": [
+      [
+        1521,
+        514
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "single",
+    "mode": "RGBA"
+  },
+  "LX-rays": {
+    "kind": "plate",
+    "files": [
+      "assets/LX-rays.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s06-knight": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s06-knight.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s06-mage": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s06-mage.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s06-archer": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s06-archer.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s06-rogue": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s06-rogue.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s17-knight": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s17-knight.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s17-mage": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s17-mage.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s17-archer": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s17-archer.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s17-rogue": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s17-rogue.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L1-wall-b": {
+    "kind": "plate",
+    "files": [
+      "assets/L1-wall-b.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "L3-wall-ruin": {
+    "kind": "plate",
+    "files": [
+      "assets/L3-wall-ruin.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s14-double": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s14-double.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
+  },
+  "H-s19-charge": {
+    "kind": "plate",
+    "files": [
+      "assets/H-s19-charge.png"
+    ],
+    "sizes": [
+      [
+        1536,
+        1024
+      ]
+    ],
+    "poses": 1,
+    "count": 1,
+    "count_source": "plate",
+    "mode": "RGB"
   }
 }
