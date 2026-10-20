@@ -1,7 +1,7 @@
-// Scene 11, chorus 2 (S68-S73): the ticket queue, the skipping-rope sweep, the broom, awareness step 2 (the sky
-// ends at a ruler-straight line) and the last shoe smack he does not even notice.
+// Scene 11, chorus 2 (S68-S73): the throne room becomes his concert stage. He rips the mic off its stand at the ticket
+// queue, sings the sweep, swings the stand at the broom, belts the anthem line under the lantern rig, then stands
+// still and takes the last shoe smack without noticing.
 import { frameAt, handheld, hold, withShake, SHAKE_PCT, type CameraPath, type CameraPose } from '../../camera/api.ts';
-import { AssetCard } from '../../cast/AssetCard.tsx';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { DamageNumber, Nameplate, RubberStamp, TicketPill, C } from '../../ui/kit.ts';
@@ -9,11 +9,11 @@ import { ImpactBurst, InkSplash, GOLD, INK } from '../../vfx/effects.ts';
 import { Throne } from './Throne.tsx';
 import { kidSmack } from './Chorus1.tsx';
 import { at } from './events.ts';
-import { Cloud, ComicHpBar, Dim, DustPuff, Kid, Knight } from './Figures.tsx';
+import { ComicHpBar, Dim, DustPuff, Kid, Knight } from './Figures.tsx';
 import { ShotFrame } from './Frame.tsx';
 import { G, S73_SHOE_FLASH } from './grades.ts';
 import { clamp01, easeIn, easeInOut, easeOut, easeOutBack, keyed, lerp, project, prog, twos } from './lib.ts';
-import { FloorStand, HeldMic, HeldStand, MIC_H, StageLights, heldAt, perform, type Overrides } from './Mic.tsx';
+import { ARM_LOW, ARM_OUT, ARM_UP, Crumble, FloorStand, HANG, HeldMic, HeldStand, REACH, RestingMic, SING, STAND_SHOULDER, STAND_STRIKE, STAND_WIND, StageLights, armKeys, perform, restMic, singKeys, type ArmPose, type Overrides } from './Mic.tsx';
 import { SCALE_C, helmAt, nerfTimeline, stateAt, swordTipAt, Vorathul, withHems, type Place } from './nerf.tsx';
 
 const shakeHits = (list: [number, keyof typeof SHAKE_PCT][]) => list.map(([start, k], i) => ({ start, seed: start * 17 + i, amp: { pct: SHAKE_PCT[k] } }));
@@ -23,48 +23,38 @@ const hopCurve = (frame: number, at0: number, len = 9): number => {
   return t < 0 || t > 1 ? 0 : Math.sin(Math.PI * t);
 };
 
-// ---------------------------------------------------------------- S68 heroes queue with tickets
+// ---------------------------------------------------------------- S68 heroes queue with tickets; he takes the mic
 const C68 = at('s68-cut');
 const STEP68 = at('s68-step');
-const TL68 = nerfTimeline([{ at: C68, pose: 'slump', dur: 0, cut: true }], { phase: 'corked' });
-// The yank: he reaches for the mic on the stand, rips it off on beat 465 (12 frames of travel) and sings it, head back;
-// the free arm is thrown out on beat 466. The sword is planted at his side so that hand is free.
 const GRAB = at('s68-grab');
-// Upper arm hanging, forearm folded up and inward: the grille ends up under his chin.
-const MIC_UP = { ua: 5, f: 148 } as const;
+const TL68 = nerfTimeline([{ at: C68, pose: 'slump', dur: 0, cut: true }], { phase: 'corked' });
+// The left arm of the slump pose (docs/rig.md §5.1) and the right one without the sword.
+const SLUMP_L: ArmPose = { ua: 6, f: 10, h: 0 };
+// The yank: the left fist travels to the mic in the stand in front of him (12 frames), closes on it on beat 465 and rips
+// it up to his mouth on the downbeat of beat 466 (12 frames); the free right arm is thrown out on the same downbeat and
+// the head goes back. The sword is planted at his side so that hand is free.
+const REACH_AT = C68 + 12;
+const YANK = STEP68 - 12;
 const OV68: Overrides = {
   plant: true,
-  L: {
-    ua: [[C68, 130], [GRAB - 12, 130], [GRAB, MIC_UP.ua], [at('s68-step') + 10, MIC_UP.ua + 6], [at('s69-cut'), MIC_UP.ua]],
-    f: [[C68, 15], [GRAB - 12, 15], [GRAB, MIC_UP.f], [at('s68-step') + 10, MIC_UP.f - 6], [at('s69-cut'), MIC_UP.f]],
-    hand: [[C68, 'open'], [GRAB - 6, 'grip']],
-  },
-  R: { ua: [[C68, -15], [at('s68-step') - 12, -15], [at('s68-step'), 100]], f: [[C68, 55], [at('s68-step') - 12, 55], [at('s68-step'), 25]], hand: [[C68, 'fist'], [at('s68-step') - 8, 'spread']] },
-  head: [[C68, 0], [GRAB + 4, 0], [GRAB + 16, 16]],
-  torso: [[C68, 0], [GRAB + 4, 0], [GRAB + 16, 5]],
+  L: armKeys([[C68, SLUMP_L], [REACH_AT, REACH], [YANK, REACH], [STEP68, SING]], [[C68, 'open'], [GRAB - 6, 'fist']]),
+  R: armKeys([[C68, ARM_LOW], [YANK, ARM_LOW], [STEP68, ARM_OUT]], [[C68, 'fist'], [YANK + 4, 'spread']]),
+  head: [[C68, 0], [YANK + 2, 0], [STEP68 + 6, 18]],
+  torso: [[C68, 0], [YANK + 2, 0], [STEP68 + 6, 5]],
 };
 const PLACE68: Place = { pos: [4.2, 0, -13], scale: SCALE_C };
-const SING = { ua: [[0, MIC_UP.ua]] as [number, number][], f: [[0, MIC_UP.f]] as [number, number][], hand: [[0, 'grip']] as [number, 'grip'][] };
-/** Mic to the mouth with a beat bob (small, 10 frames each way), head back. */
-const singKeys = (from: number, to: number, beats: number[]): { ua: [number, number][]; f: [number, number][] } => {
-  const ua: [number, number][] = [[from, MIC_UP.ua]];
-  const f: [number, number][] = [[from, MIC_UP.f]];
-  for (const b of beats) if (b > from + 10 && b < to - 10) { ua.push([b - 10, MIC_UP.ua], [b, MIC_UP.ua + 8]); f.push([b - 10, MIC_UP.f], [b, MIC_UP.f - 8]); }
-  ua.push([to, MIC_UP.ua]);
-  f.push([to, MIC_UP.f]);
-  return { ua, f };
-};
-/** The mic arm lets go of the song: upper arm down, forearm half open, mic dangling. */
-const HANG = { ua: 8, f: 30 } as const;
-// The stand is sized and placed so that the mic on it sits in his open hand when he reaches.
-const REACH68 = heldAt(perform(stateAt(TL68, GRAB - 12), GRAB - 12, OV68), PLACE68, 'L', 0.12 * MIC_H);
-const STAND68 = { x: REACH68.pos[0], height: REACH68.pos[1] / 0.9 };
+// The mic rests in the stand exactly where the fist closes on it; the stand is as tall as that (its top under the mic).
+const REST68 = restMic(perform(stateAt(TL68, REACH_AT), REACH_AT, OV68), PLACE68);
+/** Height of the bare stand (to its clamp), world units; the same stand is swung in S70. */
+const STAND_BARE = REST68.standTop;
+/** The stand left behind rocks on its feet after the yank. */
+const rock68 = (f: number): number => (f < YANK + 4 ? 0 : -0.12 * Math.exp(-(f - YANK - 4) / 12) * Math.sin(0.42 * (f - YANK - 4)));
 const CAM68: CameraPath = handheld((f) => {
   // The truck reaches him by the yank so the mic grab happens in frame.
-  const x = keyed(f, [[C68, -6.5], [at('s68-grab'), 0.6], [at('s69-cut'), 1.6]], easeOut);
+  const x = keyed(f, [[C68, -6.5], [GRAB, 0.6], [at('s69-cut'), 1.6]], easeOut);
   // The lens tightens into him over the yank so the arm and the mic read.
-  const fov = keyed(f, [[C68, 40], [at('s68-grab') - 12, 40], [at('s68-grab') + 6, 27]]);
-  const ty = keyed(f, [[C68, 1.5], [at('s68-grab') - 12, 1.5], [at('s68-grab') + 6, 2.3]]);
+  const fov = keyed(f, [[C68, 40], [GRAB - 12, 40], [GRAB + 6, 27]]);
+  const ty = keyed(f, [[C68, 1.5], [GRAB - 12, 1.5], [GRAB + 6, 2.3]]);
   return { position: [x, 1.1, -1.5], target: [x + 0.8, ty, -10], fov };
 }, { amp: 0.02, seed: 68 });
 
@@ -77,10 +67,10 @@ export const S68 = ({ frame }: { frame: number }) => {
     <ShotFrame frame={frame}>
       <Stage camera={CAM68}>
         <Throne frame={frame} />
-        <StageLights frame={frame} />
-        <FloorStand x={STAND68.x} z={-13.2} height={STAND68.height} mic={frame < GRAB - 6} />
+        <StageLights frame={frame} top={8.8} z={-18} width={11} />
+        <FloorStand x={REST68.pos[0]} z={REST68.pos[2]} bare={STAND_BARE} rock={rock68(frame)} />
         <Vorathul st={st} place={PLACE68} />
-        {frame >= GRAB - 6 ? <HeldMic st={st} place={PLACE68} side="L" /> : null}
+        {frame < REACH_AT ? <RestingMic rest={REST68} /> : <HeldMic st={st} place={PLACE68} side="L" />}
       </Stage>
       {(() => {
         const p = project(pose, [3.6, 4.6, -13]);
@@ -105,6 +95,7 @@ export const S68 = ({ frame }: { frame: number }) => {
         })}
         {posts.map((p, k) => <rect key={k} x={p.x - 0.07 * p.s} y={p.y - 1.15 * p.s} width={0.14 * p.s} height={1.15 * p.s} fill={GOLD} stroke={INK} strokeWidth={4} />)}
       </svg>
+      <Crumble frame={frame} />
       <RubberStamp frame={frame} at={at('s68-stamp')} x={1480} y={-70} width={600} rotate={17} seed={68} />
     </ShotFrame>
   );
@@ -127,7 +118,8 @@ const TL69 = nerfTimeline(
   { phase: 'corked' },
 );
 const PLACE69: Place = { pos: [3.4, 0, -15], scale: SCALE_C };
-const OV69: Overrides = { L: { ...singKeys(C69, at('s70-cut'), [HOPS[0]!, BONK]), hand: SING.hand }, head: [[C69, 16]], torso: [[C69, 5]] };
+// The right arm sweeps the sword underneath; the left one sings "in the patch notes of my doom" into the mic.
+const OV69: Overrides = { L: singKeys(C69, at('s70-cut'), [HOPS[0]!, BONK, LAUGH, at('s69-lower')]), head: [[C69, 16]], torso: [[C69, 5]] };
 const OTS69: CameraPose = { position: [-0.6, 1.5, -5], target: [1.9, 2.0, -15], fov: 40 };
 const CAM69 = withShake(handheld(hold(OTS69), { amp: 0.02, seed: 69 }), { hits: shakeHits([[HOPS[0]!, 'small'], [BONK, 'small']]) });
 // The heroes stand where the blade tip passes, in the order it meets them (pure: tip of the rig at each hop frame).
@@ -144,8 +136,8 @@ export const S69 = ({ frame }: { frame: number }) => {
     <ShotFrame frame={frame}>
       <Stage camera={CAM69}>
         <Throne frame={frame} />
-        <StageLights frame={frame} />
-        <FloorStand x={5.6} z={-14.6} height={STAND68.height} mic={false} />
+        <StageLights frame={frame} top={10.2} z={-21} width={13} />
+        <FloorStand x={5.5} z={-15.2} bare={STAND_BARE} />
         <Vorathul st={st} place={PLACE69} />
         <HeldMic st={st} place={PLACE69} side="L" />
       </Stage>
@@ -175,6 +167,7 @@ export const S69 = ({ frame }: { frame: number }) => {
           </>
         );
       })()}
+      <Crumble frame={frame} xs={[900, 1450, 1200]} />
       {/* The first hero's back, out of focus, fills the left third. */}
       <Knight asset="G34-1" x={170} y={1320} h={1050} flip pose={{ armL: 10, armR: 10 }} seed={699} style={{ filter: 'blur(6px)' }} />
     </ShotFrame>
@@ -187,25 +180,27 @@ const WOBBLE = at('s70-wobble');
 const SWEPT = at('s70-swept');
 const SKID = at('s70-skid');
 const TL70 = nerfTimeline([{ at: C70, pose: 'slump', dur: 0, cut: true }], { phase: 'corked' });
-// The stand is lifted like a staff and swung on the broom hit (wind-up and strike each 12+ frames), then lowered.
+// The stand rests on his shoulder like a bat, is wound up further and swung out at the broom knight on "dust"
+// (wind-up 12 frames, strike 13, return 18), while the left hand keeps singing; head back on "gloom".
 const SWING = { wind: SWEPT - 13, hit: SWEPT, back: SWEPT + 18 };
 const OV70: Overrides = {
-  plant: true,
-  L: { ...singKeys(C70, at('s71-cut'), [at('s70-wobble'), at('s70-broom')]), hand: SING.hand },
-  R: {
-    ua: [[C70, 90], [SWING.wind - 12, 90], [SWING.wind, 130], [SWING.hit, 25], [SWING.back, 70]],
-    f: [[C70, 95], [SWING.wind - 12, 95], [SWING.wind, 60], [SWING.hit, 30], [SWING.back, 80]],
-    hand: [[C70, 'grip']],
-  },
-  head: [[C70, 14]],
+  // The sword stands on his other side, clear of the swing.
+  plant: 0.3,
+  L: singKeys(C70, at('s71-cut'), [WOBBLE, at('s70-broom'), at('s70-gloom')]),
+  R: armKeys([[C70, STAND_SHOULDER], [SWING.wind - 12, STAND_SHOULDER], [SWING.wind, STAND_WIND], [SWING.hit, STAND_STRIKE], [SWING.back, STAND_SHOULDER]], [[C70, 'fist']]),
+  head: [[C70, 10], [at('s70-gloom') - 12, 10], [at('s70-gloom'), 20]],
   torso: [[C70, 4]],
 };
-const CAM70 = withShake(handheld(hold(frameAt([1.5, 2.6, -15], 7.4)), { amp: 0.02, seed: 70 }), { hits: shakeHits([[C70, 'small'], [SKID, 'small']]) });
+// The camera pans after him as the broom sweeps him across, so he and the mic stay in frame.
+const slide70 = (f: number): number => easeOut(prog(f, SWEPT, SKID - SWEPT));
+// The swung stand is drawn half again as tall as the one in S68 so its gold feet read across the wide frame.
+const SWUNG_BARE = 1.5 * STAND_BARE;
+const CAM70 = withShake(handheld((f) => frameAt([1.5 + 1.9 * easeInOut(prog(f, SWEPT, 30)), 2.6, -15], 7.4), { amp: 0.02, seed: 70 }), { hits: shakeHits([[C70, 'small'], [SKID, 'small']]) });
 
 export const S70 = ({ frame }: { frame: number }) => {
   const pose = CAM70(frame);
   const st0 = stateAt(TL70, frame);
-  const slide = easeOut(prog(frame, SWEPT, SKID - SWEPT));
+  const slide = slide70(frame);
   const settle = frame >= at('s70-stay') && frame < at('s70-stay') + 4 ? 0.94 : 1;
   const place: Place = { pos: [lerp(0, 3.4, slide), 0, -15], scale: SCALE_C, rot: frame >= SWEPT ? -9 * Math.exp(-(frame - SWEPT) / 9) * (frame < SKID + 12 ? 1 : 0) : 0, squash: settle };
   const walk = easeInOut(prog(frame, at('s70-broom'), at('s70-ready') - at('s70-broom')));
@@ -220,14 +215,15 @@ export const S70 = ({ frame }: { frame: number }) => {
     <ShotFrame frame={frame} cues={G.s70}>
       <Stage camera={CAM70}>
         <Throne frame={frame} />
-        <StageLights frame={frame} />
+        <StageLights frame={frame} top={9.2} z={-20} width={10} />
         <Vorathul st={st} place={place} />
         <HeldMic st={st} place={place} side="L" />
-        <HeldStand st={st} place={place} side="R" height={STAND68.height} />
+        <HeldStand st={st} place={place} side="R" bare={SWUNG_BARE} />
       </Stage>
       {frame >= at('s70-broom') ? <Knight x={knight.x} y={knight.y} h={1.4 * knight.s} pose={{ item: 'broom', itemRot: broomRot, armR: frame >= at('s70-ready') ? 70 : 20, armL: 40, lean: frame >= at('s70-sweep') ? 8 : 0, hop: frame < at('s70-ready') ? hopCurve(frame, at('s70-broom') + ((frame - at('s70-broom')) - ((frame - at('s70-broom')) % 6)), 6) * 0.15 : 0 }} seed={701} /> : null}
       <DustPuff x={feet.x} y={feet.y} size={160} t={prog(frame, SWEPT, 16)} seed={702} />
       <DustPuff x={feet.x} y={feet.y} size={220} t={prog(frame, SKID, 16)} seed={703} />
+      <Crumble frame={frame} xs={[700, 1300, 1000]} />
       <ComicHpBar value={58.5} wobble={wobble}>
         <RubberStamp frame={frame} at={C70} x={-20} y={-30} width={300} rotate={-9} seed={70} />
       </ComicHpBar>
@@ -235,94 +231,59 @@ export const S70 = ({ frame }: { frame: number }) => {
   );
 };
 
-// ---------------------------------------------------------------- S71 awareness step 2: the sky ends at a straight line
+// ---------------------------------------------------------------- S71 the anthem line on his stage, frontal and low
+// "I was the wall that no one could get through": the room is his concert stage. A low frontal hero angle (yaw 0,
+// pitch about 10 degrees up) with the lantern rig over his head; the free arm goes out on "wall", the fist up to the
+// sky on "no" with the head thrown back, and the camera pushes in on "one", "could", "get" and "through".
 const C71 = at('s71-cut');
-const TILT = at('s71-tilt');
-const CORNER = at('s71-corner');
-const EDGE = at('s71-edge');
+const WALL71 = at('s71-sky');
+const NO71 = at('s71-edge');
 const ECU71 = at('s71-ecu');
-const SKY71: [number, number, number, number] = [-220, -40, 20, 150];
-const CORNER_W: Vec3 = [SKY71[2], SKY71[3], -90];
-const TL71 = nerfTimeline(
-  [
-    { at: C71, pose: 'slump', dur: 0, cut: true },
-    { at: C71 + 8, pose: { head: [20, -0.01], torso: 6, pelvis: [0, 0] }, dur: 8 },
-  ],
-  { phase: 'corked', slitOpacity: [{ at: 0, v: 0.4, dur: 0 }, { at: EDGE, v: 0.8, dur: 4 }] },
+const TL71 = nerfTimeline([{ at: C71, pose: 'slump', dur: 0, cut: true }], {
+  phase: 'corked',
+  slitOpacity: [{ at: 0, v: 0.4, dur: 0 }, { at: NO71, v: 0.9, dur: 4 }],
+});
+const OV71: Overrides = {
+  plant: true,
+  L: singKeys(C71, at('s72-cut'), [at('s71-tilt'), at('s71-cloud'), at('s71-push1'), at('s71-push3')]),
+  R: armKeys(
+    [[C71, ARM_LOW], [WALL71 - 12, ARM_LOW], [WALL71, ARM_OUT], [NO71 - 14, ARM_OUT], [NO71, ARM_UP], [ECU71 - 12, ARM_UP], [ECU71, ARM_OUT]],
+    [[C71, 'fist'], [WALL71 - 8, 'spread'], [NO71 - 8, 'fist'], [ECU71 - 6, 'spread']],
+  ),
+  head: [[C71, 10], [NO71 - 12, 10], [NO71, 20]],
+  torso: [[C71, 3], [NO71 - 12, 3], [NO71, 8]],
+};
+const PLACE71: Place = { pos: [0, 0, -15], scale: SCALE_C };
+const FAR71: CameraPose = { position: [0, 0.8, -5.5], target: [0, 3.0, -15], fov: 46 };
+const NEAR71: CameraPose = { position: [0.25, 2.3, -9.6], target: [0.25, 3.25, -15], fov: 46 };
+/** Dolly amount: a slow creep, then four eased pushes (6 frames each) on the measured words. */
+const PUSH71: [number, number][] = [[at('s71-push1'), 0.35], [at('s71-push2'), 0.55], [at('s71-push3'), 0.75], [ECU71, 1]];
+const dolly71 = (f: number): number => {
+  let k = 0.15 * easeInOut(prog(f, C71, PUSH71[0]![0] - C71));
+  for (const [pf, v] of PUSH71) if (f >= pf) k = lerp(k, v, easeOut(prog(f, pf, 6)));
+  return k;
+};
+const mix = (a: Vec3, b: Vec3, t: number): Vec3 => [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)];
+const CAM71 = withShake(
+  handheld((f) => {
+    const k = dolly71(f);
+    return { position: mix(FAR71.position, NEAR71.position, k), target: mix(FAR71.target, NEAR71.target, k), fov: 46 };
+  }, { amp: 0.02, seed: 71 }),
+  { hits: shakeHits([[NO71, 'small'], [ECU71, 'small']]) },
 );
-const OV71: Overrides = { plant: true, L: { ua: [[C71, MIC_UP.ua], [C71 + 14, HANG.ua]], f: [[C71, MIC_UP.f], [C71 + 14, HANG.f]], hand: SING.hand } };
-const LOW71: CameraPose = { position: [0, 0.6, -5], target: [0, 3.2, -15], fov: 50 };
-const toCorner: Vec3 = [CORNER_W[0] - LOW71.position[0], CORNER_W[1] - LOW71.position[1], CORNER_W[2] - LOW71.position[2]];
-const CORNER_DIST = Math.hypot(...toCorner);
-const aim = (s: number): CameraPose => {
-  const d0: Vec3 = [LOW71.target[0] - LOW71.position[0], LOW71.target[1] - LOW71.position[1], LOW71.target[2] - LOW71.position[2]];
-  const n0 = Math.hypot(...d0);
-  // Aim slightly below and left of the corner so it sits in the upper-right third.
-  const d1: Vec3 = [toCorner[0] / CORNER_DIST - 0.1, toCorner[1] / CORNER_DIST - 0.12, toCorner[2] / CORNER_DIST];
-  const d: Vec3 = [lerp(d0[0] / n0, d1[0], s), lerp(d0[1] / n0, d1[1], s), lerp(d0[2] / n0, d1[2], s)];
-  return { ...LOW71, target: [LOW71.position[0] + d[0] * 10, LOW71.position[1] + d[1] * 10, LOW71.position[2] + d[2] * 10] };
-};
-const PUSHES: [number, number][] = [[at('s71-push1'), 0.35], [at('s71-push2'), 0.6], [at('s71-push3'), 0.8], [ECU71, 0.93]];
-const CAM71: CameraPath = (f) => {
-  const p = aim(easeInOut(prog(f, TILT, CORNER - TILT)));
-  let k = 0;
-  for (const [pf, v] of PUSHES) if (f >= pf) k = pf === ECU71 ? v : lerp(k, v, easeOut(prog(f, pf, 6)));
-  const off: Vec3 = [toCorner[0] * k, toCorner[1] * k, toCorner[2] * k];
-  return { ...p, position: [p.position[0] + off[0], p.position[1] + off[1], p.position[2] + off[2]], target: [p.target[0] + off[0], p.target[1] + off[1], p.target[2] + off[2]] };
-};
-
-/** Raw canvas weave beyond the sky's edge (C35): the L-shaped region outside the corner, in world units, shrunk
- *  until every point is in front of the camera, plus the 1 px office-grey edge line. A flat weave card sits behind. */
-const Weave = ({ pose }: { pose: CameraPose }) => {
-  const [cx, cy] = [CORNER_W[0], CORNER_W[1]];
-  for (const L of [160, 80, 40, 20, 10, 5, 2, 1, 0.5]) {
-    const ring: [number, number][] = [[cx, cy], [cx - L, cy], [cx - L, cy + L], [cx + L, cy + L], [cx + L, cy - L], [cx, cy - L]];
-    const q = ring.map(([x, y]) => project(pose, [x, y, -89.9]));
-    if (q.some((p) => p.z <= 0.5)) continue;
-    const c = q[0]!;
-    const cell = Math.min(60, Math.max(6, 0.6 * c.s));
-    return (
-      <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <defs>
-          <pattern id="p3-weave" width={cell} height={cell} patternUnits="userSpaceOnUse" x={c.x} y={c.y}>
-            <rect width={cell} height={cell} fill={WEAVE} />
-            <path d={`M0 ${cell * 0.25} H${cell} M0 ${cell * 0.75} H${cell}`} stroke="#CDBF9F" strokeWidth={cell * 0.18} />
-            <path d={`M${cell * 0.25} 0 V${cell} M${cell * 0.75} 0 V${cell}`} stroke="#D9CCAE" strokeWidth={cell * 0.14} />
-          </pattern>
-        </defs>
-        <path d={`M${q.map((p) => `${p.x} ${p.y}`).join('L')}Z`} fill="url(#p3-weave)" />
-        <path d={`M${q[1]!.x} ${q[1]!.y} L${c.x} ${c.y} L${q[5]!.x} ${q[5]!.y}`} stroke="#ADB5BD" strokeWidth={2} fill="none" />
-      </svg>
-    );
-  }
-  return null;
-};
-const WEAVE = '#E9DFC7';
 
 export const S71 = ({ frame }: { frame: number }) => {
-  const pose = CAM71(frame);
-  const place71: Place = { pos: [0, 0, -15], scale: SCALE_C };
   const st = perform(stateAt(TL71, frame), frame, OV71);
-  const cloudOff = easeInOut(prog(frame, at('s71-cloud'), EDGE - at('s71-cloud')));
-  const corner = project(pose, CORNER_W);
-  const other = [[-30, 60], [-90, 110], [-10, 125], [-60, 30]].map(([x, y]) => project(pose, [x!, y!, -89]));
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM71}>
-        <AssetCard id="C35" standIn={{ color: WEAVE }} width={600} height={500} position={[0, 100, -90.5]} renderOrder={-101} />
-        <Throne frame={frame} sky={SKY71} skyZ={-90} />
-        <StageLights frame={frame} />
-        <Vorathul st={st} place={place71} />
-        <HeldMic st={st} place={place71} side="L" />
+        <Throne frame={frame} />
+        <StageLights frame={frame} top={10.6} z={-18} width={14} rays={0.45} />
+        <FloorStand x={-2.4} z={-15.4} bare={STAND_BARE} />
+        <Vorathul st={st} place={PLACE71} />
+        <HeldMic st={st} place={PLACE71} side="L" />
       </Stage>
-      <Weave pose={pose} />
-      {other.map((p, i) => (p.z > 0 ? <Cloud key={i} x={p.x} y={p.y} w={26 * p.s} seed={711 + i} /> : null))}
-      {/* A bank of cloud hides the corner until it slides off on "no" (the reveal frame). */}
-      {cloudOff < 1 && corner.z > 0
-        ? [[-260, 120, 1500], [380, -260, 1700], [520, 300, 1300]].map(([dx, dy, w], i) => (
-            <Cloud key={i} x={corner.x + dx! + cloudOff * 2200} y={corner.y + dy! - cloudOff * 200} w={w!} seed={715 + i} />
-          ))
-        : null}
+      <Crumble frame={frame} xs={[420, 1500, 960]} />
     </ShotFrame>
   );
 };
@@ -339,7 +300,8 @@ const TL72 = nerfTimeline([{ at: C72, pose: { ...STARE }, dur: 0, cut: true }], 
   ramps: { capeSway: [{ at: 0, v: 0, dur: 0 }] },
 });
 const PLACE72: Place = { pos: [0, 0, -15], scale: SCALE_C };
-const OV_HANG: Overrides = { plant: true, L: { ua: [[0, HANG.ua]], f: [[0, HANG.f]], hand: SING.hand } };
+// The song is over: the mic hangs forgotten from his left fist, grille down beside his hip.
+const OV_HANG: Overrides = { plant: true, L: armKeys([[0, HANG]], [[0, 'fist']]) };
 const CAM72 = hold(frameAt(helmAt(stateAt(TL72, C72), PLACE72), 2.6));
 
 export const S72 = ({ frame }: { frame: number }) => {
@@ -352,7 +314,6 @@ export const S72 = ({ frame }: { frame: number }) => {
     <ShotFrame frame={frame}>
       <Stage camera={CAM72}>
         <Throne frame={frame} />
-        <StageLights frame={frame} />
         <Vorathul st={st} place={place} />
         <HeldMic st={st} place={place} side="L" />
       </Stage>
@@ -391,7 +352,7 @@ export const S73 = ({ frame }: { frame: number }) => {
     <ShotFrame frame={frame}>
       <Stage camera={CAM73}>
         <Throne frame={frame} />
-        <StageLights frame={frame} />
+        <StageLights frame={frame} top={9.2} z={-20} width={10} />
         <Vorathul st={st} place={PLACE73} />
         <HeldMic st={st} place={PLACE73} side="L" />
       </Stage>
