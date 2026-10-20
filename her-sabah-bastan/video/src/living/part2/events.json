@@ -335,19 +335,19 @@
       "kind": "cut"
     },
     {
-      "f": 2653,
-      "name": "cut: the note close, the push into it",
-      "on": "half-beat",
-      "kind": "cut"
-    },
-    {
-      "f": 2660,
-      "name": "cut to the flat note: yellow fills the frame",
-      "on": "downbeat",
-      "kind": "cut"
-    },
-    {
       "f": 2674,
+      "name": "cut: the note close, the push into it",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 2688,
+      "name": "cut to the flat note: yellow fills the frame",
+      "on": "beat",
+      "kind": "cut"
+    },
+    {
+      "f": 2688,
       "name": "PaperFold starts (1st of 2)",
       "on": "beat",
       "kind": "soft"

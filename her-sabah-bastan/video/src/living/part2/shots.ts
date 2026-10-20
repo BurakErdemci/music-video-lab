@@ -726,7 +726,7 @@ const noteWorld = (): Rect => {
   const top = r.y + LIFT_PAD * s;
   return { x: r.x + NOTE_SPR.x0 * s, y: top + NOTE_SPR.y0 * s, w: (NOTE_SPR.x1 - NOTE_SPR.x0) * s, h: (NOTE_SPR.y1 - NOTE_SPR.y0) * s };
 };
-const pressNoteLayers = (): Layer[] => {
+const pressNoteLayers = (f: number): Layer[] => {
   const nw = noteWorld();
   const r = glassNoteRect();
   const s = r.w / 339;
@@ -735,7 +735,8 @@ const pressNoteLayers = (): Layer[] => {
     canvasLayer('press-note', 'press-note', 1200, 1580, D_GLASS - 1, nw, (ctx, cw, ch) => {
       ctx.save();
       ctx.translate(cw / 2, ch / 2);
-      ctx.rotate((-4 * Math.PI) / 180);
+      // the note's corner flutters a little in the held beats (a small life inside the pose)
+      ctx.rotate(((-4 + 0.9 * Math.sin(sec(f) * 5.2) * (1 - span(f, F.noteClose, F.noteClose + 8))) * Math.PI) / 180);
       ctx.translate(-cw / 2, -ch / 2);
       paintNoteFill(ctx, cw, ch, 'Merhaba', true);
       ctx.restore();
@@ -770,34 +771,34 @@ const nightSplitLayers = (f: number): Layer[] => {
     const hy = r.y + (ht[1] as number) * s;
     if (f < F.wake) layers.push(iconLayer('icon-zzz', hx - 90, hy - 110, 360, D_GLASS - 1, (ctx, cw, ch) => paintZzz(ctx, cw, ch, sec(f - F.sleep))));
     else layers.push(iconLayer('icon-bang', hx + 10, hy - 110, 320, D_GLASS - 1, (ctx, cw, ch) => paintBang(ctx, cw, ch, sec(f - F.wake), { out: span(f, F.press - 4, F.press) })));
-  } else if (f < F.noteClose) {
-    layers.push(P1.humanLayer(f, 'h-glass-note'));
-    layers.push(...pressNoteLayers());
   } else {
-    // the close shot: the note stuck on the glass, his hand gone (the sprite's hand, magnified 25x, was a blur)
-    layers.push(...pressNoteLayers().filter((l) => l.id === 'press-note'));
+    // the note on the glass, held two beats (press -> noteClose), then the push into it; his hand lifts away as the push starts
+    layers.push(P1.humanLayer(f, 'h-glass-note'));
+    const handOut = span(f, F.noteClose, F.noteClose + 8);
+    layers.push(...pressNoteLayers(f).map((l) => (l.id === 'press-hand' ? { ...l, opacity: 1 - sine(handOut) } : l)));
   }
   // she stands facing the glass; when he presses the note first, she tilts her head (the whole drawing, 3 degrees)
-  const tilt = 3 * sine(span(f, F.press + 2, F.press + 12));
+  // she tilts her head in answer: the whole drawing leans 9 degrees across the held beats, slowly
+  const tilt = 9 * sine(span(f, F.press + 4, F.press + 22));
   layers.push(...P1.aiLayers('ai-stand', P1.AI_STAND, f, { blinks: [2626, 2650], rot: tilt, pivot: [P1.AI_STAND.x + P1.AI_STAND.w / 2, FLOOR] }));
-  if (f < F.yellow - 30) layers.push(P1.floatNotesLayer(sec(f)));
+  if (f < F.press - 16) layers.push(P1.floatNotesLayer(sec(f)));
   return layers;
 };
 const nightCam = (f: number): Cam => {
   const base: Cam = { x: 900, y: 600, z: 820 };
   if (f < F.press) return mixCam(base, { x: 905, y: 610, z: 790 }, sine(span(f, F.sleep, F.press)));
-  // the push into the note, in two shots: a slow push on him pressing it (2646-2653), then on the half beat a cut to
-  // the note close (his fingertips at its lower left) pushing into the "Merhaba" line until it is all yellow (2660).
-  // One continuous 56x zoom over 14 frames jumped frame to frame in the first renders.
+  // the held note (press -> noteClose): a slow drift only; then ONE eased push into the note (noteClose -> yellow), the
+  // camera steering onto the note ahead of the zoom (x/y arrive when the note already fills the frame), until the page is all yellow.
   const nw = noteWorld();
   const target: Cam = { x: nw.x + nw.w * 0.52, y: nw.y + nw.h * 0.18, z: 14 };
   const start: Cam = { x: 905, y: 610, z: 790 };
-  if (f < F.noteClose) {
-    const near: Cam = { x: lerp(start.x, nw.x + nw.w * 0.5, 0.5), y: lerp(start.y, nw.y + nw.h * 0.5, 0.5), z: 520 };
-    return mixCam(start, near, sine(span(f, F.press, F.noteClose)));
-  }
-  const close: Cam = { x: nw.x + nw.w * 0.5, y: nw.y + nw.h * 0.3, z: 40 };
-  return mixCam(close, target, sine(span(f, F.noteClose, F.yellow - 1)));
+  const hold: Cam = { x: 905, y: 610, z: 690 };
+  if (f < F.noteClose) return mixCam(start, hold, sine(span(f, F.press, F.noteClose)));
+  const t = span(f, F.noteClose, F.yellow - 1);
+  const u = 0.4 * easeInOut(t) + 0.6 * t; // mostly even in log-zoom: a steady glide, soft only at the start
+  const z = Math.exp(lerp(Math.log(hold.z), Math.log(target.z), u));
+  const w = sine(Math.min(1, (1.3 * Math.log(hold.z / z)) / Math.log(hold.z / target.z)));
+  return { x: lerp(hold.x, target.x, w), y: lerp(hold.y, target.y, w), z };
 };
 const nightShot = (f: number): StageShot => {
   const cam = nightCam(f);
