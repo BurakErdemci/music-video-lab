@@ -237,3 +237,30 @@ export const paintVein = (ctx: CanvasRenderingContext2D, cw: number, ch: number,
   }
   ctx.restore();
 };
+
+// ---- tick
+
+/** A moon-yellow check mark (navy outline, misregistered yellow plate) that pops in with overshoot; p in seconds, centred in the canvas. */
+export const paintTick = (ctx: CanvasRenderingContext2D, cw: number, ch: number, p: number, opts: Icon2Opts = {}): void => {
+  if (p < 0) return;
+  const o01 = clamp01(opts.out ?? 0);
+  const m = Math.min(cw, ch) / 256;
+  const sc = pop(p, 1.35) * (1 - ease(o01)) * m;
+  if (sc <= 0.01) return;
+  const pts: [number, number][] = [
+    [58, 138],
+    [108, 190],
+    [200, 70],
+  ];
+  ctx.save();
+  ctx.translate(cw / 2, ch / 2);
+  ctx.scale(sc, sc);
+  ctx.translate(-128, -128);
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y)));
+  strokeRound(ctx, palette.navy, 44);
+  ctx.beginPath();
+  pts.forEach(([x, y], i) => (i ? ctx.lineTo(x + PLATE.dx, y + PLATE.dy) : ctx.moveTo(x + PLATE.dx, y + PLATE.dy)));
+  strokeRound(ctx, palette.moonYellow, 28);
+  ctx.restore();
+};

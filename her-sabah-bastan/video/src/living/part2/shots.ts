@@ -9,11 +9,13 @@ import { paintPenReveal } from '../pen.ts';
 import * as P1 from '../part1/shots.ts';
 import { paintBodyNotes, paintMonitorScreen, paintMugTower, paintTally, paintWindowSky, MUG_CANVAS, TALLY_CANVAS } from './paintDays.ts';
 import { COME_APART_MARGIN, paintComeApart, paintCrescent, paintNoteFill, paintPath, paintVersionTag, pathGeom } from './paintVerse.ts';
-import { BOX_CANVAS, boxGeom, paintBoxes, paintGlassWall, paintSplitMoon, paintTorchLight } from './paintProps.ts';
+import { BOX_CANVAS, boxGeom, paintBoxes, paintGlassWall, paintSplitMoon } from './paintProps.ts';
+import { BLACK, paintGlassNote, paintIris, paintLensDisc } from './paintLens.ts';
 import { paintBang, paintVein, paintZzz } from './icons2.ts';
 import EVENTS from './events.json' with { type: 'json' };
 import SPRITES_H from '../sprites-p2h.json' with { type: 'json' };
 import SPRITES_A from '../sprites-p2a.json' with { type: 'json' };
+import SPRITES_M from '../sprites-p2m.json' with { type: 'json' };
 
 /**
  * Shot design of Part2 (song 0:56.86-1:51.6, scene map v2 scenes 5-8). Everything is in SONG frames; composition
@@ -34,8 +36,11 @@ import SPRITES_A from '../sprites-p2a.json' with { type: 'json' };
  * 2702-3053  her cream world: the path of handwriting, strides one per beat, the crescent, the same knot, come apart,
  *            the pen redraws v2 / v3, a row of boxes, one lamp per tap, thumbs-up.
  * 3053-3165  pull back through the glass: the back of his head enters (over-the-shoulder); lids open: empty; the vein.
- * 3165-3375  the split: he sits calmly; the torch: on her boxes, back on his wall, at the glass; click off at 3333,
- *            the light circle shrinks to the hand-over dot (960, 470, r 10) by 3340; black with the last caption.
+ * 3165-3213  the split: he sits calmly (the vein finishes deflating).
+ * 3213-3333  over-the-shoulder again: he holds a magnifying glass to the glass wall; her row of boxes slides under it, one
+ *            box per beat gets a yellow tick, the fourth is empty (his note slaps onto the glass), then the lens wipes the
+ *            sheets and ticks as the row slides back; the frame irises down to the lens circle at 3333.
+ * 3333-3375  the lens circle shrinks into the hand-over dot (960, 470, r 10) by 3340; black with the last caption.
  */
 export const SONG_START = EVENTS.songStart;
 export const SONG_END = EVENTS.songEnd;
@@ -81,10 +86,13 @@ export const F = {
   vein: ev('anger vein pops'),
   deflate: ev('Kizmiyorum'),
   calm: ev('cut: he sits calmly'),
-  torchOn: ev('torch clicks on'),
-  swing: ev('the beam swings back'),
-  hold: ev('he holds the torch'),
-  off: ev('torch clicks off'),
+  lensOn: ev('lens up'),
+  ticks: evAll('tick '),
+  emptyBox: ev('the lens reaches the empty box'),
+  note: ev('his yellow note slaps'),
+  erase0: ev('the lens wipes the sheets'),
+  hold: ev('iris starts closing'),
+  off: ev('lens drops'),
   handOver: ev('hand-over'),
 };
 /** Day cuts of the montage (2155 = day 1 typing, then every listed cut). */
@@ -117,7 +125,7 @@ interface Meta2 {
   seat?: number[];
   top?: number;
 }
-const SP2 = { ...(SPRITES_H as unknown as Record<string, Meta2>), ...(SPRITES_A as unknown as Record<string, Meta2>) };
+const SP2 = { ...(SPRITES_H as unknown as Record<string, Meta2>), ...(SPRITES_A as unknown as Record<string, Meta2>), ...(SPRITES_M as unknown as Record<string, Meta2>) };
 const has2 = (n: string): boolean => !!SP2[n.replace(/-(eye|noeye)$/, '')];
 const sp2 = (n: string): Meta2 => {
   const m = SP2[n] ?? (P1.sp(n) as unknown as Meta2);
@@ -131,7 +139,7 @@ const pt = (a: number[] | undefined, what: string): Pt => {
   return [a[0] as number, a[1] as number];
 };
 
-const HUMAN2 = ['h-type1', 'h-type2', 'h-type3', 'h-stretch', 'h-coffee', 'coffee-cab', 'chair2', 'h-sleep', 'h-wake', 'h-ots', 'h-calm', 'h-torch', 'h-torch-back'] as const;
+const HUMAN2 = ['h-type1', 'h-type2', 'h-type3', 'h-stretch', 'h-coffee', 'coffee-cab', 'chair2', 'h-sleep', 'h-wake', 'h-ots', 'h-calm', 'h-ots-lens'] as const;
 const AI2 = ['a-step1', 'a-step2', 'a-step3', 'a-trip', 'a-tap', 'a-thumb', 'a-squint'] as const;
 type Ai2 = (typeof AI2)[number] | 'ai-stand' | 'a-hand' | 'a-sit-body';
 
@@ -182,7 +190,7 @@ const human2Layer = (id: string, name: string, r: Rect, d: number, f: number, br
   const m = sp2(name);
   const s = r.w / m.w;
   const rr: Rect = { x: r.x, y: r.y - LIFT_PAD * s, w: r.w, h: r.h + LIFT_PAD * s };
-  const hair: HairOpts | undefined = m.hair ? { ...m.hair, amp: 1.4, face: name === 'h-torch-back' || name === 'h-coffee' || name === 'h-sleep' || name === 'h-wake' ? 'left' : 'right' } : undefined;
+  const hair: HairOpts | undefined = m.hair ? { ...m.hair, amp: 1.4, face: name === 'h-coffee' || name === 'h-sleep' || name === 'h-wake' ? 'left' : 'right' } : undefined;
   return {
     id,
     src: { kind: 'canvas', key: `${id}:${name}`, cw: m.w, ch: m.h + LIFT_PAD, paint: (ctx, cw, ch) => paintCharacter(ctx, cw, ch, img(name), { t: sec(f), breath, hair, notes }) },
@@ -1060,45 +1068,19 @@ const otsShot = (f: number): StageShot => {
 };
 
 // ---------------------------------------------------------------------------------------------------------------
-// Scene 8b: the split again. He sits calmly; the torch; click off; the dot.
+// Scene 8b: he sits calmly (the split, side view); then the over-the-shoulder view again with a magnifying glass held to
+// the glass wall ("trust, but verify"); the lens circle becomes the hand-over dot. The side view shows the glass edge-on, so
+// a lens seen as a disc needs the over-the-shoulder camera of scene 8a (same set, same plates).
 
 const SPLIT_BOXES_W: Rect = { x: 1330, y: FLOOR + 18 - BOX_CANVAS.h * 0.22, w: BOX_CANVAS.w * 0.22, h: BOX_CANVAS.h * 0.22 };
 const seatedSplit = (name: string): Rect => {
   const m = sp2(name);
   const s = humanScaleSplit(name);
   const floorY = m.floorY ?? (m.bbox[3] as number);
-  if (name === 'h-torch-back') return { x: 470 - (m.bbox[2] as number) * s, y: FLOOR - floorY * s, w: m.w * s, h: m.h * s };
   return { x: 150 - (m.bbox[0] as number) * s, y: FLOOR - floorY * s, w: m.w * s, h: m.h * s };
 };
-const torchPose = (f: number): 'h-calm' | 'h-torch' | 'h-torch-back' => (f < F.torchOn ? 'h-calm' : f < F.swing ? 'h-torch' : f < F.hold ? 'h-torch-back' : 'h-torch');
-const TORCH_CAM: Cam = { x: 960, y: 540, z: 1000 };
-const torchCam = (f: number): Cam => camKeys([[F.calm, { x: 930, y: 560, z: 960 }], [F.torchOn, { x: 950, y: 545, z: 990 }], [F.hold, TORCH_CAM]], f);
-const lensScreen = (f: number, cam: Cam): Pt => {
-  const pose = torchPose(f);
-  const r = seatedSplit(pose);
-  const m = sp2(pose);
-  const s = r.w / m.w;
-  const l = pt(m.lens, `${pose} lens`);
-  return project(cam, D_GLASS, [r.x + l[0] * s, r.y + l[1] * s]);
-};
-const torchTarget = (f: number, cam: Cam): { at: Pt; r: number } => {
-  const boxes: Pt = project(cam, D_GLASS, [SPLIT_BOXES_W.x + SPLIT_BOXES_W.w * 0.45, FLOOR - 120]);
-  // his wall of pinned notes, upper left of his room (clear of his own head; [330, 280] lit his head in part2-v1)
-  const wall: Pt = project(cam, P1.D_SKYROOM, [-100, 270]);
-  const glass: Pt = [HAND_OVER.x, HAND_OVER.y];
-  if (f < F.swing) return { at: boxes, r: 150 };
-  if (f < F.hold) {
-    // cut on action: the new pose already points up-left; the beam travels the last stretch onto the wall
-    const lens = lensScreen(f, cam);
-    const m = sp2('h-torch-back');
-    const dir = pt(m.dir, 'h-torch-back dir');
-    const from: Pt = [lens[0] + dir[0] * 160, lens[1] + dir[1] * 160];
-    const u = easeOut(span(f, F.swing, F.swing + 8));
-    return { at: [lerp(from[0], wall[0], u), lerp(from[1], wall[1], u)], r: lerp(60, 120, u) };
-  }
-  return { at: glass, r: 110 };
-};
-const torchLayers = (f: number, cam: Cam): Layer[] => {
+const calmCam = (f: number): Cam => camKeys([[F.calm, { x: 930, y: 560, z: 960 }], [F.lensOn, { x: 950, y: 545, z: 990 }]], f);
+const calmLayers = (f: number): Layer[] => {
   const layers: Layer[] = [
     { id: 'sroom', src: { kind: 'image', url: P1.ROOM_SPLIT.key }, d: P1.D_SKYROOM, ...P1.SROOM_W },
     { id: 'smoon', src: { kind: 'image', url: P1.ROOM_SPLIT.moon }, d: P1.D_SKYROOM, ...P1.SROOM_W },
@@ -1106,7 +1088,7 @@ const torchLayers = (f: number, cam: Cam): Layer[] => {
     P1.moonLayer(),
     canvasLayer('sboxes', 'sboxes', BOX_CANVAS.w, BOX_CANVAS.h, D_GLASS, SPLIT_BOXES_W, (ctx, cw, ch) => paintBoxes(ctx, cw, ch, { n: BOXES_N, lit: BOXES_N, open: BOXES_N, seed: 'p2:boxes' })),
   ];
-  const pose = torchPose(f);
+  const pose = 'h-calm';
   // "Kizmiyorum": the vein that popped in the over-the-shoulder shot finishes deflating on his head here
   const veinLayers: Layer[] = [];
   if (f < F.deflate + 32) {
@@ -1117,45 +1099,184 @@ const torchLayers = (f: number, cam: Cam): Layer[] => {
     const hy = r.y + (m.bbox[1] as number) * s;
     veinLayers.push(iconLayer('icon-vein', hx, hy + 10, 150, D_GLASS - 1, (ctx, cw, ch) => paintVein(ctx, cw, ch, sec(f - F.vein), { deflate: span(f, F.deflate, F.deflate + 30) })));
   }
-  layers.push(human2Layer('human', pose, seatedSplit(pose), D_GLASS, f, { top: 0.16, hip: 0.55, amp: pose === 'h-calm' ? 0.016 : 0.009, period: pose === 'h-calm' ? 5.0 : 3.8, phase: 0.1 }));
+  layers.push(human2Layer('human', pose, seatedSplit(pose), D_GLASS, f, { top: 0.16, hip: 0.55, amp: 0.016, period: 5.0, phase: 0.1 }));
   layers.push(...veinLayers);
-  // her: she lowers her thumb and tilts; squints in the beam; then stands again
+  // her: she lowers her thumb and tilts
   const aiX = SPLIT_BOXES_W.x + (boxGeom(0, BOXES_N).x / BOX_CANVAS.w) * SPLIT_BOXES_W.w - 70;
-  if (f < F.torchOn) {
-    const tilt = 3 * sine(span(f, F.calm + 8, F.calm + 24));
-    layers.push(...P1.aiLayers('ai-stand', P1.aiAt('ai-stand', aiX, 'eye'), f, { blinks: [3180], rot: tilt, pivot: [aiX, FLOOR] }));
-  } else if (f < F.swing) {
-    const s = aiScale2('a-squint');
-    layers.push(...ai2Layers('a-squint', aiFeet('a-squint', s, aiX, 'eye', FLOOR), f, { eyeH: 0.5 }));
-  } else layers.push(...P1.aiLayers('ai-stand', P1.aiAt('ai-stand', aiX, 'eye'), f, { blinks: [3290] }));
-  // the room goes dark around the torch light
-  if (f >= F.torchOn) {
-    const lens = lensScreen(f, cam);
-    const tg = torchTarget(f, cam);
-    // a click is instant: the torch on and the room lights off on the same frame (a flicker read as glitches)
-    const flick = 1;
-    const dark = 0.82;
-    layers.push(screenLayer('torch', 'torch', cam, -40, (ctx, cw, ch) => paintTorchLight(ctx, cw, ch, { lens, target: tg.at, r: tg.r, on: flick, dark, seed: 'p2:torch' })));
+  const tilt = 3 * sine(span(f, F.calm + 8, F.calm + 24));
+  layers.push(...P1.aiLayers('ai-stand', P1.aiAt('ai-stand', aiX, 'eye'), f, { blinks: [3180], rot: tilt, pivot: [aiX, FLOOR] }));
+  return layers;
+};
+const calmShot = (f: number): StageShot => ({ kind: 'stage', layers: calmLayers(f), cam: calmCam(f) });
+
+// ---- the lens shot
+
+const LENS_SCREEN: Pt = [850, 500]; // where the lens centre sits on screen at the end camera
+const LENS_ZOOM = 1.25; // screen scale of the plate at the end camera
+const LENS_MAG = 1.6;
+const LENS_SWAY = 4.6; // s per sway cycle (the whole plate leans a hair; no breathing warp, so the ring and the disc never part)
+const D_NOTE = -330;
+const D_LENS = -650;
+const D_IRIS = -800;
+const BOX_FOCUS_Y = 690; // box-canvas y the lens looks at (sheets and the tick)
+const NOTE_AT: Pt = [LENS_SCREEN[0] + 10, 150];
+const TICK_AT: readonly number[] = F.ticks;
+const SLIDES: readonly (readonly [number, number])[] = [
+  [3224, 3231],
+  [3238, 3245],
+  [3252, 3259],
+];
+const BACK_END = 3314;
+/** The iris starts closing a little before the word ("ikimize", 3321) so its edge never jumps: 18 frames, eased in and out. */
+const IRIS_FROM = 3315;
+const IRIS_START_R = 1250;
+const HAS_SHEETS: readonly boolean[] = [true, true, true, false];
+
+const lensBaseCam = (): Cam => {
+  const [cx, cy] = otsCenter();
+  return { x: cx - 330, y: cy + 60, z: OTS_END.z };
+};
+/** Row position under the lens: 0..3 = box index (fractional while sliding). */
+const rowPos = (f: number): number => {
+  let pos = 0;
+  SLIDES.forEach(([a, b], i) => {
+    pos = f >= b ? i + 1 : f > a ? i + easeInOut(span(f, a, b)) : pos;
+  });
+  if (f >= F.erase0) pos = 3 * (1 - sine(span(f, F.erase0, BACK_END)));
+  return pos;
+};
+const lensZ = (f: number): number => lerp(1515, OTS_END.z, sine(span(f, F.lensOn, F.hold)));
+const plateRect = (): Rect => {
+  const m = sp2('h-ots-lens');
+  const l = pt(m.lens, 'h-ots-lens lens');
+  const base = lensBaseCam();
+  const kp = planeScale(base, D_HEAD);
+  const s = LENS_ZOOM / kp;
+  const lx = base.x + (LENS_SCREEN[0] - W / 2) / kp;
+  const ly = base.y + (LENS_SCREEN[1] - H / 2) / kp;
+  return { x: lx - l[0] * s, y: ly - l[1] * s, w: m.w * s, h: m.h * s };
+};
+interface LensGeo {
+  cam: Cam;
+  /** Camera shift against the base camera: the plate and the wall move with it (they stay put on screen). */
+  shift: Pt;
+  /** Lens centre on screen (with the sway) and the inner radius of its ring on screen. */
+  at: Pt;
+  R: number;
+  pos: number;
+}
+const lensGeo = (f: number): LensGeo => {
+  const base = lensBaseCam();
+  const z = lensZ(f);
+  const kp = planeScale({ ...base, z }, D_HEAD);
+  const m = sp2('h-ots-lens');
+  const l = m.lens as number[];
+  const pr = plateRect();
+  const s = pr.w / m.w;
+  const sw = Math.sin((2 * Math.PI * sec(f)) / LENS_SWAY);
+  // the lens point of the plate on screen under the zoom z; the camera rides the plate
+  const lc: Pt = [W / 2 + (pr.x + (l[0] as number) * s - base.x) * kp, H / 2 + (pr.y + (l[1] as number) * s - base.y) * kp];
+  const k0 = planeScale({ ...base, z }, 0);
+  const bw = BOXES_W();
+  const g0 = boxGeom(0, BOXES_N);
+  const g1 = boxGeom(1, BOXES_N);
+  const pos = rowPos(f);
+  const bx = bw.x + ((g0.x + g0.w / 2 + 20 + (g1.x - g0.x) * pos) / BOX_CANVAS.w) * bw.w;
+  const by = bw.y + (BOX_FOCUS_Y / BOX_CANVAS.h) * bw.h;
+  const cam: Cam = { x: bx - (lc[0] - W / 2) / k0, y: by - (lc[1] - H / 2) / k0, z };
+  return {
+    cam,
+    shift: [cam.x - base.x, cam.y - base.y],
+    at: [lc[0] + 2.2 * sw, lc[1] + 1.6 * Math.sin((2 * Math.PI * sec(f)) / LENS_SWAY + 1.1)],
+    R: (l[2] as number) * s * kp * 0.985,
+    pos,
+  };
+};
+const lensBoxes = (f: number, erase: boolean): Parameters<typeof paintBoxes>[3] => {
+  const pos = rowPos(f);
+  const eraseOn = erase && f >= F.erase0;
+  return {
+    n: BOXES_N,
+    lit: BOXES_N,
+    open: BOXES_N + 1,
+    seed: 'p2:boxes',
+    items: HAS_SHEETS,
+    ticks: TICK_AT.map((t) => (f >= t ? sec(f - t) : -1)),
+    erase: Array.from({ length: BOXES_N }, (_, i) => (eraseOn ? clamp01((i + 0.55 - pos) / 0.45) : 0)),
+  };
+};
+const lensDisc = (ctx: CanvasRenderingContext2D, f: number, g: LensGeo): void => {
+  paintLensDisc(ctx, {
+    cx: g.at[0],
+    cy: g.at[1],
+    R: g.R,
+    mag: LENS_MAG,
+    scene: (c) => {
+      const r = P1.projectRect(g.cam, 0, BOXES_W());
+      c.translate(r.x, r.y);
+      paintBoxes(c, r.w, r.h, lensBoxes(f, true));
+    },
+  });
+};
+const lensLayers = (f: number): Layer[] => {
+  const g = lensGeo(f);
+  const [dx, dy] = g.shift;
+  const world = creamWorld(f).filter((l) => l.id === 'cream' || l.id === 'path');
+  const layers: Layer[] = [
+    ...world,
+    canvasLayer('boxes', 'boxes', BOX_CANVAS.w, BOX_CANVAS.h, 0, BOXES_W(), (ctx, cw, ch) => paintBoxes(ctx, cw, ch, lensBoxes(f, false))),
+  ];
+  const hole = HOLE();
+  const wallBox: Rect = { x: hole.x - 1400 + dx, y: hole.y - 800 + dy, w: hole.w + 2800, h: hole.h + 1600 };
+  const sc = 2400 / wallBox.w;
+  layers.push(
+    canvasLayer('glass-wall', 'glass-wall', 2400, Math.round(wallBox.h * sc), D_WALL, wallBox, (ctx, cw, ch) =>
+      paintGlassWall(ctx, cw, ch, { hole: { x: 1400 * sc, y: 800 * sc, w: hole.w * sc, h: hole.h * sc }, seed: 'p2:wall' }),
+    ),
+  );
+  if (f >= F.note) layers.push(screenLayer('gnote', 'gnote', g.cam, D_NOTE, (ctx) => paintGlassNote(ctx, NOTE_AT[0], NOTE_AT[1], sec(f - F.note), 'p2:gnote')));
+  layers.push(screenLayer('lens', 'lens', g.cam, D_LENS, (ctx) => lensDisc(ctx, f, g)));
+  const pr = plateRect();
+  layers.push({ id: 'human', src: { kind: 'image', url: url2('h-ots-lens') }, d: D_HEAD, x: pr.x + dx, y: pr.y + dy, w: pr.w, h: pr.h });
+  if (f >= IRIS_FROM) {
+    const u = sine(span(f, IRIS_FROM, F.off));
+    layers.push(screenLayer('iris', 'iris', g.cam, D_IRIS, (ctx, cw, ch) => paintIris(ctx, cw, ch, g.at[0], g.at[1], lerp(IRIS_START_R, g.R, u))));
   }
   return layers;
 };
-const torchShot = (f: number): StageShot => {
-  const cam = torchCam(f);
-  return { kind: 'stage', layers: torchLayers(f, cam), cam };
-};
-/** Click off (3333): the beam is gone, the room black; the light circle shrinks to the hand-over dot by 3340. */
+const lensShot = (f: number): StageShot => ({ kind: 'stage', layers: lensLayers(f), cam: lensGeo(f).cam });
+/**
+ * The lens drops (3333): the black iris has closed on the lens circle; the circle shrinks and moves into the hand-over dot
+ * and turns solid moon yellow. From the hand-over frame on it is the fixed dot on black (part 3 begins on it).
+ */
 const paintOff = (f: number) => (ctx: CanvasRenderingContext2D, w: number, h: number): void => {
-  const u = easeIn(span(f, F.off, F.handOver));
-  const r = lerp(110, HAND_OVER.r, u);
-  paintTorchLight(ctx, w, h, { lens: [HAND_OVER.x - 1, HAND_OVER.y], target: [HAND_OVER.x, HAND_OVER.y], r, on: 1, dark: 1, seed: 'p2:torch' });
-  if (f >= F.handOver) {
-    ctx.fillStyle = '#0B0F1E';
-    ctx.fillRect(0, 0, w, h);
+  ctx.fillStyle = BLACK;
+  ctx.fillRect(0, 0, w, h);
+  if (f < F.handOver) {
+    const g = lensGeo(F.off);
+    const u = easeIn(span(f, F.off, F.handOver));
+    const r = lerp(g.R, HAND_OVER.r, u);
+    const cx = lerp(g.at[0], HAND_OVER.x, u);
+    const cy = lerp(g.at[1], HAND_OVER.y, u);
+    const q = r / g.R;
+    ctx.save();
+    ctx.translate(cx, cy);
+    ctx.scale(q, q);
+    ctx.translate(-g.at[0], -g.at[1]);
+    lensDisc(ctx, F.off, g);
+    ctx.restore();
     ctx.fillStyle = HAND_OVER.color;
+    ctx.globalAlpha = clamp01((0.4 - q) / 0.3);
     ctx.beginPath();
-    ctx.arc(HAND_OVER.x, HAND_OVER.y, HAND_OVER.r, 0, Math.PI * 2);
+    ctx.arc(cx, cy, r, 0, Math.PI * 2);
     ctx.fill();
+    ctx.globalAlpha = 1;
+    return;
   }
+  ctx.fillStyle = HAND_OVER.color;
+  ctx.beginPath();
+  ctx.arc(HAND_OVER.x, HAND_OVER.y, HAND_OVER.r, 0, Math.PI * 2);
+  ctx.fill();
 };
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -1194,7 +1315,8 @@ export const shotAt = (f: number): Shot => {
   if (f < F.fold1) return { kind: 'fold', p: span(f, F.fold0, F.fold1), from: noteFlat(), to: creamShot(f) };
   if (f < F.pull) return creamShot(f);
   if (f < F.calm) return otsShot(f);
-  if (f < F.off) return torchShot(f);
+  if (f < F.lensOn) return calmShot(f);
+  if (f < F.off) return lensShot(f);
   return { kind: 'flat', paint: paintOff(f) };
 };
 
@@ -1222,7 +1344,9 @@ export const characterBoxes = (f: number): { who: 'human' | 'ai'; box: Rect }[] 
     const M = l.id === 'ai-apart' ? COME_APART_MARGIN : 0;
     const sx = l.w / (m.w + 2 * M);
     const sy = l.h / (m.h + pad + 2 * M);
-    const world: Rect = { x: l.x + (bb[0] + M) * sx, y: l.y + (bb[1] + pad + M) * sy, w: (bb[2] - bb[0]) * sx, h: (bb[3] - bb[1]) * sy };
+    // the lens plate is the back of his head (no face) and a raised arm: only its upper half (head, ring, hand) counts, not the
+    // torso that runs past the frame bottom
+    const world: Rect = { x: l.x + (bb[0] + M) * sx, y: l.y + (bb[1] + pad + M) * sy, w: (bb[2] - bb[0]) * sx, h: (bb[3] - bb[1]) * sy * (name === 'h-ots-lens' ? 0.5 : 1) };
     out.push({ who, box: P1.projectRect(stage.cam, l.d, world) });
   }
   return out;

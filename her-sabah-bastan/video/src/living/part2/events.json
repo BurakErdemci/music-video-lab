@@ -537,28 +537,59 @@
     },
     {
       "f": 3213,
-      "name": "torch clicks on, beam through the glass",
+      "name": "lens up: cut to the over-the-shoulder lens shot, box 1 under the lens",
       "on": "word",
       "kind": "cut",
       "word": "güveniyorum"
     },
     {
+      "f": 3221,
+      "name": "tick 1 stamped on box 1 under the lens",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 3235,
+      "name": "tick 2 stamped on box 2",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 3249,
+      "name": "tick 3 stamped on box 3",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
       "f": 3257,
-      "name": "the beam swings back onto his wall",
+      "name": "the lens reaches the empty box 4 (sen)",
       "on": "word",
       "kind": "cut",
       "word": "sen"
     },
     {
+      "f": 3263,
+      "name": "his yellow note slaps onto the glass in front of the empty box",
+      "on": "beat",
+      "kind": "soft"
+    },
+    {
+      "f": 3269,
+      "name": "the lens wipes the sheets and ticks as the row slides back (unutursun)",
+      "on": "word",
+      "kind": "soft",
+      "word": "unutursun"
+    },
+    {
       "f": 3321,
-      "name": "he holds the torch at the glass (ikimize)",
+      "name": "iris starts closing on the lens (ikimize)",
       "on": "word",
       "kind": "cut",
       "word": "ikimize"
     },
     {
       "f": 3333,
-      "name": "torch clicks off: the light circle shrinks",
+      "name": "lens drops: the lens circle shrinks into the dot",
       "on": "downbeat",
       "kind": "cut"
     },

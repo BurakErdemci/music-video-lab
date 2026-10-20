@@ -60,8 +60,8 @@ export const STAMPS: readonly StampSpec[] = [
   S('aynı hata', 2823, 2880, 160, 170, 104, 'cream', 'navy'),
   S('bitti', 2954, 2996, 160, 170, 118, 'cream', 'navy'),
   S('ölçülmemiş', 3116, 3150, 1100, 150, 96, 'cream', 'navy'),
-  S('bakıyorum', 3243, 3256, 1470, 16, 96, 'cream', 'navy'),
-  S('hatırlarım', 3298, 3319, 1380, 16, 96, 'cream', 'navy'),
+  S('bakıyorum', 3243, 3256, 1470, 110, 96, 'cream', 'navy'),
+  S('hatırlarım', 3298, 3319, 1380, 110, 96, 'cream', 'navy'),
 ];
 
 export const captionBox = (c: CaptionSpec2): Box => ({ x: c.x - PAD_X, y: c.y - PAD_Y, w: width(c.text, c.size) + 2 * PAD_X, h: c.size * 1.35 + 2 * PAD_Y });

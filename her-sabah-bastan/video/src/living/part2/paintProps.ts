@@ -2,6 +2,7 @@
 // the glass wall with sticky notes, and the split moon. Randomness only through seeded().
 import { palette } from '../../style/palette.ts';
 import { seeded } from '../../style/seeded.ts';
+import { paintTick } from './icons2.ts';
 
 type Ctx = CanvasRenderingContext2D;
 type Pt = readonly [number, number];
@@ -89,7 +90,7 @@ const flap = (ctx: Ctx, a: Pt, b: Pt, v: Pt, inner: boolean, j: (n: number) => n
   ink(ctx);
 };
 
-const paintBox = (ctx: Ctx, g: ReturnType<typeof boxGeom>, u: number, seed: string): void => {
+const paintBox = (ctx: Ctx, g: ReturnType<typeof boxGeom>, u: number, seed: string, items = false, erase = 0): void => {
   const r = seeded(seed);
   const j = (n: number): number => (r() - 0.5) * 2 * n;
   const { x, top, w, h } = g;
@@ -153,6 +154,7 @@ const paintBox = (ctx: Ctx, g: ReturnType<typeof boxGeom>, u: number, seed: stri
   }
   // back flap, then front flap (nearest, drawn last)
   flap(ctx, bl, br, [-dx * 0.5 * Math.cos(fe), -dy * 0.5 * Math.cos(fe) - FLAP_LEN * Math.sin(fe)], fe > Math.PI / 2, j);
+  if (items && u > 0.5) paintSheets(ctx, g, seed, erase);
   flap(ctx, fl, fr, [dx * 0.5 * Math.cos(ffe), dy * 0.5 * Math.cos(ffe) - FLAP_LEN * Math.sin(ffe)], ffe > Math.PI / 2, j);
   if (u <= 0.02) {
     // tape along the closed seam
@@ -164,6 +166,82 @@ const paintBox = (ctx: Ctx, g: ReturnType<typeof boxGeom>, u: number, seed: stri
     ctx.lineWidth = 2;
     ctx.stroke();
   }
+};
+
+
+// ---- box contents (her "done" work: a row of paper sheets standing in the open box) and the eraser that wipes them
+
+const SHEETS = 5;
+/** Left-to-right wipe front of box g at erase progress e (0 = nothing wiped, 1 = all wiped), in box-canvas px. */
+const wipeFront = (g: ReturnType<typeof boxGeom>, e: number): number => g.x - 30 + e * (g.w + 130);
+
+/** Paper sheets standing in the open box; everything left of the wipe front is gone, the front edge sheds a little dust. */
+const paintSheets = (ctx: Ctx, g: ReturnType<typeof boxGeom>, seed: string, erase: number): void => {
+  const e = clamp01(erase);
+  if (e >= 1) return;
+  const fx = wipeFront(g, e);
+  const r = seeded(`${seed}:sheets`);
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(fx, g.top - 260, g.w + 260, 330);
+  ctx.clip();
+  for (let k = 0; k < SHEETS; k++) {
+    const sw = 66 + r() * 10;
+    const sh = 118 + r() * 54;
+    const bx = g.x + 28 + k * 56 + (r() - 0.5) * 6;
+    const tilt = (r() - 0.5) * 0.16;
+    ctx.save();
+    ctx.translate(bx + sw / 2, g.top + 4);
+    ctx.rotate(tilt);
+    ctx.fillStyle = CREAM;
+    ctx.fillRect(-sw / 2, -sh, sw, sh);
+    ctx.strokeStyle = NAVY;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.strokeRect(-sw / 2, -sh, sw, sh);
+    ctx.lineCap = 'round';
+    ctx.lineWidth = 2;
+    for (let i = 0; i < 4; i++) {
+      const yy = -sh + 22 + i * 17;
+      ctx.beginPath();
+      ctx.moveTo(-sw / 2 + 9, yy);
+      ctx.lineTo(-sw / 2 + 9 + (sw - 18) * (0.5 + 0.5 * r()), yy + (r() - 0.5) * 3);
+      ctx.stroke();
+    }
+    if (k % 2 === 0) {
+      ctx.fillStyle = YELLOW;
+      ctx.fillRect(sw / 2 - 18, -sh - 7, 22, 14);
+      ctx.strokeRect(sw / 2 - 18, -sh - 7, 22, 14);
+    }
+    ctx.restore();
+  }
+  ctx.restore();
+  if (e > 0) {
+    const dr = seeded(`${seed}:dust`);
+    ctx.fillStyle = CREAM;
+    for (let i = 0; i < 14; i++) {
+      const dxx = fx - 4 - dr() * 46;
+      const dyy = g.top - 90 + dr() * 110 + e * 20 * dr();
+      const z = 3 + dr() * 5;
+      ctx.fillRect(dxx, dyy, z, z);
+    }
+  }
+};
+
+/** Check mark on a box front: p = seconds since it was stamped (< 0: none), erase = wipe progress of the box. */
+const paintBoxTick = (ctx: Ctx, g: ReturnType<typeof boxGeom>, p: number, erase: number): void => {
+  if (p < 0 || erase >= 1) return;
+  const fx = wipeFront(g, clamp01(erase));
+  const size = 150;
+  ctx.save();
+  ctx.beginPath();
+  ctx.rect(fx, g.top - 200, g.w + 260, 600);
+  ctx.clip();
+  ctx.translate(g.x + g.w / 2, g.top + g.h * 0.6);
+  ctx.scale(size / 256, size / 256);
+  ctx.translate(-128, -128);
+  paintTick(ctx, 256, 256, p);
+  ctx.restore();
 };
 
 const paintLamp = (ctx: Ctx, bx: number, by: number, on: number): void => {
@@ -238,15 +316,29 @@ const paintLamp = (ctx: Ctx, bx: number, by: number, on: number): void => {
   }
 };
 
-/** A row of n cardboard boxes (lids closed until box i opens at progress open - i) with lamps hanging above. Transparent background. */
-export const paintBoxes = (ctx: Ctx, cw: number, ch: number, o: { n: number; lit: number; open: number; seed: string }): void => {
+/**
+ * A row of n cardboard boxes (lids closed until box i opens at progress open - i) with lamps hanging above. Transparent
+ * background. Optional per box: items (paper sheets inside), ticks (seconds since the check mark was stamped, < 0 none)
+ * and erase (0..1 left-to-right wipe of that box's sheets and tick).
+ */
+export const paintBoxes = (
+  ctx: Ctx,
+  cw: number,
+  ch: number,
+  o: { n: number; lit: number; open: number; seed: string; items?: readonly boolean[]; ticks?: readonly number[]; erase?: readonly number[] },
+): void => {
   ctx.save();
   ctx.scale(cw / BOX_CANVAS.w, ch / BOX_CANVAS.h);
   for (let i = 0; i < o.n; i++) {
     const g = boxGeom(i, o.n);
     paintLamp(ctx, g.lamp[0], g.lamp[1], clamp01(o.lit - i));
   }
-  for (let i = 0; i < o.n; i++) paintBox(ctx, boxGeom(i, o.n), clamp01(o.open - i), `${o.seed}:box:${i}`);
+  for (let i = 0; i < o.n; i++) {
+    const g = boxGeom(i, o.n);
+    const e = o.erase?.[i] ?? 0;
+    paintBox(ctx, g, clamp01(o.open - i), `${o.seed}:box:${i}`, o.items?.[i] ?? false, e);
+    paintBoxTick(ctx, g, o.ticks?.[i] ?? -1, e);
+  }
   ctx.restore();
 };
 
