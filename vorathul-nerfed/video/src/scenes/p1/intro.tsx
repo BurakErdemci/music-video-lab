@@ -4,7 +4,7 @@ import { AbsoluteFill } from 'remotion';
 import { tween, handheld, WIDE, ECU, CLOSE, LOW, type CameraPose } from '../../camera/api.ts';
 import { InkFilter, inkFilterId, Overlay, seeded, shake, SpeedLines } from '../../vfx/effects.ts';
 import { at } from './events.ts';
-import { Glint } from './fx.tsx';
+import { bbox, Glint, PanelArt } from './fx.tsx';
 import { HeroImg, type HeroKind } from './heroes.tsx';
 import { clamp01, count, GOLD, INK, inOut, IVORY, lerp, outCubic, prog, project, ShotFrame, two, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 import { PaintingShot } from './paint.tsx';
@@ -323,9 +323,7 @@ const S06 = ({ frame }: { frame: number }) => {
           const cx = x0 + 260;
           return (
             <PanelClip key={kind} pts={pts} slam={slam} cx={cx}>
-              <AbsoluteFill style={{ background: GOLD }} />
-              <SpeedLines mode="radial" frame={f2 - hitAt} duration={200} seed={700 + i} focus={[cx, 560]} inner={240} count={56} thickness={60} hold={2} />
-              <HeroImg kind={kind} pose="charge" size={1150} flip={i % 2 === 1} style={{ left: cx - 575, top: 30 + (i % 2) * 50 }} />
+              <PanelArt id={`H-s06-${kind}`} box={bbox(pts)} push={0.06 * prog(frame, hitAt, 587 - hitAt)} />
             </PanelClip>
           );
         })}

@@ -1,6 +1,7 @@
 // Impact recipe, painted HUD (C09 + the G25 frame), comic captions (C10), panels (C14) and glints (C02) of part 1.
 import type { CSSProperties, ReactNode } from 'react';
-import { AbsoluteFill } from 'remotion';
+import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { assetSize } from '../../cast/available.ts';
 import { withShake, SHAKE_PCT, type CameraPath, type CameraPose, type ShakeHit } from '../../camera/api.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { hashKey, ImpactBurst, InkFilter, inkFilterId, InkSplash, Overlay, seeded, shake, SpeedLines } from '../../vfx/effects.ts';
@@ -286,6 +287,30 @@ export const Panel = ({ pts, children, slam = 1, border = 14, style }: { pts: [n
       </Overlay>
     </AbsoluteFill>
   );
+};
+
+/**
+ * A hero panel illustration (storyboard 03 §4), cover-fitted to a panel's bounding box in frame px and cropped so the
+ * image point `focus` (0..1 of the image) sits at the box centre; `zoom` > 1 crops in further, `push` adds a slow
+ * push over the panel's life. The panel's clip path cuts it to the polygon.
+ */
+export const PanelArt = ({ id, box, focus = [0.5, 0.5], zoom = 1, push = 0 }: { id: string; box: [number, number, number, number]; focus?: [number, number]; zoom?: number; push?: number }) => {
+  const [bx, by, bw, bh] = box;
+  const [iw, ih] = assetSize(id) ?? [1536, 1024];
+  const k = Math.max(bw / iw, bh / ih) * zoom * (1 + push);
+  const w = iw * k;
+  const h = ih * k;
+  // place the focus at the box centre, clamped so the image always covers the box
+  const left = Math.min(bx, Math.max(bx + bw - w, bx + bw / 2 - focus[0] * w));
+  const top = Math.min(by, Math.max(by + bh - h, by + bh / 2 - focus[1] * h));
+  return <Img src={staticFile(`assets/${id}.png`)} style={{ position: 'absolute', left, top, width: w, height: h }} />;
+};
+
+/** Bounding box of a polygon, frame px. */
+export const bbox = (pts: readonly [number, number][]): [number, number, number, number] => {
+  const xs = pts.map((p) => p[0]);
+  const ys = pts.map((p) => p[1]);
+  return [Math.min(...xs), Math.min(...ys), Math.max(...xs) - Math.min(...xs), Math.max(...ys) - Math.min(...ys)];
 };
 
 /** Slam-in scale for a panel or card landing on `at`. */

@@ -6,7 +6,7 @@ import { handheld, tween, type CameraPose } from '../../camera/api.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
 import { Shards, SpeedLines } from '../../vfx/effects.ts';
 import { at } from './events.ts';
-import { Glint, Panel, slamIn, type Impact } from './fx.tsx';
+import { bbox, Glint, Panel, PanelArt, slamIn, type Impact } from './fx.tsx';
 import { HeroImg, type HeroKind, type HeroPose } from './heroes.tsx';
 import { count, GOLD, INK, IVORY, lerp, outCubic, prog, project, two, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 import { bob, PaintingShot } from './paint.tsx';
@@ -15,15 +15,17 @@ import { chest, FAN, flight, Party, type HeroTrack } from './riff.tsx';
 import { echoesAt, ramp, rigFk, rigFor, rigWorld, Vorathul, type Timeline } from './vorathul.tsx';
 import { inkFilterDef, Pic, SvgCard, svgDoc } from './kit.tsx';
 import { RO, World } from './world.tsx';
+import { OrganLoft } from './locations.tsx';
 import { ImpactBurst } from '../../vfx/effects.ts';
 
 /**
- * A comic inset of a hero action that is too small in the wide (S17 panel style): slams in, holds, flies off.
- * `heroes` are drawn in panel pixels; the burst lands on `hitAt` at `hit` (frame px, clipped to the panel).
+ * The burst lands on `hitAt` at `hit` (frame px, clipped to the panel), over the panel illustration.
+ * A comic inset of a hero action that is too small in the wide: slams in, holds, flies off.
  */
-const ActionInset = ({ frame, from, until, hitAt, hit, pts, bg, lines, heroes, children }: {
-  frame: number; from: number; until: number; hitAt: number; hit: [number, number]; pts: [number, number][]; bg: string; lines: string;
-  heroes: { kind: HeroKind; pose: HeroPose; x: number; y: number; size: number; flip?: boolean }[]; children?: React.ReactNode;
+const ActionInset = ({ frame, from, until, hitAt, hit, pts, art, focus, zoom = 1 }: {
+  frame: number; from: number; until: number; hitAt: number; hit: [number, number]; pts: [number, number][];
+  /** Panel illustration id (storyboard 03 §4), cover-fitted and cropped to the panel. */
+  art: string; focus?: [number, number]; zoom?: number;
 }) => {
   if (frame < from || frame >= until) return null;
   const f2 = two(frame);
@@ -31,10 +33,7 @@ const ActionInset = ({ frame, from, until, hitAt, hit, pts, bg, lines, heroes, c
   return (
     <AbsoluteFill style={{ opacity: 1 - out }}>
       <Panel pts={pts} slam={slamIn(frame, from)} border={14}>
-        <AbsoluteFill style={{ background: bg }} />
-        <SpeedLines mode="radial" frame={f2 - from} duration={400} seed={hitAt} focus={hit} inner={120} count={48} thickness={46} color={lines} />
-        {heroes.map((h, i) => <HeroImg key={i} kind={h.kind} pose={h.pose} size={h.size} flip={h.flip} style={{ left: h.x - h.size / 2, top: h.y - h.size * 0.85 }} />)}
-        {children}
+        <PanelArt id={art} box={bbox(pts)} focus={focus} zoom={zoom} push={0.08 * prog(frame, from, until - from)} />
         <ImpactBurst frame={f2 - hitAt} duration={8} seed={hitAt + 7} x={hit[0]} y={hit[1]} size={150} flash={0} />
       </Panel>
     </AbsoluteFill>
@@ -176,17 +175,9 @@ const S14 = ({ frame }: { frame: number }) => {
             </Overlay>
             {/* the double attack, too small from the gallery: a comic inset of knight and archer hitting him together */}
             <ActionInset
-              frame={frame} from={S14_DBL - 8} until={S14_DBL + 16} hitAt={S14_DBL} hit={[1150, 560]} bg={IVORY} lines={GOLD}
-              pts={[[1060, 400], [1880, 360], [1880, 810], [1040, 840]]}
-              heroes={[
-                { kind: 'knight', pose: frame < S14_DBL + 2 ? 'attack' : 'fly', x: 1330 + 60 * prog(frame, S14_DBL - 8, 8), y: 810, size: 560, flip: true },
-                { kind: 'archer', pose: 'attack', x: 1700, y: 800, size: 520, flip: true },
-              ]}
-            >
-              <Overlay>
-                <path d="M1040 360L1150 360L1120 500L1190 660L1110 840L1040 840Z" fill={INK} />
-              </Overlay>
-            </ActionInset>
+              frame={frame} from={S14_DBL - 8} until={S14_DBL + 16} hitAt={S14_DBL} hit={[1460, 600]}
+              pts={[[1060, 400], [1880, 360], [1880, 810], [1040, 840]]} art="H-s14-double"
+            />
           </>
         );
       }}
@@ -410,7 +401,7 @@ const S17 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S17_CAM} impacts={impacts} hud={launched}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} />
+          <OrganLoft light={1} />
           <Vorathul state={st} frame={frame} />
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
@@ -428,9 +419,7 @@ const S17 = ({ frame }: { frame: number }) => {
               return (
                 <AbsoluteFill key={kind} style={{ opacity: 1 - out, transform: `translate(${(cx - 960) * out * 0.6}px, ${(cy - 540) * out * 0.6}px)` }}>
                   <Panel pts={pts} slam={slamIn(frame, hitAt)} border={16}>
-                    <AbsoluteFill style={{ background: i % 2 ? IVORY : GOLD }} />
-                    <SpeedLines mode="radial" frame={f2 - hitAt} duration={400} seed={1700 + i} focus={[cx, cy + 40]} inner={150} count={50} thickness={50} color={i % 2 ? GOLD : INK} />
-                    <HeroImg kind={kind} pose="charge" size={860} flip={i % 2 === 1} style={{ left: cx - 430, top: cy - 520 }} />
+                    <PanelArt id={`H-s17-${kind}`} box={bbox(pts)} push={0.06 * prog(frame, hitAt, S17_COMBO - hitAt)} />
                   </Panel>
                 </AbsoluteFill>
               );
@@ -523,7 +512,7 @@ const S18 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S18_CAM} impacts={impacts}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} />
+          <OrganLoft />
           <Vorathul state={st} frame={frame} />
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
@@ -599,7 +588,7 @@ const S19 = ({ frame }: { frame: number }) => {
       frame={frame} camera={S19_CAM} impacts={impacts}
       stage={({ sil }) => (
         <>
-          <World sil={sil} rayBend={12} cloudShift={7} />
+          <OrganLoft />
           <Vorathul state={st} frame={frame} crack={frame >= S19_STRIKE ? 0 : -1} echoes={echoesAt(S19_TL, frame, [S19_SWAT], { frames: 8 })} />
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
@@ -618,14 +607,11 @@ const S19 = ({ frame }: { frame: number }) => {
             </Overlay>
             {/* the last charge in close-up: all four run in together and the combined strike lands */}
             <ActionInset
-              frame={frame} from={S19_CHARGE} until={S19_STRIKE + 6} hitAt={S19_STRIKE} hit={[860, 560]} bg={GOLD} lines={INK}
-              pts={[[40, 400], [880, 360], [900, 810], [40, 840]]}
-              heroes={(['knight', 'rogue', 'mage', 'archer'] as HeroKind[]).map((kind, i) => ({ kind, pose: 'attack' as HeroPose, x: 160 + i * 150 + 230 * outCubic(prog(frame, S19_CHARGE, S19_STRIKE - S19_CHARGE)), y: 810 - (i % 2) * 40, size: 520 }))}
-            >
-              <Overlay>
-                <path d="M900 360L820 360L860 500L790 650L880 810L900 810Z" fill={INK} />
-              </Overlay>
-            </ActionInset>
+              frame={frame} from={S19_CHARGE} until={S19_STRIKE + 6} hitAt={S19_STRIKE} hit={[760, 560]}
+              pts={[[40, 400], [880, 360], [900, 810], [40, 840]]} art="H-s19-charge"
+              // the weakest image: four small heroes, so crop in on the running line
+              focus={[0.48, 0.62]} zoom={1.55}
+            />
           </>
         );
       }}
