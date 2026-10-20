@@ -9,6 +9,7 @@ import { Part3Scene } from './living/part3/Part3Scene.tsx';
 import { PART3_AT60_FRAMES, Part3At60 } from './living/fps60/Part3At60.tsx';
 import { PART4A_FRAMES, PART4B_FRAMES, Part4aHalftoneScene, Part4aScene, Part4bHalftoneScene, Part4bScene } from './living/part4/Part4Scene.tsx';
 import { PART4B_V3_FRAMES, Part4bV3Scene } from './living/part4/finale/Part4bV3.tsx';
+import { PART1_AT60_FRAMES, PART2_AT60_FRAMES, PART3_FULL_AT60_FRAMES, PART4A_AT60_FRAMES, PART4B_AT60_FRAMES, Part1At60, Part2At60, Part3FullAt60, Part4aAt60, Part4bAt60 } from './living/fps60/Wrappers60.tsx';
 import { FPS } from './timing.ts';
 import { H, W } from './layout.ts';
 import './style/fonts.ts';
@@ -27,5 +28,10 @@ export const LivingRoot = () => (
     <Composition id="Part4bV3" component={Part4bV3Scene} durationInFrames={PART4B_V3_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Part3" component={Part3Scene} durationInFrames={4676 - 3340} fps={FPS} width={W} height={H} />
     <Composition id="Part3At60" component={Part3At60} durationInFrames={PART3_AT60_FRAMES} fps={60} width={W} height={H} />
+    <Composition id="Part1At60" component={Part1At60} durationInFrames={PART1_AT60_FRAMES} fps={60} width={W} height={H} />
+    <Composition id="Part2At60" component={Part2At60} durationInFrames={PART2_AT60_FRAMES} fps={60} width={W} height={H} />
+    <Composition id="Part3FullAt60" component={Part3FullAt60} durationInFrames={PART3_FULL_AT60_FRAMES} fps={60} width={W} height={H} />
+    <Composition id="Part4aAt60" component={Part4aAt60} durationInFrames={PART4A_AT60_FRAMES} fps={60} width={W} height={H} />
+    <Composition id="Part4bAt60" component={Part4bAt60} durationInFrames={PART4B_AT60_FRAMES} fps={60} width={W} height={H} />
   </>
 );
