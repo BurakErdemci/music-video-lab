@@ -7,11 +7,11 @@ import { CanvasBulge, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects
 import { CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
 import { jointWorld } from './rigline.ts';
-import { DevHead } from './People.tsx';
+import { assetSize } from '../../cast/available.ts';
 import { OfficeStage, WallItems } from './office.tsx';
 import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog } from './lib.ts';
 
-const DRAIN = 'saturate(0.55)';
+const DRAIN = 'none';
 
 /** The hero's slit while seated, measured from the rig (the drawn sit_alone puts it at y 4.23, not the placeholder's 3.1). */
 const SLIT = jointWorld(CUE.s77cut.frame, 'eye_slit');
@@ -29,7 +29,7 @@ export const S77 = ({ frame }: { frame: number }) => {
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
       <AbsoluteFill style={{ filter: DRAIN }}>
         <Stage camera={path}>
-          <Cathedral banners={false} />
+          <Cathedral frame={frame} />
           <Hero frame={frame} />
         </Stage>
       </AbsoluteFill>
@@ -78,7 +78,7 @@ export const S78 = ({ frame }: { frame: number }) => {
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
       <AbsoluteFill style={{ filter: DRAIN }}>
         <Stage camera={hold(CANVAS_CAM)}>
-          <Cathedral banners={false} />
+          <Cathedral frame={frame} />
           <Hero frame={frame} />
         </Stage>
       </AbsoluteFill>
@@ -119,21 +119,29 @@ const GauntletSilhouette = ({ x, y, size }: { x: number; y: number; size: number
   </svg>
 );
 
-/** S79 03:16.07: his POV from inside, locked. The office through the canvas weave, blurred; the bored developer sips and does not look. */
-export const S79 = ({ frame }: { frame: number }) => (
-  <AbsoluteFill style={{ background: '#E9ECEF' }}>
-    <DuotoneFlash frame={frame} cues={O_BLUR} id="s79-office">
-      <AbsoluteFill style={{ filter: 'blur(14px)' }}>
-        <Img src={staticFile('plates/07-ofis-tablo.jpg')} style={{ position: 'absolute', left: -260, top: -170, width: 2420, height: 1613 }} />
-      </AbsoluteFill>
-    </DuotoneFlash>
-    <FullWeave opacity={0.34} />
-    <GauntletSilhouette x={1160} y={470} size={640} />
-    <div style={{ position: 'absolute', inset: 0, filter: 'blur(14px)' }}>
-      <DevHead frame={frame} turnAt={CUE.s79glance.frame} turnTo={0.5} x={-260 + 555 * 1.575} y={-170 + 440 * 1.575} r={62 * 1.575 * 0.62} seed={9} />
-    </div>
-  </AbsoluteFill>
-);
+/** S79 03:16.07: his POV from inside, locked. The empty office through the canvas weave, blurred; the bored developer (G46-sip) sips and does not look. */
+export const S79 = ({ frame }: { frame: number }) => {
+  const glance = easeOut(prog(frame, CUE.s79glance.frame, 8));
+  const size = assetSize('G46-sip') ?? [430, 1447];
+  const k = 9.7 * 56.47 * 1.575 / 1440;
+  const h = size[1] * k;
+  return (
+    <AbsoluteFill style={{ background: '#E9ECEF' }}>
+      <DuotoneFlash frame={frame} cues={O_BLUR} id="s79-office">
+        <AbsoluteFill style={{ filter: 'blur(14px)' }}>
+          <Img src={staticFile('assets/office-plate.png')} style={{ position: 'absolute', left: -260, top: -170, width: 2420, height: 1613 }} />
+          {/* he glances up on "being": a small lift and tilt of the same drawing, no second pose */}
+          <Img
+            src={staticFile('assets/G46-sip.png')}
+            style={{ position: 'absolute', left: -260 + 553 * 1.575 - (size[0] * k) / 2, top: -170 + 960 * 1.575 - h - glance * 14, width: size[0] * k, height: h, transformOrigin: '50% 100%', transform: `rotate(${-2.5 * glance}deg)` }}
+          />
+        </AbsoluteFill>
+      </DuotoneFlash>
+      <FullWeave opacity={0.34} />
+      <GauntletSilhouette x={1160} y={470} size={640} />
+    </AbsoluteFill>
+  );
+};
 
 /** S80 03:17.77: OFF-WIDE from the back of the room. On the wall the painting has a gauntlet-shaped bulge; the developers type on. */
 export const S80 = ({ frame }: { frame: number }) => {
@@ -144,7 +152,7 @@ export const S80 = ({ frame }: { frame: number }) => {
   const amount = 1 - 0.65 * easeInOut(prog(frame, CUE.s80relax.frame, 10));
   return (
     <AbsoluteFill style={{ background: '#E9ECEF' }}>
-      <OfficeStage camera={hold(pose)} />
+      <OfficeStage camera={hold(pose)} frame={frame} />
       {/* only the bulge's drawn marks (shadow, light crescent, contour, strain): a displacement filter stacked on the
           halftone office grade rendered as mosaic-tiled capture frames in every pass */}
       <CanvasBulge frame={frame - (frame % 10)} amount={amount} x={x} y={y} size={box[2] * 0.2} rotate={-8} seed={4} id="p4-bulge-b">

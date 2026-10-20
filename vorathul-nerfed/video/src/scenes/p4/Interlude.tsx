@@ -5,29 +5,29 @@ import { Stage, type CameraPath } from '../../stage/Stage.tsx';
 import { UiFonts } from '../../ui/kit.ts';
 import { CUE } from './cues.ts';
 import { cam, Cathedral, Hero } from './inside.tsx';
-import { DustMotes, FloorGlints, RollingHelmet, SpawnRings } from './fx.tsx';
+import { DustLayer, DustMotes, FloorGlints, SpawnRings } from './fx.tsx';
 
-const DRAIN = 'saturate(0.55)';
+const DRAIN = 'none';
 
 /** S74 02:51.33: WIDE, very slow push. The galleries are empty, the sky has drained to ivory, he sits alone on the steps. */
 export const S74 = ({ frame }: { frame: number }) => {
   const start = CUE.s74cut.frame;
-  const path: CameraPath = push(cam([0, 3.0, 5], [0, 2.1, -15]), { start, frames: 168, distance: 2.4 });
+  const path: CameraPath = push(cam([0, 4.6, 6], [0, 5.6, -15]), { start, frames: 168, distance: 2.4 });
   return (
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
       <AbsoluteFill style={{ filter: DRAIN }}>
         <Stage camera={path}>
-          <Cathedral />
+          <Cathedral frame={frame} />
           <Hero frame={frame} />
         </Stage>
       </AbsoluteFill>
-      <RollingHelmet frame={frame} start={CUE.s74roll.frame} stop={CUE.s74stop.frame} from={[1560, 770]} to={[1215, 842]} size={1.1} />
+      <DustLayer frame={frame} />
       <DustMotes frame={frame} start={CUE.s74motes.frame} gust={CUE.s74drift.frame} />
     </AbsoluteFill>
   );
 };
 
-const S75_CAM = cam([0, 2.1, -2.5], [0, 1.6, -15]);
+const S75_CAM = cam([0, 2.6, -2.5], [0, 4.6, -15]);
 
 /** S75 02:56.93: hero height, facing him. Where the heroes always stood, four faint spawn rings fade in, one per word. */
 export const S75 = ({ frame }: { frame: number }) => {
@@ -40,10 +40,11 @@ export const S75 = ({ frame }: { frame: number }) => {
       <UiFonts />
       <AbsoluteFill style={{ filter: DRAIN }}>
         <Stage camera={path}>
-          <Cathedral banners={false} />
+          <Cathedral frame={frame} />
           <Hero frame={frame} />
         </Stage>
       </AbsoluteFill>
+      <DustLayer frame={frame} />
       <FloorGlints frame={frame} start={CUE.s75glint.frame} points={glints} />
       <SpawnRings
         frame={frame}

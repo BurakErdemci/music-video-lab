@@ -9,12 +9,11 @@ import { ImpactBurst, Overlay, SpeedLines, VIOLET, IVORY, GOLD, INK } from '../.
 import { seeded } from '../../vfx/seeded.ts';
 import { CRACK_STEPS, CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
-import { DevHead } from './People.tsx';
 import { InsideCracks, OfficeCracks, OfficeStage, WallItems } from './office.tsx';
 import { jointWorld } from './rigline.ts';
 import { CANVAS, CANVAS_CAM, H, PALM_UV, W, clamp01, easeInOut, officeCam, paintingWorld, project, prog, twos } from './lib.ts';
 
-const DRAIN = 'saturate(0.8)';
+const DRAIN = 'none';
 
 /** Camera kicks on the crack steps (and any extra cue): a short decaying jolt, applied to position and target alike. */
 const kicked = (path: CameraPath, cues: readonly number[], amp = 0.07, len = 9): CameraPath => (frame) => {
@@ -42,7 +41,7 @@ const Inside = ({ frame, camera, children }: InsideProps) => {
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
       <AbsoluteFill style={{ filter: DRAIN }}>
         <Stage camera={camera}>
-          <Cathedral banners={false} />
+          <Cathedral frame={frame} />
           <Hero frame={frame} />
         </Stage>
       </AbsoluteFill>
@@ -59,7 +58,7 @@ const Office = ({ frame, camera, children, wall = true }: OfficeProps) => {
   const pose = camera(frame);
   return (
     <AbsoluteFill style={{ background: '#E9ECEF' }}>
-      <OfficeStage camera={camera} />
+      <OfficeStage camera={camera} frame={frame} />
       <OfficeCracks frame={frame} pose={pose} layer="painting" />
       {wall ? <WallItems frame={frame} pose={pose} /> : null}
       <OfficeCracks frame={frame} pose={pose} layer="wall" />
@@ -168,9 +167,11 @@ export const S82 = ({ frame }: { frame: number }) => {
             <ForumCard frame={frame} popAt={CUE.s82cut.frame} x={170} y={14} width={860} title="bring back phase 3" votes={214} replies={38} rotate={-1} />
             <ForumCard frame={frame} popAt={CUE.s82forum2.frame} x={170} y={342} width={860} title="boss is a tutorial now 2/10" votes={873} replies={120} rotate={1} author="gamer_77" />
           </Monitor>
-          <Monitor x={W - MONITOR_W - 40} y={650} width={MONITOR_W} screen={C.white}>
-            <ForumCard frame={frame} popAt={CUE.s82forum3.frame} x={170} y={170} width={860} title="#UnnerfVorathul" votes={1500} replies={402} rotate={-1} author="mod_team" />
-          </Monitor>
+          {frame >= CUE.s82forum3.frame ? (
+            <Monitor x={W - MONITOR_W - 40} y={650} width={MONITOR_W} screen={C.white}>
+              <ForumCard frame={frame} popAt={CUE.s82forum3.frame} x={170} y={170} width={860} title="#UnnerfVorathul" votes={1500} replies={402} rotate={-1} author="mod_team" />
+            </Monitor>
+          ) : null}
         </>
       )}
     </Office>
@@ -230,18 +231,10 @@ export const S87 = ({ frame }: { frame: number }) => (
   </Inside>
 );
 
-/** S88 03:32.37: OFF-MED on the bored developer. He turns, sees the cracked painting, and coffee spurts out of his mouth. */
+/** S88 03:32.37: OFF-MED on the bored developer. He sips, turns to the cracked painting, and coffee spurts out of his mouth (drawn poses swapped on the event). */
 export const S88 = ({ frame }: { frame: number }) => {
   const cam = kicked(drift(officeCam(12, -3.2, -2.5), CUE.s88cut.frame, 39, 0.4), KICKS);
-  return (
-    <Office frame={frame} camera={cam}>
-      {(pose) => {
-        const head = worldPx(pose, [-3.77, -1.63, -20]);
-        const k = (project(pose, [1, 0, -20]) as [number, number])[0] - (project(pose, [0, 0, -20]) as [number, number])[0];
-        return <DevHead frame={frame} turnAt={CUE.s88cut.frame + 6} spurtAt={CUE.s88spurt.frame} x={head[0]} y={head[1]} r={0.9 * k} seed={7} />;
-      }}
-    </Office>
-  );
+  return <Office frame={frame} camera={cam} />;
 };
 
 /** Frames on which the strobe flips: inside on the first, then alternating every two beats. */

@@ -3,7 +3,7 @@
 import { useMemo } from 'react';
 import { DoubleSide } from 'three';
 import { AssetCard, type StandIn } from '../../cast/AssetCard.tsx';
-import { AVAILABLE } from '../../cast/available.ts';
+import { assetSize, AVAILABLE } from '../../cast/available.ts';
 import { Card, useCardTexture, type Vec3 } from '../../stage/Card.tsx';
 
 /** Window into a plate, as fractions of the image: [u0, v0, u1, v1] with v measured from the top. */
@@ -44,3 +44,13 @@ export const Asset = ({ id, look, ...card }: Common & { id: string; look: Look }
   'crop' in look && !AVAILABLE.has(id) ? <CropCard src={look.src} crop={look.crop} {...card} /> : <AssetCard id={id} standIn={'crop' in look ? { src: look.src } : look} {...card} />;
 
 export { Card };
+
+/**
+ * A cut-out that exists on disk but may not be in LIVE yet (the main loop switches ids live after review): drawn at the
+ * given height with its own aspect, falling back to the stand-in only when the file is missing.
+ */
+export const Final = ({ id, standIn, height, ...card }: Omit<Common, 'width'> & { id: string; standIn: StandIn }) => {
+  const size = assetSize(id);
+  if (size) return <Card src={`assets/${id}.png`} width={(height * size[0]) / size[1]} height={height} {...card} />;
+  return <AssetCard id={id} standIn={standIn} width={height} height={height} {...card} />;
+};

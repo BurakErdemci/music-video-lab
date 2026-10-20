@@ -7,6 +7,7 @@ import { rigAt, type Key, type Timeline } from '../../rig/timeline.ts';
 import type { PipeEvent } from '../../rig/pipes.ts';
 import type { PoseDef, RigState } from '../../rig/types.ts';
 import { CUE } from './cues.ts';
+import { SEAT_Y } from './lib.ts';
 
 export const NERF_SCALE = 0.35;
 /** H units of forward root travel from the cathedral steps to the canvas plane (12 world units per H). */
@@ -15,8 +16,8 @@ export const CANVAS_STEP = 0.5;
 const P = VORATHUL_RIG.json.poses as Record<string, PoseDef>;
 const pose = (name: string, extra: Partial<PoseDef> = {}): PoseDef => ({ ...(P[name] as PoseDef), rootScale: NERF_SCALE, ...extra });
 
-/** The seat is the top step: 1.1 world units, in H. */
-export const STEP_UP = 1.1 / 12;
+/** The seat is the dais top step (inside.tsx), in H. */
+export const STEP_UP = SEAT_Y / 12;
 const SEAT = pose('sit_alone', { wings: [0, -15], root: [0, STEP_UP, 0] });
 const STAND = pose('base', { wings: [0, 0] });
 /** Standing at the canvas: root moved to the canvas plane, x set so the raised palm lands on PALM_UV. */

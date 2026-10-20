@@ -77,3 +77,9 @@ export const paintingBox = (pose: CameraPose): Box => {
   const p = paintingWorld();
   return rectBox(pose, OFFICE_Z, p.cx, p.cy, p.w, p.h);
 };
+
+// ---- the empty cathedral (inside.tsx) ----
+/** The dais card is 15 wide (1500 x 579 px); his seat is its top step, 0.3 below the card's top edge. */
+export const DAIS_W = 15;
+export const DAIS_H = (DAIS_W * 579) / 1500;
+export const SEAT_Y = DAIS_H - 0.3;

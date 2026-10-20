@@ -1,4 +1,5 @@
 // 2D overlays of the interlude shots (S74-S75). Everything steps on twos and is a pure function of the frame.
+import { Img, staticFile } from 'remotion';
 import { Overlay } from '../../vfx/effects.ts';
 import { seeded } from '../../vfx/seeded.ts';
 import { C, UiFonts } from '../../ui/kit.ts';
@@ -40,38 +41,13 @@ export const DustMotes = ({ frame, start, gust, seed = 4, count = 46 }: DustProp
   );
 };
 
-/** A knight's helmet, flat comic: ivory dome with a gold stripe, ink visor slit. Unit size = the dome width. */
-const HelmetShape = () => (
-  <g>
-    <path d="M-40 18 C-44 -26 -22 -46 0 -46 C22 -46 44 -26 40 18 Z" fill="#F4ECD8" stroke="#0A0908" strokeWidth={5} strokeLinejoin="round" />
-    <path d="M-5 -46 C-3 -20 -3 0 -5 18 L5 18 C3 0 3 -20 5 -46 Z" fill="#E2B33C" stroke="#0A0908" strokeWidth={3} />
-    <path d="M-34 -4 H34 L30 8 H-30 Z" fill="#0A0908" />
-    <path d="M-44 18 H44 L40 28 H-40 Z" fill="#E2B33C" stroke="#0A0908" strokeWidth={4} strokeLinejoin="round" />
-  </g>
+/** The painted dust layer (L4-dust, ivory motes on black) screen-blended at low opacity, drifting slowly down and left. */
+export const DustLayer = ({ frame, opacity = 0.3 }: { frame: number; opacity?: number }) => (
+  <Img
+    src={staticFile('assets/L4-dust.png')}
+    style={{ position: 'absolute', left: -60 - frame * 0.06, top: -40 + ((frame * 0.05) % 40), width: W + 120, height: H + 80, mixBlendMode: 'screen', opacity, pointerEvents: 'none' }}
+  />
 );
-
-export interface RollProps { frame: number; start: number; stop: number; from: [number, number]; to: [number, number]; size?: number }
-
-/** The helmet rolling off the pile: it rolls, bounces twice, rocks and stops on the stop cue. */
-export const RollingHelmet = ({ frame, start, stop, from, to, size = 1 }: RollProps) => {
-  const f = twos(frame);
-  if (f < start) return null;
-  const t = clamp01((f - start) / (stop - start));
-  const k = easeOut(t);
-  const x = from[0] + (to[0] - from[0]) * k;
-  const bounce = Math.abs(Math.sin(t * Math.PI * 3)) * 34 * (1 - t) ** 1.5;
-  const y = from[1] + (to[1] - from[1]) * k - bounce;
-  const roll = (to[0] < from[0] ? -1 : 1) * k * 330;
-  const rock = t >= 1 ? Math.sin((f - stop) * 0.9) * 4 * Math.exp(-(f - stop) / 8) : 0;
-  return (
-    <Overlay>
-      <ellipse cx={x} cy={to[1] + 26 * size} rx={46 * size} ry={7 * size} fill="#0A0908" opacity={0.18} />
-      <g transform={`translate(${x} ${y}) rotate(${roll + rock}) scale(${size})`}>
-        <HelmetShape />
-      </g>
-    </Overlay>
-  );
-};
 
 /** Four-point glints on the floor, flickering on twos. */
 export const FloorGlints = ({ frame, start, points, seed = 2 }: { frame: number; start: number; points: [number, number][]; seed?: number }) => {

@@ -3,13 +3,16 @@
 // same items sit right under any office camera.
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
-import { AssetCard } from '../../cast/AssetCard.tsx';
+import { assetSize } from '../../cast/available.ts';
+import { Asset, Final } from './cards.tsx';
+import { InkCrack } from './cracks.tsx';
 import { Stage, type CameraPath, type CameraPose } from '../../stage/Stage.tsx';
-import { Poster, ProgressSun, StickyNote, UiFonts } from '../../ui/kit.ts';
-import { CrackGrow, crackGraph, crackStep, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects.ts';
+import { C, Poster, ProgressSun, StickyNote, UiFonts } from '../../ui/kit.ts';
+import { UI_FONT } from '../../ui/theme.tsx';
+import { crackGraph, crackStep, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects.ts';
 import { TIMING } from '../../timing.ts';
 import { CUE, CRACK_STEPS } from './cues.ts';
-import { OFFICE_Z, PALM_UV, PLATE_CY, PLATE_H, PLATE_W, canvasBox, clamp01, paintingBox, project } from './lib.ts';
+import { OFFICE_Z, PALM_UV, PLATE_CY, PLATE_H, PLATE_W, canvasBox, clamp01, paintingBox, paintingWorld, plateToWorld, project } from './lib.ts';
 import type { Box } from './lib.ts';
 
 export const CRACK = { seed: 21, escapeAt: 16, escapeDir: 0 } as const;
@@ -53,7 +56,7 @@ export const InsideCracks = ({ frame, pose }: { frame: number; pose: CameraPose 
   return (
     <>
       <CrackGlow frame={frame} box={box} color="#BFD8FF" width={width} />
-      <CrackGrow frame={frame} {...crackProps} box={box} surface="inside" width={width} id="p4-crack-in" />
+      <InkCrack frame={frame} {...crackProps} box={box} surface="inside" width={width} id="p4-crack-in" />
     </>
   );
 };
@@ -66,26 +69,58 @@ export const OfficeCracks = ({ frame, pose, layer }: { frame: number; pose: Came
   return layer === 'painting' ? (
     <>
       <CrackGlow frame={frame} box={box} color="#E2B33C" width={width} />
-      <CrackGrow frame={frame} {...crackProps} box={box} surface="inside" width={width} id="p4-crack-out" />
+      <InkCrack frame={frame} {...crackProps} box={box} surface="inside" width={width} id="p4-crack-out" />
     </>
   ) : (
-    <CrackGrow frame={frame} {...crackProps} box={box} surface="outside" width={width} id="p4-crack-wall" />
+    <InkCrack frame={frame} {...crackProps} box={box} surface="outside" width={width} id="p4-crack-wall" />
   );
 };
 
 const O_ALWAYS = gradeCues([{ at: { frame: 0 }, grade: 'O' }], 'p4 office grade');
 
-/** The office wall plate (G27 + desks stand-in) in the canonical office grade. */
-export const OfficeStage = ({ camera, children }: { camera: CameraPath; children?: ReactNode }) => (
-  <DuotoneFlash frame={0} cues={O_ALWAYS} id="p4-office">
-    <AbsoluteFill>
-      <Stage camera={camera}>
-        <AssetCard id="G27" standIn={{ src: 'plates/07-ofis-tablo.jpg' }} width={PLATE_W} height={PLATE_H} position={[0, PLATE_CY, OFFICE_Z - 0.05]} />
-        {children}
-      </Stage>
-    </AbsoluteFill>
-  </DuotoneFlash>
+/** World units per pixel of a developer cut-out: his figure is 9.7 units tall, like the one in the old wall plate. */
+const DEV_K = 9.7 / 1440;
+const DEV_X = -3.8;
+const DEV_FEET = -10.8;
+const DEV_POSES = [
+  { id: 'G46-bored', from: 0, to: CUE.s88cut.frame },
+  { id: 'G46-sip', from: CUE.s88cut.frame, to: CUE.s88spurt.frame },
+  { id: 'G46-spit', from: CUE.s88spurt.frame, to: CUE.s89a.frame },
+  { id: 'G46-glance', from: CUE.s89a.frame, to: 1e9 },
+] as const;
+
+/** The bored developer standing in front of the painting: one drawn pose at a time, swapped on the event frames. */
+const Developer = ({ frame, x = DEV_X }: { frame: number; x?: number }) => (
+  <>
+    {DEV_POSES.map((p) => {
+      const size = assetSize(p.id) ?? [430, 1447];
+      const h = size[1] * DEV_K;
+      return <Final key={p.id} id={p.id} standIn={{ color: '#ADB5BD' }} height={h} position={[x, DEV_FEET + h / 2, OFFICE_Z + 0.5]} hidden={!(frame >= p.from && frame < p.to)} renderOrder={20} />;
+    })}
+  </>
 );
+
+const FRAME_PLATE: [number, number, number, number] = [308, 33, 914, 635];
+
+/** The office wall (the empty office plate), the black frame and the painting in it, and the developer. Office grade on all of it. */
+export const OfficeStage = ({ camera, frame = 0, dev = true, children }: { camera: CameraPath; frame?: number; dev?: boolean; children?: ReactNode }) => {
+  const p = paintingWorld();
+  const [fx0, fy0] = plateToWorld(FRAME_PLATE[0], FRAME_PLATE[1]);
+  const [fx1, fy1] = plateToWorld(FRAME_PLATE[0] + FRAME_PLATE[2], FRAME_PLATE[1] + FRAME_PLATE[3]);
+  return (
+    <DuotoneFlash frame={0} cues={O_ALWAYS} id="p4-office">
+      <AbsoluteFill>
+        <Stage camera={camera}>
+          <Final id="office-plate" standIn={{ src: 'plates/07-ofis-tablo.jpg' }} height={PLATE_H} position={[0, PLATE_CY, OFFICE_Z - 0.05]} />
+          <Asset id="p4-frame" look={{ color: '#2B3038' }} width={fx1 - fx0} height={fy0 - fy1} position={[(fx0 + fx1) / 2, (fy0 + fy1) / 2, OFFICE_Z - 0.04]} renderOrder={1} />
+          <Asset id="p4-wall-painting" look={{ src: 'plates/01-tarz-cizgi-roman.jpg' }} width={p.w} height={p.h} position={[p.cx, p.cy, OFFICE_Z - 0.03]} renderOrder={2} />
+          {dev ? <Developer frame={frame} /> : null}
+          {children}
+        </Stage>
+      </AbsoluteFill>
+    </DuotoneFlash>
+  );
+};
 
 /** Pixels per world unit on the wall plane for this camera. */
 const pxPerUnit = (pose: CameraPose): number => {
@@ -104,7 +139,7 @@ const POSTERS: PosterSpec[] = [
 
 const NOTE_AT = [
   [-5.2, 4.7, -5], [5.2, 4.8, 4], [-7.9, 4.5, 3], [-1.8, 4.8, 2], [1.8, 4.7, -3], [7.8, 4.3, -4],
-  [-4.9, -4.7, 4], [-1.5, -4.8, -2], [1.9, -4.7, 3], [5.3, -4.8, -4], [-6.1, -3.7, -3], [6.2, -3.9, 5],
+  [-8.2, -4.3, 4], [4.1, -4.8, -2], [1.4, -4.7, 3], [6.6, -4.8, -4], [-8.0, -1.2, -3], [8.0, -3.6, 5],
 ] as const;
 const TEXTS = ['REVERT', 'UNNERF', 'PHASE 3 PLS', 'BRING BACK', 'FIX IT', '#UNNERF', 'WE WAIT', 'REVERT!!', 'PHASE III', 'PLS', '1 STAR', 'UNNERF'];
 /** The first three notes land on the cut, the rest swarm in two frames apart from the swarm beat. */
@@ -121,14 +156,15 @@ const stepsSince = (frame: number, from: number): number => {
 export const WallItems = ({ frame, pose }: { frame: number; pose: CameraPose }) => {
   const k = pxPerUnit(pose);
   const petition = Math.min(100, 6 + stepsSince(frame, CUE.s84petition.frame) * 3.3);
-  const [px, py] = at(pose, 0, -6.55);
-  const pw = 7.2 * k;
+  const [px, py] = at(pose, 3.6, -6.55);
+  const pw = 6.4 * k;
   return (
     <AbsoluteFill>
       <UiFonts />
       {frame >= CUE.s84cut.frame ? (
         <div style={{ position: 'absolute', left: px - pw / 2, top: py - (pw * 470) / 1000 / 2 }}>
-          <ProgressSun frame={frame} variant="office" x={0} y={0} width={pw} from={petition} to={petition} startFrame={0} durationFrames={1} label="Petition: UNNERF VORATHUL" />
+          <ProgressSun frame={frame} variant="office" x={0} y={0} width={pw} from={petition} to={petition} startFrame={0} durationFrames={1} label="" />
+          <div style={{ position: 'absolute', left: pw * 0.5, top: -Math.max(26, pw * 0.05) * 2.4, transform: 'translateX(-50%)', whiteSpace: 'nowrap', padding: '0.25em 0.7em', borderRadius: 999, background: C.white, border: `2px solid ${C.blue}`, fontFamily: UI_FONT, fontWeight: 800, fontSize: Math.max(24, pw * 0.05), color: C.ink, letterSpacing: 1 }}>PETITION: UNNERF VORATHUL  {Math.round(petition)}%</div>
         </div>
       ) : null}
       {POSTERS.map((p, i) => {
