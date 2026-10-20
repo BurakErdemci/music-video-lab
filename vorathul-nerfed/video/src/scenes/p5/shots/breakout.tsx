@@ -12,6 +12,7 @@ import { S91_WHITE_FRAMES } from '../lib/flash.ts';
 import { E, outCubic, project, prog, pxPerUnit, twos } from '../lib/geom.ts';
 import { Dev46, Frame, O, PaintDecal, PAINT_Z } from '../lib/Office.tsx';
 import { Inside, PinnedCards, Room } from '../lib/Room.tsx';
+import { conversionAt } from '../lib/Conversion.tsx';
 import { Asset } from '../lib/PlateCard.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
 import { InFront, Shot } from '../lib/Shell.tsx';
@@ -288,7 +289,7 @@ export const S95 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S95_CAM}>
-        <Room wave={wave} centre={[S95_AT[0], S95_AT[2]]} desks={(i) => (i >= 2 ? { off: [0, 0.9 * jump, 0], rot: [0, 0, (i === 2 ? 0.08 : -0.1) * jump] } : {})} />
+        <Room wave={wave} conv={conversionAt(frame)} centre={[S95_AT[0], S95_AT[2]]} desks={(i) => (i >= 2 ? { off: [0, 0.9 * jump, 0], rot: [0, 0, (i === 2 ? 0.08 : -0.1) * jump] } : {})} />
         <CanvasShatter plate={CANVAS_FACE} t={400} punch={PUNCH} grow={GROW} />
         {still ? (
           // K3: the deep-crouch key still on the impact frames (stand-in: frame 01, both hands on the planted sword).

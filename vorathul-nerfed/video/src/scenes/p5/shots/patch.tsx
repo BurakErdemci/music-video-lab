@@ -13,6 +13,7 @@ import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints } from '../lib/rigPoints.ts';
 import { Shot } from '../lib/Shell.tsx';
 import { Vorathul } from '../lib/Vorathul.tsx';
+import { Paint } from '../lib/Conversion.tsx';
 import { cut, INK, MAGENTA, move, OFFICE_FLOOR, pose, timeline, VIOLET } from '../lib/vorathul.ts';
 
 const F = OFFICE_FLOOR;
@@ -57,12 +58,14 @@ export const S105 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S105_CAM}>
-        <AfterRoom desks={RUIN} />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} desks={RUIN} />
         <Wreck />
         <Vorathul tl={S105_TL} frame={frame} at={S105_AT} />
         <Rect w={3.4} h={1.1} at={[LAST_MON[0], F + 0.55, LAST_MON[2] + 0.4]} color={O.white} />
         <Monitor3D at={LAST_MON} w={2.0} screen={O.blue} />
         <Dev who="hoodie" act="cower" at={[-1.6 + shiver, F, -8.4]} height={2.7} order={3000} />
+      </Paint>
       </Stage>
       <PatchNotesCard frame={frame} x={1180} y={90} width={640} title={patchTitle(frame)} enterAt={E('s105-cut') + 4} lines={[{ text: 'Boss behaviour: under review', appearAt: E('s105-two') + 4 }]} footer="Balance team (hiding)" />
       <InkSplash frame={22} duration={1000} seed={105} x={1800} y={96} size={60} />
@@ -155,9 +158,11 @@ export const S107 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S107_CAM}>
-        <AfterRoom desks={RUIN} topPaint={false} />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} desks={RUIN} topPaint={false} />
         <Wreck />
         <Vorathul tl={S107_TL} frame={frame} at={S107_AT} />
+      </Paint>
       </Stage>
       <TimeRemap map={REMAP}>{(gg) => <Part1Edits g={gg} helm={{ x: head.x, y: head.y, s }} />}</TimeRemap>
       {/* Rewind grammar in office colours: scan bands and the reverse badge. */}

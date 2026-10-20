@@ -18,6 +18,7 @@ import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
 import { Shot } from '../lib/Shell.tsx';
 import { Vorathul } from '../lib/Vorathul.tsx';
+import { Paint } from '../lib/Conversion.tsx';
 import { blastFire, cut, INK, IVORY, move, OFFICE_FLOOR, pipeLandFrame, pose, strike, timeline, UNIT, VIOLET } from '../lib/vorathul.ts';
 
 const F = OFFICE_FLOOR;
@@ -68,8 +69,10 @@ export const S96 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S96_CAM}>
-        <AfterRoom />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} />
         <Vorathul tl={S96_TL} frame={frame} at={S96_AT} echo={split >= 0 && split < 8 ? { copies: 2, delay: 2, offset: [-0.2, 0.25, -0.1] } : undefined} />
+      </Paint>
       </Stage>
       {split < 0 ? half(0) : [half(-1), half(1)]}
       <BladeTrail pts={[[tip.x, tip.y], [c.x + 10, c.y - 120], [c.x, c.y + 80], [low.x - 20, low.y]]} width={70} age={split} />
@@ -105,8 +108,10 @@ export const S97 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S97_PATH}>
-        <AfterRoom />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} />
         <Vorathul tl={S97_TL} frame={frame} at={at} />
+      </Paint>
       </Stage>
       {/* An office HUD panel behind the bar keeps the label readable over the painting. */}
       <div style={{ position: 'absolute', left: BAR.x - 30, top: BAR.y - 14, width: BAR.w + 60, height: 150 * barScale + 28, background: O.white, border: `3px solid ${O.dark}`, borderRadius: 22, opacity: 0.94 }} />
@@ -163,7 +168,8 @@ export const S98 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S98_CAM}>
-        <AfterRoom desks={(i) => (i === 1 ? { hidden: true } : {})} />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} desks={(i) => (i === 1 ? { hidden: true } : {})} />
         <Vorathul tl={S98_TL} frame={frame} at={S98_AT} />
         <Desk at={[MON[0], F, MON[2] + 0.6]} w={5.2} />
         <Monitor3D at={MON} w={MON_W} screen={O.mid} />
@@ -172,6 +178,7 @@ export const S98 = ({ frame }: { frame: number }) => {
           const target = pts.mouths[n - 1]!.p;
           return <FlyingPipe key={n} from={[MON[0], scr, MON[2] + 0.3]} to={[target[0] + 1.6, target[1] + 0.6, target[2]]} t={(frame - (land - 20)) / 12} />;
         })}
+      </Paint>
       </Stage>
       <div style={{ position: 'absolute', left: tl.x, top: tl.y, width: br.x - tl.x, height: br.y - tl.y, overflow: 'hidden' }}>
         <Desktop frame={frame} burstAt={burst} width={br.x - tl.x} x={0} y={0} />
@@ -239,7 +246,8 @@ export const S99 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S99_CAM}>
-        <AfterRoom />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} />
         {still ? (
           // K2: second-form claws at the lens (stand-in: the second-form frame 04, ink and violet only).
           // Sized by height (the final G43 keeps its own aspect): claws fill the frame and come 25 % closer over 4 frames.
@@ -247,6 +255,7 @@ export const S99 = ({ frame }: { frame: number }) => {
         ) : (
           <Vorathul tl={S99_TL} frame={frame} at={S99_AT} echo={lunge >= -4 && lunge < 10 ? { copies: 3, delay: 2, offset: [0, 0.05, -0.6] } : undefined} />
         )}
+      </Paint>
       </Stage>
       {WINDOWS.map((w, i) => <BrowserWindow key={i} {...w} tear={LUNGE + i} frame={frame} />)}
       {[0, 1, 2].map((i) => (
@@ -300,9 +309,11 @@ export const S100 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S100_CAM}>
+        <Paint frame={frame}>
         {/* The near desks stay out: their chairs filled the lower corner as a dark blob right at the lens. */}
-        <AfterRoom floorPaint={false} desks={(d) => (d % 2 ? { hidden: true } : {})} />
+        <AfterRoom frame={frame} floorPaint={false} desks={(d) => (d % 2 ? { hidden: true } : {})} />
         <Vorathul tl={S100_TL} frame={frame} at={S100_AT} />
+      </Paint>
       </Stage>
       {cursors.map((c, i) => (
         <Cursor key={i} frame={frame} path={[{ f: frame, x: c.pr.x, y: c.pr.y }]} size={Math.min(6, (0.55 * pxPerUnit(cam, c.pr.z)) / 40)} />
@@ -331,9 +342,11 @@ export const S101 = ({ frame }: { frame: number }) => (
     <DuotoneFlash frame={frame} cues={BOSS_CUES} id="p5-s101">
       <AbsoluteFill style={{ background: O.bg }}>
         <Stage camera={S101_CAM}>
-          <AfterRoom />
+        <Paint frame={frame}>
+          <AfterRoom frame={frame} />
           <Vorathul tl={S101_TL} frame={frame} at={S101_AT} />
-        </Stage>
+        </Paint>
+      </Stage>
         <BossNameplate frame={frame} x={0} y={660} slamAt={E('s101-cut')} />
       </AbsoluteFill>
     </DuotoneFlash>
@@ -377,12 +390,14 @@ export const S102 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S102_CAM}>
-        <AfterRoom />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} />
         {still ? (
           <Asset id="G42" standIn={{ plate: '04-ikinci-form.jpg', crop: K1_CROP, keying: 'ink' }} width={5.4} height={3.6} position={[0, -1.4, -5.6]} renderOrder={1500} />
         ) : (
           <Vorathul tl={S102_TL} frame={frame} at={S102_AT} echo={frame < THRUST + 16 ? { copies: 3, delay: 2, offset: [-0.5, 0, -0.3], colors: [VIOLET, VIOLET, INK] } : undefined} />
         )}
+      </Paint>
       </Stage>
       <SpeedLines mode="radial" frame={twos(frame) - THRUST} duration={18} seed={102} focus={[b[0], b[1]]} inner={180} count={60} thickness={12} />
       {Array.from({ length: KEBAB }, (_, i) => {
@@ -399,15 +414,15 @@ export const S102 = ({ frame }: { frame: number }) => {
 };
 
 // ------------------------------------------------------------------ S103 A9 pipe-fan blast, restored, from the ceiling
-// Feet near the lens so the billboarded figure lies well in front of the wall (review: the wall cut him).
-const S103_AT: Vec3 = [0, F + 0.05, -8.8];
+const S103_AT: Vec3 = [0, F + 0.05, -11.5];
 const BLAST = E('s103-blast');
 const S103_TL = timeline(
   [cut(E('s103-cut'), pose('blast_antic')), strike(BLAST, pose('blast_strike'), 20), move(E('s103-strips'), pose('blast_follow'), 14)],
   { extraPipes: blastFire(BLAST) },
 );
-// Steep enough that the top of the frame meets the floor, never the wall or the painting.
-const S103_BASE: CameraPose = { position: [0.4, 4.6, -10.4], target: [0, F, -12.4], fov: 56 };
+// High angle from under the ceiling, at most ~25 degrees down (director: steep cameras turn the cards into cut-outs
+// lying on the floor); the 16 blasts still come up at the lens.
+const S103_BASE: CameraPose = { position: [0.4, 2.2, 0.5], target: [0, -2.6, -11.5], fov: 48 };
 const S103_CAM: CameraPath = withShake(handheld(hold(S103_BASE), { amp: 0.04, seed: 's103' }), {
   hits: [{ start: BLAST, seed: 1031, amp: { pct: SHAKE_PCT.big } }, { start: E('s103-strips'), seed: 1032, amp: { pct: SHAKE_PCT.medium } }],
 });
@@ -418,7 +433,7 @@ const pitched = (p: Vec3): Vec3 => {
   const z = p[2] - S103_AT[2];
   return [p[0], S103_AT[1] + y * Math.cos(PITCH) - z * Math.sin(PITCH), S103_AT[2] + y * Math.sin(PITCH) + z * Math.cos(PITCH)];
 };
-const STRIPS: Vec3[] = [[-5.0, 3.5, -8.6], [5.2, 3.5, -9.4], [-4.4, 3.5, -12.6], [4.8, 3.5, -13.2]];
+const STRIPS: Vec3[] = [[-5.0, 4.9, -6.5], [5.2, 4.9, -7.4], [-4.4, 4.9, -12.6], [4.8, 4.9, -13.2]];
 
 export const S103 = ({ frame }: { frame: number }) => {
   const cam = S103_CAM(frame);
@@ -429,9 +444,11 @@ export const S103 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S103_CAM}>
-        <AfterRoom ceiling={false} strips={false} />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} strips={false} />
         <Vorathul tl={S103_TL} frame={frame} at={S103_AT} pitch={PITCH} />
         {strips < 0 ? STRIPS.map((s, i) => <LightStrip key={i} at={s} len={5} />) : null}
+      </Paint>
       </Stage>
       <Overlay>
         {pts.mouths.map((m, i) => {
@@ -484,10 +501,10 @@ const S104_CAM: CameraPath = withShake(handheld(hold({ position: [2, -5.4, -6], 
 });
 // Props in the blade's path: they fly left across the room and crash on beat 744.
 const FLYERS = [
-  { kind: 'monitor', at: [6.5, F + 2.2, -11.2] as Vec3, to: [-5.5, F, -10.5] as Vec3, spin: 2.6 },
-  { kind: 'chair', at: [3.2, F, -10.2] as Vec3, to: [-3.8, F, -9.6] as Vec3, spin: -3.2 },
-  { kind: 'monitor', at: [8.8, F + 2.2, -12.6] as Vec3, to: [-1.8, F, -12.4] as Vec3, spin: -2.1 },
-  { kind: 'chair', at: [9.6, F, -11.0] as Vec3, to: [-7.4, F, -11.8] as Vec3, spin: 3.6 },
+  { kind: 'monitor', at: [6.5, F + 2.2, -14.2] as Vec3, to: [-5.5, F, -14.5] as Vec3, spin: 2.6 },
+  { kind: 'chair', at: [3.6, F, -15.2] as Vec3, to: [-3.8, F, -15.6] as Vec3, spin: -3.2 },
+  { kind: 'monitor', at: [8.8, F + 2.2, -16.0] as Vec3, to: [-1.8, F, -16.4] as Vec3, spin: -2.1 },
+  { kind: 'chair', at: [9.6, F, -15.0] as Vec3, to: [-7.4, F, -15.8] as Vec3, spin: 3.6 },
 ];
 
 export const S104 = ({ frame }: { frame: number }) => {
@@ -498,19 +515,21 @@ export const S104 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S104_CAM}>
-        <AfterRoom desks={() => ({ hidden: true })} />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} desks={() => ({ hidden: true })} />
         <Desk at={[7.4, F, -11.0]} rot={[0, 0, t > 0 ? -0.25 * outBack(t) : 0]} off={t > 0 ? [-1.2 * t, 0.4 * Math.sin(Math.PI * t), 0] : undefined} />
         <Vorathul tl={S104_TL} frame={frame} at={S104_AT} echo={frame >= SWEEP - 4 && frame < SWEEP + 10 ? { copies: 3, delay: 2, offset: [0.5, 0, -0.2] } : undefined} />
         {FLYERS.map((f, i) => {
           const p: Vec3 = t <= 0 ? f.at : [lerp(f.at[0], f.to[0], t), lerp(f.at[1], f.to[1], t) + Math.sin(Math.PI * t) * 2.4 + (after > 0 ? Math.max(0, 0.6 * Math.sin(after * 0.5)) * Math.exp(-after / 6) : 0), lerp(f.at[2], f.to[2], t)];
           const rot: Vec3 = [0, 0, t * f.spin];
-          return f.kind === 'monitor' ? <Monitor3D key={i} at={p} rot={rot} w={2.2} screen={O.blue} /> : <Chair key={i} at={p} rot={rot} size={2.4} pose={6} />;
+          return f.kind === 'monitor' ? <Monitor3D key={i} at={p} rot={rot} w={1.8} screen={O.blue} /> : <Chair key={i} at={p} rot={rot} size={1.9} pose={6} />;
         })}
         {/* The desk we hide under: its underside across the top fifth, legs left and right. */}
         <Rect w={11} h={2.6} at={[2, -3.98, -6.9]} rot={[Math.PI / 2, 0, 0]} color={O.dark} />
         <Rect w={11} h={0.24} at={[2, -4.1, -8.2]} color={O.white} />
         <Rect w={0.22} h={2.2} at={[-2.6, F + 1.1, -7.6]} color={O.slate} />
         <Dev who="glasses" act="underDesk" at={[-1.3, F, -7.0]} height={1.9} order={3000} />
+      </Paint>
       </Stage>
       <SpeedLines mode="parallel" frame={twos(frame) - SWEEP} duration={14} seed={104} angle={Math.PI} count={30} speed={160} />
       <BladeTrail pts={[[W + 40, blade.y - 140], [blade.x + 120, blade.y - 40], [blade.x - 500, blade.y + 30], [-60, blade.y - 30]]} width={64} age={frame - SWEEP} life={8} />

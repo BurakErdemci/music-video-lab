@@ -17,6 +17,7 @@ import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints } from '../lib/rigPoints.ts';
 import { Shot } from '../lib/Shell.tsx';
 import { Vorathul } from '../lib/Vorathul.tsx';
+import { Paint } from '../lib/Conversion.tsx';
 import { cut, GOLD, INK, IVORY, LAUGH, move, OFFICE_FLOOR, pose, strike, THRONE_SIT, THRONE_SUMMON, timeline, VIOLET } from '../lib/vorathul.ts';
 import type { PoseDef } from '../../../rig/types.ts';
 
@@ -132,10 +133,12 @@ export const S108 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S108_CAM}>
-        <AfterRoom ceiling={false} strips={false} wallTop={SKY_Y} topPaint={false} />
+        <Paint frame={frame}>
+        <AfterRoom frame={frame} ceiling={false} strips={false} wallTop={SKY_Y} topPaint={false} />
         <PaintedSky />
         <PeelCeiling p={peel} />
         <Vorathul tl={S108_TL} frame={frame} at={S108_AT} />
+      </Paint>
       </Stage>
       {/* The painted light layer, screen-blended and low, instead of flat solid violet rays. */}
       <DomPlate id="LX-rays" plate="03-kanat-yelpaze.jpg" crop={[0, 0, 1536, 1024]} x={0} y={0} width={W} style={{ mixBlendMode: 'screen', opacity: 0.5 * (1 - clamp01((frame - SUMMON) / 24)) }} />
@@ -184,17 +187,19 @@ export const S109 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S109_CAM}>
+        <Paint frame={frame}>
         <SkyRoom>
           {LOOSE.map((c, i) => {
             const s = TIER1[c.slot]!;
             const e = outCubic(fly);
-            const p: Vec3 = [lerp(c.from[0], s.at[0], e), lerp(c.from[1], s.at[1], e) + Math.sin(Math.PI * fly) * 5, lerp(c.from[2], s.at[2], e)];
+            const p: Vec3 = [lerp(c.from[0], s.at[0], e), lerp(c.from[1], s.at[1], e) + Math.sin(Math.PI * fly) * 2.2, lerp(c.from[2], s.at[2], e)];
             return <Chair key={i} at={p} rot={[0, 0, fly < 1 ? fly * 9 + i : s.rot]} size={2.7} pose={fly < 1 ? 6 : 1} />;
           })}
           {SPARE.map((p, i) => <Chair key={`s${i}`} at={[p[0], p[1] + (spin > 0 ? 0.3 * Math.abs(Math.sin(spin * 0.3)) : 0), p[2]]} rot={[0, 0, spin * 0.35 * (i % 2 ? -1 : 1)]} size={2.5} pose={spin > 0 ? 6 : 2} />)}
           {M109.map((m, i) => <Scorch key={i} at={m.at} frame={frame} land={m.land} seed={i} />)}
           <Vorathul tl={S109_TL} frame={frame} at={S109_AT} />
         </SkyRoom>
+      </Paint>
       </Stage>
       {M109.map((m, i) => <MeteorFall key={i} frame={frame} cam={cam} at={m.at} land={m.land} seed={1095 + i} size={64 + i * 6} from={[-380 + i * 260, -900]} />)}
     </Shot>
@@ -210,9 +215,10 @@ const S110_TL = timeline([
   strike(SLAM, pose('slam_strike'), 20),
   move(E('s110-tier2') + 10, pose('slam_follow'), 18),
 ]);
-const S110_BASE: CameraPose = { position: [0.6, 13.5, -9.6], target: [0.6, F, -12.6], fov: 52 };
+// High angle at most ~25 degrees down (director): the slam reads from above without turning the cards into floor cut-outs.
+const S110_BASE: CameraPose = { position: [0.6, 2.4, 1.0], target: [0.8, -3.6, -12.4], fov: 46 };
 const S110_PITCH = pitchOf(S110_BASE);
-const S110_CAM: CameraPath = withShake(handheld(tween(S110_BASE, { ...S110_BASE, position: [0.6, 12.4, -9.9] }, { start: E('s110-cut'), frames: 100 }), { amp: 0.05, seed: 's110' }), {
+const S110_CAM: CameraPath = withShake(handheld(tween(S110_BASE, { ...S110_BASE, position: [0.6, 2.2, -0.2] }, { start: E('s110-cut'), frames: 100 }), { amp: 0.05, seed: 's110' }), {
   hits: [{ start: SLAM, seed: 1101, amp: { pct: SHAKE_PCT.big }, frames: 18 }, { start: E('s110-tier2'), seed: 1102, amp: { pct: SHAKE_PCT.small } }],
 });
 const SCATTER: Vec3[] = [[-5.8, F, -8.5], [-4.8, F, -16.2], [7.4, F, -16.4]];
@@ -226,6 +232,7 @@ export const S110 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S110_CAM}>
+        <Paint frame={frame}>
         <SkyRoom>
           <Throne tier={1} pitch={S110_PITCH} />
           {SCATTER.map((s, i) => {
@@ -243,6 +250,7 @@ export const S110 = ({ frame }: { frame: number }) => {
           })}
           <Vorathul tl={S110_TL} frame={frame} at={S110_AT} pitch={S110_PITCH} />
         </SkyRoom>
+      </Paint>
       </Stage>
       <Overlay>
         <defs>
@@ -251,7 +259,8 @@ export const S110 = ({ frame }: { frame: number }) => {
         {ring >= 0 && ring < 22
           ? [0, 1].map((k) => {
               const r = (120 + 900 * outCubic(clamp01((ring - k * 3) / 16))) * (1 - k * 0.15);
-              return <circle key={k} cx={feet.x} cy={feet.y} r={r} fill="none" stroke={INK} strokeWidth={34 * (1 - ring / 22)} filter={`url(#${inkFilterId(110, 10, 0.3)})`} />;
+              // The ring lies on the floor: an ellipse squashed by the camera pitch.
+              return <ellipse key={k} cx={feet.x} cy={feet.y} rx={r} ry={r * Math.sin(-S110_PITCH)} fill="none" stroke={INK} strokeWidth={34 * (1 - ring / 22)} filter={`url(#${inkFilterId(110, 10, 0.3)})`} />;
             })
           : null}
       </Overlay>
@@ -280,6 +289,7 @@ export const S111 = ({ frame }: { frame: number }) => {
   return (
     <Shot>
       <Stage camera={S111_CAM}>
+        <Paint frame={frame}>
         <SkyRoom>
           <Throne />
           <Vorathul tl={S111_TL} frame={frame} at={THRONE_AT} />
@@ -291,6 +301,7 @@ export const S111 = ({ frame }: { frame: number }) => {
             return <Dev key={k} who={k ? 'bun' : 'hoodie'} at={[lerp(-9, 9, t), F + bob, -6.5 - k * 1.2]} rot={[0, 0, -0.12]} height={3.3} flipX={k === 0} order={3000} />;
           })}
         </SkyRoom>
+      </Paint>
       </Stage>
       {M111.map((m, i) => <MeteorFall key={i} frame={frame} cam={cam} at={m.at} land={m.land} seed={1110 + i} size={70} from={[i ? 300 : -400, -900]} />)}
     </Shot>
@@ -344,12 +355,14 @@ export const S112 = ({ frame }: { frame: number }) => {
           {/* The panel: tilted inside an ivory gutter with an ink border (comic page grammar). */}
           <AbsoluteFill style={{ transform: `rotate(${PANEL_TILT[i]}deg) scale(0.9)`, border: `10px solid ${INK}`, overflow: 'hidden', background: O.bg }}>
             <Stage camera={S112_CAM}>
+        <Paint frame={frame}>
               <SkyRoom>
                 <Throne />
                 <Vorathul tl={S112_TL} frame={frame} at={THRONE_AT} />
                 {RING.map((m, k) => <Scorch key={k} at={m.at} frame={frame} land={m.land} seed={10 + k} />)}
               </SkyRoom>
-            </Stage>
+            </Paint>
+      </Stage>
             <InkSplash frame={age} duration={30} seed={1126 + i} x={hp.x} y={hp.y} size={260} variant="violet" fade={8} />
             <ImpactBurst frame={age} duration={8} seed={1126 + i} x={hp.x} y={hp.y} size={200} flash={0} />
             <Shards frame={age} duration={26} seed={1132 + i} origin={[hp.x, hp.y]} count={16} size={40} speed={34} fills={[GOLD, IVORY, INK]} />
@@ -388,11 +401,13 @@ export const S113 = ({ frame }: { frame: number }) => {
       <DomPlateFilters />
       <BlastScene frame={frame}>
         <Stage camera={S113_CAM}>
+        <Paint frame={frame}>
           <SkyRoom>
             <Throne />
             <Vorathul tl={S113_TL} frame={frame} at={THRONE_AT} />
           </SkyRoom>
-        </Stage>
+        </Paint>
+      </Stage>
         {blast < 0 ? <Meteor frame={Math.round(g * 29)} duration={30} seed={1133} from={from} to={[hitPt.x, hitPt.y]} size={lerp(40, 520, g * g)} trail={lerp(400, 2600, g)} /> : null}
         <Shards frame={blast - 9} duration={40} seed={1134} origin={[hitPt.x, hitPt.y]} direction={0} spread={Math.PI * 2} speed={70} size={90} count={44} fills={[GOLD, IVORY, O.white, O.mid]} gravity={1.6} />
         <InkSplash frame={blast - 9} duration={30} seed={1135} x={hitPt.x} y={hitPt.y} size={620} variant="violet" fade={10} />
@@ -448,13 +463,15 @@ export const S114 = ({ frame }: { frame: number }) => {
     <Shot>
       <BlastScene frame={frame}>
         <Stage camera={S114_CAM}>
+        <Paint frame={frame}>
           <SkyRoom>
             <Throne />
             <Vorathul tl={S114_TL} frame={frame} at={THRONE_AT} />
             {devT > 0 && devT < 1 ? <Dev who="glasses" act="run" at={[devAt[0], F + Math.abs(Math.sin(ff * 0.6)) * 0.25, devAt[2]]} rot={[0, 0, frame >= CLONK && frame < CLONK + 8 ? 0.3 : -0.1]} height={3.2} order={3000} /> : null}
             {frame >= CLONK - 10 && frame < CLONK + 40 ? <Chair at={[chairX, chairY, -6.9]} rot={[0, 0, (frame - CLONK) * 0.2]} size={2.3} order={3001} pose={4} /> : null}
           </SkyRoom>
-        </Stage>
+        </Paint>
+      </Stage>
         {/* Smoke: ink-edged ivory and grey clouds drifting apart and thinning. */}
         <Overlay style={{ opacity: 1 - clear }}>
           <defs>
