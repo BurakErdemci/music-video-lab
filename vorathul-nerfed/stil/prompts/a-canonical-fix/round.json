@@ -1,0 +1,22 @@
+[
+  {
+    "id": "canon-sheet",
+    "prompt": "stil/prompts/a-canonical-fix/canon-sheet.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/02-kanonik-karakter-sayfasi.jpg",
+      "stil/onayli/03-kanat-yelpaze.jpg"
+    ],
+    "out": "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+  },
+  {
+    "id": "office-frame",
+    "prompt": "stil/prompts/a-canonical-fix/office-frame.prompt.txt",
+    "refs": [
+      "stil/onayli/07-ofis-tablo.jpg",
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/onayli/02-kanonik-karakter-sayfasi.jpg"
+    ],
+    "out": "stil/prompts/a-canonical-fix/out/office-frame.png"
+  }
+]

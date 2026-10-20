@@ -1,0 +1,15 @@
+[
+  {
+    "id": "rig-M",
+    "prompt": "stil/prompts/c1-rig-master/rig-M.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "out": "stil/prompts/c1-rig-master/out/rig-M.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "key": "#00FF00"
+  }
+]

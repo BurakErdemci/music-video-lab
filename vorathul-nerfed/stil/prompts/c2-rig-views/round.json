@@ -1,0 +1,77 @@
+[
+  {
+    "id": "rig-V1",
+    "prompt": "stil/prompts/c2-rig-views/rig-V1.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "out": "stil/prompts/c2-rig-views/out/rig-V1.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "rig-V2",
+    "prompt": "stil/prompts/c2-rig-views/rig-V2.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "out": "stil/prompts/c2-rig-views/out/rig-V2.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "rig-V3",
+    "prompt": "stil/prompts/c2-rig-views/rig-V3.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "out": "stil/prompts/c2-rig-views/out/rig-V3.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "rig-V4",
+    "prompt": "stil/prompts/c2-rig-views/rig-V4.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "out": "stil/prompts/c2-rig-views/out/rig-V4.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "rig-V5",
+    "prompt": "stil/prompts/c2-rig-views/rig-V5.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "out": "stil/prompts/c2-rig-views/out/rig-V5.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png",
+      "stil/prompts/c1-rig-master/out/rig-M.png"
+    ],
+    "key": "#00FF00"
+  }
+]

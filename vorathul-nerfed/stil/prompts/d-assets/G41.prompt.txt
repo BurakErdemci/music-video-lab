@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./G41.png
+
+The attached image is the APPROVED OFFICE REFERENCE. Match its office style EXACTLY: a video game studio office drawn in a sterile flat vector style (cool greys #E9ECEF #CED4DA #ADB5BD, white, one UI blue #3B82F6, thin uniform outlines, rounded rectangles, no texture).
+
+Subject: six identical grey ergonomic office chairs in different orientations: upright front, upright side, tipped on its side, upside down, tilted back, spinning seat seen from above.
+Composition: two rows of three with wide gaps, landscape 1536x1024.
+
+The subject is isolated on a plain flat #00FF00 green background with nothing else in the image; parts are separated by wide empty gaps and do not overlap. The green will be removed and is the only colour allowed outside the palette.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

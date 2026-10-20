@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./G27.png
+
+The attached image is the APPROVED OFFICE REFERENCE. Match its office style EXACTLY: a video game studio office drawn in a sterile flat vector style (cool greys #E9ECEF #CED4DA #ADB5BD, white, one UI blue #3B82F6, thin uniform outlines, rounded rectangles, no texture).
+
+Subject: the game studio office wall from the reference without the painting: cool grey wall, a white shelf unit on the left, a window on the right, ceiling light strips, a large potted plant; the centre of the wall left completely empty and flat (a large picture will be placed there); no people, no desks.
+Composition: wide eye-level shot, landscape 1536x1024, the empty centre area about 60 percent of the width and the upper two thirds of the height.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

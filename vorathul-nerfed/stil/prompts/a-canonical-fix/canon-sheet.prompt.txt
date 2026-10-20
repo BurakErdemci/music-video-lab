@@ -1,0 +1,27 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./canon-sheet.png
+
+Three images are attached. The FIRST is the approved ART STYLE: bold graphic comic panel in a noir style, huge flat solid black areas, very simplified shapes, thick brush-ink edges with dry-brush breaks, flat colour, no gradients, slight screen-print paper texture. The SECOND is the CURRENT turnaround sheet of the character: keep its overall design, layout, three views and drawing style, but it has two errors that you must fix (see CORRECTIONS). The THIRD shows the approved WING design: black organ pipes fanned out like the primary feathers of a huge angel wing in a wide upward ARC, short pipes near the body and very long pipes at the outer edge, every pipe mouth glowing violet.
+
+Subject: The official model turnaround sheet of the character Vorathul for animation, redrawn with the corrections below: the same character three times: FRONT view, SIDE view (profile facing left, wings seen edge-on) and BACK view (cape and the roots of the pipe wings visible). Standing neutral, both gauntlets on the sword pommel in the front view. Identical proportions, height and details in all three. These features are FIXED and must appear exactly:
+1. Closed black great-helm, ONE narrow horizontal violet eye slit, no visible face.
+2. Two long black horns that curve outward and up like a crescent moon, from the sides of the helm.
+3. Jagged black crown on the helm: five sharp spikes, three violet gems across the front.
+4. Spiky black fur-like pauldrons on both shoulders, a high spiky collar.
+5. Two small violet diamond studs on the upper chest, one on each side.
+6. WINGS: on each side about eight long black organ pipes fan out sideways from the shoulder blades like a spread wing, short pipes near the body, long pipes at the outer edge; every pipe mouth glows violet.
+7. Long tattered black cape reaching the floor, ragged flame-like lower edge.
+8. Greatsword: black blade with one violet rune line in the fuller, spiked black crossguard with a violet gem in the centre, held point-down in front of him.
+9. Body is solid flat black #0A0A0A; violet #9B5CE0 ONLY on items 1, 3, 5, 6 (pipe mouths) and 8 — and on his ENERGY: strike trails, meteor trails and the armour cracks of the second form (approved frames 04, 06).
+10. Proportions: very tall, broad shoulders, the helm is small relative to the shoulders.
+
+CORRECTIONS (both are mandatory):
+A. EYE SLIT: in the FRONT view the closed great-helm has EXACTLY ONE eye slit: a single narrow horizontal violet slit, one single continuous shape. NOT two eyes, NOT two glowing dots, NOT two separate slits, no pupils. The side view shows the same single slit in profile. The back view has no eye.
+B. SWORD IN THE SIDE VIEW: the greatsword in the SIDE view must be just as thick and heavy as in the FRONT view. Draw it as a massive broad blade, with the same blade width as the front view (about one twelfth of the figure's height), a thick violet-runed fuller and the spiked crossguard with its violet gem, point down in front of him. NOT a thin needle, NOT a narrow rapier: turn the blade so that its broad face shows even in the profile view.
+C. WINGS: the wings follow the THIRD image, a wide upward ARC fan of organ pipes (about eight pipes on each side as in item 6), clearly spread wider than the body in the front and back views; edge-on in the side view.
+
+Composition: three full figures in a row on a plain flat ivory #F4ECD8 background with no scenery and no ground shadow except a thin flat line, even spacing, each figure 85 percent of the frame height, landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, labels, arrows, logos or watermarks.
+- NOT glossy digital painting, NOT 3D, no gradients, no colours other than black, ivory and violet.
+
+After copying, print the output path and pixel size.

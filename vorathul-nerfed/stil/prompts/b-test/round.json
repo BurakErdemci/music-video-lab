@@ -1,0 +1,112 @@
+[
+  {
+    "id": "G15",
+    "prompt": "stil/prompts/b-test/G15.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/b-test/out/G15.png",
+    "key": "#808080"
+  },
+  {
+    "id": "G16",
+    "prompt": "stil/prompts/b-test/G16.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/b-test/out/G16.png",
+    "key": "#808080"
+  },
+  {
+    "id": "G17",
+    "prompt": "stil/prompts/b-test/G17.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/b-test/out/G17.png",
+    "key": "#808080"
+  },
+  {
+    "id": "G18",
+    "prompt": "stil/prompts/b-test/G18.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/b-test/out/G18.png",
+    "key": "#808080"
+  },
+  {
+    "id": "G11",
+    "prompt": "stil/prompts/b-test/G11.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "out": "stil/prompts/b-test/out/G11.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "G42",
+    "prompt": "stil/prompts/b-test/G42.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "out": "stil/prompts/b-test/out/G42.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "G43",
+    "prompt": "stil/prompts/b-test/G43.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "out": "stil/prompts/b-test/out/G43.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "G44",
+    "prompt": "stil/prompts/b-test/G44.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "out": "stil/prompts/b-test/out/G44.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "G45",
+    "prompt": "stil/prompts/b-test/G45.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "out": "stil/prompts/b-test/out/G45.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/canon-sheet.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "G32",
+    "prompt": "stil/prompts/b-test/G32.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/b-test/out/G32.png",
+    "key": "#808080"
+  }
+]

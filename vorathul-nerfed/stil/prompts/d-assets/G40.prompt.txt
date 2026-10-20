@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./G40.png
+
+The attached image is the APPROVED OFFICE REFERENCE. Match its office style EXACTLY: a video game studio office drawn in a sterile flat vector style (cool greys #E9ECEF #CED4DA #ADB5BD, white, one UI blue #3B82F6, thin uniform outlines, rounded rectangles, no texture).
+
+Subject: the game studio office from the reference after a disaster: desks overturned, monitors fallen and cracked, cables hanging from the ceiling strips, chairs on their sides, papers scattered; the big empty picture frame on the back wall broken open with torn canvas edges; flat vector style, no paint or ink yet, no people.
+Composition: wide eye-level shot, landscape 1536x1024, the floor centre left clear.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

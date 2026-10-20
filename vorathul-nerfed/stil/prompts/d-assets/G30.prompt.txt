@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./G30.png
+
+The attached image is the APPROVED OFFICE REFERENCE. Match its office style EXACTLY: a video game studio office drawn in a sterile flat vector style (cool greys #E9ECEF #CED4DA #ADB5BD, white, one UI blue #3B82F6, thin uniform outlines, rounded rectangles, no texture).
+
+Subject: the bored developer from the reference (short black hair, grey hoodie, dark trousers, white sneakers) as separate cut-out body parts laid out with gaps: head with half-closed bored eyes, head yawning, torso with hood, left and right upper arms, left and right forearms, legs standing, legs mid-step; three-quarter front view, all parts at the same scale.
+Composition: parts laid out in a grid, landscape 1536x1024.
+
+The subject is isolated on a plain flat #00FF00 green background with nothing else in the image; parts are separated by wide empty gaps and do not overlap. The green will be removed and is the only colour allowed outside the palette.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.
