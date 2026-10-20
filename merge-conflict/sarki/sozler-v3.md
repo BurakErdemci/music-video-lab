@@ -12,6 +12,11 @@ levels: vault `Teknik/Arastirmalar/Suno_Prompt_Kurallari_2026-10-20`):
 - Two voices are made in separate takes and stitched (Suno labels steer but do not command; stems cannot split
   two voices blended in one take).
 
+## What worked (Burak, 20 Oct 2026)
+
+One change from the researched draft: the first tag "Modern metalcore" replaced by **"Kawaii heavy metal"** -
+"şov attı" (it delivered). The style below is the working one.
+
 ## Settings
 
 - Model: try **v6** and **v6-wild** (one guide reports heavy genres respond better on wild). Max Mode on.
@@ -21,7 +26,7 @@ levels: vault `Teknik/Arastirmalar/Suno_Prompt_Kurallari_2026-10-20`):
 ## Style (master take, one female lead)
 
 ```
-Modern metalcore, 152 BPM, 4/4, E minor, drop-C chugging high-gain palm-muted guitars, scooped mids, thick sub bass, tight double-kick drums, syncopated half-time breakdowns, crushing riffs, aggressive dense production, fast guitar solo. Female lead vocal, sweet bright high-pitched idol voice singing over the heavy riffs, gang shouts on the choruses. Hard stops before the choruses, a stripped piano interlude, huge final chorus.
+Kawaii heavy metal, 152 BPM, 4/4, E minor, drop-C chugging high-gain palm-muted guitars, scooped mids, thick sub bass, tight double-kick drums, syncopated half-time breakdowns, crushing riffs, aggressive dense production, fast guitar solo. Female lead vocal, sweet bright high-pitched idol voice singing over the heavy riffs, gang shouts on the choruses. Hard stops before the choruses, a stripped piano interlude, huge final chorus.
 ```
 
 ## Exclude
