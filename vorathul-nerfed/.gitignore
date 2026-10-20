@@ -12,3 +12,5 @@ stil/*
 sfx/_kenney/
 !sfx/candidates/*.wav
 !sfx/candidates/*.mp3
+.render.lock/
+video/public/plates/
