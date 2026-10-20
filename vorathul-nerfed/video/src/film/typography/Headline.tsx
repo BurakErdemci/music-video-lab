@@ -32,6 +32,8 @@ export const Headline = ({ spec, frame }: { spec: HeadlineSpec; frame: number })
         position: 'absolute', left: spec.x, top: spec.y, width: w, height: h, boxSizing: 'border-box', padding: HEADLINE.pad,
         background: C.white, border: `2px solid ${C.mid}`, borderRadius: 18, boxShadow: '0 12px 0 rgba(52,58,64,0.10)',
         transform: `translateY(${e.lift}px) scale(${e.scale})`, transformOrigin: '50% 100%', clipPath: `inset(-20px -20px -20px ${e.wipe}%)`,
+        // Fade with the wipe: a bare wipe left the last glyph ("5" of PATCH 2.5) standing alone for a few frames.
+        opacity: 1 - e.wipe / 100,
         display: 'flex', flexDirection: 'column', gap: HEADLINE.gap,
       }}
     >
