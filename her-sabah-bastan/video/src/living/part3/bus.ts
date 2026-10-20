@@ -5,6 +5,7 @@
 import { palette } from '../../style/palette.ts';
 import { paintBusWindow, paintGlassRain, heartTip } from './busWindow.ts';
 import { aiLayers, HUMAN_BREATH, tintedSprite } from './figures.ts';
+import { skin, solveArm, TIP as FINGER_TIP, type Rig } from './fingerRig.ts';
 import { F, H, W, canvasLayer, charLayer, clamp01, easeInOut, getImg, imageLayer, mixCam, placeAt, pt, sec, sine, sp, span, url, type Cam, type Layer, type Rect } from './common.ts';
 
 const D_BUS = 0;
@@ -68,7 +69,7 @@ const humanLayer = (f: number): Layer => {
 /** The breath patch, plate px: just in front of his mouth on the glass. */
 const MOUTH = humanPt('hb-lean', 'mouth');
 const FOG = { x: MOUTH[0] + 120, y: MOUTH[1] - 10, r: 120 };
-const HEART = { x: FOG.x + 22, y: FOG.y - 26, size: 124 };
+const HEART = { x: FOG.x + 22, y: FOG.y - 26, size: 90 };
 /** Travel of the scenery (px of the near layer): constant speed, then the bus brakes into the stop. */
 const SPEED = 19;
 const BRAKE0 = F.reach - 10;
@@ -90,16 +91,115 @@ const aiScale = (n: AiPose): number => 104 / AI_HEAD[n];
 const SIT_Y = 690; // the sill line under the reflections (plate px)
 /** Her rect in plate px. Sitting back to back: her back (right edge) against his reflection's back at BACK_X. */
 const BACK_X = 1090;
+/** Centre of the heart's outline (plate px): the heart is drawn around it, her rest fingertip sits just off it. */
+const HEART_C: [number, number] = (() => {
+  const xs: number[] = [];
+  const ys: number[] = [];
+  for (let i = 0; i <= 200; i++) {
+    const q = heartTip(HEART, i / 200);
+    xs.push(q[0]);
+    ys.push(q[1]);
+  }
+  return [(Math.min(...xs) + Math.max(...xs)) / 2, (Math.min(...ys) + Math.max(...ys)) / 2];
+})();
+/**
+ * Drawing the heart: her body holds (a small lean that follows the hand, plus a slow sway) and the arm does the
+ * drawing (two bones, see fingerRig.ts), so the fingertip IS the pen: it stays on the stroke tip for the whole
+ * stroke. After the stroke the finger lifts off the glass back to its rest place. All plate px / sprite px, continuous in f.
+ */
+const fingerPose = (f: number): { ox: number; oy: number; rig: Rig; tipPlate: [number, number]; pen: [number, number] } => {
+  const s = aiScale('a-finger');
+  const rest: [number, number] = [HEART_C[0], HEART_C[1] - 20 * s];
+  const p = clamp01((f - F.heart) / (F.heartDone - F.heart));
+  const lift = sine(span(f, F.heartDone, F.heartDone + 14));
+  const pen = heartTip(HEART, p);
+  const tgt: [number, number] = [pen[0] + (rest[0] - pen[0]) * lift, pen[1] + (rest[1] - pen[1]) * lift];
+  const dx = (tgt[0] - rest[0]) / s;
+  const dy = (tgt[1] - rest[1]) / s;
+  const sway = 1.5 * Math.sin(sec(f) * 1.3);
+  const b: [number, number] = [0.5 * dx + sway, 0.4 * dy + 0.4 * sway];
+  const rig = solveArm([FINGER_TIP[0] + dx, FINGER_TIP[1] + dy], b);
+  const ox = rest[0] - FINGER_TIP[0] * s;
+  const oy = rest[1] - FINGER_TIP[1] * s;
+  const tp = skin(FINGER_TIP[0], FINGER_TIP[1], rig);
+  return { ox, oy, rig, tipPlate: [ox + tp[0] * s, oy + tp[1] * s], pen: tgt };
+};
+/** Her drawing arm posed by the rig, drawn at full alpha into an offscreen canvas (the caller applies the reflection alpha). */
+const MARGIN = { l: 160, t: 120, r: 60, b: 60 };
+const MESH = { x0: 0, x1: 300, y0: 140, y1: 470, step: 12 };
+const paintFingerPose = (f: number, unit: number): HTMLCanvasElement => {
+  const m = sp('a-finger');
+  const { rig } = fingerPose(f);
+  const off = document.createElement('canvas');
+  off.width = Math.ceil((m.w + MARGIN.l + MARGIN.r) * unit);
+  off.height = Math.ceil((m.h + MARGIN.t + MARGIN.b) * unit);
+  const g = off.getContext('2d') as CanvasRenderingContext2D;
+  const img = getImg(url('a-finger'));
+  // everything outside the mesh box holds with the torso (just the body lean)
+  g.save();
+  g.setTransform(unit, 0, 0, unit, (MARGIN.l + rig.b[0]) * unit, (MARGIN.t + rig.b[1]) * unit);
+  g.beginPath();
+  g.rect(-1000, -1000, 4000, 4000);
+  g.rect(MESH.x0 - 1000, MESH.y0 + 8, MESH.x1 - MESH.x0 + 1000 - 8, MESH.y1 - MESH.y0 - 16);
+  g.clip('evenodd');
+  g.drawImage(img, 0, 0);
+  g.restore();
+  // the mesh box: every cell warped by the skinning (continuous, so no seams except antialiasing, covered by a half-px grow)
+  const nx = Math.round((MESH.x1 - MESH.x0) / MESH.step);
+  const ny = Math.round((MESH.y1 - MESH.y0) / MESH.step);
+  const pos = (i: number, j: number): [number, number] => {
+    const q = skin(MESH.x0 + i * MESH.step, MESH.y0 + j * MESH.step, rig);
+    return [(MARGIN.l + q[0]) * unit, (MARGIN.t + q[1]) * unit];
+  };
+  const tri = (s0: [number, number], s1: [number, number], s2: [number, number], d0: [number, number], d1: [number, number], d2: [number, number]): void => {
+    const det = (s1[0] - s0[0]) * (s2[1] - s0[1]) - (s2[0] - s0[0]) * (s1[1] - s0[1]);
+    const a = ((d1[0] - d0[0]) * (s2[1] - s0[1]) - (d2[0] - d0[0]) * (s1[1] - s0[1])) / det;
+    const c = ((d2[0] - d0[0]) * (s1[0] - s0[0]) - (d1[0] - d0[0]) * (s2[0] - s0[0])) / det;
+    const b = ((d1[1] - d0[1]) * (s2[1] - s0[1]) - (d2[1] - d0[1]) * (s1[1] - s0[1])) / det;
+    const d = ((d2[1] - d0[1]) * (s1[0] - s0[0]) - (d1[1] - d0[1]) * (s2[0] - s0[0])) / det;
+    const e = d0[0] - a * s0[0] - c * s0[1];
+    const ff = d0[1] - b * s0[0] - d * s0[1];
+    const cx = (d0[0] + d1[0] + d2[0]) / 3;
+    const cy = (d0[1] + d1[1] + d2[1]) / 3;
+    const grow = (p: [number, number]): [number, number] => {
+      const L = Math.hypot(p[0] - cx, p[1] - cy) || 1;
+      return [p[0] + ((p[0] - cx) / L) * 0.6, p[1] + ((p[1] - cy) / L) * 0.6];
+    };
+    const g0 = grow(d0);
+    const g1 = grow(d1);
+    const g2 = grow(d2);
+    g.save();
+    g.beginPath();
+    g.moveTo(g0[0], g0[1]);
+    g.lineTo(g1[0], g1[1]);
+    g.lineTo(g2[0], g2[1]);
+    g.closePath();
+    g.clip();
+    g.setTransform(a, b, c, d, e, ff);
+    g.drawImage(img, 0, 0);
+    g.restore();
+  };
+  for (let j = 0; j < ny; j++) {
+    for (let i = 0; i < nx; i++) {
+      const sx0 = MESH.x0 + i * MESH.step;
+      const sy0 = MESH.y0 + j * MESH.step;
+      const sx1 = sx0 + MESH.step;
+      const sy1 = sy0 + MESH.step;
+      const p00 = pos(i, j);
+      const p10 = pos(i + 1, j);
+      const p01 = pos(i, j + 1);
+      const p11 = pos(i + 1, j + 1);
+      tri([sx0, sy0], [sx1, sy0], [sx0, sy1], p00, p10, p01);
+      tri([sx1, sy0], [sx1, sy1], [sx0, sy1], p10, p11, p01);
+    }
+  }
+  return off;
+};
 const aiPlateRect = (n: AiPose, f: number): Rect => {
   const m = sp(n);
   const s = aiScale(n);
   const bb = m.bbox as number[];
-  if (n === 'a-finger') {
-    const tip = pt(n, 'fingertip');
-    const p = clamp01((f - F.heart) / (F.heartDone - F.heart));
-    const [hx, hy] = heartTip(HEART, p);
-    return { x: hx - (tip[0] as number) * s, y: hy - (tip[1] as number) * s, w: m.w * s, h: m.h * s };
-  }
+  if (n === 'a-finger') return { x: fingerPose(f).ox, y: fingerPose(f).oy, w: m.w * s, h: m.h * s };
   if (n === 'a-reach') {
     // the note lands beyond the glass's left edge, by his elbow on the sill
     const note = pt(n, 'note');
@@ -129,7 +229,10 @@ const paintReflections = (f: number) => (ctx: CanvasRenderingContext2D): void =>
   const r = aiPlateRect(n, f);
   const [x, y] = C(r.x, r.y);
   ctx.globalAlpha = a;
-  ctx.drawImage(getImg(url(n)), x, y, r.w * WK, r.h * WK);
+  if (n === 'a-finger') {
+    const unit = (r.w * WK) / sp(n).w;
+    ctx.drawImage(paintFingerPose(f, unit), x - MARGIN.l * unit, y - MARGIN.t * unit);
+  } else ctx.drawImage(getImg(url(n)), x, y, r.w * WK, r.h * WK);
   if (n === 'a-read') paintPageTurn(ctx, f, x, y, r.w * WK / sp(n).w);
   ctx.globalAlpha = 1;
 };
