@@ -556,3 +556,20 @@ that produced §1.3, so every frame here equals `round(anchor × 30)`.
 - **S44** — f2865 `beat[294]` zoom panel 1 · f2884 `beat[296]` zoom panel 2 · f2904 `beat[298]` zoom panel 3 · f2923 `beat[300]` zoom panel 4 · f2942 `beat[302]` hold, eye dims
 - **S45** — f2962 `beat[304]` cut: low angle under helm · f2963 `word('unfair', 1)` LOOKS UP, scream, sky shakes · f2971 `beat[305]` shake peak · f2981 `beat[306]` paint flakes fall · f2991 `beat[307]` flakes
 - **Secondary keys (Intro section only, kind `key`):** beats 0, 2, 4, 6, 8, 11, 13, 15, 17, 19, 21, 24, 26, 28, 30, 32, 34, 36, 38, 42, 45, 47, 61, 66, 69, 71, 73, 75, 77, 79, 81, 83, 85, 87, 89, 91, 93, 95, 97, 100, 102, 104, 106, 108, 110, 112, 114, 116, 118, 120, 122, 124, 126, 128, 130, 132, 134, 135, 138, 139, 140, 142, 145, 147, 149, 151.
+
+
+## Architect decisions (20 Oct 2026)
+
+1. **The painting is 16:9**, the video's own ratio, so the S31 switch is invisible. The office
+   frame (07) is regenerated with a 16:9 painting.
+2. **No filler keys in the intro.** The 2.03–2.07-beat gaps are frame rounding; `beatcheck` now
+   allows one frame (0.102 beat). Keep only keys that mean something.
+3. **The eraser is office-palette** (white/grey/UI blue); the pink in frame 07 was a generation
+   slip. Magenta stays reserved for deleted things. Violet on Vorathul's attacks, meteor trails and
+   second-form cracks is confirmed (`KARAKTER.md` item 9 updated).
+4. **Fonts:** UI text uses Inter and IBM Plex Mono (already added by the UI lane, SIL OFL); big comic
+   captions use Anton (SIL OFL, from her-sabah-bastan). No handwriting face — the office stays sterile.
+5. **Image test round first:** the four hero sheets and the second-form helm halves, to prove the
+   key-colour cut-out before the other 26 images.
+6. **Open for the director's listening check (at home):** "Of" 74.48 s (p = 0.275), the first
+   "Patch" (77.76 mix vs 79.14 vocal stem; 79.14 used), the intro "VORASOL" chants.

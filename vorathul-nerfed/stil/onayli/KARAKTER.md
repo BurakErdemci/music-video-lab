@@ -8,5 +8,5 @@
 6. WINGS: on each side about eight long black organ pipes fan out sideways from the shoulder blades like a spread wing, short pipes near the body, long pipes at the outer edge; every pipe mouth glows violet.
 7. Long tattered black cape reaching the floor, ragged flame-like lower edge.
 8. Greatsword: black blade with one violet rune line in the fuller, spiked black crossguard with a violet gem in the centre, held point-down in front of him.
-9. Body is solid flat black #0A0A0A; violet #9B5CE0 ONLY on items 1, 3, 5, 6 (pipe mouths) and 8.
+9. Body is solid flat black #0A0A0A; violet #9B5CE0 ONLY on items 1, 3, 5, 6 (pipe mouths) and 8 — and on his ENERGY: strike trails, meteor trails and the armour cracks of the second form (approved frames 04, 06).
 10. Proportions: very tall, broad shoulders, the helm is small relative to the shoulders.
