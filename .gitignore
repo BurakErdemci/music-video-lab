@@ -1,0 +1,8 @@
+audio/
+*.wav
+*.mp3
+node_modules/
+out/
+__pycache__/
+.delegate-runs/
+data/_*
