@@ -5,7 +5,8 @@ import type { ReactNode } from 'react';
 import { StickyNote } from '../../../ui/kit.ts';
 import { C } from '../../../ui/theme.tsx';
 import { easeInQuad, ImpactBurst, InkSplash, Meteor, MissingTextureFillSafe, PaintSeep, seeded } from './fx.tsx';
-import { Dust, Hero, KoStars, type HeroKind, type HeroPose } from '../art/heroes.tsx';
+import { Dust, KoStars, type HeroKind, type HeroPose } from '../art/heroes.tsx';
+import { HeroPiece } from './heroArt.tsx';
 import { BigHand } from '../art/hands.tsx';
 import { EraserArt } from '../art/props.tsx';
 import { BAR, CELLS, Caption, type HudState } from './hud.tsx';
@@ -16,6 +17,8 @@ export const FLOOR = 992;
 const HERO_H = 116;
 /** Where the helm sits in window px (the sticky note lands here); measured on the rig stills. */
 export const HELM: Pt = [962, 400];
+/** The giant sticky note sits on the upper right of the helm and leaves the eye slit free. */
+const NOTE = { x: HELM[0] + 55, y: HELM[1] - 115, w: 150 };
 
 const clamp = (v: number, a = 0, b = 1): number => Math.min(b, Math.max(a, v));
 const lerp = (a: number, b: number, t: number): number => a + (b - a) * t;
@@ -199,7 +202,6 @@ const SEEPS: readonly { at: number; seed: number; at2: (f: number) => Pt }[] = [
   { at: T.health, seed: 301, at2: capPx },
   { at: T.forty, seed: 302, at2: capPx },
   { at: T.rain, seed: 303, at2: () => [1500, 30] },
-  { at: T.pipMagenta - 5, seed: 304, at2: () => HELM },
 ];
 const Seeps = ({ f }: { f: number }): ReactNode => (
   <>
@@ -259,7 +261,7 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
         })}
         {heroes.map((h) => (
           <g key={h.kind}>
-            <Hero kind={h.kind} pose={h.pose} frame={f} x={h.x} y={h.y} height={HERO_H} flip={h.flip} rotate={h.rotate} />
+            <HeroPiece kind={h.kind} pose={h.pose} frame={f} x={h.x} y={h.y} height={HERO_H} flip={h.flip} rotate={h.rotate} />
             {h.stars ? <KoStars frame={f} x={h.x} y={h.y - 70} size={34} /> : null}
           </g>
         ))}
@@ -303,9 +305,9 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
       {f >= noteSlap ? (
         <StickyNote
           frame={f}
-          x={HELM[0] - 170 + (f >= T.tug && f < T.tug + 18 ? Math.sin((f - T.tug) * 2.4) * 10 : 0)}
-          y={HELM[1] - 190}
-          width={340}
+          x={NOTE.x - NOTE.w / 2 + (f >= T.tug && f < T.tug + 18 ? Math.sin((f - T.tug) * 2.4) * 10 : 0)}
+          y={NOTE.y - NOTE.w * 0.46}
+          width={NOTE.w}
           text="Phase 3"
           slapAt={noteSlap}
           rotate={-7}
@@ -313,7 +315,7 @@ export const PaintScript2D = ({ frame: f }: { frame: number }) => {
       ) : null}
       {f >= noteSlap + 6 ? (
         <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={SVG_STYLE}>
-          <path d={`M${HELM[0] - 150} ${HELM[1] - 20} L${HELM[0] + 140} ${HELM[1] + 70}`} stroke={C.blue} strokeWidth={14} strokeLinecap="round" opacity={clamp((f - noteSlap - 6) / 5)} />
+          <path d={`M${NOTE.x - NOTE.w * 0.4} ${NOTE.y - NOTE.w * 0.04} L${NOTE.x + NOTE.w * 0.4} ${NOTE.y + NOTE.w * 0.2}`} stroke={C.blue} strokeWidth={9} strokeLinecap="round" opacity={clamp((f - noteSlap - 6) / 5)} />
         </svg>
       ) : null}
     </>

@@ -38,7 +38,7 @@ export const S28 = ({ frame }: { frame: number }) => {
   return (
     <Shot frame={frame}>
       <PaintView {...paintAt(frame)} view={v} hudFixed />
-      <ImpactBurst frame={frame - T.rogueFlat} duration={12} seed={90} x={bx} y={by} size={170} flash={2} />
+      <ImpactBurst frame={frame - T.rogueFlat} duration={12} seed={90} x={bx} y={by} size={170} flash={1} />
     </Shot>
   );
 };
@@ -135,7 +135,7 @@ const skyShakeAt = (f: number): [number, number] => {
 /** The helm seen from below: collar in front, the lit slit foreshortened, horns and crown behind (stand-in for G13). */
 const HelmFromBelow = () => (
   <svg width={1920} height={1080} viewBox="0 0 1920 1080" style={{ position: 'absolute', inset: 0 }}>
-    <g transform={`translate(${HELM[0]} ${HELM[1] + 40})`} fill="#0A0908">
+    <g transform={`translate(${HELM[0]} ${HELM[1] + 30}) scale(0.55)`} fill="#0A0908">
       <path d="M-210 -150 Q-300 -330 -170 -330 Q-250 -230 -150 -170Z" />
       <path d="M210 -150 Q300 -330 170 -330 Q250 -230 150 -170Z" />
       <path d="M-120 -150 L-110 -260 L-70 -170 L-40 -290 L0 -180 L40 -290 L70 -170 L110 -260 L120 -150Z" />
@@ -184,6 +184,7 @@ export const S45 = ({ frame }: { frame: number }) => {
     <Shot frame={frame}>
       <PaintView {...paintAt(frame, { skyShake: sky, skyViolet: up && frame < T.lookUp + 10, headUp: up, under: up ? <HelmFromBelow /> : undefined })} view={SKY_VIEW(frame)} hudFixed />
       <Flakes f={frame} />
+      <PanelFrame />
     </Shot>
   );
 };

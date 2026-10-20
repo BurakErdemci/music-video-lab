@@ -20,7 +20,8 @@ export const M_CUES = (at: number): DuotoneCue[] => gradeCues([{ at: { frame: at
 export const SWINGS: Swing[] = [
   ...duotoneSwings(S26_CUES),
   { frame: SHOT_FROM.S27, swings: 1 }, // hard cut office -> painting
-  ...impactSwings(T.rogueFlat, 2),
+  ...impactSwings(T.rogueFlat, 1),
+  { frame: SHOT_FROM.S29, swings: 1 }, // the floor view cuts to the brighter victory view
   { frame: T.update, swings: 1 }, // the grey drain snaps back to colour
   ...duotoneSwings(S33_CUES),
   { frame: SHOT_FROM.S37, swings: 1 }, // office -> painting
