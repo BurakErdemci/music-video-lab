@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./G46-sheet.png
+
+The attached image is the APPROVED OFFICE REFERENCE. Match its office style EXACTLY: a video game studio office drawn in a sterile flat vector style (cool greys #E9ECEF #CED4DA #ADB5BD, white, one UI blue #3B82F6, thin uniform outlines, rounded rectangles, no texture).
+
+2 images are attached. The FIRST attached image is the approved OFFICE frame (office style, palette, and the bored developer in the grey hoodie seen from behind). The SECOND attached image is the office developer pose sheet; the FIRST figure of each row (grey hoodie) is the same bored developer, use it for his face.
+
+Subject: the official character model sheet of the bored office developer from the attached images: short messy black hair, light grey hoodie with the hood down and sleeves pushed up to the forearms, dark charcoal trousers, white sneakers, pale skin, a bored half-lidded face with a small flat mouth; the same man four times, standing relaxed with his arms hanging: seen from the BACK, from the FRONT, in LEFT PROFILE facing left, and in THREE-QUARTER FRONT view; identical height, proportions, hair and clothes in all four.
+Composition: four full figures in a row with even gaps on a plain flat light grey #E9ECEF background with no scenery and no shadow, each figure 85 percent of the frame height, landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.

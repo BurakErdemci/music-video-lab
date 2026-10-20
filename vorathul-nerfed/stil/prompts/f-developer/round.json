@@ -1,0 +1,159 @@
+[
+  {
+    "id": "G46-sheet",
+    "prompt": "stil/prompts/f-developer/G46-sheet.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-sheet.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png"
+    ]
+  },
+  {
+    "id": "G46-walk",
+    "prompt": "stil/prompts/f-developer/G46-walk.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-walk.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-click",
+    "prompt": "stil/prompts/f-developer/G46-click.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-click.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-bored",
+    "prompt": "stil/prompts/f-developer/G46-bored.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-bored.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-tap",
+    "prompt": "stil/prompts/f-developer/G46-tap.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-tap.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-pin",
+    "prompt": "stil/prompts/f-developer/G46-pin.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-pin.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-dust",
+    "prompt": "stil/prompts/f-developer/G46-dust.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-dust.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-glance",
+    "prompt": "stil/prompts/f-developer/G46-glance.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-glance.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-sip",
+    "prompt": "stil/prompts/f-developer/G46-sip.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-sip.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  },
+  {
+    "id": "G46-spit",
+    "prompt": "stil/prompts/f-developer/G46-spit.prompt.txt",
+    "refs": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "out": "stil/prompts/f-developer/out/G46-spit.png",
+    "depends_on": [
+      "stil/prompts/a-canonical-fix/out/office-frame.png",
+      "stil/prompts/d-assets/out/G39.png",
+      "stil/prompts/f-developer/out/G46-sheet.png"
+    ],
+    "key": "#00FF00"
+  }
+]

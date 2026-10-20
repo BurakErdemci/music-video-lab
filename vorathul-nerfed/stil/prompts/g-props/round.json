@@ -1,0 +1,49 @@
+[
+  {
+    "id": "P1-mic",
+    "prompt": "stil/prompts/g-props/P1-mic.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "out": "stil/prompts/g-props/out/P1-mic.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "P1-mic-stand",
+    "prompt": "stil/prompts/g-props/P1-mic-stand.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "out": "stil/prompts/g-props/out/P1-mic-stand.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "P1-stage-lights",
+    "prompt": "stil/prompts/g-props/P1-stage-lights.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg",
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "out": "stil/prompts/g-props/out/P1-stage-lights.png",
+    "depends_on": [
+      "stil/prompts/e-locations/out/L3-wall.png"
+    ],
+    "key": "#808080"
+  },
+  {
+    "id": "P1-stage-glow",
+    "prompt": "stil/prompts/g-props/P1-stage-glow.prompt.txt",
+    "refs": [
+      "stil/onayli/01-tarz-cizgi-roman.jpg"
+    ],
+    "out": "stil/prompts/g-props/out/P1-stage-glow.png"
+  }
+]

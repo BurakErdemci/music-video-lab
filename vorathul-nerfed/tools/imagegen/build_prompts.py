@@ -4,7 +4,8 @@ Run from the clip root (vorathul-nerfed/):
     python -I tools/imagegen/build_prompts.py
 
 Writes stil/prompts/<round>/<id>.prompt.txt and stil/prompts/<round>/round.json for the rounds
-a-canonical-fix, b-test, c-rig-parts, d-assets and e-locations (docs/storyboard-03-locations.md). Every verbatim block (STYLE-P, FIXED, STYLE-O,
+a-canonical-fix, b-test, c-rig-parts, d-assets and e-locations (docs/storyboard-03-locations.md), f-developer and g-props
+(docs/storyboard-04-developer-and-props.md). Every verbatim block (STYLE-P, FIXED, STYLE-O,
 cut-out lines, NEGATIVE) is read from the approved prompt files or from the storyboards at build
 time, never retyped, and every asset paragraph is parsed from the storyboard asset lists. The
 script is idempotent: it rewrites the prompt files and round.json files and nothing else.
@@ -343,15 +344,27 @@ REF_LABELS = {
 ORDINALS = ["FIRST", "SECOND", "THIRD", "FOURTH", "FIFTH", "SIXTH", "SEVENTH"]
 
 
-def parse_locations():
+SB4 = ROOT / "docs" / "storyboard-04-developer-and-props.md"
+ID_SB3 = r"(?:L\d|H|LX)-[a-z0-9-]+"
+ID_SB4 = r"(?:G46|P1)-[a-z0-9-]+"
+REF_G39 = "stil/prompts/d-assets/out/G39.png"
+REF_LABELS[REF_OFFICE_NEW] = ("the approved OFFICE frame (office style, palette, and the bored developer in the grey "
+                              "hoodie seen from behind)")
+ROUND_LABELS = {"g-props": {"stil/prompts/e-locations/out/L3-wall.png": ("the throne room plate where these props are used: match its "
+                                                          "gold, ink and line weight")}}
+REF_LABELS[REF_G39] = ("the office developer pose sheet; the FIRST figure of each row (grey hoodie) is the same bored "
+                       "developer, use it for his face")
+
+
+def parse_locations(path=SB3, idpat=ID_SB3):
     """Table rows `| id | size | alpha | ... | refs |` plus `- **id** — Subject: ... Composition: ...`."""
-    text = read(SB3)
+    text = read(path)
     table = {}
-    for row in re.finditer(r"^\| `?((?:L\d|H|LX)-[a-z0-9-]+)`? \|(.+)\|\s*$", text, re.M):
+    for row in re.finditer(rf"^\| `?({idpat})`? \|(.+)\|\s*$", text, re.M):
         cells = [c.strip() for c in row.group(2).split("|")]
         table[row.group(1)] = dict(size=cells[0], alpha=cells[1], refs=cells[-1])
     assets = {}
-    for b in re.finditer(r"^- \*\*((?:L\d|H|LX)-[a-z0-9-]+)\*\* — (.+)$", text, re.M):
+    for b in re.finditer(rf"^- \*\*({idpat})\*\* — (.+)$", text, re.M):
         aid, body = b.group(1), b.group(2)
         sm = re.search(r"Subject: (.*?) Composition: (.*)$", body)
         if not sm:
@@ -365,35 +378,37 @@ def parse_locations():
     return assets
 
 
-def location_refs(a):
-    """refs cell: comma list of `style`, `fight`, `canon`, `heroes`, or another asset id (its out/)."""
+def location_refs(a, rnd="e-locations"):
+    """refs cell: comma list of `style`, `office`, `fight`, `canon`, `heroes`, `g39`, or an asset id
+    (`e:<id>` = an e-locations image, a bare id = an image of this round)."""
+    named = {"style": [REF_STYLE], "office": [REF_OFFICE_NEW], "fight": [REF_FIGHT], "canon": [REF_CANON],
+             "heroes": HERO_REFS, "g39": [REF_G39]}
     refs = []
     for r in (x.strip() for x in a["refs"].split(",")):
-        if r == "style":
-            refs.append(REF_STYLE)
-        elif r == "fight":
-            refs.append(REF_FIGHT)
-        elif r == "canon":
-            refs.append(REF_CANON)
-        elif r == "heroes":
-            refs += HERO_REFS
-        elif re.match(r"^(L\d|H|LX)-", r):
-            refs.append(f"stil/prompts/e-locations/out/{r}.png")
+        if r in named:
+            refs += named[r]
+        elif r.startswith("e:"):
+            refs.append(f"stil/prompts/e-locations/out/{r[2:]}.png")
+        elif re.match(rf"^({ID_SB3}|{ID_SB4})$", r):
+            refs.append(f"stil/prompts/{rnd}/out/{r}.png")
         else:
             die(f"unknown ref {r!r}")
-    if not refs or refs[0] != REF_STYLE:
-        die(f"refs must start with style: {a['refs']!r}")
+    if not refs or refs[0] not in (REF_STYLE, REF_OFFICE_NEW):
+        die(f"refs must start with style or office: {a['refs']!r}")
     return refs
 
 
-def location_entry(aid, a):
-    refs = location_refs(a)
+def location_entry(aid, a, rnd="e-locations"):
+    """Painting assets take STYLE-P and the grey key; assets whose first ref is the office frame take
+    STYLE-O and the green key (grey is inside the office palette)."""
+    refs = location_refs(a, rnd)
+    office = refs[0] == REF_OFFICE_NEW
     cut = a["alpha"].startswith("cut-out")
-    parts = [LINE1.format(id=aid), STYLE_P]
+    parts = [LINE1.format(id=aid), STYLE_O if office else STYLE_P]
     if len(refs) > 1:
         lines = []
         for k, r in enumerate(refs):
-            label = REF_LABELS.get(r) or (f"the already generated image {Path(r).stem} (see the Subject "
+            label = ROUND_LABELS.get(rnd, {}).get(r) or REF_LABELS.get(r) or (f"the already generated image {Path(r).stem} (see the Subject "
                                           "for how this image relates to it)")
             lines.append(f"The {ORDINALS[k]} attached image is {label}.")
         parts.append(f"{len(refs)} images are attached. " + " ".join(lines))
@@ -401,9 +416,10 @@ def location_entry(aid, a):
         parts.append(FIXED)
     parts.append(f"Subject: {a['subject']}\nComposition: {a['comp']}")
     if cut:
-        parts.append(CUT_P)
+        parts.append(CUT_O if office else CUT_P)
     parts += [NEGATIVE, LAST]
-    return dict(id=aid, text="\n\n".join(parts) + "\n", refs=refs, key="#808080" if cut else None)
+    key = ("#00FF00" if office else "#808080") if cut else None
+    return dict(id=aid, text="\n\n".join(parts) + "\n", refs=refs, key=key)
 
 
 # ---------------------------------------------------------------- write rounds
@@ -450,6 +466,10 @@ def main():
     rounds["d-assets"] = [asset_entry(g) for g in d_ids]
     if SB3.is_file():
         rounds["e-locations"] = [location_entry(i, a) for i, a in parse_locations().items()]
+    if SB4.is_file():
+        sb4 = parse_locations(SB4, ID_SB4)
+        for rnd, prefix in (("f-developer", "G46-"), ("g-props", "P1-")):
+            rounds[rnd] = [location_entry(i, a, rnd) for i, a in sb4.items() if i.startswith(prefix)]
     for name, entries in rounds.items():
         rows = write_round(name, entries)
         print(f"{name}: {len(rows)} prompts")

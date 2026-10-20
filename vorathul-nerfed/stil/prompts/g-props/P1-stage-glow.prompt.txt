@@ -1,0 +1,11 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./P1-stage-glow.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+Subject: seven cones of stage spotlight light falling from the top edge of the image toward the bottom, evenly spaced, painted in the comic print style: each cone made of warm gold #E2B33C and ivory #F4ECD8 dry-brush hatching and a coarse halftone dot screen that fades from dense at the top to sparse at the bottom, two of the cones violet #9B5CE0 halftone instead of gold; ragged ink-brush edges; the background is solid flat black #0A0A0A everywhere else; no lanterns, no buildings, no figures.
+Composition: landscape 1536x1024, the cone tips at the top edge, the cones widening downward with dark gaps between them.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.
