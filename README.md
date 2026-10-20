@@ -62,6 +62,8 @@ npm run beatcheck       # sync check against data/timing.json
 
 ## Licenses
 
-Fonts in `her-sabah-bastan/video/public/fonts/` are under the SIL Open Font License 1.1 (license
-texts next to the font files). Licensing for the code, the images and the songs is being decided
-and will be added here before the first release.
+- Code: [MIT](LICENSE).
+- Images, prompts, songs, lyrics, videos and documentation: [CC BY 4.0](LICENSE-ASSETS.md) — use them
+  for anything, credit the clip and this repo.
+- Third-party fonts (SIL OFL 1.1) and Kenney sound sources (CC0) keep their own licences; see
+  [LICENSE-ASSETS.md](LICENSE-ASSETS.md).
