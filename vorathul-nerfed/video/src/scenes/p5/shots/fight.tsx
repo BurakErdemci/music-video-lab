@@ -11,6 +11,7 @@ import { DuotoneFlash, ImpactBurst, InkSplash, Overlay, seeded, Shards, SpeedLin
 import { BOSS_CUES } from '../lib/flash.ts';
 import { clamp01, E, inOut, lerp, outBack, outCubic, prog, project, pxPerUnit, twos, unproject, W, H } from '../lib/geom.ts';
 import { Chair, Desk, Dev, LightStrip, Monitor3D, O, Rect } from '../lib/Office.tsx';
+import { AVAILABLE } from '../../../cast/available.ts';
 import { Asset } from '../lib/PlateCard.tsx';
 import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
@@ -85,8 +86,9 @@ const barScale = BAR.w / 900;
 const capAt = (v: number): [number, number] => [BAR.x + (v / 100) * BAR.w, BAR.y + (60 + 32) * barScale];
 const barValue = (frame: number): number => lerp(60, 100, inOut(prog(frame, E('s97-cut'), E('s97-full') - E('s97-cut'))));
 const S97_TL = timeline([
-  cut(E('s97-cut'), pose('base', { armR: [92, 18, 0, 'fist'], armL: [40, 80, 0, 'fist'], torso: 10, head: [8, -0.005], lean: 6, wings: [null, 10] })),
-  move(E('s97-full') + 6, pose('base', { armR: [100, 40, 0, 'fist'], armL: [60, 70, 0, 'spread'], torso: 14, head: [14, -0.01], lean: 8, wings: [null, 14] }), 12),
+  // His left arm (screen right in the front view) pulls the cap, so the body stays in frame on the left of it.
+  cut(E('s97-cut'), pose('base', { armL: [92, 18, 0, 'fist'], armR: [40, 80, 0, 'grip'], torso: -10, head: [-8, -0.005], lean: -6, wings: [null, 10] })),
+  move(E('s97-full') + 6, pose('base', { armL: [100, 40, 0, 'fist'], armR: [60, 70, 0, 'grip'], torso: -14, head: [-14, -0.01], lean: -8, wings: [null, 14] }), 12),
 ]);
 const S97_PATH: CameraPath = withShake(handheld(hold(S97_CAM), { amp: 0.03, seed: 's97' }), { hits: [{ start: E('s97-full'), seed: 971, amp: { pct: SHAKE_PCT.small } }] });
 
@@ -95,7 +97,7 @@ export const S97 = ({ frame }: { frame: number }) => {
   const v = barValue(frame);
   const [cx, cy] = capAt(v);
   const hand = unproject(cam, cx + 30, cy, S97_DEPTH);
-  const at = solveAt(S97_TL, frame, 'handR', [hand[0], hand[1]], cam.position[2] - S97_DEPTH);
+  const at = solveAt(S97_TL, frame, 'handL', [hand[0], hand[1]], cam.position[2] - S97_DEPTH);
   const full = frame - E('s97-full');
   const [c60x] = capAt(60);
   return (
@@ -119,7 +121,7 @@ export const S97 = ({ frame }: { frame: number }) => {
 };
 
 // ------------------------------------------------------------------ S98 the Recycle Bin bursts: his pipes come back
-const S98_AT: Vec3 = [3.2, F, -16.5];
+const S98_AT: Vec3 = [5.8, F, -15.5];
 const S98_TL = timeline([
   cut(E('s98-cut'), pose('conduct_wide', { head: [12, -0.01], torso: 6 })),
   move(E('s98-pipe3'), pose('conduct_wide', { armR: [130, 20, 20, 'spread'], armL: [80, 40, 20, 'spread'], head: [16, -0.01], torso: 10, lean: 4 }), 14),
@@ -237,7 +239,8 @@ export const S99 = ({ frame }: { frame: number }) => {
         <AfterRoom />
         {still ? (
           // K2: second-form claws at the lens (stand-in: the second-form frame 04, ink and violet only).
-          <Asset id="G43" standIn={{ plate: '04-ikinci-form.jpg', crop: K2_CROP, keying: 'ink' }} width={6.4} position={[0, 1.0, -9.6]} renderOrder={1500} />
+          // Sized by height (the final G43 keeps its own aspect): claws fill the frame and come 25 % closer over 4 frames.
+          <Asset id="G43" standIn={{ plate: '04-ikinci-form.jpg', crop: K2_CROP, keying: 'ink' }} width={3.1} height={3.1} position={[0, 1.3, -9.6]} scale={1 + 0.08 * (frame - LUNGE)} renderOrder={1500} />
         ) : (
           <Vorathul tl={S99_TL} frame={frame} at={S99_AT} echo={lunge >= -4 && lunge < 10 ? { copies: 3, delay: 2, offset: [0, 0.05, -0.6] } : undefined} />
         )}
@@ -355,8 +358,9 @@ export const S102 = ({ frame }: { frame: number }) => {
   if (still || !tl) {
     // K1 key still across the frame: map the plate's sword line (px in the 1536 x 1024 plate) to the screen.
     const sx = (px: number, py: number): [number, number] => [(px / 1536) * W * 1.15 - W * 0.075, (py / 1024) * H * 1.15 - H * 0.075];
-    a = sx(250, 470);
-    b = sx(330, 30);
+    // The final G42 runs the blade straight down the middle, crossguard at the centre, tip at the bottom.
+    a = AVAILABLE.has('G42') ? [W / 2, H * 0.5] : sx(250, 470);
+    b = AVAILABLE.has('G42') ? [W / 2, H * 0.97] : sx(330, 30);
   } else {
     const pts = rigPoints(S102_TL, frame, { at: S102_AT });
     const g = project(cam, pts.swordGrip);
@@ -370,7 +374,7 @@ export const S102 = ({ frame }: { frame: number }) => {
       <Stage camera={S102_CAM}>
         <AfterRoom />
         {still ? (
-          <Asset id="G42" standIn={{ plate: '04-ikinci-form.jpg', crop: K1_CROP, keying: 'ink' }} width={18.2} position={[0, -1.4, -5.6]} renderOrder={1500} />
+          <Asset id="G42" standIn={{ plate: '04-ikinci-form.jpg', crop: K1_CROP, keying: 'ink' }} width={5.4} height={3.6} position={[0, -1.4, -5.6]} renderOrder={1500} />
         ) : (
           <Vorathul tl={S102_TL} frame={frame} at={S102_AT} echo={frame < THRUST + 16 ? { copies: 3, delay: 2, offset: [-0.5, 0, -0.3], colors: [VIOLET, VIOLET, INK] } : undefined} />
         )}

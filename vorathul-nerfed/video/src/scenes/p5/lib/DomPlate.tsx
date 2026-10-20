@@ -1,7 +1,7 @@
 // Plate-crop stand-ins for screen-space (DOM) shots: a crop of an approved frame in a box, optionally keyed to
 // its ink (dark pixels to solid ink, the rest transparent; violet kept). The final asset replaces it when AVAILABLE.
 import { Img, staticFile } from 'remotion';
-import { AVAILABLE } from '../../../cast/available.ts';
+import { assetSize, AVAILABLE } from '../../../cast/available.ts';
 
 const SRC_W = 1536;
 const SRC_H = 1024;
@@ -30,15 +30,20 @@ export interface DomPlateProps {
   y: number;
   width: number;
   ink?: boolean;
+  /** Width of the final image when it is live (it keeps its own aspect, centred on the stand-in box). */
+  finalWidth?: number;
   style?: React.CSSProperties;
 }
 
-export const DomPlate = ({ id, plate, crop, x, y, width, ink = false, style }: DomPlateProps) => {
+export const DomPlate = ({ id, plate, crop, x, y, width, ink = false, finalWidth, style }: DomPlateProps) => {
   const [cx, cy, cw, ch] = crop;
   const s = width / cw;
   const height = ch * s;
-  if (AVAILABLE.has(id)) {
-    return <Img src={staticFile(`assets/${id}.png`)} style={{ position: 'absolute', left: x, top: y, width, height, objectFit: 'contain', ...style }} />;
+  const size = assetSize(id);
+  if (AVAILABLE.has(id) && size) {
+    const fw = finalWidth ?? width;
+    const fh = (fw * size[1]) / size[0];
+    return <Img src={staticFile(`assets/${id}.png`)} style={{ position: 'absolute', left: x + (width - fw) / 2, top: y + (height - fh) / 2, width: fw, height: fh, ...style }} />;
   }
   return (
     <div style={{ position: 'absolute', left: x, top: y, width, height, overflow: 'hidden', filter: ink ? 'url(#p5-ink-key)' : undefined, ...style }}>

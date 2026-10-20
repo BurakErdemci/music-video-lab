@@ -395,7 +395,7 @@ export const S113 = ({ frame }: { frame: number }) => {
         // The white-out, held ivory into the beat-816 grade: K4 is the black silhouette on it (Z6 fix, one swing).
         <AbsoluteFill style={{ background: IVORY }}>
           <SpeedLines mode="radial" frame={blast} duration={12} seed={1137} focus={[W / 2, H * 0.42]} inner={380} count={64} thickness={22} />
-          <DomPlate id="G45" plate="06-dovus-faz3.jpg" crop={K4_CROP} x={W / 2 - 340} y={H * 0.08} width={680} ink />
+          <DomPlate id="G45" plate="06-dovus-faz3.jpg" crop={K4_CROP} x={W / 2 - 340} y={H * 0.08} width={680} finalWidth={1240} ink />
         </AbsoluteFill>
       ) : null}
     </Shot>
