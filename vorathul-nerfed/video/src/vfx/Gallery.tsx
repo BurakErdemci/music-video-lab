@@ -20,7 +20,7 @@ import { StickerCutout } from './StickerCutout.tsx';
 import { GOLD, INK, IVORY, SKY, VIOLET, VIOLET_LIGHT, type Pt } from './style.tsx';
 import { fastForward, playBetween, TimeRemap } from './TimeRemap.tsx';
 
-export const GALLERY_FRAMES = 1080;
+export const GALLERY_FRAMES = 1140;
 /** The meteor segment's splashes and debris hold until here. */
 const METEOR_END = 360;
 
@@ -39,7 +39,7 @@ const SEGMENTS: { from: number; label: string }[] = [
   { from: 95, label: 'SpeedLines radial' },
   { from: 140, label: 'SpeedLines parallel' },
   { from: 185, label: 'ImpactBurst + shake' },
-  { from: 235, label: 'Shards' },
+  { from: 250, label: 'Shards' },
   { from: 285, label: 'Meteor rain' },
   { from: 360, label: 'EchoTrail echo' },
   { from: 420, label: 'EchoTrail smear' },
@@ -47,12 +47,16 @@ const SEGMENTS: { from: number; label: string }[] = [
   { from: 530, label: 'ScribbleBoil' },
   { from: 580, label: 'DryBrushStroke / dryBrushOutline' },
   { from: 620, label: 'StickerCutout (boil, peel)' },
-  { from: 690, label: 'PaintSpread overlay' },
+  { from: 690, label: 'PaintSpread pour' },
   { from: 770, label: 'PaintSpread cover' },
   { from: 810, label: 'CanvasBulge' },
   { from: 870, label: 'CrackGrow inside -> wall' },
   { from: 960, label: 'TimeRemap backward / 4x' },
-  { from: 1020, label: 'gradeCues V / O / POSTER / GOLD' },
+  { from: 1020, label: 'grade V' },
+  { from: 1040, label: 'grade O-a (halftone)' },
+  { from: 1060, label: 'grade O-b (halftone + selection edge)' },
+  { from: 1080, label: 'grade O-c (MEMORY logic, office colours)' },
+  { from: 1100, label: 'grade POSTER / GOLD' },
 ];
 
 // Grades built by the cue helper; every anchor is a frame here because the gallery has no song.
@@ -63,10 +67,13 @@ const DUOTONE = gradeCues(
     { at: { frame: 482 }, grade: 'V', hold: 8 },
     { at: { frame: 512 }, grade: 'GOLD' },
     { at: { frame: 522 }, grade: 'MEMORY', hold: 6 },
+    // O-a -> O-b keeps the same two colours (only the edge is added), so it is not a swing.
     { at: { frame: 1024 }, grade: 'V' },
     { at: { frame: 1040 }, grade: 'O' },
-    { at: { frame: 1056 }, grade: 'POSTER' },
-    { at: { frame: 1068 }, grade: 'GOLD' },
+    { at: { frame: 1060 }, grade: 'O_B' },
+    { at: { frame: 1080 }, grade: 'O_C' },
+    { at: { frame: 1100 }, grade: 'POSTER' },
+    { at: { frame: 1116 }, grade: 'GOLD' },
   ],
   'gallery grades',
 );
@@ -162,7 +169,7 @@ const SHAKES = [
   { start: 52, strength: 22, seed: 1 },
   { start: 190, strength: 34, seed: 2 },
   { start: 220, strength: 20, seed: 3 },
-  { start: 238, strength: 18, seed: 4 },
+  { start: 252, strength: 18, seed: 4 },
   ...METEORS.map((m, i) => ({ start: impactsOf(m), strength: m.size * 0.5, seed: 10 + i })),
 ];
 
@@ -226,10 +233,11 @@ const GalleryScene = () => {
       <InkSplash frame={frame - 192} duration={40} seed={52} x={960} y={560} size={200} fade={6} />
       {/* 30 frames after the first burst: its 3 swings fill that second. */}
       <ImpactBurst frame={frame - 220} duration={12} seed={53} x={1380} y={440} size={180} flash={1} />
-      {/* 6. Debris: a ground burst, then an all-round burst */}
-      <ImpactBurst frame={frame - 238} duration={8} seed={61} x={960} y={880} size={150} flash={0} />
-      <Shards frame={frame - 238} duration={46} seed={61} origin={[960, 880]} spread={Math.PI * 0.9} speed={40} size={64} count={34} />
-      <Shards frame={frame - 256} duration={30} seed={62} origin={[1300, 520]} direction={0} spread={Math.PI * 2} speed={30} size={52} count={26} />
+      {/* 6. Debris: a ground burst, then an all-round burst. Kept clear of the f220 burst's second:
+          flashcheck counted the burst star, debris and shake here as 3 more swings (measured). */}
+      <ImpactBurst frame={frame - 252} duration={8} seed={61} x={960} y={880} size={150} flash={0} />
+      <Shards frame={frame - 252} duration={33} seed={61} origin={[960, 880]} spread={Math.PI * 0.9} speed={40} size={64} count={34} />
+      <Shards frame={frame - 266} duration={19} seed={62} origin={[1300, 520]} direction={0} spread={Math.PI * 2} speed={30} size={52} count={26} />
       {/* 7. Meteor rain: each impact = splash + small burst + debris */}
       {METEORS.map((m, i) => {
         const hit = impactsOf(m);
@@ -281,10 +289,10 @@ const GalleryScene = () => {
       {/* 13-14. Paint pours out of the painting over the office, then floods the frame */}
       {(frame >= 690 && frame < 810) || (frame >= 870 && frame < 960) ? <PaintingCard /> : null}
       {inRange(frame, 690, 770, () => (
-        <PaintSpread frame={frame - 692} seed={5} drip={2.2} rise={0.3} reach={560} bands={[INK, GOLD, INK, GOLD]} bandWidth={90} sources={[{ x: 960, y: 640 }, { x: 700, y: 600, delay: 8 }, { x: 1250, y: 660, delay: 14 }, { x: 960, y: 900, delay: 22 }]} />
+        <PaintSpread frame={frame - 692} seed={5} edge={{ x0: CARD[0] + 50, x1: CARD[0] + CARD[2] - 50, y: CARD[1] + CARD[3] + 14 }} floor={950} streams={7} width={72} speed={7} />
       ))}
       {inRange(frame, 770, 810, () => (
-        <PaintSpread frame={frame - 772} seed={6} mode="cover" bands={[INK, GOLD, INK]} bandWidth={150} growth={(t) => 60 + t * 62} sources={[{ x: 0, y: 0 }, { x: 1920, y: 0, delay: 3 }, { x: 0, y: 1080, delay: 5 }, { x: 1920, y: 1080, delay: 2 }, { x: 960, y: -60, delay: 6 }]} />
+        <PaintSpread frame={frame - 772} seed={6} mode="cover" duration={34} />
       ))}
       {/* 16. Crack: one step per cue, inside the painting, then out across the wall */}
       {inRange(frame, 870, 960, () => (
