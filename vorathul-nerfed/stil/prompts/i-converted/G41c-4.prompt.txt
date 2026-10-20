@@ -1,0 +1,15 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./G41c-4.png
+
+The attached image is the APPROVED STYLE AND CHARACTER REFERENCE. Match its art style EXACTLY: bold graphic comic panel in a noir style, huge flat areas of solid black, very simplified shapes, thick confident brush-ink edges with dry-brush breaks, minimal detail, flat colour with no gradients, slight screen-print paper texture. World palette: bright ivory #F4ECD8, warm gold #E2B33C, one flat pale sky blue #8EC5E8. Vorathul is solid flat black #0A0A0A with violet #9B5CE0 only on eye slit, crown gems, chest-studs and sword runes.
+
+3 images are attached. The FIRST attached image is the approved STYLE frame (style and palette). The SECOND attached image is the throne room plate where these props are used: match its gold, ink and line weight. The THIRD attached image is the SHAPE reference: the grey office chair to convert; keep its exact pose, orientation and silhouette.
+
+Subject: the office chair of the THIRD attached image converted into Vorathul's world: the SAME chair in EXACTLY the same pose, orientation and silhouette (upside down, castors in the air), now drawn in the comic style of the FIRST image as a small black-and-gold gothic throne: a spiky black backrest with gold trim and a small violet #9B5CE0 gem, a worn ivory cushion, a black iron base with gold claw-like castors.
+Composition: one chair, centred, the same framing as the THIRD image, filling about 85 percent of the image, square 1024x1024.
+
+The subject is isolated on a plain flat #808080 mid-grey background with nothing else in the image; parts are separated by wide empty gaps and do not overlap. The grey will be removed and is the only colour allowed outside the palette.
+
+- ABSOLUTELY NO text, letters, numbers, logos, signatures, watermarks or speech bubbles.
+- NOT glossy digital painting, NOT cinematic lighting, NOT photorealistic, NOT 3D. No other colours than the palette above.
+
+After copying, print the output path and pixel size.
