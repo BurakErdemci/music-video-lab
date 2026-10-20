@@ -9,7 +9,8 @@ import { Stage } from '../../stage/Stage.tsx';
 import { Cursor, Monitor, PatchNotesCard, SkipButton, TypingText, VolumeSlider, C } from '../../ui/kit.ts';
 import { easeInOut as uiEaseInOut, lerp as uiLerp, prog as uiProg } from '../../ui/theme.tsx';
 import { INK, IVORY, VIOLET, VIOLET_LIGHT, seeded } from '../../vfx/effects.ts';
-import { Cathedral, PLATE } from './Backdrop.tsx';
+import { PLATE } from './Backdrop.tsx';
+import { Throne } from './Throne.tsx';
 import { at } from './events.ts';
 import { Balloon, DustPuff } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
@@ -129,7 +130,7 @@ export const S64 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM64}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE64} />
       </Stage>
       {frame < PRESS ? <Balloon x={helm.x + 120} y={170} w={700} text={SPEECH.slice(0, chars)} tx={helm.x + 40} ty={helm.y - 30 - 170} size={32} /> : null}
@@ -213,7 +214,7 @@ export const S65 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM65}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE65} />
       </Stage>
       <Notes frame={frame} mouths={mouths} corkAt={corkAt} />
@@ -253,7 +254,7 @@ export const S66 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM66}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE66} />
       </Stage>
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
@@ -302,7 +303,7 @@ export const S67 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame} cues={G.s67}>
       <Stage camera={CAM67}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE67} />
       </Stage>
       {leak > 0 ? (

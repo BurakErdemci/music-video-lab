@@ -10,7 +10,7 @@ import type { Vec3 } from '../../stage/Card.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { Cursor, Marquee, MissingTexture, Padlock, Toggle, VideoTimeline, C, type Rect } from '../../ui/kit.ts';
 import { EchoTrail, ScribbleBoil, GOLD, INK, IVORY, VIOLET, VIOLET_LIGHT, seeded } from '../../vfx/effects.ts';
-import { Cathedral, Sky, Wall } from './Backdrop.tsx';
+import { Throne } from './Throne.tsx';
 import { at } from './events.ts';
 import { Cloud, LightRays, MAGENTA, beamPath } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
@@ -124,7 +124,7 @@ export const S54 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame} cues={G.s54}>
       <Stage camera={CAM54}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <Bolts frame={frame} pose={pose} st0={st0} place={place} />
@@ -171,7 +171,7 @@ export const S55 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM55}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE55} />
       </Stage>
       {frame >= CHECK && frame < LOCK55 ? (
@@ -273,7 +273,7 @@ export const S56 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame} cues={G.s56}>
       <Stage camera={CAM56}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE56} />
       </Stage>
       <Scorch frame={frame} pose={pose} />
@@ -308,8 +308,7 @@ export const S57 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM57}>
-        <Sky rect={[-220, -40, 220, 240]} z={-68} />
-        <Wall />
+        <Throne frame={frame} />
       </Stage>
       {storm ? (
         <>
@@ -385,7 +384,7 @@ export const S58 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM58}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <LightRays x={rays.x} y={rays.y} frame={frame} opacity={0.55} n={18} />
@@ -478,7 +477,7 @@ export const S60 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM60}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <LightRays x={rays.x} y={rays.y} frame={C60} opacity={0.4} n={18} />
@@ -533,7 +532,7 @@ export const S61 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM61}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE61} />
       </Stage>
       {drop > 0 && drop < 1 ? (

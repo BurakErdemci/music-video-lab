@@ -6,7 +6,7 @@ import type { Vec3 } from '../../stage/Card.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { DamageNumber, Nameplate, RubberStamp, TicketPill, C } from '../../ui/kit.ts';
 import { ImpactBurst, InkSplash, GOLD, INK } from '../../vfx/effects.ts';
-import { Cathedral, Floor, Sky, Wall } from './Backdrop.tsx';
+import { Throne } from './Throne.tsx';
 import { kidSmack } from './Chorus1.tsx';
 import { at } from './events.ts';
 import { Cloud, ComicHpBar, Dim, DustPuff, Kid, Knight } from './Figures.tsx';
@@ -39,7 +39,7 @@ export const S68 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM68}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={{ pos: [4.2, 0, -13], scale: SCALE_C }} />
       </Stage>
       {(() => {
@@ -102,7 +102,7 @@ export const S69 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM69}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE69} />
       </Stage>
       {sweeping ? (
@@ -161,7 +161,7 @@ export const S70 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame} cues={G.s70}>
       <Stage camera={CAM70}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       {frame >= at('s70-broom') ? <Knight x={knight.x} y={knight.y} h={1.4 * knight.s} pose={{ item: 'broom', itemRot: broomRot, armR: frame >= at('s70-ready') ? 70 : 20, armL: 40, lean: frame >= at('s70-sweep') ? 8 : 0, hop: frame < at('s70-ready') ? hopCurve(frame, at('s70-broom') + ((frame - at('s70-broom')) - ((frame - at('s70-broom')) % 6)), 6) * 0.15 : 0 }} seed={701} /> : null}
@@ -247,9 +247,7 @@ export const S71 = ({ frame }: { frame: number }) => {
     <ShotFrame frame={frame}>
       <Stage camera={CAM71}>
         <AssetCard id="C35" standIn={{ color: WEAVE }} width={600} height={500} position={[0, 100, -90.5]} renderOrder={-101} />
-        <Sky rect={SKY71} z={-90} />
-        <Wall />
-        <Floor />
+        <Throne frame={frame} sky={SKY71} skyZ={-90} />
         <Vorathul st={st} place={{ pos: [0, 0, -15], scale: SCALE_C }} />
       </Stage>
       <Weave pose={pose} />
@@ -287,7 +285,7 @@ export const S72 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM72}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       {frame >= KID72 ? (
@@ -324,7 +322,7 @@ export const S73 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM73}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={PLACE73} />
       </Stage>
       {[0, 1, 2].map((j) => {

@@ -6,7 +6,7 @@ import type { Vec3 } from '../../stage/Card.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { DamageNumber, Nameplate, RubberStamp, StickyNote, C } from '../../ui/kit.ts';
 import { CanvasBulge, DuotoneFlash, ImpactBurst, InkSplash, Shards, SpeedLines, StickerCutout, GOLD, INK, IVORY, VIOLET, type DuotoneCue } from '../../vfx/effects.ts';
-import { Cathedral } from './Backdrop.tsx';
+import { Throne } from './Throne.tsx';
 import { at } from './events.ts';
 import { BootSole, ComicHpBar, DustPuff, Flakes, Kid, KoStars, LightRays, Tablet, type KidPose } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
@@ -52,7 +52,7 @@ export const S46 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM46}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <Flakes frame={frame} start={at('s46-cut') - 40} seed={46} fall={1.4} />
@@ -117,7 +117,7 @@ export const S47 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM47}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <LightRays x={960} y={project(pose, [0, 30, -14]).y} frame={frame} opacity={0.5 * (1 - prog(frame, T1 - 6, 6))} />
@@ -194,7 +194,7 @@ export const S48 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame} cues={G.s48}>
       <Stage camera={CAM48}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       {!asDust ? <RubberStamp frame={frame} at={at('s48-cut')} x={chest.x - w / 2} y={chest.y - (w * 0.4) / 2} width={w} rotate={-12} seed={48} /> : null}
@@ -299,7 +299,7 @@ export const S50 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM50}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={{ pos: [-5, 0, -19], scale: SCALE_C }} />
       </Stage>
       <LightRays x={kx} y={ky - kh * 0.62} frame={frame} opacity={0.75} />
@@ -335,7 +335,7 @@ export const S51 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM51}>
-        <Cathedral wallPitch={-PITCH51 * 0.5} />
+        <Throne frame={frame} wallPitch={-PITCH51 * 0.5} />
         <Vorathul st={st} place={place} />
       </Stage>
       <Kid asset="G32-4" x={kid.x} y={kid.y} h={1.4 * kid.s} pose={{ armL: 40, armR: 60, lean: side * 12 - 4, step: side, head: 10, boot: 30 }} />
@@ -374,7 +374,7 @@ export const S52 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM52}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <HelmNote frame={frame} st={st} place={place} pose={pose} />
@@ -411,7 +411,7 @@ export const S53 = ({ frame }: { frame: number }) => {
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM53}>
-        <Cathedral />
+        <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
       <SpeedLines mode="radial" frame={t} duration={14} seed={531} focus={[960, 560]} inner={420} />
