@@ -87,7 +87,8 @@ export const ZoomIntro = ({ frame, lOverride }: { frame: number; lOverride?: num
   const fTitleFade = ev('intro.title.fade').frame;
   const titleOp = frame < fTitleFade ? 1 : fadeOut(frame, fTitleFade, ev('intro.title.fade').enter.frames);
   const sinceStamp = frame - fTitle;
-  const titleScale = sinceStamp < 3 ? (STAMP_SQUASH[sinceStamp] as number) : 1;
+  // sinceStamp is fractional at 60 fps: index by its whole part (integer frames are unchanged)
+  const titleScale = sinceStamp >= 0 && sinceStamp < 3 ? (STAMP_SQUASH[Math.floor(sinceStamp)] as number) : 1;
   const titleRot = range(seeded('stamp:title-intro'), -2, 2);
   const plate = plateOffset('stamp:title-intro');
 
