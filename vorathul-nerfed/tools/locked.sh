@@ -21,4 +21,6 @@ while ! mkdir "$LOCK" 2>/dev/null; do
 done
 echo "$mypid" > "$LOCK/pid"
 trap 'rm -rf "$LOCK"' EXIT
+# Node tools that take the lock themselves (tools/renderlock.mjs) see this and do not wait on us.
+export RENDER_LOCK_HELD=1
 "$@"

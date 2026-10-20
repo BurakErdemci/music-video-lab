@@ -12,6 +12,7 @@ import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
+import { withRenderLock } from './renderlock.mjs';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const VIDEO = path.join(ROOT, 'video');
@@ -72,6 +73,9 @@ const main = async () => {
   const t0 = Date.now();
   const serveUrl = await bundle({ entryPoint: path.join(VIDEO, 'src/index.ts'), publicDir: path.join(VIDEO, 'public') });
   const chromiumOptions = gl ? { gl } : {};
+  // Lanes called this tool outside tools/locked.sh and their Chromes overlapped other renders, so the
+  // lock is taken here, around the browser's whole life, not left to the caller.
+  const files = await withRenderLock(async () => {
   const browser = await openBrowser('chrome', { chromeMode: 'chrome-for-testing', chromiumOptions });
   const composition = await selectComposition({ serveUrl, id: comp, puppeteerInstance: browser, chromiumOptions });
   const files = [];
@@ -83,6 +87,8 @@ const main = async () => {
     console.log(`  frame ${f} -> ${path.relative(ROOT, output)} (${Date.now() - s} ms)`);
   }
   await browser.close({ silent: true });
+  return files;
+  });
   const sheet = path.join(outDir, 'contact.jpg');
   contactSheet(files, frames.map((f) => `${comp} f${f}`), sheet);
   console.log(`bundle+render ${Date.now() - t0} ms, ${frames.length} stills, contact sheet: ${path.relative(ROOT, sheet)}`);
