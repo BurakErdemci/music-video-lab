@@ -23,7 +23,7 @@ The v3 take's chorus "does not flow, is not catchy, I stumble when singing it"; 
 The lyrics differed in two places, both reverted to v1: the third line changed every chorus ("One conflict" ->
 "Forty conflicts, forty files, the whole repo's on fire", too many syllables), and the tag asked for gang vocals,
 which can push Suno to shout instead of sing a melody. Now both choruses are identical and sung; the gang shouts
-stay only in the (parentheses). The final chorus keeps its own words, as in v1.
+stay only in the (parentheses). The final chorus answers it with the v1 line "Two girls, one line, and we figured it out".
 
 ## Settings
 
@@ -177,7 +177,7 @@ Two branches of the same old tree, you know
 Accept both changes! (YES!)
 Accept both changes! (YES!)
 Blue and orange together, it's a gradient now
-Nine hundred conflicts and we figured it out
+Two girls, one line, and we figured it out
 Accept both changes! (YES!)
 Commit and push it! (PUSH IT!)
 Equals, equals, equals, now we're whole
