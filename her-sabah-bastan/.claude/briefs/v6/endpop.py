@@ -3,7 +3,8 @@ import importlib.util, json, os, sys
 import numpy as np
 from PIL import Image
 
-ROOT = 'C:/Users/burcu/Documents/klip-her-sabah'
+from pathlib import Path
+ROOT = Path(__file__).resolve().parents[3].as_posix()
 spec = importlib.util.spec_from_file_location('mt', ROOT + '/video/scripts/make-tweens.py')
 mt = importlib.util.module_from_spec(spec); spec.loader.exec_module(mt)
 pairs = json.load(open(mt.PAIRS, encoding='utf-8'))

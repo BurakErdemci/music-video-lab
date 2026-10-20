@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # usage: gen.sh <run-name> <prompt-file> <ref images...>; log in stil/canli/logs/<run-name>.log
 set -u
-root=/c/Users/burcu/Documents/klip-her-sabah
+root="$(cd "$(dirname "$0")/../.." && pwd)"
 name=$1; prompt=$2; shift 2
 args=()
 for r in "$@"; do args+=(-i "$r"); done

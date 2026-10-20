@@ -5,8 +5,9 @@
 Writes data/grid-verification.json."""
 import json, sys, numpy as np, librosa
 from scipy.signal import find_peaks
+from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8")
-R = "C:\\Users\\burcu\\Documents\\klip-her-sabah\\"
+R = str(Path(__file__).resolve().parents[2]) + "\\"
 T = json.load(open(R + "data\\timing.json", encoding="utf-8"))
 g = np.array(T["beats"]); db = np.array(T["downbeats"]); FPS = T["fps"]; F = 1000 / FPS
 y, sr = librosa.load(R + "sarki\\her-sabah-bastan.wav", sr=22050, mono=True); dur = len(y) / sr

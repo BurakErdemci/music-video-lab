@@ -1,7 +1,8 @@
 """Renders data/timing-summary.md from data/timing.json and data/grid-verification.json (stdlib only)."""
 import json, sys
+from pathlib import Path
 sys.stdout.reconfigure(encoding="utf-8")
-R = "C:\\Users\\burcu\\Documents\\klip-her-sabah\\data\\"
+R = str(Path(__file__).resolve().parents[2]) + "\\data\\"
 T = json.load(open(R + "timing.json", encoding="utf-8")); V = json.load(open(R + "grid-verification.json", encoding="utf-8"))
 ts = lambda t: "-" if t is None else "%d:%05.2f" % (int(t // 60), t % 60)
 tp = T["tempo"]; S = T["sections"]; Ls = T["lines"]

@@ -2,8 +2,10 @@
 kick-band (<120 Hz) onset + bass/full chroma novelty + energy step. Bars may be 4 beats (free) or 2/3/5/6/8 (penalised),
 because the measured phase of kick/chord changes slips by a beat at several places. Writes data/_downbeats.json."""
 import json, sys, numpy as np, librosa
-SRC = r"C:\Users\burcu\Documents\klip-her-sabah\sarki\her-sabah-bastan.wav"
-D = r"C:\Users\burcu\Documents\klip-her-sabah\data\\"
+from pathlib import Path
+R = str(Path(__file__).resolve().parents[2]) + "\\"
+SRC = R + "sarki\\her-sabah-bastan.wav"
+D = R + "data\\"
 LAM = float(sys.argv[1]) if len(sys.argv) > 1 else 4.0
 g = np.array(json.load(open(D + "_grid.json"))["beats"]); n = len(g)
 y, sr = librosa.load(SRC, sr=22050, mono=True); hop = 128

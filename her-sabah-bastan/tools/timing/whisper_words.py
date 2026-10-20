@@ -4,7 +4,8 @@ import json, sys, time, subprocess
 import numpy as np
 from faster_whisper import WhisperModel
 import os
-SRC = os.environ.get("WHISPER_SRC", r"C:\Users\burcu\Documents\klip-her-sabah\sarki\her-sabah-bastan.wav")
+from pathlib import Path
+SRC = os.environ.get("WHISPER_SRC", str(Path(__file__).resolve().parents[2] / "sarki" / "her-sabah-bastan.wav"))
 out = sys.argv[1]; model = sys.argv[2] if len(sys.argv) > 2 else "large-v3"
 clip = sys.argv[3] if len(sys.argv) > 3 else "0"
 prompt = sys.argv[4] if len(sys.argv) > 4 else None

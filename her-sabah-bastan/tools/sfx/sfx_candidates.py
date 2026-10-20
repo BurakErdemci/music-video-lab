@@ -6,11 +6,12 @@ Needs the Kenney CC0 packs unzipped under KENNEY_DIR (env var), one dir per pack
 (URLs are in sfx/candidates/SOURCES.md). Never modifies the song; only reads it.
 """
 import os, re, json, subprocess, bisect, tempfile, shutil
+from pathlib import Path
 import numpy as np, soundfile as sf
 from scipy.signal import butter, sosfilt
 
 SR = 48000
-ROOT = "C:/Users/burcu/Documents/klip-her-sabah"
+ROOT = (Path(__file__).resolve().parents[2]).as_posix()
 SONG = f"{ROOT}/sarki/her-sabah-bastan.wav"
 OUT = f"{ROOT}/sfx/candidates"
 KEN = os.environ["KENNEY_DIR"]

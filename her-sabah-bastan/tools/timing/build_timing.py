@@ -5,10 +5,11 @@ usage: python build_timing.py MAIN_WHISPER.json CLIP_WHISPER.json VOCALS_WHISPER
  - lines: start/end only from matched whisper words; < 50 % words matched -> anchored=false, start/end null."""
 import sys, json, math, numpy as np, librosa
 from scipy.signal import find_peaks
-sys.path.insert(0, r"C:\Users\burcu\Documents\klip-her-sabah\tools\timing")
+from pathlib import Path
+R = str(Path(__file__).resolve().parents[2]) + "\\"
+sys.path.insert(0, R + "tools\\timing")
 from lyrics_align import parse, align, norm
 sys.stdout.reconfigure(encoding="utf-8")
-R = "C:\\Users\\burcu\\Documents\\klip-her-sabah\\"
 SRC = R + "sarki\\her-sabah-bastan.wav"; D = R + "data\\"
 FPS = 30; fr = lambda t: int(round(t * FPS))
 GR = json.load(open(D + "_grid.json")); g = np.array(GR["beats"])

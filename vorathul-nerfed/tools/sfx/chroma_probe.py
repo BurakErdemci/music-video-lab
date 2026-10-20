@@ -1,7 +1,8 @@
 """Chroma of the song around each tonal SFX event (ear-proxy for the ambiguous key)."""
 import numpy as np, soundfile as sf, sys
+from pathlib import Path
 from scipy.signal import stft
-SONG = "C:/Users/burcu/Documents/klip-her-sabah/sarki/her-sabah-bastan.wav"
+SONG = str(Path(__file__).resolve().parents[3] / "her-sabah-bastan" / "sarki" / "her-sabah-bastan.wav")
 NAMES = ["C","C#","D","D#","E","F","F#","G","G#","A","A#","B"]
 x, sr = sf.read(SONG, always_2d=True); m = x.mean(1)
 events = {"B1 pop 15.6":15.6048,"A intro 3":4.3,"C verse1 21.2":21.2335,"G lamps 90.5":90.5,

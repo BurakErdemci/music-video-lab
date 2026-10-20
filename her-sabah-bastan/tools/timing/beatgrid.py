@@ -4,8 +4,10 @@ fitted by maximising the (smoothed) onset-envelope sum at the beats, with a curv
 import json, numpy as np, librosa
 from scipy.optimize import minimize
 from scipy.ndimage import gaussian_filter1d
-SRC = r"C:\Users\burcu\Documents\klip-her-sabah\sarki\her-sabah-bastan.wav"
-OUT = r"C:\Users\burcu\Documents\klip-her-sabah\data\_grid.json"
+from pathlib import Path
+R = str(Path(__file__).resolve().parents[2]) + "\\"
+SRC = R + "sarki\\her-sabah-bastan.wav"
+OUT = R + "data\\_grid.json"
 KNOT = 20.0
 y, sr = librosa.load(SRC, sr=22050, mono=True); hop = 128
 dur = len(y) / sr

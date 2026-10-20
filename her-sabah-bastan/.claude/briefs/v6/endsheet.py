@@ -1,6 +1,7 @@
 import importlib.util, json, os
 from PIL import Image
-ROOT='C:/Users/burcu/Documents/klip-her-sabah'
+from pathlib import Path
+ROOT=Path(__file__).resolve().parents[3].as_posix()
 spec=importlib.util.spec_from_file_location('mt',ROOT+'/video/scripts/make-tweens.py');mt=importlib.util.module_from_spec(spec);spec.loader.exec_module(mt)
 pairs={p['key']:p for p in json.load(open(mt.PAIRS,encoding='utf-8'))}
 keys=['A15.1_A22.3_-18','H26.1m_H26.2m_-57','A18.1_A18.2_10','H28.2_H28.3_159']
