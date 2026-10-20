@@ -617,3 +617,20 @@ rigState(frame) = {
    rims visible in frame 04. Accept that, or generate halves and hide the swap under the flash?
 6. **Open — a new tool dependency.** Cutting and measuring need Python + Pillow/numpy, as in the
    previous clip, but this repo has none yet. Burak must approve the dependency.
+
+## 9. Architect decisions (20 Oct 2026)
+
+- **Pose cadence = true twos, 15 fps** (one new rig pose every 2 frames at 30 fps), not 12 fps:
+  an even cadence cannot judder against the 30 fps camera. Keep it behind the one constant; the
+  6.1.2 test render confirms it.
+- **Helm halves are cut from the closed helm** (no pop at the split). The inner-shell rims of frame
+  04 are restored as a code-drawn ink edge along each cut line (same dry-brush stroke as the VFX
+  library), so nothing is generated twice.
+- **Python tooling uses temporary environments** (`uv run --with pillow --with numpy python ...`),
+  exactly like `tools/timing/`. Nothing is added to the repo's dependencies, so no new dependency
+  is introduced.
+- **Checkerboard wing shape:** asked to the director (open until answered). Recommendation: the
+  outline of the deleted pipe fan itself, because it reads as "the missing texture of exactly what
+  was deleted" and it is derived from the rig, not drawn.
+- **Stage changes for later:** `Card` renders `DoubleSide` (mirrored subtrees) and gets an
+  `idColor` for the measurement tests — part of the rig code lane.
