@@ -1,4 +1,5 @@
 import raw from './vorathul.rig.json' with { type: 'json' };
+import rawDrawn from './vorathul.drawn.rig.json' with { type: 'json' };
 import type { PartDef, RigJson, RigModel, RigNode, Side } from './types.ts';
 
 /** Expands the JSON part list into the node tree (sided parts become _R/_L, mirrored families get a flip root). */
@@ -50,6 +51,8 @@ export const loadRig = (json: RigJson): RigModel => {
 
 export const RIG_JSON = raw as unknown as RigJson;
 export const RIG: RigModel = loadRig(RIG_JSON);
+/** The same rig with the drawn art cut from the rig sheets (tools/rig/cut_drawn.py): only texture paths, sizes, pivots and sockets differ. */
+export const RIG_DRAWN: RigModel = loadRig(rawDrawn as unknown as RigJson);
 
 export const texOf = (m: RigModel, slot: string) => m.json.textures[slot]!;
 /** Card centre offset from the joint (H, y up): where the card sits relative to its pivot. */

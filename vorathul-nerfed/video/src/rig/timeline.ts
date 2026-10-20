@@ -79,7 +79,7 @@ interface Prep {
   starts: number[];
   arrivals: { at: number; amp: number }[];
 }
-const cache = new WeakMap<Timeline, Prep>();
+const cache = new WeakMap<RigModel, WeakMap<Timeline, Prep>>();
 
 const plantToGround = (m: RigModel, plant: [number, number]): GroundSword => {
   const b = m.json.bladeBelow;
@@ -110,7 +110,9 @@ const staticState = (m: RigModel, def: PoseDef): RigState => {
 const emptyWing = (m: RigModel): WingState => ({ s: 1, deleted: 0, pipes: m.json.pipes.items.map((it) => ({ body: true, mouth: true, checker: false, glow: 1, theta: it.open, lengthScale: it.lengthScale, fly: 0, cork: { show: false, travel: 0, scale: 1 } })) });
 
 export const prepare = (m: RigModel, tl: Timeline): Prep => {
-  const hit = cache.get(tl);
+  let perModel = cache.get(m);
+  if (!perModel) cache.set(m, (perModel = new WeakMap()));
+  const hit = perModel.get(tl);
   if (hit) return hit;
   const keys = [...tl.keys].sort((a, b) => a.at - b.at);
   const defs: PoseDef[] = [];
@@ -140,7 +142,7 @@ export const prepare = (m: RigModel, tl: Timeline): Prep => {
     return { at: k.at, amp };
   });
   const p = { keys, defs, chs, ground, starts, arrivals };
-  cache.set(tl, p);
+  perModel.set(tl, p);
   return p;
 };
 
