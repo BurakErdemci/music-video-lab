@@ -2,7 +2,7 @@
 // deleted, the padlocked helm, the drooping lasers, the cursed storm toggled off, the seven-minute cutscene and
 // its 16x skip, "what went wrong".
 import type { ReactNode } from 'react';
-import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { AbsoluteFill } from 'remotion';
 import { frameAt, handheld, hold, OFF_WIDE, withShake, SHAKE_PCT, type CameraPath, type CameraPose } from '../../camera/api.ts';
 import { VORATHUL_RIG } from '../../rig/model.ts';
 import type { RigState, Side } from '../../rig/types.ts';
@@ -16,7 +16,8 @@ import { Cloud, LightRays, MAGENTA, beamPath } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
 import { G } from './grades.ts';
 import { easeIn, easeInOut, easeOut, easeOutBack, keyed, lerp, project, prog, twos } from './lib.ts';
-import { HANDS, MONITORS, OfficeStage, plateRect, plateAt } from './Office.tsx';
+import { HANDS, MONITORS, OfficeWall, plateRect, plateAt } from './Office.tsx';
+import { FlatPainting } from './PaintingView.tsx';
 import { DELETED_PIPES, KEPT_PIPES, FULL_H, SCALE_A, SCALE_C, helmAt, nerfTimeline, nodeAt, pipeMouthAt, slitAt, stateAt, Vorathul, type Place } from './nerf.tsx';
 import type { PipeEvent } from '../../rig/pipes.ts';
 
@@ -387,7 +388,7 @@ export const S58 = ({ frame }: { frame: number }) => {
         <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
-      <LightRays x={rays.x} y={rays.y} frame={frame} opacity={0.55} n={18} />
+      <LightRays x={rays.x} y={rays.y} frame={frame} opacity={0.3} />
       <Letterbox open={lb} />
       <Caption text={'THE LAMENT OF VORATHUL · I'} show={title} y={340} size={92} />
       <Caption text={'ACT I · THE RISING'} show={frame >= at('s58-raise') && frame < at('s58-conduct') ? 1 : 0} y={150} size={40} />
@@ -413,7 +414,7 @@ const CAM59 = handheld(hold(OFF_WIDE), { amp: 0.03, seed: 59 });
 /** The cutscene as a small office video player: letterboxed frame of the painting with a player bar. */
 const MiniCutscene = ({ frame, x, y, w, h, holdAt }: { frame: number; x: number; y: number; w: number; h: number; holdAt?: number }) => (
   <div style={{ position: 'absolute', left: x, top: y, width: w, height: h, overflow: 'hidden', background: C.black }}>
-    <Img src={staticFile('plates/05-nerf-hali.jpg')} style={{ position: 'absolute', left: 0, top: h * 0.12, width: w, height: h * 0.62, objectFit: 'cover' }} />
+    <FlatPainting style={{ position: 'absolute', left: 0, top: h * 0.12, width: w, height: h * 0.62 }} />
     <div style={{ position: 'absolute', left: w * 0.03, top: h * 0.77 }}>
       <VideoTimeline frame={frame} width={w * 0.94} progressFrom={0.05} progressTo={0.07} startFrame={C59 - 30} durationFrames={80} holdAt={holdAt} holdFrames={HOLD} />
     </div>
@@ -430,9 +431,7 @@ export const S59 = ({ frame }: { frame: number }) => {
   const pose = CAM59(frame);
   return (
     <ShotFrame frame={frame} bg={C.bg}>
-      <Stage camera={CAM59}>
-        <OfficeStage />
-      </Stage>
+      <OfficeWall frame={frame} pose={pose} />
       {MONITORS.map((m, i) => {
         const { a, b } = plateRect(pose, ...m);
         return <MiniCutscene key={i} frame={frame} x={a.x} y={a.y} w={b.x - a.x} h={b.y - a.y} holdAt={RINGS} />;
@@ -480,12 +479,12 @@ export const S60 = ({ frame }: { frame: number }) => {
         <Throne frame={frame} />
         <Vorathul st={st} place={place} />
       </Stage>
-      <LightRays x={rays.x} y={rays.y} frame={C60} opacity={0.4} n={18} />
+      <LightRays x={rays.x} y={rays.y} frame={C60} opacity={0.3} />
       {!done ? (
         <>
           <ScribbleBoil frame={f - C60} duration={200} seed={60} x={960} y={540} rx={420} ry={330} color={INK} width={8} loops={2} ticks={10} />
           <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-            {[0].map((i) => <rect key={i} x={0} y={vhs.range(150, 930)} width={1920} height={vhs.range(3, 8)} fill={C.white} opacity={0.4} />)}
+            {[0].map((i) => <rect key={i} x={0} y={vhs.range(150, 930)} width={1920} height={vhs.range(3, 8)} fill={C.white} opacity={0.3} />)}
           </svg>
         </>
       ) : null}

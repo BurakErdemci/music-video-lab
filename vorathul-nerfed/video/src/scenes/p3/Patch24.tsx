@@ -1,6 +1,6 @@
 // Scenes 9-10 (S62-S67): Patch 2.4. The patch card, the cutscene editor, the SKIP pill and its guillotine
 // letterbox, the volume slider that corks each pipe it passes, clutch_throat, and MY / THEME / SONG.
-import { AbsoluteFill, Img, staticFile } from 'remotion';
+import { AbsoluteFill } from 'remotion';
 import { frameAt, handheld, hold, OFF_WIDE, withShake, SHAKE_PCT, type CameraPath } from '../../camera/api.ts';
 import type { PipeEvent } from '../../rig/pipes.ts';
 import type { Key } from '../../rig/timeline.ts';
@@ -9,14 +9,14 @@ import { Stage } from '../../stage/Stage.tsx';
 import { Cursor, Monitor, PatchNotesCard, SkipButton, TypingText, VolumeSlider, C } from '../../ui/kit.ts';
 import { easeInOut as uiEaseInOut, lerp as uiLerp, prog as uiProg } from '../../ui/theme.tsx';
 import { INK, IVORY, VIOLET, VIOLET_LIGHT, seeded } from '../../vfx/effects.ts';
-import { PLATE } from './Backdrop.tsx';
 import { Throne } from './Throne.tsx';
 import { at } from './events.ts';
 import { Balloon, DustPuff } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
 import { G } from './grades.ts';
 import { easeIn, easeOut, easeOutBack, lerp, project, prog, twos } from './lib.ts';
-import { OfficeStage } from './Office.tsx';
+import { OfficeWall } from './Office.tsx';
+import { PaintingWindow } from './PaintingView.tsx';
 import { KEPT_PIPES, SCALE_C, helmAt, nerfTimeline, pipeMouthAt, slitAt, stateAt, Vorathul, withCorks, withHead, type Place } from './nerf.tsx';
 
 const shakeHits = (list: [number, keyof typeof SHAKE_PCT][]) => list.map(([start, k], i) => ({ start, seed: start * 13 + i, amp: { pct: SHAKE_PCT[k] } }));
@@ -34,9 +34,7 @@ export const S62 = ({ frame }: { frame: number }) => {
   const live = easeOutBack(prog(frame, at('s62-live'), 5), 2.5);
   return (
     <ShotFrame frame={frame} bg={C.bg}>
-      <Stage camera={CAM62}>
-        <OfficeStage />
-      </Stage>
+      <OfficeWall frame={frame} pose={CAM62(frame)} pose62 />
       <AbsoluteFill style={{ transform: `translate(${jolt}px, ${-jolt * 0.5}px)` }}>
         <PatchNotesCard frame={frame} x={1010} y={250} width={820} title={title62(frame)} enterAt={C62} lines={[{ text: 'Applying changes…', appearAt: at('s62-four') }]} />
         {live > 0 ? (
@@ -74,7 +72,7 @@ export const S63 = ({ frame }: { frame: number }) => {
             ))}
           </div>
           <div style={{ position: 'absolute', left: 270, top: 64, width: 640, height: 360, borderRadius: 6, overflow: 'hidden', border: `2px solid ${C.dark}`, background: C.black }}>
-            <Img src={staticFile(PLATE.nerf)} style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
+            <PaintingWindow frame={frame} x={0} y={0} w={640} h={360} mood="slump" />
             {dropped ? <SkipButton frame={frame} appearAt={DROP - 8} width={150} margin={18} /> : null}
           </div>
           <div style={{ position: 'absolute', left: 270, top: 438, fontSize: 16, fontWeight: 700, color: C.slate }}>THE LAMENT OF VORATHUL · 7:00</div>
