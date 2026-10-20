@@ -3,7 +3,7 @@
 // through Pic (AssetCard once the final image lands; a code-drawn palette stand-in until then).
 import { seeded } from '../../vfx/effects.ts';
 import type { Vec3 } from '../../stage/Card.tsx';
-import { AVAILABLE } from '../../cast/available.ts';
+import { assetSize, AVAILABLE } from '../../cast/available.ts';
 import { GOLD, GOLD_DEEP, INK, inkFilterDef, IVORY, Pic, poly, r2, SKY, SvgCard, svgDoc } from './kit.tsx';
 
 // ---------------------------------------------------------------------------------------------------------------
@@ -299,12 +299,26 @@ const BANNERS: { x: number; z: number; ph: number }[] = [
   { x: -13, z: -22, ph: 1.6 }, { x: 13, z: -22, ph: 2.6 }, { x: -9, z: -33, ph: 0.4 }, { x: 9, z: -33, ph: 1.1 },
 ];
 
+/** Width a Pic really takes: the final image keeps its aspect from the given height (AssetCard), the stand-in its own. */
+const drawnWidth = (id: string, w: number, h: number): number => {
+  const s = AVAILABLE.has(id) ? assetSize(id) : undefined;
+  return s ? (h * s[0]) / s[1] : w;
+};
+const SKY_W = drawnWidth('G01', 300, 173);
+const WALL_W = drawnWidth('G03', WALL.w, WALL.h);
+/** Repeats of the sky and the back wall on each side, butted edge to edge, so wide and whip framings never reach the
+ * edge of the built set (the final G03 is narrower than the stand-in, so a fixed spacing left black gaps). */
+const SKY_TILES = [-1, 0, 1];
+const WALL_TILES = WALL_W < WALL.w ? [-3, -2, -1, 0, 1, 2, 3] : [-1, 0, 1];
+
 export const World = ({ sil = false, cloudShift = 0, rays = 0, rayBend = 0, bow, sway = 0, duck = 0, near = true, army = true }: WorldState) => {
   const back = sil ? IVORY : null;
   const fig = sil ? INK : null;
   return (
     <>
-      <Pic id="G01" color={SKY} svg={SKY_SVG} width={300} height={173} position={[0, 30, -80]} renderOrder={RO.sky} flat={back} />
+      {SKY_TILES.map((k) => (
+        <Pic key={`sky${k}`} id="G01" color={SKY} svg={SKY_SVG} width={300} height={173} position={[k * (SKY_W - 0.5), 30, -80]} scale={k % 2 ? [-1, 1, 1] : 1} renderOrder={RO.sky + k * 0.001} flat={back} />
+      ))}
       {[[-17, 34, 0], [15, 44, 1], [3, 56, 2], [-9, 52, 1], [21, 26, 0]].map(([x, y, k], i) => (
         <Pic key={`c${i}`} id={`G02-${(i % 5) + 1}`} color={IVORY} svg={CLOUD_SVG[k as number] as string} width={22} height={10} position={[(x as number) + cloudShift * Math.sign(-(x as number)), (y as number) - cloudShift * 0.4, -78]} renderOrder={RO.cloud + i * 0.01} flat={back} />
       ))}
@@ -317,8 +331,8 @@ export const World = ({ sil = false, cloudShift = 0, rays = 0, rayBend = 0, bow,
           ))
         : null}
       {/* the back wall, repeated once on each side so whip-pans never reach the edge of the world */}
-      {[-1, 0, 1].map((k) => (
-        <Pic key={`w${k}`} id="G03" color={IVORY} svg={WALL_SVG} width={WALL.w} height={WALL.h} position={[k * (WALL.w - 0.5), WALL.h / 2, WALL.z]} renderOrder={RO.wall + k * 0.01} flat={back} />
+      {WALL_TILES.map((k) => (
+        <Pic key={`w${k}`} id="G03" color={IVORY} svg={WALL_SVG} width={WALL.w} height={WALL.h} position={[k * (WALL_W - 0.5), WALL.h / 2, WALL.z]} scale={k % 2 ? [-1, 1, 1] : 1} renderOrder={RO.wall + k * 0.01} flat={back} />
       ))}
       <Pic id="G04a" color={IVORY} svg={GALLERY_SVG} width={GALLERY.w} height={GALLERY.h} position={[-GALLERY.x, GALLERY.h / 2, GALLERY.z]} renderOrder={RO.gallery} flat={back} />
       <Pic id="G04b" color={IVORY} svg={GALLERY_SVG} width={GALLERY.w} height={GALLERY.h} position={[GALLERY.x, GALLERY.h / 2, GALLERY.z]} scale={AVAILABLE.has('G04b') ? 1 : [-1, 1, 1]} renderOrder={RO.gallery} flat={back} />
