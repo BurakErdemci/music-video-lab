@@ -17,6 +17,8 @@ export interface Pose { t: number; card: string | null; at?: Placement }
  *  equals, merge (take-v4 lines 15-22 for chorus 1). */
 export interface ChorusLines { cur1: number; inc1: number; fire: number; merge1: number; cur2: number; inc2: number; equals: number; merge2: number; end: number }
 export const CHORUS1: ChorusLines = { cur1: 15, inc1: 16, fire: 17, merge1: 18, cur2: 19, inc2: 20, equals: 21, merge2: 22, end: 64.152 };
+/** Chorus 2 (85.42-106.68 s): the same eight lines, sung again (take-v4 lines 30-37). */
+export const CHORUS2: ChorusLines = { cur1: 30, inc1: 31, fire: 32, merge1: 33, cur2: 34, inc2: 35, equals: 36, merge2: 37, end: 106.68 };
 
 const cam = (position: Vec3, target: Vec3, fov = 40, roll = 0): CameraPose => ({ position, target, fov, roll });
 const F = FLOOR_Y;
