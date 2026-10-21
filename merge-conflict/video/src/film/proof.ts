@@ -8,7 +8,8 @@ import { whiteoutSwings, type WhiteoutSpec } from '../fx/whiteout.tsx';
 import { inQuad, ramp } from '../lib/ease.ts';
 import { assertFlashBudget, type Swing } from '../lib/flash.ts';
 import { spotPlan } from '../light/spotlight.tsx';
-import { dissolveEnd, dissolvePlan } from '../particles/dissolve.tsx';
+import { smearPlan, smearSpan } from '../cards/smear.tsx';
+import { dissolvePlan } from '../particles/dissolve.tsx';
 import type { Burst } from '../particles/field.tsx';
 import { microGaps } from '../timing.ts';
 
@@ -63,17 +64,20 @@ export const HEAD_BURST: Burst = { t: at('head-burst'), origin: [VERSE_B.x, -1.0
 
 export const WHITEOUTS: readonly WhiteoutSpec[] = [
   { id: 'wo-riff', t0: at('riff-burst'), frames: 3 },
-  { id: 'wo-split', t0: at('eye-split'), frames: 3, figures: [{ card: INTRO_CARD.O, at: INTRO_O }, { card: INTRO_CARD.B, at: INTRO_B }] },
-  { id: 'wo-head', t0: at('head-burst'), frames: 3, figures: [{ card: 'B03', at: VERSE_B }] },
+  { id: 'wo-split', t0: at('eye-split'), frames: 3, figures: [{ card: INTRO_CARD.O, at: INTRO_O }, { card: INTRO_CARD.B, at: INTRO_B }], camera: INTRO_CAM },
+  { id: 'wo-head', t0: at('head-burst'), frames: 3, figures: [{ card: 'B03', at: VERSE_B }], camera: VERSE_CAM },
 ];
 
-// Verse 1 poses: B03 gathers out of the burst, then B03 -> B01 -> B03 through dissolves.
-export const VERSE_DISSOLVES = [
-  dissolvePlan({ id: 'gather-b03', t0: at('head-burst'), gatherFrames: 18, to: { card: 'B03', at: VERSE_B } }),
-  dissolvePlan({ id: 'swap-b01', t0: at('swap-b01'), scatterFrames: 24, gatherFrames: 16, from: { card: 'B03', at: VERSE_B }, to: { card: 'B01', at: VERSE_B } }),
-  dissolvePlan({ id: 'swap-b03', t0: at('swap-b03'), scatterFrames: 24, gatherFrames: 16, from: { card: 'B01', at: VERSE_B }, to: { card: 'B03', at: VERSE_B } }),
+// Verse 1 poses: B03 gathers out of the "head" burst (a scene change: particle dissolve), then a new pose
+// every 2 bars on the downbeat through a smear (cards/smear.tsx).
+export const VERSE_GATHER = dissolvePlan({ id: 'gather-b03', t0: at('head-burst'), gatherFrames: 18, to: { card: 'B03', at: VERSE_B } });
+export const VERSE_FIRST = 'B03';
+export const VERSE_SMEARS = [
+  smearPlan({ id: 'pose-b04', t: at('pose-b04'), from: 'B03', to: 'B04', dir: 1 }),
+  smearPlan({ id: 'pose-b07', t: at('pose-b07'), from: 'B04', to: 'B07', dir: -1 }),
+  smearPlan({ id: 'pose-b02', t: at('pose-b02'), from: 'B07', to: 'B02', dir: 1 }),
 ] as const;
-export const SCRIBBLE_B03_FROM = dissolveEnd(VERSE_DISSOLVES[2]);
+export const SCRIBBLE_B07_FROM = smearSpan(VERSE_SMEARS[1])[1] + 0.15;
 
 /** The mirror-tile align sweeps: "stable" lights the rows front to back, "clean" sweeps again. */
 export const alignAt = (t: number): number => {
