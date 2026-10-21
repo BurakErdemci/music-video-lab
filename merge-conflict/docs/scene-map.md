@@ -363,3 +363,27 @@ Rules:
 - At least 6 distinct forms in every 30 s, and never the same form twice in a row.
 - The faces come from the two families at full range: pop (Bungee and the other display faces) and metal (Metal Mania, Pirata One, UnifrakturMaguntia, Anton).
 - Git objects are the WORLD the type lives in. They never replace the type form. The type plays with the object (it lands on the sign, it is stamped by the press, it rides the rail).
+
+## Round 6 approved; decisions for the rest (Burak, 2026-10-21)
+
+- Burak on the round-6 proof: "the chorus came out right, this road is good, I expect the same performance for the rest." Round 6's rules are the bar for every later section: a scene every 2-4 bars, git worlds, event transitions, lit girls, designed type, and the chorus intensity rule (chorus 2 and the final chorus are measured against it too).
+- **"Build failed. Syntax error on line forty-two." (193.1-196.49):** the BLUE girl reads it, mirroring the intro (she reads the git error at the start), in her metal costume per the schedule.
+- **Final chorus "Accept both" (160.06-181.44):** the approved fusion sheets stil/prompts/o-keys/out/PF1-blue-fusion.png and PF2-orange-fusion.png are the "mix" costume. Cards: PB1-4 / PO1-4 (accept both, push it, reach, celebrate) and face sequences PBX1-3 / POX1-3.
+
+### Round 7: 64.15-140.04
+- **V3 rebase (64.15-85.42), raspy and sweet trading:**
+  - commits slide and collapse into one tiny line on "squashed all your sorries";
+  - the blame gutter repeating one name;
+  - CI checks turning red one by one on "the pipeline is red";
+  - a 5-minute standup countdown on "standup's in five".
+- **Chorus 2 (85.42-106.68):** the chorus-1 plan word for word (film/chorus/plan.ts), with a fresh variation in the camera and worlds only. It must pass the intensity rule again.
+- **V4 trade (106.68-117.36), getting faster:**
+  - tabs against spaces as visible whitespace arrows and dots;
+  - the variable `data2`;
+  - the `// don't touch` comment;
+  - "I TOUCHED IT" as a strike-through edit.
+  - The cuts accelerate toward the scream.
+- **Scream (117.36-120.03):** blue turns METAL here (the costume schedule), both screaming.
+- **GIT! PUSH! FORCE! (120.03-125.36), the slowest and heaviest:** `git push --force` typed word by word, one OQ1/OQ2/OQ3 pose per word, the warning screen, metal worlds (W04, W11).
+- **Whisper "...you wouldn't" (125.36-126.70):** blue's horror (BQ3 and BMX5), near silence. The quietest frame of the clip.
+- **Solo (126.70-140.04):** the dance duel. Air guitar OQ4 against BQ1, BQ2 blade slash, cuts on the riff, metal worlds.
