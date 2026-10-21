@@ -10,7 +10,9 @@ import { GRADE_GLSL, type Grade, gradeUniform } from '../grade/grade.ts';
 import { type Hex, rgb } from '../lib/ease.ts';
 import { ORDER, useUniforms } from './Stage.tsx';
 
-export const FLOOR_Y = -3.4;
+import { FLOOR_Y } from './floor.ts';
+
+export { FLOOR_Y };
 const WALL_Z = -10;
 const VERT = /* glsl */ `varying vec2 vUv; varying vec3 vWorld;
 void main() { vUv = uv; vec4 w = modelMatrix * vec4(position, 1.0); vWorld = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`;

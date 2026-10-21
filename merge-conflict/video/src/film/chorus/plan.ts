@@ -5,7 +5,7 @@
 import { blendPose, type CameraPose, HOME_Z, type Vec3 } from '../../camera/camera.ts';
 import type { Placement } from '../../cards/Card.tsx';
 import { at } from '../../events.ts';
-import { FLOOR_Y } from '../../stage/SetPlate.tsx';
+import { FLOOR_Y } from '../../stage/floor.ts';
 import { beat, beatIndexAt, beats } from '../../timing.ts';
 import type { TransitionKind } from '../../transitions/scene/scene.tsx';
 
