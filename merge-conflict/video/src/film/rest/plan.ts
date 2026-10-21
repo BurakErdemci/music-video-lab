@@ -61,13 +61,13 @@ const METAL: MShot[] = [
   // 2. GIT!: the punch and shake on her roar, GIT! slammed beside her
   { id: 'push-git', t: tk(45, 0), scene: 'forge', cam: 'low', into: 'shock', move: 'dollyzoom', B: null, O: ['OF1', full(2.0, 6.6)] },
   // 3. the build: the charge grows (the HUD types the command), blue sees it coming, orange leaps, the camera
-  //    tilts up after her; a sneer on the anticipation, blue braces
-  { id: 'push-charge', t: db(tk(45, 0) + 0.6), scene: 'cathedral', cam: 'hero', into: 'fire', move: 'orbit', O: ['OF1', full(0, 6.4)] },
+  //    tilts up after her; blue braces
+  // (round 7c flash fix: the charge stays in the forge, a cut not a cover, so the build keeps under 3 flashes a second)
+  { id: 'push-charge', t: db(tk(45, 0) + 0.6), scene: 'forge', cam: 'hero', into: 'shock', move: 'orbit', O: ['OF1', full(0, 6.4)] },
   { id: 'push-sees', t: bt(tk(45, 0) + 1.33), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'push', B: faceC('BMX1'), O: null },
   { id: 'push-leap', t: db(tk(45, 0) + 1.95), scene: 'forge', cam: 'low', into: 'fire', move: 'push', B: null, O: ['OF2', { x: 1.0, feet: -1.8, height: 6.2, z: 0 }] },
   { id: 'push-leap-2', t: bt(tk(45, 0) + 2.65), scene: 'forge', cam: 'reverse', into: 'shock', move: 'orbit', O: ['OF2', { x: -0.8, feet: -1.2, height: 6.0, z: 0, flip: true }] },
-  { id: 'push-sneer', t: bt(tk(45, 0) + 3.0), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', O: faceC('OMX5', true) },
-  { id: 'push-brace', t: bt(tk(45, 0) + 3.33), scene: 'faceB', cam: 'hero', into: 'shock', move: 'push', B: faceC('BMX4'), O: null },
+  { id: 'push-brace', t: bt(tk(45, 0) + 3.0), scene: 'faceB', cam: 'hero', into: 'shock', move: 'push', B: faceC('BMX4'), O: null },
   // 4. PUSH!: she smashes down (an impact frame, the floor ring), then the painting, uncovered and shaken
   { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: null, O: ['OF3', full(1.4, 6.6)] },
   { id: 'push-impact', t: tk(46, 0) + 0.2, scene: 'panel', panel: 'QK1', cam: 'hero', into: 'shock', move: 'push', B: null, O: null },
