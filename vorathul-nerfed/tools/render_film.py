@@ -7,15 +7,18 @@ of the same frame is clean. So this tool:
   1. renders the range twice (through tools/locked.sh, one Chrome at a time),
   2. diffs both renders frame by frame (mean abs difference on a 192x108 downscale),
   3. re-renders every disputed frame as a still,
-  4. splices the stills into render A (audio copied from A) -> the clean mp4,
+  4. splices the stills into render A (audio copied from A, or with --song the song file itself from the
+     range's start time; Nerfed60 has no <Audio> and must use --song) -> the clean mp4,
   5. runs tools/glitchcheck.py (clean vs A, clean vs B) and tools/flashcheck.py on it.
 Exit 0 only when both checks pass.
 
 Run from anywhere (needs ffmpeg, Pillow, uv):
   python tools/render_film.py --entry src/vfx/index.ts --comp VfxGallery --frames 900-1139 --out out/gallery.mp4
+  python tools/render_film.py --entry src/index.ts --comp Nerfed60 --frames 0-16427 --out out/nerfed60.mp4       --song public/audio/song.wav
 Flags default to the measured recommendation (see FLAGS); override with --render-flags "...".
 """
 import argparse, os, shutil, subprocess, sys, tempfile, time
+from fractions import Fraction
 from pathlib import Path
 from PIL import Image, ImageChops, ImageStat
 
@@ -65,14 +68,24 @@ def probe(path):
     return int(out[0]), int(out[1]), out[2]
 
 
-def splice(src, stills, out, width, height, fps):
+def duration(path, stream):
+    out = subprocess.run(['ffprobe', '-v', 'error', '-select_streams', stream, '-show_entries', 'stream=duration',
+                          '-of', 'csv=p=0', str(path)], capture_output=True, text=True).stdout.strip()
+    return float(out) if out and out != 'N/A' else float('nan')
+
+
+def splice(src, stills, out, width, height, fps, song=None, song_start=0.0):
     k = width * height * 3
+    # --song: the song itself from the range's start (sample-accurate -ss on the wav input), not render A's track.
+    # A 60 fps composition on a fractional clock plays <Audio> at the wrong offset, so it is rendered muted.
+    audio_in = ['-ss', f'{song_start:.6f}', '-i', str(song)] if song else ['-i', str(src)]
+    audio_map = ['-map', '2:a', '-c:a', 'aac', '-b:a', '320k'] if song else ['-map', '1:a?', '-c:a', 'copy']
     dec = subprocess.Popen(['ffmpeg', '-loglevel', 'error', '-i', str(src), '-f', 'rawvideo',
                             '-pix_fmt', 'rgb24', '-'], stdout=subprocess.PIPE)
     enc = subprocess.Popen(['ffmpeg', '-loglevel', 'error', '-y', '-f', 'rawvideo', '-pix_fmt', 'rgb24',
-                            '-s', f'{width}x{height}', '-r', fps, '-i', '-', '-i', str(src),
-                            '-map', '0:v', '-map', '1:a?', '-c:v', 'libx264', '-crf', '16',
-                            '-pix_fmt', 'yuv420p', '-c:a', 'copy', '-shortest', str(out)], stdin=subprocess.PIPE)
+                            '-s', f'{width}x{height}', '-r', fps, '-i', '-', '-i', str(src), *audio_in,
+                            '-map', '0:v', *audio_map, '-c:v', 'libx264', '-crf', '16',
+                            '-pix_fmt', 'yuv420p', '-shortest', str(out)], stdin=subprocess.PIPE)
     i = n = 0
     while True:
         f = dec.stdout.read(k)
@@ -107,9 +120,16 @@ def main():
     ap.add_argument('--render-flags', default=FLAGS, help=f'render flags (default "{FLAGS}")')
     ap.add_argument('--threshold', type=float, default=8.0, help='disputed when mean abs diff (0-255) exceeds this')
     ap.add_argument('--keep', action='store_true', help='keep the work folder')
+    ap.add_argument('--song', help='audio file (relative to video/) muxed from the range start instead of the audio '
+                                   'of render A; the render then runs --muted. Required for Nerfed60.')
     a = ap.parse_args()
+    song = None
+    if a.song:
+        song = (VIDEO / a.song).resolve()
+        if not song.exists():
+            sys.exit(f'song not found: {song}')
     start = int(a.frames.split('-')[0])
-    flags = a.render_flags.split()
+    flags = a.render_flags.split() + (['--muted'] if song and '--muted' not in a.render_flags.split() else [])
     still_flags = [f for f in flags if f.startswith('--gl')]  # the other flags are render-only
     out = Path(a.out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -144,8 +164,11 @@ def main():
             print(f'  frame {start + i}: still vs A {da:.1f}, vs B {db:.1f} -> matches {tag}', flush=True)
             stills[i] = png
         width, height, fps = probe(ra)
-        n, used = splice(ra, stills, out, width, height, fps)
+        n, used = splice(ra, stills, out, width, height, fps, song, float(start / Fraction(fps)))
         print(f'spliced {used} stills into {n} frames -> {out}', flush=True)
+        if song:
+            print(f'audio: {song.name} from {float(start / Fraction(fps)):.3f} s; durations video {duration(out, "v:0"):.3f} s, '
+                  f'audio {duration(out, "a:0"):.3f} s (expected {n / Fraction(fps):.3f} s)', flush=True)
 
         bad = False
         for other in (ra, rb):
