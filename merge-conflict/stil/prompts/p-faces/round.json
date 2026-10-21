@@ -1,0 +1,46 @@
+[
+ {
+  "id": "PBX2-sing",
+  "prompt": "stil/prompts/p-faces/PBX2-sing.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/p-keys/out/PBX1-base.png"
+  ],
+  "out": "stil/prompts/p-faces/out/PBX2-sing.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PBX3-laugh",
+  "prompt": "stil/prompts/p-faces/PBX3-laugh.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/p-keys/out/PBX1-base.png"
+  ],
+  "out": "stil/prompts/p-faces/out/PBX3-laugh.png",
+  "key": "#808080"
+ },
+ {
+  "id": "POX2-sing",
+  "prompt": "stil/prompts/p-faces/POX2-sing.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png",
+   "stil/prompts/p-keys/out/POX1-base.png"
+  ],
+  "out": "stil/prompts/p-faces/out/POX2-sing.png",
+  "key": "#808080"
+ },
+ {
+  "id": "POX3-laugh",
+  "prompt": "stil/prompts/p-faces/POX3-laugh.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png",
+   "stil/prompts/p-keys/out/POX1-base.png"
+  ],
+  "out": "stil/prompts/p-faces/out/POX3-laugh.png",
+  "key": "#808080"
+ }
+]

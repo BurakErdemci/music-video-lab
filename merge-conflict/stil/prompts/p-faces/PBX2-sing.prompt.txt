@@ -1,0 +1,16 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./PBX2-sing.png
+
+Subject: the BLUE girl in her FINAL FUSION outfit. The THIRD attached image is the BASE FRAME of a frame-by-frame expression animation. Reproduce the third image EXACTLY: the same framing, scale and position in the canvas, the same head angle and shoulders, the same hair shape, outfit, accessories, lighting and background. Change ONLY the face to: singing joyfully with the mouth wide open, eyes half closed. Only the eyes, brows and mouth change; the head may tilt by a few degrees at most.
+
+Match the attached fusion model sheet EXACTLY: her face, the very long high blue ponytail with the spiky clip, the blue-and-silver sequin jacket with steel plate shoulders and chain-mail, the sequins and glowing seams fading in a smooth gradient from deep blue into warm orange toward one side, sequinned flared trousers with steel trim, platform boots with steel toes.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official FINAL FUSION model sheet. The THIRD attached image is the base frame to match.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No scenery, no particles, no glow. Medium close-up: head, shoulders and upper chest, the head in the upper half, facing the viewer in a slight three-quarter turn. All of her hair stays inside the left, right and top edges where possible; only the chest runs off the bottom edge. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

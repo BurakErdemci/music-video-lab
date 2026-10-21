@@ -1,0 +1,14 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./PB3-reach.png
+
+Subject: the BLUE girl in her FINAL FUSION outfit from the end of the music video, when both girls finally accept both changes: full body, warm and open: turned slightly to the right, reaching one hand toward the right side of the frame to take someone's hand, a happy smile. It is a clear, powerful key pose. Match the attached fusion model sheet EXACTLY: her face, the very long high blue ponytail with the spiky clip, the blue-and-silver sequin jacket with steel plate shoulders and chain-mail, the sequins and glowing seams fading in a smooth gradient from deep blue into warm orange toward one side, sequinned flared trousers with steel trim, platform boots with steel toes.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official FINAL FUSION model sheet.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No floor, no cast shadow, no scenery, no props, no buttons, no particles, no glow. The whole figure (and all of her hair) stays inside the frame with a clear grey margin on every side. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

@@ -1,0 +1,14 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./PO4-celebrate.png
+
+Subject: the ORANGE girl in her FINAL FUSION outfit from the end of the music video, when both girls finally accept both changes: full body, jumping for joy with one fist high in the air, the mane flying, laughing. It is a clear, powerful key pose. Match the attached fusion model sheet EXACTLY: her face, the huge wild flame-like orange mane, the orange-and-gold sequin cropped jacket with spiked leather vest details and flame patterns, the sequins and flames fading in a smooth gradient from orange into cool blue toward one side, flared trousers with sequins and flames, spiked platform boots.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official FINAL FUSION model sheet.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No floor, no cast shadow, no scenery, no props, no buttons, no particles, no glow. The whole figure (and all of her hair) stays inside the frame with a clear grey margin on every side. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

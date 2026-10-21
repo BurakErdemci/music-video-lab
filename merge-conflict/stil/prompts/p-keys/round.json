@@ -1,0 +1,102 @@
+[
+ {
+  "id": "PB1-accept-both",
+  "prompt": "stil/prompts/p-keys/PB1-accept-both.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PB1-accept-both.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB2-push-it",
+  "prompt": "stil/prompts/p-keys/PB2-push-it.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PB2-push-it.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB3-reach",
+  "prompt": "stil/prompts/p-keys/PB3-reach.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PB3-reach.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB4-celebrate",
+  "prompt": "stil/prompts/p-keys/PB4-celebrate.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PB4-celebrate.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO1-accept-both",
+  "prompt": "stil/prompts/p-keys/PO1-accept-both.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PO1-accept-both.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO2-push-it",
+  "prompt": "stil/prompts/p-keys/PO2-push-it.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PO2-push-it.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO3-reach",
+  "prompt": "stil/prompts/p-keys/PO3-reach.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PO3-reach.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO4-celebrate",
+  "prompt": "stil/prompts/p-keys/PO4-celebrate.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PO4-celebrate.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PBX1-base",
+  "prompt": "stil/prompts/p-keys/PBX1-base.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/PBX1-base.png",
+  "key": "#808080"
+ },
+ {
+  "id": "POX1-base",
+  "prompt": "stil/prompts/p-keys/POX1-base.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/p-keys/out/POX1-base.png",
+  "key": "#808080"
+ }
+]
