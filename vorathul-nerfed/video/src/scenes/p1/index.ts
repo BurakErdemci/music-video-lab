@@ -1,6 +1,6 @@
 // Lane p1: see src/scenes/README.md. The shots of this part, in film frames: every shot starts on its first
 // storyboard event (S01 on frame 0) and ends where the next one starts; the last ends at the part boundary.
-import type { ComponentType } from 'react';
+import { createElement, type ComponentType } from 'react';
 import { PART_RANGES, type Shot } from '../../film/shot.ts';
 import { at } from './events.ts';
 import { INTRO_SHOTS } from './intro.tsx';
@@ -19,16 +19,21 @@ const STARTS: [string, number][] = [
   ['S21', at('s21-crack')], ['S22', at('s22-split')], ['S23', at('s23-pip-1')], ['S24', at('s24-slam')], ['S25', at('s25-phase3')],
 ];
 
-export const SHOTS: Shot[] = STARTS.map(([id, from], i) => {
-  const Component = C[id];
-  if (!Component) throw new Error(`p1: no component for ${id}`);
-  return { id, from, to: i + 1 < STARTS.length ? (STARTS[i + 1] as [string, number])[1] : PART_RANGES.p1[1], Component };
-});
-
 // Flash budget of the part (docs/flash-audit.md, fixed plan): the hard cut from black into the painting, the 2-frame
 // silhouette pass of the big impacts of the collision table that fall in p1 (in on N, out on N+2), and the
 // one-beat black/violet grades of S22 and S24 that replace their posterise (audit fixes Z1, Z2).
 export const P1_SILHOUETTE_IMPACTS = ['s07-clash', 's09-fan', 's11-sweep', 's15-slam', 's16-explosion', 's19-swat', 's19-strike'].map(at);
+
+// The silhouette pass is a held impact frame: the shot is frozen on N for [N, N+2). Left moving, the 60 fps
+// in-betweens darkened it in two separate steps and flashcheck counted 4 swings at 0:20-0:21 (measured 21 Oct).
+const silHold = (frame: number): number => P1_SILHOUETTE_IMPACTS.find((n) => frame >= n && frame < n + 2) ?? frame;
+
+export const SHOTS: Shot[] = STARTS.map(([id, from], i) => {
+  const Inner = C[id];
+  if (!Inner) throw new Error(`p1: no component for ${id}`);
+  const Component = ({ frame }: { frame: number }) => createElement(Inner, { frame: silHold(frame) });
+  return { id, from, to: i + 1 < STARTS.length ? (STARTS[i + 1] as [string, number])[1] : PART_RANGES.p1[1], Component };
+});
 export const P1_SWINGS: Swing[] = [
   { frame: at('s02-cut'), swings: 1 },
   ...P1_SILHOUETTE_IMPACTS.flatMap((f) => [{ frame: f, swings: 1 }, { frame: f + 2, swings: 1 }]),
