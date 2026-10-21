@@ -230,3 +230,21 @@ Rules:
 - **The rig only plays single eased accents** (a kick, a point, a head turn), then holds.
 - **Accents are stepped on threes (measured):** the "Scroll Up!" mascot face close-up at 3:18.7-3:19.2 changes once every 3 frames of its 30 fps (about 10 drawings/s), while the camera stays smooth. Our rig accents hold each state 6 frames at 60 fps; camera, type and particles stay smooth. Accents are rare and deliberate (Burak: "very cute and rare").
 - **Accent recipe ("Scroll Up!" 1:13-1:21):** an anticipation pose (she crouches on "UP:"), the release on the sung word (she springs up pointing on "SCROLL"), a new pose on the next word ("UP!"). The camera amplifies the release with a low-angle swing and a punch while the type word slams, and a continuous travel device (her rising platform) carries the shot between accents. Ours: "ORANGE!", GIT! PUSH! FORCE!, the HEAD kick.
+
+## What we take from "Scroll Up!" and what we leave (Burak, 2026-10-21)
+
+Burak: "take the good things that fit our theme, but overall it is a different theme."
+
+**Taken, in our own look** (disco against metal, git, typography-led):
+- still key poses with the camera carrying the motion;
+- accents stepped on threes;
+- anticipation, then the release on the sung word;
+- a continuous travel device between accents.
+
+**One-time glyph moment (later sections, not the proof):** the girls rebuilt from their own git lines (blue from `- color: blue;`, orange from `+ color: orange;`) through the card point clouds. It happens only at the piano truce and/or the final "Accept both", where the two text clouds mix into one picture.
+
+**Not taken:**
+- the warm cosy bokeh palette;
+- the anime/VTuber mascot look;
+- the text mosaic as the main look;
+- the life-in-questions content.
