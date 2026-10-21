@@ -1,0 +1,18 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./OV5-spaces.png
+
+Subject: the ORANGE girl of the attached METAL-FORM model sheet, full body, leaning forward and jabbing her index finger toward the LEFT side of the frame, snarling, teeth bared.
+
+Acting: this is an ACTION frame from an animated music video, NOT a standing pose. Push the pose hard: a strong line of action through the whole body, clear silhouette, exaggerated cartoon acting, the face fully committed to the emotion.
+
+She wears EXACTLY the metal outfit of the model sheet: the sleeveless black leather battle vest with silver spikes and orange flame patterns over the black ripped crop top, studded fingerless gloves and spiked wrist cuffs, the heavy studded belt with chains, tight black leather trousers whose flame pattern covers the whole flared lower leg, huge black spiked platform combat boots, the dark scratch-like black-and-orange face paint across the eyes, silver STAR-shaped earrings, the huge wild feathery flame-like orange mane, mostly loose, with only a few thin braids with small chains (no thick braids, no metal cuff beads).
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official model sheet: match her face, hair, outfit, accessories and proportions EXACTLY.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No props. No floor, no cast shadow, no scenery, no particles, no motion lines, no glow, no sparks, no flames in the air (effects are added later in compositing). The whole figure (all of her hair and anything she holds) stays inside the frame with a clear grey margin on every side. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks (paper and notes are blank).
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

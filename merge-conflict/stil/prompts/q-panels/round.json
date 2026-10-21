@@ -1,0 +1,52 @@
+[
+ {
+  "id": "QK1-push-impact",
+  "prompt": "stil/prompts/q-panels/QK1-push-impact.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/q-panels/out/QK1-push-impact.png"
+ },
+ {
+  "id": "QK2-scream-face-off",
+  "prompt": "stil/prompts/q-panels/QK2-scream-face-off.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/q-panels/out/QK2-scream-face-off.png"
+ },
+ {
+  "id": "QK3-solo-back-to-back",
+  "prompt": "stil/prompts/q-panels/QK3-solo-back-to-back.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/q-panels/out/QK3-solo-back-to-back.png"
+ },
+ {
+  "id": "QK4-rebase-heist",
+  "prompt": "stil/prompts/q-panels/QK4-rebase-heist.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/q-panels/out/QK4-rebase-heist.png"
+ },
+ {
+  "id": "QK5-standup-panic",
+  "prompt": "stil/prompts/q-panels/QK5-standup-panic.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/q-panels/out/QK5-standup-panic.png"
+ }
+]

@@ -1,0 +1,24 @@
+[
+ {
+  "id": "OV2b-squash-press",
+  "prompt": "stil/prompts/q-seq/OV2b-squash-press.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/q-moments/out/OV2a-squash-hold.png"
+  ],
+  "out": "stil/prompts/q-seq/out/OV2b-squash-press.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OV2c-squash-line",
+  "prompt": "stil/prompts/q-seq/OV2c-squash-line.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/q-moments/out/OV2a-squash-hold.png"
+  ],
+  "out": "stil/prompts/q-seq/out/OV2c-squash-line.png",
+  "key": "#808080"
+ }
+]
