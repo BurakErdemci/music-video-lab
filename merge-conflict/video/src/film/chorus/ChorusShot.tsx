@@ -49,8 +49,10 @@ const poseOf = (list: readonly Pose[], t: number): Pose | null => {
 
 export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
   const plan = chorusPlan(L);
-  // chorus 2's variation: every travelling shot runs the other way, a little higher and wider
-  const P = v === 1 ? plan : { ...plan, SHOTS: plan.SHOTS.map((s) => (FIXED.includes(s.scene) ? s : { ...s, from: { ...s.to, position: [s.to.position[0], s.to.position[1] + 0.8, s.to.position[2]] as [number, number, number], fov: s.to.fov + 4 }, to: { ...s.from, position: [s.from.position[0], s.from.position[1] + 0.8, s.from.position[2]] as [number, number, number], fov: s.from.fov + 4 } })) };
+  // chorus 2's variation: every travelling shot is taken a little higher, wider and from one step to the side
+  // (reversing the moves too made neighbouring shots differ more in brightness and pushed the flash count up)
+  const lift = (c: CameraPose): CameraPose => ({ ...c, position: [c.position[0] + 1.0, c.position[1] + 0.6, c.position[2]], target: [c.target[0] + 0.5, c.target[1], c.target[2]], fov: c.fov + 3 });
+  const P = v === 1 ? plan : { ...plan, SHOTS: plan.SHOTS.map((s) => (FIXED.includes(s.scene) ? s : { ...s, from: lift(s.from), to: lift(s.to) })) };
   const TYPE = chorusType(L);
   const at = (id: string): number => (TYPE.find((e) => e.id === id) as { t0: number }).t0;
   const MERGES: Record<string, readonly [number, number, number, number]> = {
