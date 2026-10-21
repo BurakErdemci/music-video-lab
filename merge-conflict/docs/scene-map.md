@@ -333,3 +333,23 @@ Rules from here:
    - pre-chorus: a strobe split;
    - chorus: the battle arena, the recurring set.
 7. **Style frames before code for the new worlds** (video-yapim lesson): painted world plates and key scene frames from Codex, approved by Burak, then built.
+
+## The chorus is the peak (Burak, 2026-10-21)
+
+Burak: "the chorus, the part of the clip that must be the most memorable, came out so dull that I enjoyed the song far more listening blind; watching with the clip lowered my enjoyment." The clip must ADD to the song, most of all in the chorus.
+
+**Measurable rule:** the chorus is the most intense part of the clip. Its visible events per beat and its mean frame-to-frame motion are at least 1.5x the verses' (measured on the render; reported every round). Camera punch on every beat, a cut or transition every 2 beats (about 0.67 s at 180 BPM; Arcane 2:18 runs a 0.9 s median). Every sung word hits something. Flash budget still holds: energy comes from motion, scale, colour and particles, not white flashes.
+
+**Line by line (chorus 1 and 2 identical, as the song is):**
+- **"Accept current change!"** The camera slams onto blue on the arena platform; she stomps the button; the words stack huge in the pop family and the floor erupts in light.
+- **"(NO!)"** Hard cut to orange's face close-up screaming (OMX3), a giant metal "NO!" filling the frame, a shockwave and a glass shatter.
+- **"Accept incoming change!" / "(NO!)"** The mirror image: orange slams her plaque (OC1); then blue's shouting close-up (BX4) and a giant pop "NO!".
+- **"Two girls, one line,"** Both on one glowing line (the line-42 runway), back to back.
+- **"the build is on fire"** The whole arena ignites: a fire wall rises, sparks and embers burst.
+- **"Merge conflict, merge conflict,"** Logo B slams massive and its two halves are the two girls crashing into each other; a kaleidoscope burst.
+- **"heart going haywire"** A heartbeat line (a git graph gone mad) races across the frame.
+- **"(NEVER!)"** Bigger than NO!: both screaming close-ups in a split frame.
+- **"Equals, equals, equals"** The `=======` bars slam in like walls closing in, a camera punch on each.
+- **"in the middle of my soul"** The walls crush to a single line of light.
+- **"Merge conflict... I can't take control"** Logo B's second variation spins out of control: a barrel roll, then everything bursts into particles at the chorus end.
+- **Throughout:** lasers sweep on every downbeat, mirror-ball dots run over everything, confetti and embers burst on every NO!/NEVER!, and the girls' faces act through the expression sequences.
