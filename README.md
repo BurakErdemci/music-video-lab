@@ -12,12 +12,28 @@ with Codex (`image_gen`) for images and sub-agents for measurement, scaffolding 
 If you watched one of these videos and thought *"I want to make one too"* — this repo is meant to
 be that reference.
 
-## Clips
+## Finished clips
 
-| Clip | Song | Status | Making-of |
-|---|---|---|---|
-| [`her-sabah-bastan/`](her-sabah-bastan/) | *Her Sabah Baştan* — Turkish duet about an AI that forgets every morning (~4:01) | Whole film assembled, polish and sound effects pending | in progress |
-| [`vorathul-nerfed/`](vorathul-nerfed/) | *NERFED* — symphonic metal anthem of a final boss nerfed in a patch (4:33.8, ~186 BPM) | Style approved, project skeleton built | [part 1: from song to style](vorathul-nerfed/docs/making-of/01-from-song-to-style.md) |
+<table>
+<tr>
+<td width="50%" valign="top">
+<a href="her-sabah-bastan/"><img src="her-sabah-bastan/docs/media/hero.jpg" alt="Her Sabah Baştan: a human and an AI press palms on a halftone moon" width="100%"></a><br>
+<b><a href="her-sabah-bastan/">Her Sabah Baştan</a></b><br>
+Turkish duet about an AI that meets its human for the first time every morning. 4:01, 1080p at 60 fps.
+Two-colour silk-screen print, drawn poses, and a camera and transitions built in code.
+</td>
+<td width="50%" valign="top">
+<a href="vorathul-nerfed/"><img src="vorathul-nerfed/docs/media/hero.jpg" alt="Vorathul: a matte black knight with organ-pipe wings in a painted cathedral" width="100%"></a><br>
+<b><a href="vorathul-nerfed/">Vorathul: NERFED</a></b><br>
+Symphonic metal anthem of a final boss who is nerfed in a patch and climbs out of the painting he lives in.
+4:33.8, 1440p at 60 fps. Graphic noir comic cut-outs on a 2.5D stage.
+</td>
+</tr>
+</table>
+
+Each clip README has animated excerpts, the pipeline, what was tried and dropped, and how to run it.
+The longer making-of for Vorathul starts at
+[part 1: from song to style](vorathul-nerfed/docs/making-of/01-from-song-to-style.md).
 
 Finished videos are published as **GitHub Releases** (one tag per clip). Song files are not stored
 in git; each clip's README says which release holds its audio.
