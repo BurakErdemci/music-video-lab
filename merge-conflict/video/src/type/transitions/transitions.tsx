@@ -125,28 +125,36 @@ export const MarkerWipe = ({ plan, t, from, to, color }: { plan: WipePlan; t: nu
 };
 
 // ---- through the counter -------------------------------------------------------------------------------
-export interface CounterPlan { id: string; t0: number; dur: number; center: [number, number] }
+export interface CounterPlan { id: string; t0: number; dur: number; center: [number, number]; hole: number }
 export const counterPlan = (p: Omit<CounterPlan, 'dur'> & { frames?: number }): CounterPlan => ({ ...p, dur: frames(p.id, p.frames ?? 28, 20, 40) });
 /** Centre of the counter (the hole) of letter i of a placed word, from its advances and cap height. */
 export const counterOf = (w: WordAt, i: number): [number, number] => {
   const l = layout(w.text, w.size, w.face);
   return [w.x + (l.xs[i] as number) + (l.ws[i] as number) / 2, w.y - w.size * capOf(w.face) * 0.5];
 };
-/** Scale of the old layer at progress u: exponential, so the dive accelerates into the hole. */
-export const counterScale = (u: number): number => Math.exp(Math.log(70) * u * u);
+/** Half-width (px) of the counter of letter i: a conservative share of its advance. */
+export const holeOf = (w: WordAt, i: number): number => (layout(w.text, w.size, w.face).ws[i] as number) * 0.14;
+const PUNCH = 0.8;
+/** Scale of the old layer: exponential, reaching the scale at which the hole covers the whole frame (from
+ *  the frame centre to a corner, plus margin) at 80 % of the move; after that the old layer is gone. */
+export const counterScale = (u: number, hole: number): number => Math.exp(Math.log(1250 / hole) * Math.min(1, u / PUNCH) ** 2);
 
 export const ThroughCounter = ({ plan, t, from, to }: { plan: CounterPlan; t: number; from: ReactNode; to: ReactNode }) => {
   if (t < plan.t0) return <>{from}</>;
   if (t >= plan.t0 + plan.dur) return <>{to}</>;
   const u = progress(t, plan.t0, plan.dur);
   const [cx, cy] = plan.center;
-  const s = counterScale(u);
+  const s = counterScale(u, plan.hole);
+  // the hole travels to the frame centre as it opens, so the dive goes straight through it
+  const k = outQuad(Math.min(1, u / PUNCH));
+  const px = lerp(cx, 960, k);
+  const py = lerp(cy, 540, k);
   const inS = lerp(0.55, 1, outQuad(clamp01((u - 0.35) / 0.65)));
   const inO = outQuad(clamp01((u - 0.3) / 0.4));
   return (
     <g>
       <g transform={`translate(960 540) scale(${inS}) translate(-960 -540)`} opacity={inO}>{to}</g>
-      <g transform={`translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})`} opacity={1 - clamp01((u - 0.8) / 0.2)}>{from}</g>
+      {u < PUNCH && <g transform={`translate(${px} ${py}) scale(${s}) translate(${-cx} ${-cy})`}>{from}</g>}
     </g>
   );
 };
