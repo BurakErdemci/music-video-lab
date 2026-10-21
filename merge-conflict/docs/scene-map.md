@@ -440,4 +440,37 @@ Gemini's points that held up when the frames were checked, now binding:
 - **Transitions match the clip.** The halftone-dot and wavy-paper covers in muted purple and brown go; disco parts use
   neon, laser, mirror-shard and glitch transitions, metal parts fire, shatter and screen-tear ones.
 - **Card defect:** the blue face close-up at the whisper (126.2 s) shows a sharp cyan triangle on her neck; fix the card.
-Rejected: adding a wobble or mesh sway to the girls (Burak found the sway absurd; the camera carries the motion).
+Rejected at first, then REVERSED by Burak (see "Living motion" below).
+
+## Living motion (Burak, 2026-10-21: "let's do Gemini's idea; ours swayed too much and always at the same tempo")
+
+The old sway failed on two counts: too big, and one constant tempo. The new secondary motion is small and follows the music:
+- **Camera shake** is always on, its amplitude driven per frame by the measured kick/bass energy (bigger on hits,
+  near zero in the piano), stepped every 3 frames in metal and smooth in disco.
+- **No frozen frame:** every held shot carries a slow push or pull (Ken Burns, 2-6 % over the shot).
+- **Hair and clothes ripple:** a mesh deformation on the card weighted to the outer silhouette (hair ends, flares,
+  coat tails, chains), zero inside the face box and the torso. The peak displacement is <= 0.6 % of the card height,
+  so roughly a tenth of the old sway. Amplitude follows the section energy (off in the piano, low in the verses, full
+  in the choruses and metal), and the phase is driven by the beat grid, never a free-running loop. It is measured:
+  max displacement, face-box displacement = 0, and the correlation of the amplitude with the section energy.
+- **Solo:** the cut rate doubles (a new framing every half bar or faster) and the camera trembles on the tempo; the
+  solo may reach 1.15x the chorus motion (Burak's call).
+
+## GIT! PUSH! FORCE! storyboard (Burak, 2026-10-21: "the power-up, the wave that pushes the blue girl is not there")
+
+proof140-r7b had the cards, but tiny on stage, a full-screen terminal in between, and giant type over the impact
+painting; the blue girl was missing. Shot by shot (the subject card >= 60 % of the frame height, type never over a face or action box):
+1. 120.03-120.68: a two-shot that sets up the target: orange (OF1) gathering power on the left, embers and light sucked
+   toward her fists; blue (metal) on the right, bracing. A low angle.
+2. 120.68 "GIT!": camera punch and shake on OF1 roaring; GIT! slams behind her, not over her face.
+3. 120.9-124.2: the build. Her charge grows (glow, cracks lighting up across the floor toward blue); `git push --force`
+   types as a small HUD in a corner, never full screen; OF2 leaps, the camera tilts up after her; a cut-in to blue's face (BMX) seeing it coming.
+4. 124.32 "PUSH!": OF3 smashes down; an impact frame; a shockwave ring races across the floor; cut to QK1, uncovered, with shake.
+5. 124.5-125.0: BF1 blue is thrown back across the frame with speed streaks and debris: the wave visibly hits and pushes her.
+6. 125.02 "FORCE!": OF4, finger to the sky, low angle; FORCE! behind her.
+
+## Resolution: no blur (Burak, 2026-10-21, on the 1:06 heist painting zoomed 2x)
+
+- Plates are upscaled 2x with Upscayl's digital-art-4x model (3072x2048).
+- No plate or card is ever shown above 1.25x its native pixel scale at the 2K output; `tools/framecheck.mjs` measures this.
+- Cards shown large (face close-ups and big action shots) get an upscaled copy the same way.
