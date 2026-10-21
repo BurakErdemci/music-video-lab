@@ -6,7 +6,7 @@
 import { useLoader } from '@react-three/fiber';
 import { useMemo } from 'react';
 import { staticFile } from 'remotion';
-import { BufferAttribute, DoubleSide, LinearFilter, LinearMipmapLinearFilter, NoColorSpace, PlaneGeometry, TextureLoader } from 'three';
+import { AdditiveBlending, BufferAttribute, DoubleSide, LinearFilter, LinearMipmapLinearFilter, NoColorSpace, PlaneGeometry, TextureLoader } from 'three';
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
 import { type Hex, rgb } from '../lib/ease.ts';
 import { GRADE_GLSL, type Grade, rivalOf } from '../grade/grade.ts';
@@ -146,6 +146,10 @@ const lightUniforms = (l: CardLight | undefined, t: number) => ({
   uTime: t,
 });
 
+/** The floor glow: a soft additive pool of the set's colour, brightest under the feet. */
+const GLOW_FRAG = /* glsl */ `uniform float uOpacity; uniform vec3 uColor; varying vec2 vUv;
+void main() { float r = length((vUv - 0.5) * 2.0); float a = (1.0 - smoothstep(0.0, 1.0, r)); gl_FragColor = vec4(uColor * a * uOpacity, 1.0); }`;
+
 export const useCardTexture = (id: string) => {
   const tex = useLoader(TextureLoader, staticFile(cardEntry(id).file));
   tex.colorSpace = NoColorSpace;
@@ -247,14 +251,20 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.16 : 0,
     uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
   });
-  const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.6 : 0 });
+  const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.78 : 0 });
+  // the floor glow: the set's light pooling around her feet (round 7c, Gemini: the girls looked pasted on)
+  const glow = useUniforms({ uOpacity: grounded ? opacity * 0.5 : 0, uColor: rgb(grade.hue) });
   const w = height * cardAspect(id);
   return (
     <>
       {grounded && (
         <>
+          <mesh position={[x + dx, FLOOR_Y + 0.003, z ?? 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool} visible={opacity > 0.001}>
+            <planeGeometry args={[w * 2.2, height * 0.42]} />
+            <shaderMaterial {...glow} vertexShader={SHADOW_VERT} fragmentShader={GLOW_FRAG} transparent depthTest={false} depthWrite={false} blending={AdditiveBlending} side={DoubleSide} />
+          </mesh>
           <mesh position={[x + dx, FLOOR_Y + 0.004, z ?? 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool + 1} visible={opacity > 0.001}>
-            <planeGeometry args={[w * 1.15, height * 0.16]} />
+            <planeGeometry args={[w * 1.3, height * 0.2]} />
             <shaderMaterial {...shadow} vertexShader={SHADOW_VERT} fragmentShader={SHADOW_FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
           </mesh>
           <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], -height * stretch[1] * 0.55, 1]} visible={opacity > 0.001}>
