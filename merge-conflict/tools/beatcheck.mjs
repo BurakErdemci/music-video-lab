@@ -114,7 +114,13 @@ const beatPos = (t) => {
 // defaults to 4, an assumption, not a measured rule. The hard stop and the end silence are dead by design.
 const limitFor = (name) => (/^(chorus|final|build|outro|intro)/i.test(name) ? 2 : 4);
 const EXEMPT = /^(hard_stop|silence_end)/;
-const beatLen = 60 / T.bpm_mean;
+// One 60 fps frame expressed in beats where the gap ends: the local beat length, not the mean BPM (take-v1's
+// intro runs at 156 BPM inside a 180 BPM song).
+const beatLenAt = (t) => {
+  const b = T.beats;
+  const i = Math.max(0, Math.min(b.length - 2, b.findIndex((x, k) => t < (b[k + 1] ?? Infinity))));
+  return b[i + 1] - b[i];
+};
 const violations = [];
 for (const s0 of T.sections) {
   if (EXEMPT.test(s0.name)) continue;
@@ -125,17 +131,19 @@ for (const s0 of T.sections) {
   const endId = s.end < s0.end ? '(range end)' : '(section end)';
   const pts = [{ pos: beatPos(s.start), id: '(section start)' }, ...evs.map((e) => ({ pos: beatPos(e.t), id: e.id })), { pos: beatPos(s.end), id: endId }];
   let worst = 0;
+  let worstEnd = s.end;
   let where = '';
   for (let k = 1; k < pts.length; k++) {
     const gap = pts[k].pos - pts[k - 1].pos;
     if (gap > worst) {
       worst = gap;
+      worstEnd = k < pts.length - 1 ? evs[k - 1]?.t ?? s.end : s.end;
       where = `${pts[k - 1].id} -> ${pts[k].id}`;
     }
   }
   const limit = limitFor(s.name);
   // One frame of tolerance absorbs rounding of both ends to whole frames.
-  const bad = worst > limit + 1 / FPS / beatLen;
+  const bad = worst > limit + 1 / FPS / beatLenAt(worstEnd);
   if (bad) violations.push(s.name);
   console.log(`${bad ? 'FAIL' : 'ok  '} ${(s.name + (clipped ? '*' : '')).padEnd(26)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(1).padStart(5)} beats (limit ${limit})  ${where}`);
 }

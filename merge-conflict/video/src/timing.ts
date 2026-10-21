@@ -2,12 +2,15 @@
 // requires the copy to be byte-identical). The scene clock is in SECONDS; frames only appear at render time.
 // Erasable TypeScript only: node loads this file in tools/.
 import raw from './data/mc-timing.json' with { type: 'json' };
+import type { MapToken } from './lyrics/bind.ts';
+import { gridLenAt, gridPos, gridTime, medianStep } from './timing/grid.ts';
 
 export interface TimingWord { w: string; s: number; e: number; p: number }
 export interface TimingSection { name: string; start: number; end: number }
 export interface TimingBar { bar: number; start: number; end: number }
 export interface TimingStop { start: number; end: number; note?: string }
-export interface TimingLine { section: string; text: string; ratio: number; start: number; end: number; heard: string }
+/** A lyric line; `tokens` is the token-to-word map (docs/architecture.md "Lyric token map"). */
+export interface TimingLine { section: string; text: string; ratio: number; start: number; end: number; heard: string; tokens?: MapToken[] }
 /** [time in seconds, first word as heard, second word as heard] */
 export type TimingHook = [number, string, string];
 export interface Timing {
@@ -71,20 +74,18 @@ export const sectionAt = (t: number): string => {
   return (s ?? at(sections, sections.length - 1, 'section')).name;
 };
 
-/** Continuous beat position at t seconds (beat index plus fraction). */
-export const beatPos = (t: number): number => {
-  const b = beats;
-  if (t <= (b[0] as number)) return (t - (b[0] as number)) / ((b[1] as number) - (b[0] as number));
-  let lo = 0;
-  let hi = b.length - 1;
-  if (t >= (b[hi] as number)) return hi + (t - (b[hi] as number)) / ((b[hi] as number) - (b[hi - 1] as number));
-  while (hi - lo > 1) {
-    const m = (lo + hi) >> 1;
-    if ((b[m] as number) <= t) lo = m;
-    else hi = m;
-  }
-  return lo + (t - (b[lo] as number)) / ((b[hi] as number) - (b[lo] as number));
-};
+const BEAT = medianStep(TIMING.beats);
+const BAR = medianStep(TIMING.downbeats);
+/** Continuous beat position at t (beat index plus fraction), from the beats around t. */
+export const beatPos = (t: number): number => gridPos(beats, t, BEAT);
+/** Continuous bar position at t (downbeat index plus fraction), from the downbeats around t. */
+export const barPos = (t: number): number => gridPos(downbeats, t, BAR);
+/** Length (s) of the beat t falls in; the median beat outside the measured grid. */
+export const beatLengthAt = (t: number): number => gridLenAt(beats, t, BEAT);
+/** Length (s) of the bar t falls in (3- and 5-beat bars included); the median bar outside the grid. */
+export const barLengthAt = (t: number): number => gridLenAt(downbeats, t, BAR);
+/** Time at a continuous beat position (e.g. "one beat after t" = beatTime(beatPos(t) + 1)). */
+export const beatTime = (pos: number): number => gridTime(beats, pos, BEAT);
 
 /** Index of the beat closest to t seconds. */
 export const nearestBeat = (t: number): number => {
