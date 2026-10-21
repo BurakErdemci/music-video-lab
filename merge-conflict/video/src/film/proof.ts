@@ -58,7 +58,7 @@ export const VERSE_CAM = movesPath('verse', V0, [
   { id: 'cam-pull-2', t: at('cam-pull-2'), frames: 40, to: shifted(HOME, [0.4, 0, -0.2]) },
 ]);
 
-export const RIFF_BURST: Burst = { t: at('riff-burst'), origin: [0, -2.6, 0.5] };
+export const RIFF_BURST: Burst = { t: at('riff-burst'), origin: [0, -2.0, 0.5] };
 export const HEAD_BURST: Burst = { t: at('head-burst'), origin: [VERSE_B.x, -1.0, 0.5] };
 
 export const WHITEOUTS: readonly WhiteoutSpec[] = [

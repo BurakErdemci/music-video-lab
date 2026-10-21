@@ -52,10 +52,10 @@ void main() {
     vec3 o = slot == 0 ? uBurstO[0] : slot == 1 ? uBurstO[1] : slot == 2 ? uBurstO[2] : uBurstO[3];
     float a = t - tb;
     if (tb < 0.0 || a < 0.0) { alpha = 0.0; a = 0.0; }
-    float spd = mix(5.0, 13.0, aRnd.x);
+    float spd = mix(9.0, 21.0, aRnd.x);
     float ang = mix(-2.6, 2.6, aSeed.x);
     vec3 v = vec3(sin(ang) * spd, cos(ang) * spd * mix(0.6, 1.1, aSeed.y) + 1.5, (aSeed.z - 0.5) * spd * 0.7);
-    float k = 2.6;
+    float k = 2.2;
     float e = (1.0 - exp(-k * a)) / k;
     p = o + v * e;
     p.y -= mix(0.6, 1.3, aRnd.y) * (a - e);
