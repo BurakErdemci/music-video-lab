@@ -4,17 +4,18 @@ Inputs (all in data/take-v1/ unless noted): _grid.json (beatgrid.py), _downbeats
 whisper_vocals.json (whisper_words.py on the mix and on the demucs vocal stem), sarki/sozler-v1.md, audio/merge-conflict-v1.wav.
 usage: python -I build_mc_timing.py STEMS_DIR      (STEMS_DIR holds drums/bass/other/vocals.wav from demucs htdemucs)
 Lyrics are bound only to measured (heard) words; a lyric line with < 50 % of its words heard gets start/end null."""
-import sys, re, json, numpy as np, librosa
+import os, sys, re, json, numpy as np, librosa
 from pathlib import Path
 from scipy.ndimage import median_filter
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 from lyrics_align import align, norm
 sys.stdout.reconfigure(encoding="utf-8")
 ROOT = Path(__file__).resolve().parents[2]
-D = ROOT / "data" / "take-v1"
+VER = os.environ.get("MC_TAKE", "v1")                # song version: audio/merge-conflict-<VER>.wav, sarki/sozler-<VER>.md -> data/take-<VER>/
+D = ROOT / "data" / f"take-{VER}"
 STEMS = Path(sys.argv[1])
-SRC = ROOT / "audio" / "merge-conflict-v1.wav"
-LYRICS = ROOT / "sarki" / "sozler-v1.md"
+SRC = ROOT / "audio" / f"merge-conflict-{VER}.wav"
+LYRICS = ROOT / "sarki" / f"sozler-{VER}.md"
 sr = 22050
 
 g = np.array(json.load(open(D / "_grid.json"))["beats"]); GR = json.load(open(D / "_grid.json"))
@@ -77,7 +78,7 @@ W.sort(key=lambda w: w["s"]); heard = [norm(w["w"]) for w in W]
 
 # ---------------- lyrics (v1 sheet: ``` fenced block; [Header: ...] sets the section, a leading [Voice] tag on a line sets the voice)
 raw = open(LYRICS, encoding="utf-8").read()
-block = raw.split("## Lyrics (v1)")[1].split("```")[1]
+block = raw.split("\n## Lyrics")[1].split("```")[1]
 lsecs = []; cur = None
 for ln in block.splitlines():
     s = ln.strip()
@@ -88,11 +89,16 @@ for ln in block.splitlines():
     voice = None; m = re.match(r"^\[([^\]]+)\]\s*(.*)$", s)
     if m: voice, s = m.group(1), m.group(2)
     if norm(s): cur["lines"].append(dict(text=s, voice=voice))
+def singer_of(tag, header):
+    t = (tag or header).lower()
+    if "sweet" in t: return "sweet"
+    if "raspy" in t: return "raspy"
+    return "both"                       # both voices, screams, and the flat robot voice (no girl sings it)
 lines = []; LW = []; owner = []
 for si, sec in enumerate(lsecs):
     for l in sec["lines"]:
         toks = [norm(t) for t in l["text"].split() if norm(t)]
-        lines.append(dict(sec=si, header=sec["header"], text=l["text"], voice=l["voice"], toks=toks))
+        lines.append(dict(sec=si, header=sec["header"], text=l["text"], voice=l["voice"], toks=toks, voice_name=singer_of(l["voice"], sec["header"])))
         for t in toks: LW.append(t); owner.append(len(lines) - 1)
 match = align(LW, heard)
 for L in lines: L["m"] = []; L["unmatched"] = []
@@ -152,7 +158,8 @@ micro_gaps = [[round(a, 2), round(z, 2)] for a, z in gaps if not any(a < s["end"
 def bar_at_or_before(t): return int(np.searchsorted(db_t, t, side="right") - 1)
 def bar_nearest(t): return int(np.argmin(np.abs(db_t - t)))
 # (name, lyric header prefix, first bar index, why this bar). Bar indices count from the first downbeat (0.303 s); rules are explained in timing-summary.md.
-SECTION_SPEC = [
+SPECS = {}
+SPECS['v1'] = [
     ("intro_robot", "Intro", 0, "file start; two flat robot lines 0.32-1.2 and 1.9-4.6 over a hit and a short drum fill"),
     ("intro_groove", None, 3, "instrumental: bass and full drums enter at 4.82 and play to the guitar hit, no sung word"),
     ("verse1_sweet", "Verse 1", 12, "downbeat of the bar holding the first word (17.10), band stop 17.25-17.75 inside it"),
@@ -171,6 +178,8 @@ SECTION_SPEC = [
     ("scream_end", "Both voices scream", 95, "heavy band re-enters on the downbeat 127.10 after the stop 124.5-127.1"),
     ("outro", "Outro", 112, "blast beat returns 149.5-150.5, then decay and silence"),
 ]
+exec(open(Path(__file__).with_name('mc_specs.py'), encoding='utf-8').read()) if VER != 'v1' else None     # other takes: SPECS[VER] lives in mc_specs.py
+SECTION_SPEC = SPECS[VER]
 sections = []
 for i, (name, hdr, b0, rule) in enumerate(SECTION_SPEC):
     b1 = SECTION_SPEC[i + 1][2] if i + 1 < len(SECTION_SPEC) else len(db_t)
@@ -190,9 +199,11 @@ def key_of(v):
     return sorted(sc, reverse=True)
 chroma = lambda a, z: yc[:, (tc >= a) & (tc < z)].mean(1)
 ks = key_of(chroma(0, dur))
-key_str = "%s (bass+other chroma, r=%.2f; next %s %.2f; both choruses read A# major, i.e. Ab major, the relative of F minor)" % (ks[0][1], ks[0][0], ks[1][1], ks[1][0])
+key_str = "%s (bass+other chroma, r=%.2f; next %s %.2f)" % (ks[0][1], ks[0][0], ks[1][1], ks[1][0])
 for s in sections:
     k2 = key_of(chroma(s["start"], s["end"])); s["key"] = dict(best=k2[0][1], r=round(k2[0][0], 3), second=k2[1][1], r2=round(k2[1][0], 3))
+for s_ in sections:
+    if s_["name"] in ("chorus1", "chorus2", "final_chorus"): key_str += "; %s reads %s r=%.2f" % (s_["name"], s_["key"]["best"], s_["key"]["r"])
 key_windows = []
 for b in range(0, len(db_t) - 8, 4):
     k2 = key_of(chroma(db_t[b], db_t[b + 8])); key_windows.append(dict(start=round(float(db_t[b]), 2), end=round(float(db_t[b + 8]), 2), bar=b, key=k2[0][1], r=round(k2[0][0], 3), second=k2[1][1], r2=round(k2[1][0], 3)))
@@ -235,13 +246,15 @@ for s in sections:
 # ---------------- write
 words_out = [dict(w=w["w"], s=round(w["s"], 3), e=round(w["e"], 3), p=round(w["p"], 3)) for w in W]
 lyric_alignment = [dict(section=L["header"].replace(": ", " - "), text=L["text"], ratio=round(L["ratio"], 2), start=None if L["start"] is None else round(L["start"], 2),
-                        end=None if L["end"] is None else round(L["end"], 2), heard=L["heard"] if L["anchored"] else None) for L in lines]
+                        end=None if L["end"] is None else round(L["end"], 2), heard=L["heard"] if L["anchored"] else None,
+                        singer={"sweet": "B", "raspy": "O", "both": "both"}[L["voice_name"]], voice=L["voice_name"]) for L in lines]
 hooks = []
 for i, w in enumerate(W[:-1]):
     if norm(w["w"]) in ("accept", "except") and norm(W[i + 1]["w"]) in ("current", "incoming", "both"):
         hooks.append([round(w["s"], 2), w["w"], W[i + 1]["w"]])
 out_bars = [dict(b, mix=round(b["mix"], 2), drums=round(b["drums"], 2), bass=round(b["bass"], 2), other=round(b["other"], 2), vocals=round(b["vocals"], 2)) for b in bars]
-timing = dict(source="merge-conflict-v1.wav", duration=round(dur, 2), key=key_str, meter="4/4 assumed", bpm_mean=round(float(60 / np.diff(g[g >= GR["segments"][1]["start"]]).mean()), 2),   # mean over the steady part: the first fitted segment (0-4.16 s, robot lines) has no pulse
+bpm_from = GR["segments"][1]["start"] if abs(GR["segments"][0]["bpm"] / float(np.median(60 / iv)) - 1) > 0.03 else 0.0     # skip a first fitted segment with no pulse (v1 intro)
+timing = dict(source=f"merge-conflict-{VER}.wav", duration=round(dur, 2), key=key_str, meter="4/4 assumed", bpm_mean=round(float(60 / np.diff(g[g >= bpm_from]).mean()), 2),   # mean over the steady part: the first fitted segment (0-4.16 s, robot lines) has no pulse
               
               bpm_range_20s=[round(min(w20), 1), round(max(w20), 1)],
               beats=[round(float(t), 3) for t in g], downbeats=[round(float(t), 3) for t in db_t],
@@ -252,7 +265,7 @@ timing = dict(source="merge-conflict-v1.wav", duration=round(dur, 2), key=key_st
 dump = lambda name, obj: json.dump(obj, open(D / name, "w", encoding="utf-8"), ensure_ascii=False, indent=1)
 dump("mc-timing.json", timing)
 dump("bars.json", out_bars)
-dump("lyric_align.json", [dict(l, voice=L["voice"]) for l, L in zip(lyric_alignment, lines)])
+dump("lyric_align.json", [dict(l, voice_tag=L["voice"]) for l, L in zip(lyric_alignment, lines)])
 dump("stops_raw.json", stops_raw)
 # details for timing-summary.md (not part of the engine schema)
 dump("_detail.json", dict(sections=sections, grid_segments=[dict(start=round(s["start"], 2), end=round(s["end"], 2), bpm=round(s["bpm"], 2), period=round(s["period"], 5)) for s in GR["segments"]],

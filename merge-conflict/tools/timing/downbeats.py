@@ -3,9 +3,11 @@ kick-band (<120 Hz) onset + bass/full chroma novelty + energy step. Bars may be 
 because the measured phase of kick/chord changes slips by a beat at several places. Writes data/_downbeats.json."""
 import json, sys, numpy as np, librosa
 from pathlib import Path
+import os
+VER = os.environ.get("MC_TAKE", "v1")          # song version: audio/merge-conflict-<VER>.wav -> data/take-<VER>/
 ROOT = Path(__file__).resolve().parents[2]
-SRC = str(ROOT / "audio" / "merge-conflict-v1.wav")
-D = str(ROOT / "data" / "take-v1") + "/"
+SRC = str(ROOT / "audio" / f"merge-conflict-{VER}.wav")
+D = str(ROOT / "data" / f"take-{VER}") + "/"
 LAM = float(sys.argv[1]) if len(sys.argv) > 1 else 4.0
 g = np.array(json.load(open(D + "_grid.json"))["beats"]); n = len(g)
 y, sr = librosa.load(SRC, sr=22050, mono=True); hop = 128

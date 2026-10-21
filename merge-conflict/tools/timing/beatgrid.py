@@ -5,10 +5,12 @@ envelope summed at the beats, minus PENALTY per extra segment. Beat level = the 
 is the same grid with every second beat dropped). Writes data/_grid.json."""
 import json, numpy as np, librosa
 from pathlib import Path
+import os
+VER = os.environ.get("MC_TAKE", "v1")          # song version: audio/merge-conflict-<VER>.wav -> data/take-<VER>/
 from scipy.ndimage import gaussian_filter1d
 ROOT = Path(__file__).resolve().parents[2]
-TAKE = ROOT / "data" / "take-v1"
-SRC = str(ROOT / "audio" / "merge-conflict-v1.wav")
+TAKE = ROOT / "data" / f"take-{VER}"
+SRC = str(ROOT / "audio" / f"merge-conflict-{VER}.wav")
 OUT = str(TAKE / "_grid.json")
 P_LO, P_HI, P_STEP = 0.28, 0.45, 0.0008      # beat period search range (s): 133-214 BPM, covers the 153 of take 1 and the 185 asked of Suno
 MIN_SEG, MAX_SEG, LATTICE, PENALTY = 6, 70, 2.0, 14.0
