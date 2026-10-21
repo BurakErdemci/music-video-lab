@@ -409,3 +409,18 @@ zoom on the accent word), lyric-locked hits, type with effects; in metal add ste
 fire and spark bursts, cut-ins to the faces (BX/OX/BMX/OMX), a new framing every bar in the solo (duel
 alternation, split screen, low angles), never two bars on the same full-body stage shot. The "Merge conflict"
 logo move stays the chorus's own. Flash <= 3/s still holds.
+
+## Framing: the face and the action stay in frame (Burak, 2026-10-21, on proof140-r7b)
+
+Burak, with a screenshot at 2:15 (an orange face close-up showing only mouth and chest): "most of the new images
+are like this, bigger than the screen, as if zoomed 2x." The camera punches, pushes and dolly zooms are stacked on
+top of cards already placed tight, so the eyes leave the frame.
+
+Binding, measured per frame by a new `tools/framecheck.mjs` (exit 1 on any failure):
+- Every card carries a measured **face box** (both eyes, brows and the top of the head, hair excluded) and an
+  **action box** (head, both hands, anything held, feet) in normalised card coordinates, stored next to the card.
+- Whenever a card is the subject of a shot, its face box stays fully inside the frame with a 4 % margin in every frame,
+  including through punches, shakes and dolly zooms.
+- A full-body action card shows its whole action box, except a framing that deliberately cuts at the knees or below.
+- A face close-up may fill the frame, but the face box may not exceed 70 % of the frame height.
+- The 0-64 s part (approved) is measured too; only frames that fail are changed there.
