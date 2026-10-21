@@ -1,0 +1,604 @@
+{
+ "note": "solo lines only, vocals.wav of the demucs separation; the screams GIT/PUSH/FORCE are excluded from 'melodic' and listed apart",
+ "lines": [
+  {
+   "line": 2,
+   "text": "I'm HEAD, I'm main, I'm stable and clean",
+   "singer": "sweet",
+   "scream": false,
+   "start": 16.88,
+   "end": 19.54,
+   "f0_median_hz": 350.98399350228027,
+   "f0_p10_hz": 312.69118989895867,
+   "f0_p90_hz": 393.96621227037315,
+   "f0_range_semitones": 4.0,
+   "centroid_hz": 2912.325001372204,
+   "flatness": 0.018840739503502846,
+   "hnr_db": 8.444026669484462,
+   "voiced_fraction": 0.2857142857142857,
+   "vocal_stem_db": -25.316144943237305
+  },
+  {
+   "line": 3,
+   "text": "Line forty-two, the button was blue, the calmest you've seen",
+   "singer": "sweet",
+   "scream": false,
+   "start": 19.54,
+   "end": 22.28,
+   "f0_median_hz": 391.69713385748963,
+   "f0_p10_hz": 346.9525984964539,
+   "f0_p90_hz": 414.9886574883231,
+   "f0_range_semitones": 3.0999999999999988,
+   "centroid_hz": 2961.612149575413,
+   "flatness": 0.016132976859807968,
+   "hnr_db": 9.65966104914776,
+   "voiced_fraction": 0.4448979591836735,
+   "vocal_stem_db": -25.11770248413086
+  },
+  {
+   "line": 4,
+   "text": "Reviewed and approved by the whole design team",
+   "singer": "sweet",
+   "scream": false,
+   "start": 22.28,
+   "end": 24.98,
+   "f0_median_hz": 261.42647251857596,
+   "f0_p10_hz": 232.90450925475,
+   "f0_p90_hz": 414.9886574883231,
+   "f0_range_semitones": 10.0,
+   "centroid_hz": 3092.5116798973754,
+   "flatness": 0.021741999313235283,
+   "hnr_db": 8.418244307473241,
+   "voiced_fraction": 0.34297520661157027,
+   "vocal_stem_db": -24.222652435302734
+  },
+  {
+   "line": 5,
+   "text": "Then someone pushed at midnight... who are you?",
+   "singer": "sweet",
+   "scream": false,
+   "start": 25.1,
+   "end": 27.68,
+   "f0_median_hz": 262.94090066745287,
+   "f0_p10_hz": 259.92076683399534,
+   "f0_p90_hz": 280.18995564988325,
+   "f0_range_semitones": 1.2999999999999994,
+   "centroid_hz": 3235.374384220586,
+   "flatness": 0.030245210975408554,
+   "hnr_db": 9.435438628154465,
+   "voiced_fraction": 0.31601731601731603,
+   "vocal_stem_db": -24.310462951660156
+  },
+  {
+   "line": 6,
+   "text": "I'm feature branch, I'm fresh from the night",
+   "singer": "raspy",
+   "scream": false,
+   "start": 27.68,
+   "end": 30.22,
+   "f0_median_hz": 391.69713385748963,
+   "f0_p10_hz": 313.3479193648535,
+   "f0_p90_hz": 393.96621227037315,
+   "f0_range_semitones": 3.963677897670875,
+   "centroid_hz": 3164.307825488386,
+   "flatness": 0.0308376494795084,
+   "hnr_db": 4.7220137846939725,
+   "voiced_fraction": 0.11842105263157894,
+   "vocal_stem_db": -25.299875259399414
+  },
+  {
+   "line": 7,
+   "text": "The button is ORANGE now and baby, orange is right",
+   "singer": "raspy",
+   "scream": false,
+   "start": 30.22,
+   "end": 32.84,
+   "f0_median_hz": 350.98399350228027,
+   "f0_p10_hz": 233.4465213430482,
+   "f0_p90_hz": 391.69713385748963,
+   "f0_range_semitones": 8.959757772870198,
+   "centroid_hz": 2939.872810823928,
+   "flatness": 0.01938525214791298,
+   "hnr_db": 3.013466026913819,
+   "voiced_fraction": 0.07659574468085106,
+   "vocal_stem_db": -24.56753921508789
+  },
+  {
+   "line": 8,
+   "text": "I rewrote your CSS and I'm ready to fight",
+   "singer": "raspy",
+   "scream": false,
+   "start": 32.84,
+   "end": 35.52,
+   "f0_median_hz": 468.5074227026001,
+   "f0_p10_hz": 414.9886574883231,
+   "f0_p90_hz": 519.8415336679908,
+   "f0_range_semitones": 3.9000000000000035,
+   "centroid_hz": 3298.274054039712,
+   "flatness": 0.018872609362006187,
+   "hnr_db": 7.2239096540698124,
+   "voiced_fraction": 0.1125,
+   "vocal_stem_db": -24.34636116027832
+  },
+  {
+   "line": 9,
+   "text": "Three hundred commits and I never asked once!",
+   "singer": "raspy",
+   "scream": false,
+   "start": 35.96,
+   "end": 38.4,
+   "f0_median_hz": 393.96621227037315,
+   "f0_p10_hz": 389.44112437458904,
+   "f0_p90_hz": 468.5074227026001,
+   "f0_range_semitones": 3.2,
+   "centroid_hz": 3233.917168362989,
+   "flatness": 0.01969211921095848,
+   "hnr_db": 7.226057343339854,
+   "voiced_fraction": 0.1689497716894977,
+   "vocal_stem_db": -23.9908390045166
+  },
+  {
+   "line": 24,
+   "text": "That history was mine, those commits were sweet!",
+   "singer": "sweet",
+   "scream": false,
+   "start": 67.28,
+   "end": 70.16,
+   "f0_median_hz": 358.1534705503353,
+   "f0_p10_hz": 341.9798342663644,
+   "f0_p90_hz": 390.56912911603933,
+   "f0_range_semitones": 2.3000000000000003,
+   "centroid_hz": 3295.9075266527425,
+   "flatness": 0.0283056553453207,
+   "hnr_db": 8.892098557697231,
+   "voiced_fraction": 0.10116731517509728,
+   "vocal_stem_db": -23.94578742980957
+  },
+  {
+   "line": 26,
+   "text": "Then git blame says it's YOUR name on every line!",
+   "singer": "sweet",
+   "scream": false,
+   "start": 72.72,
+   "end": 75.58,
+   "f0_median_hz": 272.2134915042738,
+   "f0_p10_hz": 231.8313642433184,
+   "f0_p90_hz": 400.2300931935566,
+   "f0_range_semitones": 9.4530466415581,
+   "centroid_hz": 3071.372483654503,
+   "flatness": 0.02214687503874302,
+   "hnr_db": 4.866689214845306,
+   "voiced_fraction": 0.050980392156862744,
+   "vocal_stem_db": -24.762231826782227
+  },
+  {
+   "line": 27,
+   "text": "The pipeline is red!",
+   "singer": "raspy",
+   "scream": false,
+   "start": 75.6,
+   "end": 76.84,
+   "f0_median_hz": 259.92076683399534,
+   "f0_p10_hz": 241.11786903593213,
+   "f0_p90_hz": 369.7128629991274,
+   "f0_range_semitones": 7.400000000000003,
+   "centroid_hz": 2901.774620109214,
+   "flatness": 0.02082972042262554,
+   "hnr_db": 4.606766693586653,
+   "voiced_fraction": 0.11206896551724138,
+   "vocal_stem_db": -25.060626983642578
+  },
+  {
+   "line": 49,
+   "text": "Maybe blue was never really mine",
+   "singer": "sweet",
+   "scream": false,
+   "start": 142.44,
+   "end": 144.68,
+   "f0_median_hz": 262.94090066745287,
+   "f0_p10_hz": 232.90450925475,
+   "f0_p90_hz": 278.5761802547597,
+   "f0_range_semitones": 3.0999999999999988,
+   "centroid_hz": 3227.179292385816,
+   "flatness": 0.013751484453678131,
+   "hnr_db": 9.220349733525076,
+   "voiced_fraction": 0.27722772277227725,
+   "vocal_stem_db": -23.575958251953125
+  },
+  {
+   "line": 50,
+   "text": "Maybe orange was just my way to say hello",
+   "singer": "raspy",
+   "scream": false,
+   "start": 144.68,
+   "end": 148.71,
+   "f0_median_hz": 348.9624744528825,
+   "f0_p10_hz": 262.94090066745287,
+   "f0_p90_hz": 393.96621227037315,
+   "f0_range_semitones": 6.999999999999998,
+   "centroid_hz": 3427.020589371391,
+   "flatness": 0.0206162016838789,
+   "hnr_db": 8.73970108008872,
+   "voiced_fraction": 0.2752808988764045,
+   "vocal_stem_db": -23.588836669921875
+  },
+  {
+   "line": 51,
+   "text": "We're the same file, just from different times",
+   "singer": "sweet",
+   "scream": false,
+   "start": 149.12,
+   "end": 154.47,
+   "f0_median_hz": 391.69713385748963,
+   "f0_p10_hz": 261.42647251857596,
+   "f0_p90_hz": 621.7804423383078,
+   "f0_range_semitones": 15.000000000000004,
+   "centroid_hz": 3060.7041400864414,
+   "flatness": 0.013562669046223164,
+   "hnr_db": 9.43785266266252,
+   "voiced_fraction": 0.4148936170212766,
+   "vocal_stem_db": -23.588821411132812
+  }
+ ],
+ "melodic": {
+  "summary": {
+   "sweet": {
+    "n_lines": 8,
+    "f0_median_hz": {
+     "median": 311.599,
+     "p25": 262.941,
+     "p75": 366.539
+    },
+    "f0_p10_hz": {
+     "median": 260.674,
+     "p25": 232.905,
+     "p75": 320.013
+    },
+    "f0_p90_hz": {
+     "median": 397.098,
+     "p25": 362.974,
+     "p75": 414.989
+    },
+    "f0_range_semitones": {
+     "median": 3.55,
+     "p25": 2.9,
+     "p75": 9.59
+    },
+    "centroid_hz": {
+     "median": 3081.942,
+     "p25": 3035.931,
+     "p75": 3229.228
+    },
+    "flatness": {
+     "median": 0.02,
+     "p25": 0.016,
+     "p75": 0.024
+    },
+    "hnr_db": {
+     "median": 9.056,
+     "p25": 8.438,
+     "p75": 9.436
+    },
+    "voiced_fraction": {
+     "median": 0.301,
+     "p25": 0.233,
+     "p75": 0.361
+    }
+   },
+   "raspy": {
+    "n_lines": 6,
+    "f0_median_hz": {
+     "median": 371.341,
+     "p25": 349.468,
+     "p75": 393.399
+    },
+    "f0_p10_hz": {
+     "median": 288.144,
+     "p25": 246.574,
+     "p75": 370.418
+    },
+    "f0_p90_hz": {
+     "median": 393.966,
+     "p25": 392.264,
+     "p75": 449.872
+    },
+    "f0_range_semitones": {
+     "median": 5.482,
+     "p25": 3.916,
+     "p75": 7.3
+    },
+    "centroid_hz": {
+     "median": 3199.112,
+     "p25": 2995.982,
+     "p75": 3282.185
+    },
+    "flatness": {
+     "median": 0.02,
+     "p25": 0.019,
+     "p75": 0.021
+    },
+    "hnr_db": {
+     "median": 5.973,
+     "p25": 4.636,
+     "p75": 7.226
+    },
+    "voiced_fraction": {
+     "median": 0.115,
+     "p25": 0.112,
+     "p75": 0.156
+    }
+   }
+  },
+  "separability": {
+   "n_lines": 14,
+   "n_sweet": 8,
+   "n_raspy": 6,
+   "majority_baseline": 0.571,
+   "loo_nearest_centroid_all_features": 0.714,
+   "f0_median_hz": {
+    "auc_sweet_higher": 0.344,
+    "loo_accuracy": 0.643
+   },
+   "centroid_hz": {
+    "auc_sweet_higher": 0.417,
+    "loo_accuracy": 0.643
+   },
+   "flatness": {
+    "auc_sweet_higher": 0.417,
+    "loo_accuracy": 0.286
+   },
+   "hnr_db": {
+    "auc_sweet_higher": 0.896,
+    "loo_accuracy": 0.714
+   }
+  }
+ },
+ "with_screams": {
+  "summary": {
+   "sweet": {
+    "n_lines": 8,
+    "f0_median_hz": {
+     "median": 311.599,
+     "p25": 262.941,
+     "p75": 366.539
+    },
+    "f0_p10_hz": {
+     "median": 260.674,
+     "p25": 232.905,
+     "p75": 320.013
+    },
+    "f0_p90_hz": {
+     "median": 397.098,
+     "p25": 362.974,
+     "p75": 414.989
+    },
+    "f0_range_semitones": {
+     "median": 3.55,
+     "p25": 2.9,
+     "p75": 9.59
+    },
+    "centroid_hz": {
+     "median": 3081.942,
+     "p25": 3035.931,
+     "p75": 3229.228
+    },
+    "flatness": {
+     "median": 0.02,
+     "p25": 0.016,
+     "p75": 0.024
+    },
+    "hnr_db": {
+     "median": 9.056,
+     "p25": 8.438,
+     "p75": 9.436
+    },
+    "voiced_fraction": {
+     "median": 0.301,
+     "p25": 0.233,
+     "p75": 0.361
+    }
+   },
+   "raspy": {
+    "n_lines": 6,
+    "f0_median_hz": {
+     "median": 371.341,
+     "p25": 349.468,
+     "p75": 393.399
+    },
+    "f0_p10_hz": {
+     "median": 288.144,
+     "p25": 246.574,
+     "p75": 370.418
+    },
+    "f0_p90_hz": {
+     "median": 393.966,
+     "p25": 392.264,
+     "p75": 449.872
+    },
+    "f0_range_semitones": {
+     "median": 5.482,
+     "p25": 3.916,
+     "p75": 7.3
+    },
+    "centroid_hz": {
+     "median": 3199.112,
+     "p25": 2995.982,
+     "p75": 3282.185
+    },
+    "flatness": {
+     "median": 0.02,
+     "p25": 0.019,
+     "p75": 0.021
+    },
+    "hnr_db": {
+     "median": 5.973,
+     "p25": 4.636,
+     "p75": 7.226
+    },
+    "voiced_fraction": {
+     "median": 0.115,
+     "p25": 0.112,
+     "p75": 0.156
+    }
+   }
+  },
+  "separability": {
+   "n_lines": 14,
+   "n_sweet": 8,
+   "n_raspy": 6,
+   "majority_baseline": 0.571,
+   "loo_nearest_centroid_all_features": 0.714,
+   "f0_median_hz": {
+    "auc_sweet_higher": 0.344,
+    "loo_accuracy": 0.643
+   },
+   "centroid_hz": {
+    "auc_sweet_higher": 0.417,
+    "loo_accuracy": 0.643
+   },
+   "flatness": {
+    "auc_sweet_higher": 0.417,
+    "loo_accuracy": 0.286
+   },
+   "hnr_db": {
+    "auc_sweet_higher": 0.896,
+    "loo_accuracy": 0.714
+   }
+  }
+ },
+ "timbre_only": {
+  "separability": {
+   "n_lines": 29,
+   "n_sweet": 14,
+   "n_raspy": 15,
+   "majority_baseline": 0.517,
+   "loo_nearest_centroid_all_features": 0.517,
+   "centroid_hz": {
+    "auc_sweet_higher": 0.562,
+    "loo_accuracy": 0.552
+   },
+   "flatness": {
+    "auc_sweet_higher": 0.524,
+    "loo_accuracy": 0.172
+   },
+   "high_share": {
+    "auc_sweet_higher": 0.557,
+    "loo_accuracy": 0.552
+   }
+  }
+ },
+ "line_classification": [
+  {
+   "line": 2,
+   "singer": "sweet",
+   "f0": 351.0,
+   "centroid": 2912,
+   "flatness": 0.019,
+   "hnr": 8.4
+  },
+  {
+   "line": 3,
+   "singer": "sweet",
+   "f0": 391.7,
+   "centroid": 2962,
+   "flatness": 0.016,
+   "hnr": 9.7
+  },
+  {
+   "line": 4,
+   "singer": "sweet",
+   "f0": 261.4,
+   "centroid": 3093,
+   "flatness": 0.022,
+   "hnr": 8.4
+  },
+  {
+   "line": 5,
+   "singer": "sweet",
+   "f0": 262.9,
+   "centroid": 3235,
+   "flatness": 0.03,
+   "hnr": 9.4
+  },
+  {
+   "line": 6,
+   "singer": "raspy",
+   "f0": 391.7,
+   "centroid": 3164,
+   "flatness": 0.031,
+   "hnr": 4.7
+  },
+  {
+   "line": 7,
+   "singer": "raspy",
+   "f0": 351.0,
+   "centroid": 2940,
+   "flatness": 0.019,
+   "hnr": 3.0
+  },
+  {
+   "line": 8,
+   "singer": "raspy",
+   "f0": 468.5,
+   "centroid": 3298,
+   "flatness": 0.019,
+   "hnr": 7.2
+  },
+  {
+   "line": 9,
+   "singer": "raspy",
+   "f0": 394.0,
+   "centroid": 3234,
+   "flatness": 0.02,
+   "hnr": 7.2
+  },
+  {
+   "line": 24,
+   "singer": "sweet",
+   "f0": 358.2,
+   "centroid": 3296,
+   "flatness": 0.028,
+   "hnr": 8.9
+  },
+  {
+   "line": 26,
+   "singer": "sweet",
+   "f0": 272.2,
+   "centroid": 3071,
+   "flatness": 0.022,
+   "hnr": 4.9
+  },
+  {
+   "line": 27,
+   "singer": "raspy",
+   "f0": 259.9,
+   "centroid": 2902,
+   "flatness": 0.021,
+   "hnr": 4.6
+  },
+  {
+   "line": 49,
+   "singer": "sweet",
+   "f0": 262.9,
+   "centroid": 3227,
+   "flatness": 0.014,
+   "hnr": 9.2
+  },
+  {
+   "line": 50,
+   "singer": "raspy",
+   "f0": 349.0,
+   "centroid": 3427,
+   "flatness": 0.021,
+   "hnr": 8.7
+  },
+  {
+   "line": 51,
+   "singer": "sweet",
+   "f0": 391.7,
+   "centroid": 3061,
+   "flatness": 0.014,
+   "hnr": 9.4
+  }
+ ]
+}

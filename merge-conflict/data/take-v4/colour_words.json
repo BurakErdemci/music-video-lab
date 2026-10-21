@@ -1,0 +1,197 @@
+{
+ "heard_in_words": {
+  "orange": [
+   {
+    "t": 30.96,
+    "end": 31.26,
+    "w": "orange"
+   },
+   {
+    "t": 31.98,
+    "end": 32.42,
+    "w": "orange"
+   },
+   {
+    "t": 39.24,
+    "end": 39.72,
+    "w": "orange,"
+   },
+   {
+    "t": 40.58,
+    "end": 41.0,
+    "w": "orange"
+   },
+   {
+    "t": 145.68,
+    "end": 146.2,
+    "w": "orange"
+   },
+   {
+    "t": 164.26,
+    "end": 164.46,
+    "w": "orange"
+   }
+  ],
+  "blue": [
+   {
+    "t": 38.4,
+    "end": 38.92,
+    "w": "Blue,"
+   },
+   {
+    "t": 39.98,
+    "end": 40.22,
+    "w": "blue,"
+   },
+   {
+    "t": 143.12,
+    "end": 143.38,
+    "w": "blue"
+   },
+   {
+    "t": 163.72,
+    "end": 164.0,
+    "w": "Blue"
+   }
+  ],
+  "pink": []
+ },
+ "raw_passes": {
+  "whisper_main": {
+   "orange": [
+    30.96,
+    31.98,
+    39.24,
+    40.58,
+    145.68,
+    164.26
+   ],
+   "blue": [
+    38.4,
+    39.98,
+    143.12,
+    163.72
+   ],
+   "pink": []
+  },
+  "whisper_vocals": {
+   "orange": [
+    30.96,
+    32.0,
+    38.9,
+    40.18,
+    145.68,
+    164.26
+   ],
+   "blue": [
+    38.36,
+    39.6,
+    143.0,
+    163.74
+   ],
+   "pink": []
+  }
+ },
+ "lyric_occurrences": [
+  {
+   "line": 3,
+   "text": "Line forty-two, the button was blue, the calmest you've seen",
+   "colour": "blue",
+   "voice": "sweet",
+   "heard_as": "glued,",
+   "t": 20.98,
+   "correct": false
+  },
+  {
+   "line": 7,
+   "text": "The button is ORANGE now and baby, orange is right",
+   "colour": "orange",
+   "voice": "raspy",
+   "heard_as": "orange",
+   "t": 30.96,
+   "correct": true
+  },
+  {
+   "line": 7,
+   "text": "The button is ORANGE now and baby, orange is right",
+   "colour": "orange",
+   "voice": "raspy",
+   "heard_as": "orange",
+   "t": 31.98,
+   "correct": true
+  },
+  {
+   "line": 10,
+   "text": "Blue!",
+   "colour": "blue",
+   "voice": "sweet",
+   "heard_as": "Blue,",
+   "t": 38.4,
+   "correct": true
+  },
+  {
+   "line": 11,
+   "text": "Orange!",
+   "colour": "orange",
+   "voice": "raspy",
+   "heard_as": "orange,",
+   "t": 39.24,
+   "correct": true
+  },
+  {
+   "line": 12,
+   "text": "Blue!",
+   "colour": "blue",
+   "voice": "sweet",
+   "heard_as": "blue,",
+   "t": 39.98,
+   "correct": true
+  },
+  {
+   "line": 13,
+   "text": "ORANGE!",
+   "colour": "orange",
+   "voice": "raspy",
+   "heard_as": "orange",
+   "t": 40.58,
+   "correct": true
+  },
+  {
+   "line": 49,
+   "text": "Maybe blue was never really mine",
+   "colour": "blue",
+   "voice": "sweet",
+   "heard_as": "blue",
+   "t": 143.12,
+   "correct": true
+  },
+  {
+   "line": 50,
+   "text": "Maybe orange was just my way to say hello",
+   "colour": "orange",
+   "voice": "raspy",
+   "heard_as": "orange",
+   "t": 145.68,
+   "correct": true
+  },
+  {
+   "line": 55,
+   "text": "Blue and orange together, it's a gradient now",
+   "colour": "blue",
+   "voice": "both",
+   "heard_as": "Blue",
+   "t": 163.72,
+   "correct": true
+  },
+  {
+   "line": 55,
+   "text": "Blue and orange together, it's a gradient now",
+   "colour": "orange",
+   "voice": "both",
+   "heard_as": "orange",
+   "t": 164.26,
+   "correct": true
+  }
+ ],
+ "pink_heard": 0
+}
