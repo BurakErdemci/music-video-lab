@@ -27,6 +27,9 @@ FACES = {
     'shrikhand': 'Shrikhand-Regular.ttf',
     'righteous': 'Righteous-Regular.ttf',
     'jetbrains': 'JetBrainsMono-Variable.ttf',
+    'fraktur': 'UnifrakturMaguntia-Book.ttf',
+    'pirata': 'PirataOne-Regular.ttf',
+    'metalmania': 'MetalMania-Regular.ttf',
 }
 CHARS = [chr(c) for c in range(32, 127)]
 BITMAP_CHARS = [c for c in CHARS if c.upper() == c and c != ' '] + [' ']

@@ -6,7 +6,7 @@ import { continueRender, delayRender, staticFile } from 'remotion';
 import metrics from './metrics.json' with { type: 'json' };
 
 /** Face keys: 'display' is Anton and 'mono' is IBM Plex Mono (the first engine's names). */
-export type Face = 'display' | 'mono' | 'bebas' | 'bungee' | 'monoton' | 'shrikhand' | 'righteous' | 'jetbrains';
+export type Face = 'display' | 'mono' | 'bebas' | 'bungee' | 'monoton' | 'shrikhand' | 'righteous' | 'jetbrains' | 'fraktur' | 'pirata' | 'metalmania';
 
 const FAMILY: Record<Face, { css: string; file: string; weight: string; metric: keyof typeof metrics | null }> = {
   display: { css: 'MCAnton', file: 'Anton-Regular.ttf', weight: '400', metric: 'anton' },
@@ -17,6 +17,9 @@ const FAMILY: Record<Face, { css: string; file: string; weight: string; metric: 
   shrikhand: { css: 'MCShrikhand', file: 'Shrikhand-Regular.ttf', weight: '400', metric: 'shrikhand' },
   righteous: { css: 'MCRighteous', file: 'Righteous-Regular.ttf', weight: '400', metric: 'righteous' },
   jetbrains: { css: 'MCJetBrains', file: 'JetBrainsMono-Variable.ttf', weight: '100 800', metric: 'jetbrains' },
+  fraktur: { css: 'MCFraktur', file: 'UnifrakturMaguntia-Book.ttf', weight: '400', metric: 'fraktur' },
+  pirata: { css: 'MCPirata', file: 'PirataOne-Regular.ttf', weight: '400', metric: 'pirata' },
+  metalmania: { css: 'MCMetalMania', file: 'MetalMania-Regular.ttf', weight: '400', metric: 'metalmania' },
 };
 
 export const familyOf = (face: Face): string => `'${FAMILY[face].css}', ${face === 'mono' || face === 'jetbrains' ? 'monospace' : 'sans-serif'}`;
