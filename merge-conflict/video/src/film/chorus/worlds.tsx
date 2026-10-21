@@ -73,13 +73,14 @@ export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED], plate 
 };
 
 export const InsertWorld = ({ t, color, hit }: { t: number; color: Hex; hit: number }) => {
+  // a steady, bright backdrop: the close-up sits between two arena shots 0.3 s apart, and a darker or decaying
+  // backdrop made each cut a flash (chorus 2, round 7)
   const p = pulseAt(t) * 0.35;
-  const k = clamp01((t - hit) / 0.5);
   return (
     <>
       <Backdrop color="#06020a" />
-      <LedWall position={[0, 0, -9]} width={30} height={18} cols={40} rows={24} colors={[color, '#ffffff']} pattern="radial" pulse={0.6 + 0.4 * p} t={t * 3} />
-      <Halo position={[0, 1.8, -3]} size={9 * (1 + 0.3 * (1 - k))} color={color} intensity={1.2} />
+      <LedWall position={[0, 0, -9]} width={30} height={18} cols={40} rows={24} colors={[color, '#ffffff']} pattern="radial" pulse={0.8 + 0.2 * p} t={t * 3} />
+      <Halo position={[0, 1.8, -3]} size={10} color={color} intensity={1.4} />
       <Embers box={[-9, 9, -5, 5, -4, 3]} count={180} t={t} color={color === RED ? EMBER : '#9fe8ff'} bursts={[{ t: hit, origin: [0, 1.5, 0] }]} />
     </>
   );
