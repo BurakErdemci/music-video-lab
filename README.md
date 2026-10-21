@@ -26,7 +26,8 @@ Two-colour silk-screen print, drawn poses, and a camera and transitions built in
 <a href="vorathul-nerfed/"><img src="vorathul-nerfed/docs/media/hero.jpg" alt="Vorathul: a matte black knight with organ-pipe wings in a painted cathedral" width="100%"></a><br>
 <b><a href="vorathul-nerfed/">Vorathul: NERFED</a></b><br>
 Symphonic metal anthem of a final boss who is nerfed in a patch and climbs out of the painting he lives in.
-4:33.8, 1440p at 60 fps. Graphic noir comic cut-outs on a 2.5D stage.
+4:33.8, 1440p at 60 fps. Graphic noir comic cut-outs on a 2.5D stage.<br>
+<a href="https://www.youtube.com/watch?v=QUtyszbWdDg">Watch on YouTube</a>
 </td>
 </tr>
 </table>

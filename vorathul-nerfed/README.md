@@ -1,5 +1,7 @@
 # Vorathul: NERFED
 
+**Watch it on YouTube: [Vorathul - NERFED || Opus 5.5 Music Clip](https://www.youtube.com/watch?v=QUtyszbWdDg)**
+
 <img src="docs/media/hero.jpg" alt="Vorathul, a matte black knight with a fan of pipe-organ wings, towering in a gold-and-blue painted cathedral" width="100%">
 
 *NERFED* is a 4:33 symphonic metal anthem about a final boss who gets nerfed in a patch. The film puts a
@@ -197,7 +199,7 @@ python tools/render_film.py --entry src/index.ts --comp Nerfed60 --frames 0-1642
   `vorathul-audio-input` (asset `Vorathul.Nerfed.wav`, 52.6 MB). Drafts are not visible to the public, so
   nobody else can download the song until it is published. The command above uses that tag; this README
   used to say `audio-input`.
-- **The final video is not attached to a release yet.**
+- **The final video is on YouTube only** (linked at the top), not in a release.
 - The delivered file is 2560x1440 but the Remotion compositions are 1920x1080 (`W` and `H` in
   `video/src/Root.tsx`). The repo does not record how the 1440p copy was made.
 - The making-of has parts 1 and 2 only, and part 2 still carries TODO comments for the later VFX rounds and
