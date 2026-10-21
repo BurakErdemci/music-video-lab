@@ -83,7 +83,7 @@ const Streaks = ({ spec, a, b, ox, oy, reach }: Ctx) => {
       <defs>
         <radialGradient id={gid} gradientUnits="userSpaceOnUse" cx={ox} cy={oy} r={reach}>
           <stop offset="0" stopColor={mixHex(c1, c0, 0.45)} />
-          <stop offset="1" stopColor={mixHex(c0, DARK, 0.4)} />
+          <stop offset="1" stopColor={mixHex(c0, DARK, 0.15)} />
         </radialGradient>
       </defs>
       <rect x={-20} y={-20} width={W + 40} height={H + 40} fill={`url(#${gid})`} opacity={veil} />
@@ -112,12 +112,12 @@ const Mirror = ({ spec, a, b, t }: Ctx) => {
       const op = twinkle.range(0.7, 1);
       const d = ((x - W / 2) * 0.7071 + (y - H / 2) * 0.7071) / half - p;
       const r = 36 * Math.exp(-((d / 0.5) ** 2));
-      if (r > 1) dots.push(<circle key={`${gx}-${gy}`} cx={x} cy={y} r={r} fill={light ? mixHex(c0, LIGHT, 0.55) : mixHex(c1, DARK, 0.25)} opacity={op} />);
+      if (r > 1) dots.push(<circle key={`${gx}-${gy}`} cx={x} cy={y} r={r} fill={light ? mixHex(c0, LIGHT, 0.55) : mixHex(c1, DARK, 0.15)} opacity={op} />);
     }
   }
   return (
     <g>
-      <Veil color={mixHex(c0, DARK, 0.45)} opacity={veil} />
+      <Veil color={mixHex(c0, DARK, 0.15)} opacity={veil} />
       {dots}
     </g>
   );
@@ -159,7 +159,7 @@ const Shatter = ({ spec, a, b, ox, oy, reach }: Ctx) => {
         <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
           <stop offset="0" stopColor={mixHex(c0, LIGHT, 0.3)} />
           <stop offset="0.5" stopColor={c0} />
-          <stop offset="1" stopColor={mixHex(c0, DARK, 0.4)} />
+          <stop offset="1" stopColor={mixHex(c0, DARK, 0.15)} />
         </linearGradient>
       </defs>
       {cracks.map((d, i) => (
@@ -221,7 +221,7 @@ const makeCracks = (id: string, ox: number, oy: number, reach: number, grow: num
 
 const Ink = ({ spec, a, b }: Ctx) => {
   const [c0, c1] = spec.colors;
-  const cols = [c0, mixHex(c1, DARK, 0.45), mixHex(mixHex(c0, c1, 0.5), DARK, 0.3)];
+  const cols = [c0, mixHex(c1, DARK, 0.15), mixHex(mixHex(c0, c1, 0.5), DARK, 0.15)];
   const centres = [100, 540, 980];
   const STEP = 40;
   const X0 = -300;
@@ -281,7 +281,7 @@ const Diff = ({ spec, a, b }: Ctx) => {
         const base = inserted ? ins : del;
         return (
           <g key={i} transform={`translate(${x},${i * rh})`}>
-            <rect x={0} y={0} width={W} height={rh + 1} fill={mixHex(base, DARK, 0.5)} />
+            <rect x={0} y={0} width={W} height={rh + 1} fill={mixHex(base, DARK, 0.15)} />
             <rect x={0} y={0} width={14} height={rh + 1} fill={base} />
             <text x={50} y={rh * 0.66} fontFamily="monospace" fontSize={rh * 0.5} fill={mixHex(base, LIGHT, 0.55)}>
               {inserted ? '+ ' : '- '}
