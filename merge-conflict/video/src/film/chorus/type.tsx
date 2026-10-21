@@ -13,7 +13,10 @@ import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
 import { MergeConflictLogo } from '../../type/logo/Logo.tsx';
 import { Kaleido } from '../../transitions/scene/scene.tsx';
+import { Knockout, faceBoxes } from '../../type/Knockout.tsx';
+import { Scrim } from '../../type/Scrim.tsx';
 import { LOGO_DESIGN } from '../proof.ts';
+import { CHORUS2_START, chorus1StateAt, chorus2StateAt } from './ChorusShot.tsx';
 import type { TypeEntry } from './typeplan.ts';
 
 /** Logo B's signature move (the same both times): the halves fly in from off frame and crash on "conflict",
@@ -26,8 +29,11 @@ export const logoApart = (t: number, merge: readonly [number, number, number, nu
   return 0;
 };
 
-// inside a 4 % margin, clear of the girls' heads in the slam shots (round 7c, Gemini)
-const box = { x: 760, y: 80, w: 1030, h: 560 };
+// Forms drawn in screen space: inside the 4 % margin whatever the camera does, below the girls' faces (they sit in the
+// upper half of every chorus frame), and cut away around any face that still crosses them (type/Knockout.tsx).
+// The rest live on the type plane, so the camera carries them.
+const SCREEN_FORMS: readonly string[] = ['Shout', 'Logo', 'Stack', 'Stamp', 'Extrude', 'Marquee', 'FlameText'];
+const box = { x: 300, y: 520, w: 1320, h: 480 };
 /** NO! sits off the screaming face (her bust is right of centre for orange, left for blue); NEVER! spans both. */
 const shoutPlace = (e: TypeEntry) =>
   e.text === 'NEVER!' ? { cx: 960, cy: 820, w: 1800, rot: e.style === 'steel' ? -4 : 4 } : e.style === 'steel' ? { cx: 640, cy: 720, w: 1120, rot: -7 } : { cx: 1300, cy: 720, w: 1120, rot: 6 };
@@ -37,7 +43,7 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
   const out: ReactNode[] = [];
   for (const e of entries) {
     if (t < e.t0 - 0.02 || t >= e.t1) continue;
-    const isScreen = e.form === 'Shout' || e.form === 'Logo';
+    const isScreen = SCREEN_FORMS.includes(e.form);
     if (isScreen !== screen) continue;
     const toks = lineTokens(e.line).slice(e.range[0], e.range[1]);
     switch (e.form) {
@@ -45,7 +51,7 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         out.push(<Stack key={e.id} spec={form(e)} t={t} />);
         break;
       case 'Stamp':
-        out.push(<Stamp key={e.id} spec={form(e, { x: 120, y: 80, w: 1100, h: 620 })} t={t} />);
+        out.push(<Stamp key={e.id} spec={form(e, { x: 200, y: 520, w: 1500, h: 480 })} t={t} />);
         break;
       case 'Shout':
         out.push(<Shout key={e.id} spec={{ id: `sh-${e.id}`, text: e.text ?? 'NO!', at: e.t0, until: e.t1, style: e.style ?? 'chrome', color: e.style === 'steel' ? '#ff2a14' : '#19c8ff', ...shoutPlace(e) }} t={t} />);
@@ -57,16 +63,21 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         out.push(<RunwayLine key={`${e.id}-43`} spec={{ id: `${e.id}-43`, text: '}', gutter: '43', t0: e.t0, t1: e.t1, cps: 80, origin: [-5.2, -3.38, 4.6], dir: [1, 0, 0], up: [0, 0, -1], size: 0.5, color: '#5f6b8a' }} t={t} pose={pose} />);
         break;
       case 'FlameText':
-        out.push(<FlameText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, y: 300, size: 150, face: 'metalmania', until: e.t1, key: 4 }} t={t} />);
+        out.push(<FlameText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, y: 720, size: 150, face: 'metalmania', until: e.t1, key: 4 }} t={t} />);
         break;
       case 'Wave':
         out.push(<Wave key={e.id} spec={form(e, { x: 140, y: 640, w: 1640, h: 380 })} t={t} opt={{ size: 190, face: 'bungee', amp: 110 }} />);
         break;
       case 'Extrude':
-        out.push(<Extrude key={e.id} spec={form(e, { x: 260, y: 120, w: 1400, h: 520 })} t={t} opt={{ size: 360, face: 'display', depth: 0.3 }} />);
+        out.push(<Extrude key={e.id} spec={form(e, { x: 260, y: 560, w: 1400, h: 440 })} t={t} opt={{ size: 330, face: 'display', depth: 0.3 }} />);
         break;
       case 'Marquee':
-        out.push(<Marquee key={e.id} spec={form(e, { x: 40, y: 260, w: 1840, h: 520 })} t={t} />);
+        out.push(
+          <g key={e.id}>
+            <Scrim x={140} y={610} w={1640} h={390} pad={20} />
+            <Marquee spec={form(e, { x: 140, y: 610, w: 1640, h: 390 })} t={t} />
+          </g>,
+        );
         break;
       case 'GlitchText':
         out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, y: 820, size: 170, face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
@@ -94,5 +105,7 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         break;
     }
   }
-  return <g>{out}</g>;
+  if (!screen) return <g>{out}</g>;
+  const faces = faceBoxes((t < CHORUS2_START ? chorus1StateAt : chorus2StateAt)(t));
+  return <Knockout id="ch-face-knockout" faces={faces}>{out}</Knockout>;
 };
