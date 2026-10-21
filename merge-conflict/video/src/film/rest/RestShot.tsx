@@ -1,0 +1,189 @@
+// Verse 3 (rebase), verse 4 (trade), the scream, GIT! PUSH! FORCE!, the whisper and the guitar solo (64.15-140.04 s,
+// round 7), drawn from the shot table in plan.ts on the worlds of worlds/v3.tsx, v4.tsx, groove.tsx and the chorus
+// worlds. The same recipe as the verses: a camera variant of each world's hero move per shot, painted plates behind,
+// girls lit by the scene, a cover transition on every world change and a shock inside one. The camera punches on
+// every downbeat in the verses and on every hit (each second beat) in the scream, the breakdown and the solo,
+// hardest in the breakdown; the whisper holds still.
+import { AbsoluteFill } from 'remotion';
+import { type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
+import { Card, type CardLight } from '../../cards/Card.tsx';
+import { EVENTS } from '../../events.ts';
+import { GRADES, type Grade, metalGrade } from '../../grade/grade.ts';
+import { clamp01, type Hex, outQuad } from '../../lib/ease.ts';
+import { lineTokens } from '../../lyrics/LyricLayer.tsx';
+import { Dissolve, dissolvePlan, dissolveState } from '../../particles/dissolve.tsx';
+import { type Burst, Field } from '../../particles/field.tsx';
+import { Stage } from '../../stage/Stage.tsx';
+import { FLOOR_Y } from '../../stage/floor.ts';
+import { barPos, downbeats, sec } from '../../timing.ts';
+import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
+import { FormDefs } from '../../type/forms/common.tsx';
+import { Svg } from '../../type/Svg.tsx';
+import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
+import { PlateLayer } from '../../worlds/plate.tsx';
+import { SUBWAY_CAMERA, SubwayWorld, TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
+import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
+import { BLAME_CAMERA, BLAME_GUTTERS, BlameWorld, CALLGRID_CAMERA, CallGridWorld, COUNTDOWN_FRAME, PIPELINE_CAMERA, PipelineWorld, SQUASH_CAMERA, SquashWorld } from '../../worlds/v3.tsx';
+import { CASE_LINE, GUILTY_TAG, LASERCASE_CAMERA, LaserCaseWorld, NAMETAG_CAMERA, NameTagWorld, WHISPER_CAMERA, WhisperWorld, WHITESPACE_CAMERA, WhitespaceWorld } from '../../worlds/v4.tsx';
+import { Arena, CYAN, InsertWorld, pulseAt, RED, SplitWorld } from '../chorus/worlds.tsx';
+import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
+import { BLUE_METAL_AT, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
+import { type Box, RestType } from './type.tsx';
+
+const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
+const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
+const ARENA_CAMERA: Hero = { from: cam([-6, 1.4, 14], [0, -1, -1], 44), to: cam([4, 1.0, 12.5], [0, -1, -1], 44) };
+const HERO: Record<RestScene, Hero> = {
+  rails: RAILS_CAMERA, subway: SUBWAY_CAMERA, squash: SQUASH_CAMERA, blame: BLAME_CAMERA, pipeline: PIPELINE_CAMERA, callgrid: CALLGRID_CAMERA,
+  whitespace: WHITESPACE_CAMERA, nametag: NAMETAG_CAMERA, lasercase: LASERCASE_CAMERA, scream: FACE_CAMERA, cathedral: CATHEDRAL_CAMERA,
+  forge: FORGE_CAMERA, warning: TERMINAL_CAMERA, pushface: FACE_CAMERA, whisper: WHISPER_CAMERA, tunnel: CHEVRON_TUNNEL_CAMERA, arena: ARENA_CAMERA, duel: FACE_CAMERA,
+};
+/** Painted plates (trial): night for the rebase, Burak's approved worlds for the rest; the code worlds alone where no plate fits. */
+const PLATES: Partial<Record<RestScene, string>> = { rails: 'W12', subway: 'W10', squash: 'W08', blame: 'W01', pipeline: 'W05', lasercase: 'W01', cathedral: 'W04', forge: 'W11', arena: 'W09' };
+/** Cover colours at about the plates' mean luminance (round 6's flash lesson). */
+const COLORS: Record<RestScene, [Hex, Hex]> = {
+  rails: ['#6a3cd8', '#e0508a'], subway: ['#2765ff', '#7d38ff'], squash: ['#d23d2a', '#3a5eee'], blame: ['#2765ff', '#19a0e0'], pipeline: ['#e9320b', '#c84a10'],
+  callgrid: ['#8a3cd8', '#e0508a'], whitespace: ['#2765ff', '#e9320b'], nametag: ['#d8602a', '#7d38ff'], lasercase: ['#e92645', '#2765ff'], scream: ['#ff2217', '#2d63fb'],
+  cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], warning: ['#ff2217', '#c84a10'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
+  tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'],
+};
+const TRANSITIONS: TransitionSpec[] = RSHOTS.map((s, i) => {
+  const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
+  return { id: `r-tr-${s.id}`, kind: cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene] };
+});
+
+const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;
+const HITS = EVENTS.filter((e) => e.kind === 'hit').map((e) => e.t);
+
+const BLUE_DISCO: Grade = { ...GRADES.reviewed, amount: 0.42 };
+const BLUE_METAL: Grade = metalGrade({ ...GRADES.reviewed, amount: 0.42 }, 1);
+const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
+
+// blue turns metal on the scream's downbeat: her shocked disco face scatters, her metal scream gathers
+const BLUE_TURN = dissolvePlan({ id: 'r-blue-metal', t0: SCREAM.start - 20 / 60, scatterFrames: 20, gatherFrames: 12, from: { card: 'BX3', at: { x: -4.4, feet: -5.4, height: 10.5, z: 0 } }, to: { card: 'BMX2', at: { x: -4.2, feet: -5.4, height: 10.5, z: 0 } } });
+
+const lightOf = (who: 'B' | 'O', t: number, scene: RestScene): CardLight => {
+  const metalScene = scene === 'cathedral' || scene === 'forge' || scene === 'tunnel' || scene === 'warning' || scene === 'pushface';
+  const key: Hex = metalScene ? '#ff5a1a' : who === 'B' ? CYAN : '#ff3a14';
+  if (scene === 'whisper') return { key: '#9fb8ff', keyAmt: 0.25, rim: 0.7 };
+  return { key, keyAmt: 0.4, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.9, amt: 0.45, color: metalScene ? '#ffd0a0' : '#d8e8ff', slope: 0.3 }, dots: scene === 'arena' ? 0.5 : 0.1, ball: [0, 5.3, -6], rim: 1.4 };
+};
+
+export const RestShot = ({ frame }: { frame: number }) => {
+  const t = sec(frame);
+  const { shot, k } = shotIn(RSHOTS, t);
+  const scene = shot.scene;
+  const blueP = poseAt(RBLUE, t);
+  const orangeP = poseAt(RORANGE, t);
+  const focus = focusOf(blueP && (scene === 'subway' || scene === 'blame' || scene === 'whitespace' || scene === 'nametag' || scene === 'whisper') ? blueP : (orangeP ?? blueP));
+  const base = variant(HERO[scene], shot.cam, k, focus);
+  const planeBase = variant(HERO[scene], shot.cam, 0, focus);
+  // the punch: every downbeat in the verses, every hit in the scream, breakdown and solo (hardest in the breakdown)
+  const heavy = t >= SCREAM.start && t < WHISPER.start;
+  const quiet = t >= WHISPER.start && t < SOLO.start;
+  const hits = t >= SCREAM.start ? HITS : downbeats;
+  const h = [...hits].reverse().find((x) => t >= x) ?? 0;
+  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : heavy || t >= SOLO.start ? 0.07 : 0.05;
+  const pose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
+  const plane = typePlane(pose, planeBase, 1);
+  const p = pulseAt(t) * 0.35;
+  // anchors: where the world's objects sit on the type plane's screen
+  const P = (v: Vec3) => project(planeBase, v);
+  const rect = (r: { centre: Vec3; width: number; height: number }): Box => {
+    const a = P([r.centre[0] - r.width / 2, r.centre[1] + r.height / 2, r.centre[2]]);
+    const b = P([r.centre[0] + r.width / 2, r.centre[1] - r.height / 2, r.centre[2]]);
+    return { x: a.x, y: a.y, w: b.x - a.x, h: b.y - a.y };
+  };
+  const gTop = P(BLAME_GUTTERS.far);
+  const gBot = P(BLAME_GUTTERS.near);
+  const anchors = {
+    gutter: scene === 'blame' ? { x: gTop.x + 30, y: Math.min(gTop.y, gBot.y) + 60, w: 1100, h: Math.min(560, Math.abs(gBot.y - gTop.y) * 0.8) } : undefined,
+    countdown: scene === 'callgrid' ? rect(COUNTDOWN_FRAME) : undefined,
+    tag: scene === 'nametag' ? rect(GUILTY_TAG) : undefined,
+    caseLine: scene === 'lasercase' ? rect(CASE_LINE) : undefined,
+  };
+  const fails = [tk(27, 1), tk(27, 2), tk(27, 3), tk(28, 1), tk(28, 2), tk(28, 3)];
+  const bursts: Burst[] = ([
+    { t: tk(25, 6), origin: [0, 0.5, 0] },
+    { t: tk(43, 3), origin: [0, 0, -1] },
+    { t: SCREAM.start, origin: [0, 1, 0] },
+    { t: tk(45, 0), origin: [0, 0, 0] },
+    { t: tk(46, 0), origin: [3, 0, 0] },
+    { t: tk(47, 0), origin: [0, 1, 0] },
+    ...HITS.filter((x) => x >= SOLO.start).map((x) => ({ t: x, origin: [0, 0, 0] })),
+  ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).slice(-4);
+  const world = (() => {
+    switch (scene) {
+      case 'rails':
+        return <RailsWorld t={t} plate="shot" split={tk(23, 1)} />;
+      case 'subway':
+        return <SubwayWorld t={t} plate="shot" lit={{ main: 1, feature: 0.6, stable: 1 }} />;
+      case 'squash':
+        return <SquashWorld t={t} plate="shot" squash={tk(25, 6)} />;
+      case 'blame':
+        return <BlameWorld t={t} plate="shot" />;
+      case 'pipeline':
+        return <PipelineWorld t={t} plate="shot" fails={fails} />;
+      case 'callgrid':
+        return <CallGridWorld t={t} off={tk(29, 6)} />;
+      case 'whitespace':
+        return <WhitespaceWorld t={t} />;
+      case 'nametag':
+        return <NameTagWorld t={t} reveal={tk(40, 4)} />;
+      case 'lasercase':
+        return <LaserCaseWorld t={t} plate="shot" smash={tk(43, 3)} />;
+      case 'scream':
+      case 'duel':
+        return <SplitWorld t={t} hit={[...HITS].reverse().find((x) => t >= x) ?? t} />;
+      case 'cathedral':
+        return <CathedralWorld t={t} plate="shot" hits={HITS} />;
+      case 'forge':
+        return <ForgeWorld t={t} plate="shot" hits={HITS} />;
+      case 'tunnel':
+        return <ChevronTunnelWorld t={t} hits={HITS} />;
+      case 'warning':
+        return <TerminalWorld t={t} fail={shot.t} />;
+      case 'pushface':
+        return <InsertWorld t={t} color={RED} hit={tk(47, 0)} />;
+      case 'whisper':
+        return <WhisperWorld t={t} />;
+      case 'arena':
+        return <Arena t={t} stomps={[]} embers={[]} lasers={1.4} led={['#ff3014', '#ffb020']} plate />;
+    }
+  })();
+  const blueGrade = t >= BLUE_METAL_AT ? BLUE_METAL : BLUE_DISCO;
+  const figure = (who: 'B' | 'O', pp: ReturnType<typeof poseAt>, opacity = 1) => {
+    if (!pp?.at) return null;
+    const clip = scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined;
+    const grounded = (pp.at.feet ?? FLOOR_Y) === FLOOR_Y;
+    return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={who === 'B' ? blueGrade : ORANGE_METAL} {...pp.at} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clip} light={lightOf(who, t, scene)} ground={grounded ? undefined : false} />;
+  };
+  const turn = dissolveState(BLUE_TURN, t);
+  const blueFig = turn.active ? <>{figure('B', { t: 0, card: 'BX3', at: BLUE_TURN.from?.at }, turn.fromOpacity)}{figure('B', { t: 0, card: 'BMX2', at: BLUE_TURN.to?.at }, turn.toOpacity)}</> : figure('B', blueP);
+  return (
+    <AbsoluteFill style={{ background: '#000' }}>
+      <Stage pose={pose}>
+        {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
+        {world}
+        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.6 + p} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
+        {blueFig}
+        {figure('O', orangeP)}
+        {turn.active && <Dissolve plan={BLUE_TURN} t={t} grade={BLUE_METAL} />}
+        {!quiet && <Field t={t} grade={BLUE_DISCO} layer="front" density={0.5} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
+      </Stage>
+      <Svg>
+        <FormDefs />
+        <g transform={plane.transform}>
+          <RestType entries={REST_TYPE.filter((e) => e.form !== 'Shout')} t={t} anchors={anchors} />
+        </g>
+        <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
+        {TRANSITIONS.map((s) => {
+          const [a, b] = transitionWindow(s);
+          return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
+        })}
+      </Svg>
+    </AbsoluteFill>
+  );
+};
+
+export const REST_START = RSHOTS[0]?.t ?? 0;
