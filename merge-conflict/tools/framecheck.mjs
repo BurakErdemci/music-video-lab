@@ -196,12 +196,13 @@ if (process.argv.includes('--type')) {
   });
   for (const fr of picks) {
     const st = M.filmStateAt(fr);
-    const faces = st.subjects.filter((x) => !x.silhouette && frames[x.card]).map((x) => { const b = screenBox(st.pose, x, frames[x.card].face); return [b.x0, b.y0, b.x1, b.y1]; });
-    samples.push({ frame: fr, t: fr / FPS, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), faces });
+    const subj = st.subjects.filter((x) => !x.silhouette && frames[x.card]);
+    const faces = subj.map((x) => { const b = screenBox(st.pose, x, frames[x.card].face); return [b.x0, b.y0, b.x1, b.y1]; });
+    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), faces, cards: subj.map((x) => x.card) });
   }
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));
-  const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'typeframe.py'), list], { stdio: 'inherit' });
+  const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'typeframe.py'), list, path.join(shots, 'failures.json')], { stdio: 'inherit' });
   rmSync(serveUrl, { recursive: true, force: true });
   // --keep <dir> copies the stills there before the temp dir goes
   if (arg('keep')) cpSync(shots, path.resolve(arg('keep')), { recursive: true });
