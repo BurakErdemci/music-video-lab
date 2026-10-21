@@ -27,8 +27,8 @@ export const VSHOTS: VShot[] = [
   // V1, blue alone, the neon light-box city
   { id: 'sub-ride', t: V1.start, scene: 'subway', cam: 'hero', into: 'streaks' },
   { id: 'sub-head', t: tk(2, 1), scene: 'subway', cam: 'close', into: 'shock' },
-  { id: 'sub-main', t: tk(2, 3), scene: 'subway', cam: 'low', into: 'shock' },
-  { id: 'sub-kick', t: tk(2, 5), scene: 'subway', cam: 'wide', into: 'shock' },
+  { id: 'sub-main', t: tk(2, 3), scene: 'subway', cam: 'hero', into: 'shock' },
+  { id: 'sub-kick', t: tk(2, 5), scene: 'subway', cam: 'low', into: 'shock' },
   { id: 'run-line', t: tk(3, 0), scene: 'runway', cam: 'hero', into: 'diff' },
   { id: 'run-blue', t: tk(3, 5), scene: 'runway', cam: 'close', into: 'shock' },
   { id: 'press-wall', t: tk(4, 0), scene: 'press', cam: 'hero', into: 'mirror' },
