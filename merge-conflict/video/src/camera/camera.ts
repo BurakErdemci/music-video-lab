@@ -72,3 +72,39 @@ export const project = (pose: CameraPose, p: Vec3): Projected => {
   const k = H / 2 / (z * Math.tan((pose.fov * Math.PI) / 360));
   return { x: W / 2 + dot(v, right) * k, y: H / 2 - dot(v, up) * k, s: k };
 };
+
+/** Screen pixel to the world point on the plane z = zp, through the same camera project() uses. */
+export const unproject = (pose: CameraPose, px: number, py: number, zp = 0): [number, number] => {
+  const fwd = norm(sub(pose.target, pose.position));
+  const right = norm(cross(fwd, [0, 1, 0]));
+  const up = cross(right, fwd);
+  const k = Math.tan((pose.fov * Math.PI) / 360);
+  const nx = ((px - W / 2) / (H / 2)) * k;
+  const ny = ((H / 2 - py) / (H / 2)) * k;
+  const d: Vec3 = [fwd[0] + right[0] * nx + up[0] * ny, fwd[1] + right[1] * nx + up[1] * ny, fwd[2] + right[2] * nx + up[2] * ny];
+  const s = (zp - pose.position[2]) / d[2];
+  return [pose.position[0] + d[0] * s, pose.position[1] + d[1] * s];
+};
+
+// ---- continuous camera (round 4: the motion belongs to the camera and the space) ---------------------------
+/** A continuous move from `from` to `to` over [t0, t1], at constant speed (a dolly never stops inside a shot). */
+export const drift = (from: CameraPose, to: CameraPose, t0: number, t1: number): CameraPath => (t) => blendPose(from, to, Math.min(1, Math.max(0, (t - t0) / (t1 - t0))));
+/** A camera punch on each hit: the fov narrows by `amt` (fraction) and eases back over 10 frames, no bounce. */
+export const punched = (path: CameraPath, hits: readonly number[], amt = 0.06): CameraPath => (t) => {
+  const p = path(t);
+  const h = [...hits].reverse().find((x) => t >= x);
+  if (h === undefined) return p;
+  const u = (t - h) * 6;
+  return u >= 1 ? p : { ...p, fov: p.fov * (1 - amt * (1 - outQuad(u))) };
+};
+/** The SVG transform that keeps a type layer authored in the screen space of `base` on the world plane z = zp under `pose`:
+ *  type at zp > 0 sits in front of the girls (z = 0) and the set (z = -10), so a camera move parallaxes the
+ *  three layers. `map` sends a HOME-screen point through the same transform. */
+export const typePlane = (pose: CameraPose, base: CameraPose = HOME, zp = 1): { transform: string; map: (x: number, y: number) => [number, number] } => {
+  const c0 = unproject(base, W / 2, H / 2, zp);
+  const c1 = unproject(base, W / 2 + 100, H / 2, zp);
+  const pc = project(pose, [c0[0], c0[1], zp]);
+  const p1 = project(pose, [c1[0], c1[1], zp]);
+  const s = (p1.x - pc.x) / 100;
+  return { transform: `translate(${pc.x.toFixed(2)} ${pc.y.toFixed(2)}) scale(${s.toFixed(5)}) translate(${-W / 2} ${-H / 2})`, map: (x, y) => [pc.x + (x - W / 2) * s, pc.y + (y - H / 2) * s] };
+};
