@@ -75,7 +75,7 @@ const AY = 1.02 - PAD;
 const SPLIT_M = (0.04 * W) / (H / 2);
 /** How far the guard may widen and pan: the plates cover 1.3x the frame at the shot's opening pose, and the shots'
  *  own moves already use part of that. */
-const ZMAX = 1.25;
+const ZMAX = 1.5;
 const PAN_MAX = 0.45;
 /** Where a knee framing may cut, down the card (normalised, y down). */
 export const KNEE_V = 0.7;
@@ -126,7 +126,12 @@ const panWindow = (lims: readonly Limit[], z: number, ax: 0 | 1): [number, numbe
   }
   return [L, R];
 };
-const fits = (lims: readonly Limit[], z: number) => (panWindow(lims, z, 0)[0] <= panWindow(lims, z, 0)[1] + 1e-9) && (panWindow(lims, z, 1)[0] <= panWindow(lims, z, 1)[1] + 1e-9);
+/** Does widening z leave a pan inside the remaining pan budget [lo, hi] per axis that fits every limit? */
+const fits = (lims: readonly Limit[], z: number, lo: [number, number], hi: [number, number]) =>
+  ([0, 1] as const).every((ax) => {
+    const [L, R] = panWindow(lims, z, ax);
+    return Math.max(L, lo[ax]) <= Math.min(R, hi[ax]) + 1e-9;
+  });
 const clamp = (v: number, a: number, b: number) => Math.min(b, Math.max(a, v));
 
 /** The framing guard: the least widening, then the least pan, that keeps the subjects in frame. */
@@ -142,16 +147,20 @@ export const guard = (pose0: CameraPose, subjects: readonly Subject[]): { pose: 
     const { lims, zLo, zHi } = limitsOf(pose, subjects);
     if (!lims.length) break;
     const lo = Math.max(1, zLo);
-    const hi = Math.max(lo, Math.min(ZMAX / zTotal, zHi));
+    // a barrel roll turns side-by-side girls upright on screen; there the guard may widen up to 2x
+    const zMax = ZMAX + 0.5 * Math.abs(Math.sin(pose0.roll ?? 0));
+    const hi = Math.max(lo, Math.min(zMax / zTotal, zHi));
     let z: number;
-    if (fits(lims, lo)) z = lo;
-    else if (!fits(lims, hi)) z = hi;
+    const pLo: [number, number] = [-PAN_MAX - panX, -PAN_MAX - panY];
+    const pHi: [number, number] = [PAN_MAX - panX, PAN_MAX - panY];
+    if (fits(lims, lo, pLo, pHi)) z = lo;
+    else if (!fits(lims, hi, pLo, pHi)) z = hi;
     else {
       let a = lo;
       let b = hi;
       for (let k = 0; k < 24; k++) {
         const m = (a + b) / 2;
-        if (fits(lims, m)) b = m;
+        if (fits(lims, m, pLo, pHi)) b = m;
         else a = m;
       }
       z = b;
