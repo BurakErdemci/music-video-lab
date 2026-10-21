@@ -113,6 +113,16 @@ if (take === 'take-v4') {
   check('orange turns metal on the measured "ORANGE!" shout', C.costumeAt('O', orangeWord.s).form === 'metal' && C.costumeAt('O', orangeWord.s - 0.02).form === 'disco', `${orangeWord.w} @ ${orangeWord.s} s`);
   check('the costume does not follow the heaviness: orange stays disco through a heavy bar before 40.58 s', (() => { const hb = T.bars.find((x) => x.start > 16.33 && x.end < orangeWord.s && x.heavy >= 65); return !hb || C.costumeAt('O', hb.start + 0.1).form === 'disco'; })());
   check('type family: a blue solo line in verse 1 is pop, the groove (set metal 1) is metal for a duet', C.familyFor('B', 18, M.metalAt(18)) === 'pop' && C.familyFor('both', 10, M.metalAt(10)) === 'metal');
+  // round 3: in the hard-metal groove no type state sits unchanged for longer than one bar
+  const E = await import(pathToFileURL(path.join(ROOT, 'video/src/events.ts')).href);
+  const changes = E.EVENTS.filter((e) => e.kind === 'type-change' && e.t >= groove.start - 1e-3 && e.t <= verse.start + 1e-3).map((e) => e.t).sort((a, b) => a - b);
+  const pts = [groove.start, ...changes, verse.start];
+  let worst = 0, where = '';
+  for (let i = 1; i < pts.length; i++) {
+    const g = grid.gridPos(T.downbeats, pts[i]) - grid.gridPos(T.downbeats, pts[i - 1]);
+    if (g > worst) { worst = g; where = `${pts[i - 1].toFixed(2)}-${pts[i].toFixed(2)} s`; }
+  }
+  check('groove: the type changes at least once per bar', worst <= 1 + 1e-3, `longest unchanged ${worst.toFixed(2)} bars (${where}), ${changes.length} changes`);
   check('the per-singer bias: blue a step toward pop, orange toward metal', M.metalFor(60, 'B') < M.metalAt(60) && M.metalFor(60, 'O') > M.metalAt(60));
 }
 
