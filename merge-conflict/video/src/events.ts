@@ -30,6 +30,7 @@ const tokens = (line: number, n: number, kind: string): FilmEvent[] => Array.fro
 
 /** Beats of chorus 1 (42.90-64.15 s): the chorus pulse. */
 const CHORUS = sectionNamed('chorus1');
+const CHORUS2 = sectionNamed('chorus2');
 // round 6: the camera punches on EVERY chorus beat (scene-map.md "The chorus is the peak")
 const CHORUS_PULSES = beatsIn(CHORUS.start, CHORUS.end);
 /** intro_groove (4.37-16.33 s, hard metal by Burak's ear): a metal hit on every second beat, 13..47. */
@@ -111,6 +112,12 @@ export const EVENTS: FilmEvent[] = [
   ev('framing-c13', 'framing', 'downbeat', 47),
   // a visible pulse on every chorus beat: the camera punch, the floor and LED wall pulse
   ...CHORUS_PULSES.map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b)),
+  // round 7: verse 3 (rebase), chorus 2, verse 4 (trade), the scream, GIT! PUSH! FORCE!, the whisper, the solo
+  ...[23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 45, 46, 47, 48].flatMap((l) => tokens(l, lines[l]?.text.split(/\s+/).filter(Boolean).length ?? 0, 'type')),
+  ...beatsIn(CHORUS2.start, CHORUS2.end).map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b)),
+  // the scream, the breakdown and the solo hit on every second beat (camera punch, sparks); "AAAAAH!" has no
+  // measured word, so the scream's events are its beats
+  ...[sectionNamed('scream'), sectionNamed('breakdown_git_push_force'), sectionNamed('guitar_solo')].flatMap((sec) => beatsIn(sec.start, sec.end).filter((b) => b % 2 === 0).map((b) => ev(`hit-${b}`, 'hit', 'beat', b))),
 ];
 
 const BY_ID = new Map(EVENTS.map((e) => [e.id, e]));
