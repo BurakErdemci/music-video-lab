@@ -27,12 +27,23 @@ export interface DissolvePlan {
 }
 const DELAY = 0.1;
 
+/** architecture.md: scatter 20-28 frames, gather 12-20 frames at 60 fps (cards and letters alike). */
+export const checkDissolveFrames = (id: string, scatter: number, gather: number): void => {
+  if (scatter < 20 || scatter > 28) throw new Error(`dissolve ${id}: scatter ${scatter} frames (allowed 20-28 at 60 fps)`);
+  if (gather < 12 || gather > 20) throw new Error(`dissolve ${id}: gather ${gather} frames (allowed 12-20 at 60 fps)`);
+};
+const oq = (x: number) => {
+  const k = Math.min(1, Math.max(0, x));
+  return 1 - (1 - k) * (1 - k);
+};
+/** The dissolve's curves (the same as its vertex shader): scatter pS then gather pG, per-point delay. */
+export const dissolveCurves = (u: number, delay: number, scatter: number, gather: number) => ({ pS: oq((u - delay) / scatter), pG: oq((u - scatter - delay) / gather) });
+
 /** Builds a plan and checks the frame counts against architecture.md (scatter 20-28, gather 12-20 at 60 fps). */
 export const dissolvePlan = (p: Omit<DissolvePlan, 'scatter' | 'gather'> & { scatterFrames?: number; gatherFrames?: number }): DissolvePlan => {
   const s = p.scatterFrames ?? 24;
   const g = p.gatherFrames ?? 16;
-  if (s < 20 || s > 28) throw new Error(`dissolve ${p.id}: scatter ${s} frames (allowed 20-28 at 60 fps)`);
-  if (g < 12 || g > 20) throw new Error(`dissolve ${p.id}: gather ${g} frames (allowed 12-20 at 60 fps)`);
+  checkDissolveFrames(p.id, s, g);
   if (!p.from && !p.to) throw new Error(`dissolve ${p.id}: needs a from or a to card`);
   // A gather-only plan (points -> card) starts from the scattered cloud: no scatter phase.
   return { id: p.id, t0: p.t0, from: p.from, to: p.to, scatter: p.from ? s / 60 : 0, gather: g / 60 };
