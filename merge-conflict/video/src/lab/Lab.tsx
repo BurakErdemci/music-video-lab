@@ -22,8 +22,16 @@ import { Floor, Marquee } from '../type/forms/Dots.tsx';
 import { Flap, Ring, Wave } from '../type/forms/Letters.tsx';
 import { Extrude, Stamp as StampForm } from '../type/forms/Plates.tsx';
 import { Stack } from '../type/forms/Stack.tsx';
-import { counterOf, counterPlan, LetterMorph, MarkerWipe, morphPlan, shatterEnd, shatterPlan, TextShatter, ThroughCounter, TypeWhip, whipPlan, type WordAt, wipePlan } from '../type/transitions/transitions.tsx';
+import { counterOf, counterPlan, holeOf, LetterMorph, MarkerWipe, morphPlan, shatterEnd, shatterPlan, TextShatter, ThroughCounter, TypeWhip, whipPlan, type WordAt, wipePlan } from '../type/transitions/transitions.tsx';
 import { lineTokens, type Token } from '../lyrics/LyricLayer.tsx';
+import type { CameraPose } from '../camera/camera.ts';
+import type { CardProps, Placement } from '../cards/Card.tsx';
+import type { Hex } from '../lib/ease.ts';
+import { downbeat } from '../timing.ts';
+import { HoopType, type HoopPlan, kickCards, kickPlan, KickWord, perchDy, perchPlacement, perchVisible, PerchWord, RevealBoard, type RevealPlan, revealDone, throwPlan, throwRecoil, ThrowWords } from '../girls/interact.tsx';
+import { Fill, Knockout } from '../girls/inside.tsx';
+import { focusAt, focusLook, focusPlan, framing, type FramingKind, framingPlan, type Girl, poseBarDraws, poseBarPlan } from '../girls/staging.tsx';
+import { hueAt, keyFill } from '../type/forms/common.tsx';
 import { LightBox } from '../type/LightBox.tsx';
 import { Slam } from '../type/Slam.tsx';
 import { Stamp } from '../type/Stamp.tsx';
@@ -279,7 +287,7 @@ const L_WIPE = wipePlan({ id: 'lab-wipe', t0: 0.6, marker: '>', frames: 26 });
 const L_WIPE2 = wipePlan({ id: 'lab-wipe2', t0: 1.9, marker: '=', frames: 26 });
 const L_MORPH = morphPlan({ id: 'lab-morph', t0: 0.8, from: W_FROM, to: W_TO, frames: 30 });
 const COUNTER_WORD: WordAt = { text: 'CODE', x: 560, y: 680, size: 330, face: 'bungee', fill: '#ff7a1a' };
-const L_COUNTER = counterPlan({ id: 'lab-counter', t0: 0.8, center: counterOf(COUNTER_WORD, 1), frames: 34 });
+const L_COUNTER = counterPlan({ id: 'lab-counter', t0: 0.8, center: counterOf(COUNTER_WORD, 1), hole: holeOf(COUNTER_WORD, 1), frames: 34 });
 const L_SHATTER = shatterPlan({
   id: 'lab-shatter',
   t0: 0.7,
@@ -299,8 +307,8 @@ const TYPE: Segment[] = [
   formSeg('stack', 'form STACK: line 0, key HEAD', startOf(0, 0, 0.2), (st) => <Stack spec={spec('lab-stack', 0, 1, 'B')} t={st} />),
   formSeg('code', 'form CODE: line 1 words 0-4, key 42', startOf(1, 0, 0.2), (st) => <Code spec={spec('lab-code', 1, 1, 'B', [0, 5])} t={st} opt={{ gutter: '42', size: 64 }} />),
   formSeg('diff', 'form DIFF: line 1 words 5-9, key BLUE', startOf(1, 5, 0.3), (st) => <Diff spec={spec('lab-diff', 1, 5, 'B', [5, 10])} t={st} opt={{ minus: 'color: orange;', size: 60 }} />),
-  formSeg('ring', 'form RING: line 3 around a centre, key WHO', startOf(3, 0, 0.2), (st) => <Ring spec={spec('lab-ring', 3, 5, 'O')} t={st} opt={{ cx: 960, cy: 560, r: 330, size: 64 }} />),
-  formSeg('wave', 'form WAVE: line 2 on a beat-kicked baseline, key APPROVED', startOf(2, 0, 0.2), (st) => <Wave spec={spec('lab-wave', 2, 2, 'both')} t={st} opt={{ size: 88 }} />),
+  formSeg('ring', 'form RING: line 3 around a centre, key WHO', startOf(3, 0, 0.2), (st) => <Ring spec={spec('lab-ring', 3, 5, 'O')} t={st} opt={{ cx: 960, cy: 700, r: 420, size: 110 }} />),
+  formSeg('wave', 'form WAVE: line 2 on a beat-kicked baseline, key APPROVED', startOf(2, 0, 0.2), (st) => <Wave spec={spec('lab-wave', 2, 2, 'both')} t={st} opt={{ size: 130 }} />),
   formSeg('floor', 'form FLOOR: line 0 lit in the floor tiles, key HEAD', startOf(0, 0, 0.2), (st) => <Floor spec={spec('lab-floor', 0, 1, 'B')} t={st} opt={{ pose: HOME, x: 1.2, z: 1.6, tile: 0.36 }} />),
   formSeg('marquee', 'form MARQUEE: line 0 in bulbs, key HEAD', startOf(0, 0, 0.2), (st) => <Marquee spec={spec('lab-marquee', 0, 1, 'O')} t={st} />),
   formSeg('stamp', 'form STAMP: line 2 plates, key APPROVED multiplies', startOf(2, 0, 0.2), (st) => <StampForm spec={spec('lab-stamp', 2, 2, 'B')} t={st} />),
@@ -332,7 +340,131 @@ const TYPE: Segment[] = [
   { id: 'whip', title: 'transition WHIP: one-direction smear of a type layer', dur: TYPE_SEG, render: (t) => <Behind t={t}><TypeWhip plan={L_WHIP} t={t} color="#19c8ff" from={LAYER_A()} to={LAYER_B()} /></Behind> },
 ];
 
-const SEGMENTS: Segment[] = [...ENGINE.map((s) => ({ ...s, dur: SEG })), ...TYPE];
+// ---- the girls are never wallpaper: interactions, focus, framings, pose bars, inside the type (3 s each) --
+const GSEG = 3;
+const B = GRADES.reviewed;
+const O_GRADE: Grade = { hue: '#ff6a10', rival: '#2f7bff', amount: 0.3, rim: 1.2, stage: 1 };
+const gradeOf = (id: string): Grade => (id.startsWith('O') ? O_GRADE : B);
+/** A girls segment: the stage (camera, set, cards) and the type layer, both on the song clock from `from`. */
+const girlSeg = (id: string, title: string, from: number, stage: (st: number) => { pose: CameraPose; cards: ReactNode; split?: boolean }, overlay: (st: number, pose: CameraPose) => ReactNode): Segment => ({
+  id,
+  title,
+  dur: GSEG,
+  render: (t) => {
+    const st = from + t;
+    const s = stage(st);
+    return (
+      <Black>
+        <Stage pose={s.pose}>
+          <SetPlate t={st} grade={B} split={s.split ? '#ff5a10' : undefined} />
+          <Field t={st} grade={B} layer="back" density={0.5} />
+          {s.cards}
+        </Stage>
+        <Svg>
+          <FormDefs />
+          {overlay(st, s.pose)}
+        </Svg>
+      </Black>
+    );
+  },
+});
+const draw = (d: { card: string; opacity: number; dx: number; stretch: [number, number] }, at: Placement, st: number, key: string, extra: Partial<CardProps> = {}) => (
+  <Card key={key} id={d.card} t={st} grade={gradeOf(d.card)} {...at} dx={d.dx} stretch={d.stretch} opacity={d.opacity} {...extra} />
+);
+
+const W0 = lineTokens(0);
+const W2 = lineTokens(2);
+const W3 = lineTokens(3);
+const tok = (line: readonly Token[], i: number) => line[i] as Token;
+
+const KICK_AT: Placement = { x: -1.6, height: 6.6 };
+const KICK = kickPlan({ id: 'lab-kick', word: { text: 'HEAD', x: 980, y: 900, size: 230, face: 'display', fill: '#19c8ff' }, tok: tok(W0, 1), kick: tok(W0, 3).start, idle: 'B03', kickCard: 'B12', at: KICK_AT, dir: 1 });
+const PERCH = { id: 'lab-perch', word: { text: 'HEAD', x: 300, y: 1010, size: 520, face: 'bungee' as const, fill: '#ff7a1a' as Hex }, letter: 2, tok: tok(W0, 1), land: tok(W0, 3).start, card: 'O11', height: 4.6, pose: HOME };
+const HOOP_AT: Placement = { x: 0, height: 7 };
+const hoopPlan = (): HoopPlan => ({ id: 'lab-hoop', tokens: W3.slice(0, 5), key: 2, card: 'O06', at: HOOP_AT, pose: HOME, rx: 360, ry: 80, size: 72, speed: 1.7, fill: (i) => hueAt('O', 0, i), keyFill: keyFill('O') });
+const REVEAL_FLAP: RevealPlan = { id: 'lab-reveal-flap', text: 'WHO ARE YOU?', box: { x: 360, y: 260, w: 1200, h: 560 }, reveal: tok(W3, 5).start, kind: 'flap', color: '#ffd23a' };
+const REVEAL_SLIDE: RevealPlan = { id: 'lab-reveal-slide', text: 'APPROVED', box: { x: 420, y: 380, w: 1080, h: 300 }, reveal: tok(W2, 2).start + 0.4, kind: 'slide', color: '#19c8ff' };
+const THROW_A: Placement = { x: -4.2, height: 5.6 };
+const THROW_B: Placement = { x: 4.2, height: 5.6 };
+const THROW = throwPlan({
+  id: 'lab-throw',
+  throws: [
+    { tok: tok(W3, 5), from: 'A', land: tok(W3, 6).start },
+    { tok: tok(W3, 6), from: 'B', land: tok(W3, 7).start },
+    { tok: tok(W3, 7), from: 'A', land: tok(W3, 7).end + 0.25 },
+  ],
+  A: { card: 'O03', at: THROW_A, color: '#ff7a1a' },
+  B: { card: 'B01', at: THROW_B, color: '#2f7bff' },
+  pose: HOME,
+  size: 110,
+});
+const FOCUS = focusPlan([
+  { t: tok(W0, 1).start, singer: 'O', frames: 36 },
+  { t: tok(W0, 3).start, singer: 'B', frames: 36 },
+  { t: tok(W0, 5).start, singer: 'O', frames: 30 },
+  { t: tok(W0, 7).start, singer: 'both', frames: 30 },
+]);
+const ORANGE_GIRL: Girl = { full: 'O06', close: 'O05', color: '#ff7a1a' };
+const BLUE_GIRL: Girl = { full: 'B04', close: 'B09', color: '#2f7bff' };
+const FR_FROM = tok(W0, 0).start - 0.2;
+const framingSeg = (kind: FramingKind, title: string) => {
+  framingPlan([{ t: FR_FROM, kind }], FR_FROM + GSEG);
+  return girlSeg(`framing-${kind}`, title, FR_FROM, (st) => {
+    const f = framing(kind, st, kind === 'split' ? ORANGE_GIRL : BLUE_GIRL, kind === 'split' ? BLUE_GIRL : ORANGE_GIRL);
+    return { pose: f.pose, split: f.split, cards: f.cards.map(({ key, ...c }) => <Card key={key} grade={gradeOf(c.id)} {...c} />) };
+  }, (st) => <Stack spec={{ id: `fr-${kind}`, line: 0, key: 1, singer: 'B', t0: -Infinity, t1: Infinity, box: { x: 260, y: 200, w: 1400, h: 620 } }} t={st} />);
+};
+const POSEBAR = poseBarPlan('lab-posebar', ['B03', 'B04', 'B07', 'B02'], 7, 2, '#19c8ff');
+const POSE_AT: Placement = { x: 0, height: 7 };
+
+const GIRLS: Segment[] = [
+  girlSeg('kick', 'girls KICK: the pose swaps to a kick on "main" and HEAD flies off', tok(W0, 1).start - 0.3, (st) => ({ pose: HOME, cards: kickCards(KICK, st).map((d, i) => draw(d, KICK_AT, st, `k${i}`)) }), (st) => <KickWord plan={KICK} t={st} />),
+  girlSeg('perch', 'girls PERCH: she drops onto the A of HEAD, the letter dips', tok(W0, 1).start - 0.2, (st) => ({
+    pose: HOME,
+    cards: perchVisible(PERCH, st) ? <Card id={PERCH.card} t={st} grade={O_GRADE} {...perchPlacement(PERCH)} dy={perchDy(PERCH, st)} /> : null,
+  }), (st) => <PerchWord plan={PERCH} t={st} />),
+  girlSeg('hoop', 'girls HOOP: the RING orbits her waist, in front, then behind', tok(W3, 0).start - 0.2, (st) => ({ pose: HOME, cards: <Card id="O06" t={st} grade={O_GRADE} {...HOOP_AT} /> }), (st) => <HoopType plan={hoopPlan()} t={st} />),
+  girlSeg('reveal-flap', 'girls REVEAL: a FLAP board folds away on "who" to show her', tok(W3, 5).start - 1.6, (st) => ({ pose: HOME, cards: <Card id="B04" t={st} grade={B} x={0} height={7} soft={revealDone(REVEAL_FLAP, st) ? 0 : 0.8} /> }), (st) => <RevealBoard plan={REVEAL_FLAP} t={st} />),
+  girlSeg('reveal-slide', 'girls REVEAL: a STAMP plate slides off to show her', tok(W2, 2).start - 1.4, (st) => ({ pose: HOME, cards: <Card id="B10" t={st} grade={B} x={0} height={7} /> }), (st) => <RevealBoard plan={REVEAL_SLIDE} t={st} />),
+  girlSeg('throw', 'girls THROW: who / are / you? thrown across, each knocks her back', tok(W3, 5).start - 0.5, (st) => ({
+    pose: HOME,
+    cards: (
+      <>
+        <Card id="O03" t={st} grade={O_GRADE} {...THROW_A} dx={throwRecoil(THROW, 'A', st)} rimDir={[1, 0.3]} />
+        <Card id="B01" t={st} grade={B} {...THROW_B} dx={throwRecoil(THROW, 'B', st)} rimDir={[-1, 0.3]} />
+      </>
+    ),
+  }), (st) => <ThrowWords plan={THROW} t={st} />),
+  girlSeg('focus', 'girls FOCUS: the singer big and sharp, focus ping-pongs (36-40 f moves)', tok(W0, 1).start - 0.2, (st) => {
+    const w = focusAt(FOCUS, st);
+    const o = focusLook(w);
+    const b = focusLook(1 - w);
+    return {
+      pose: HOME,
+      cards: (
+        <>
+          <Card id="O06" t={st} grade={O_GRADE} x={-3.4} height={6.4 * o.scale} soft={o.soft} lit={o.lit} rimDir={[1, 0.3]} />
+          <Card id="B04" t={st} grade={B} x={3.4} height={6.4 * b.scale} soft={b.soft} lit={b.lit} rimDir={[-1, 0.3]} />
+        </>
+      ),
+    };
+  }, () => null),
+  framingSeg('face', 'framing FACE: giant close-up behind the STACK'),
+  framingSeg('tiny', 'framing TINY: a tiny full figure behind huge type'),
+  framingSeg('low', 'framing LOW: low angle'),
+  framingSeg('clones', 'framing CLONES: five copies, phase-offset in the dance'),
+  framingSeg('split', 'framing SPLIT: one girl per half'),
+  girlSeg('posebar', 'girls POSE PER BAR: a new pose each downbeat, ghost trails fade over a beat', downbeat(7) - 0.4, (st) => ({
+    pose: HOME,
+    cards: poseBarDraws(POSEBAR, st, POSE_AT.height).map((d, i) =>
+      draw(d, POSE_AT, st, `pb${i}`, d.ghost !== undefined ? { flat: { color: POSEBAR.color, mix: 0.85 }, soft: 0.3 } : {}),
+    ),
+  }), () => null),
+  girlSeg('knockout', 'inside KNOCKOUT: the girl only through the letters', tok(W0, 1).start - 0.2, (st) => ({ pose: HOME, cards: <Card id="B09" t={st} grade={B} x={0} feet={-7.2} height={12} /> }), (st) => <Knockout plan={{ id: 'lab-ko', tokens: W0, key: 1, face: 'display', field: '#0a0414', edge: '#19c8ff' }} t={st} />),
+  girlSeg('fill', 'inside FILL: her silhouette filled with the line', tok(W2, 0).start - 0.2, (st) => ({ pose: HOME, cards: <Card id="B07" t={st} grade={B} x={0} height={8} flat={{ color: '#05030a', mix: 0.92 }} /> }), (st, pose) => <Fill plan={{ id: 'lab-fill', tokens: W2, key: 2, card: 'B07', at: { x: 0, height: 8 }, pose, colors: ['#19c8ff', '#2f7bff', '#8fd8ff', '#7a6cff'], keyColor: '#ff7a1a', size: 54 }} t={st} />),
+];
+
+const SEGMENTS: Segment[] = [...ENGINE.map((s) => ({ ...s, dur: SEG })), ...TYPE, ...GIRLS];
 const STARTS = SEGMENTS.reduce<number[]>((a, s, i) => [...a, (a[i] as number) + (s.dur ?? SEG) * 60], [0]);
 export const LAB_FRAMES = STARTS.at(-1) as number;
 
