@@ -15,7 +15,7 @@
 //           "Line forty-two..." as a DIFF.
 import { type CameraPath, type CameraPose, drift, HOME, HOME_Z, punched, shifted } from '../camera/camera.ts';
 import type { Placement } from '../cards/Card.tsx';
-import { at } from '../events.ts';
+import { at, EVENTS } from '../events.ts';
 import { whiteoutSwings, type WhiteoutSpec } from '../fx/whiteout.tsx';
 import { framingPlan } from '../girls/framing.ts';
 import { kickPlan } from '../girls/interact.tsx';
@@ -29,7 +29,8 @@ import { stackLayout } from '../type/forms/Stack.tsx';
 import type { LogoDesign } from '../type/logo/Logo.tsx';
 import { counterOf, counterPlan, holeOf, morphPlan, whipPlan, wipePlan, type WordAt } from '../type/transitions/transitions.tsx';
 
-export const PROOF_END = 20;
+/** Round 5: the proof runs to the end of chorus 1, so it ends on a phrase. */
+export const PROOF_END = sectionNamed('chorus1').end;
 
 /** Who reads git's error in the intro (0-4.37 s). Burak 2026-10-21: the girl who starts the lyrics, the sweet
  *  blue girl. 'O' or 'both' are kept as options (both girls in frame, the text between them). */
@@ -79,7 +80,7 @@ export const VERSE_FULL: Placement = { x: -4.4, height: 4.6 };
 export const WHIP_OUT = whipPlan({ id: 'whip-out', t0: at('whip-verse') - 12 / 60, dir: -1, frames: 12 });
 /** Her entrance burst: particles fly OUT from her chest after the hit (field burst origin, world units). */
 export const BLUE_BURST = { t: at('blue-enter') + 1 / 60, origin: [VERSE_B.x + 0.6, (VERSE_B.feet ?? 0) + 0.68 * VERSE_B.height, 0.5] as [number, number, number] };
-export const STACK2: FormSpec = { id: 'verse-2', line: 2, key: 1, singer: 'B', t0: VERSE.start, t1: at('morph-line') + 0.02, box: { x: 760, y: 120, w: 1090, h: 800 } };
+export const STACK2: FormSpec = { id: 'verse-2', line: 2, key: 1, singer: 'B', t0: VERSE.start, t1: at('morph-line') + 0.02, box: { x: 760, y: 110, w: 1090, h: 560 } };
 const keyAt = stackLayout(STACK2, lineTokens(2)[1]?.start ?? VERSE.start).find((w) => w.tok === 1);
 if (!keyAt) throw new Error('proof: the STACK has no key word');
 export const KICK = kickPlan({
@@ -94,29 +95,60 @@ export const KICK = kickPlan({
 });
 const cleanAt = stackLayout(STACK2, at('morph-line')).find((w) => w.tok === 7);
 if (!cleanAt) throw new Error('proof: the STACK has no CLEAN');
-export const DIFF3: FormSpec = { id: 'verse-3', line: 3, key: 5, singer: 'B', t0: at('tok-3-0'), t1: 30, box: { x: 600, y: 300, w: 1260, h: 460 } };
-export const DIFF_OPT = { minus: 'color: orange;', size: 64, keyScale: 1.9 } as const;
+/** Line 3 "Line forty-two, the button was blue" as a big left-aligned line; CLEAN morphs into its LINE. */
+export const LYRIC3 = { x: 700, y: 300, w: 1160, size: 140 } as const;
 export const MORPH_LINE = morphPlan({
   id: 'morph-line',
   t0: at('morph-line'),
   frames: 16,
   from: { text: cleanAt.text, x: cleanAt.x, y: cleanAt.y, size: cleanAt.size, face: cleanAt.face, fill: '#7a6cff' },
-  to: { text: 'Line', x: 600 + 40 + 2 * 0.6 * 64, y: 300 + 60 + 460 * 0.36 * 1.85, size: 64, face: 'jetbrains', fill: '#c8ffd9' },
+  to: { text: 'LINE', x: LYRIC3.x, y: LYRIC3.y, size: LYRIC3.size, face: 'bebas', fill: '#2f7bff' },
 });
 
 // ---- framings (never longer than 2 bars) -----------------------------------------------------------------
 export const FRAMINGS = framingPlan(
   [
-    { t: 0, kind: 'knee' },
-    { t: at('framing-face'), kind: 'face' },
-    { t: GROOVE.start, kind: 'stage' },
-    { t: at('framing-clones'), kind: 'clones' },
-    { t: at('framing-low'), kind: 'low' },
-    { t: at('framing-knee'), kind: 'knee' },
-    { t: at('framing-tiny'), kind: 'tiny' },
-    { t: at('framing-waist'), kind: 'waist' },
-    { t: VERSE.start, kind: 'knee' },
-    { t: at('framing-stage-2'), kind: 'stage' },
+    { t: 0, kind: 'knee', who: 'B' },
+    { t: at('framing-face'), kind: 'face', who: 'B' },
+    { t: GROOVE.start, kind: 'stage', who: 'O' },
+    { t: at('framing-clones'), kind: 'clones', who: 'O' },
+    { t: at('framing-low'), kind: 'low', who: 'O' },
+    { t: at('framing-knee'), kind: 'knee', who: 'O' },
+    { t: at('framing-tiny'), kind: 'tiny', who: 'O' },
+    { t: at('framing-waist'), kind: 'waist', who: 'O' },
+    // verse 1, blue
+    { t: VERSE.start, kind: 'knee', who: 'B' },
+    { t: at('framing-stage-2'), kind: 'stage', who: 'B' },
+    { t: at('framing-v1-low'), kind: 'low', who: 'B' },
+    { t: at('framing-v1-waist'), kind: 'waist', who: 'B' },
+    { t: at('framing-v1-face'), kind: 'face', who: 'B' },
+    { t: at('orange-anticipate'), kind: 'stage', who: 'both' },
+    // verse 2, orange (disco)
+    { t: at('orange-release'), kind: 'knee', who: 'O' },
+    { t: at('framing-v2-waist'), kind: 'waist', who: 'O' },
+    { t: at('framing-v2-split'), kind: 'split', who: 'both' },
+    { t: at('framing-v2-low'), kind: 'low', who: 'O' },
+    { t: at('framing-v2-stage'), kind: 'stage', who: 'O' },
+    // pre-chorus ping-pong, the transformation
+    { t: at('tok-10-0'), kind: 'face', who: 'B' },
+    { t: at('tok-11-0'), kind: 'face', who: 'O' },
+    { t: at('tok-12-0'), kind: 'split', who: 'both' },
+    { t: at('tok-13-0'), kind: 'knee', who: 'O' },
+    { t: at('framing-pre-both'), kind: 'stage', who: 'both' },
+    // chorus 1 on the split stage
+    { t: at('framing-c1'), kind: 'split', who: 'both' },
+    { t: at('tok-15-3'), kind: 'knee', who: 'O' },
+    { t: at('framing-c3'), kind: 'split', who: 'both' },
+    { t: at('tok-17-0'), kind: 'stage', who: 'both' },
+    { t: at('tok-18-0'), kind: 'tiny', who: 'both' },
+    { t: at('tok-18-2'), kind: 'waist', who: 'O' },
+    { t: at('framing-c7'), kind: 'split', who: 'both' },
+    { t: at('framing-c8'), kind: 'knee', who: 'O' },
+    { t: at('framing-c9'), kind: 'split', who: 'both' },
+    { t: at('tok-21-0'), kind: 'stage', who: 'both' },
+    { t: at('tok-22-0'), kind: 'tiny', who: 'both' },
+    { t: at('tok-22-2'), kind: 'waist', who: 'O' },
+    { t: at('framing-c13'), kind: 'split', who: 'both' },
   ],
   PROOF_END,
 );
@@ -124,10 +156,25 @@ export const FRAMINGS = framingPlan(
 // ---- the camera: every held shot moves continuously (round 4); the groove adds a fov punch every 2 beats --------
 const LOW: CameraPose = { position: [0, -2.6, HOME_Z - 3], target: [0, 1.2, 0], fov: 46 };
 const lift = (p: CameraPose, dy: number): CameraPose => ({ ...p, position: [p.position[0], p.position[1] + dy, p.position[2]], target: [p.target[0], p.target[1] + dy * 0.6, p.target[2]] });
+/** The moves from verse 1's low angle on: one per cue, chosen by the framing kind, alternating direction so
+ *  consecutive shots never travel the same way. */
+const moveFor = (kind: string, k: number): { from: CameraPose; to: CameraPose; typeZ: number; move: string } => {
+  const d = k % 2 ? 1 : -1;
+  if (kind === 'stage') return { from: shifted(HOME, [-0.9 * d, 0.2, -0.3]), to: shifted(HOME, [0.9 * d, 0.2, -0.6]), typeZ: 0.8, move: 'lateral dolly (parallax)' };
+  if (kind === 'knee') return { from: shifted(HOME, [0.3 * d, 0, 0]), to: shifted(HOME, [-0.2 * d, 0.2, -1.2]), typeZ: 0.8, move: 'slow push-in' };
+  if (kind === 'waist') return { from: shifted(HOME, [0, -0.5, -0.4]), to: shifted(HOME, [0.2 * d, 0.5, -0.9]), typeZ: 0.8, move: 'vertical travel up and push' };
+  if (kind === 'face') return { from: shifted(HOME, [0.2 * d, 0.1, -0.2]), to: shifted(HOME, [0, 0.25, -0.9]), typeZ: 0.8, move: 'slow push-in' };
+  if (kind === 'split') return { from: shifted(HOME, [0.6 * d, 0.1, 0]), to: shifted(HOME, [-0.6 * d, 0.1, -0.5]), typeZ: 0.8, move: 'lateral dolly across the split' };
+  if (kind === 'tiny') return { from: shifted(HOME, [0, 0.4, -1.6]), to: shifted(HOME, [0, 0.2, 0.5]), typeZ: 1, move: 'pull-out from the logo' };
+  return { from: LOW, to: lift(LOW, 0.9), typeZ: 0.8, move: 'low angle, vertical rise' };
+};
+const LATER_MOVES = FRAMINGS.slice(10).map((c, k) => moveFor(c.kind, k));
+/** The chorus pulse times (events kind 'pulse'). */
+export const CHORUS_PULSE_TIMES = EVENTS.filter((e) => e.kind === 'pulse').map((e) => e.t);
 /** One move per framing cue, in cue order: from -> to over the cue's span; typeZ is the type layer's depth. */
 export const CAMERA: readonly { from: CameraPose; to: CameraPose; typeZ: number; move: string }[] = [
   { from: HOME, to: shifted(HOME, [-0.5, 0.25, -1.0]), typeZ: 0.8, move: 'slow push-in toward her' },
-  { from: shifted(HOME, [-1.2, 1.0, -4.5]), to: shifted(HOME, [-0.9, 1.15, -5.3]), typeZ: 0.8, move: 'cut closer, slow push-in on her face' },
+  { from: shifted(HOME, [-0.3, 0.2, -0.4]), to: shifted(HOME, [-0.1, 0.35, -1.1]), typeZ: 0.8, move: 'cut to her close-up card (B06), slow push-in' },
   { from: shifted(HOME, [-1.2, 0, -0.4]), to: shifted(HOME, [1.2, 0, -0.4]), typeZ: 1, move: 'lateral dolly left to right (parallax)' },
   { from: HOME, to: shifted(HOME, [0, 0.2, -2.2]), typeZ: 1, move: 'push-in through the clones' },
   { from: LOW, to: lift(LOW, 0.9), typeZ: 1, move: 'low angle, vertical rise' },
@@ -136,6 +183,7 @@ export const CAMERA: readonly { from: CameraPose; to: CameraPose; typeZ: number;
   { from: shifted(HOME, [0, -0.6, -0.6]), to: shifted(HOME, [0, 0.6, -1.0]), typeZ: 1, move: 'vertical travel up and push' },
   { from: HOME, to: shifted(HOME, [0.6, 0.15, -1.1]), typeZ: 0.8, move: 'slow push-in toward the STACK' },
   { from: { position: [0.4, -1.7, HOME_Z - 1.2], target: [-0.6, 0.4, 0], fov: 44 }, to: { position: [1.2, -1.3, HOME_Z - 1.8], target: [-0.4, 0.6, 0], fov: 44 }, typeZ: 0.8, move: 'swing to a low angle on the kick, then a rising dolly' },
+  ...LATER_MOVES,
 ];
 /** The camera at t: the shot's pose, its base pose (the type layer is authored in its screen space) and depth. */
 export const cameraAt = (t: number): { pose: CameraPose; base: CameraPose; typeZ: number } => {
@@ -147,7 +195,9 @@ export const cameraAt = (t: number): { pose: CameraPose; base: CameraPose; typeZ
   const t1 = (FRAMINGS[i + 1] as { t: number } | undefined)?.t ?? PROOF_END;
   let path: CameraPath = drift(c.from, c.to, t0, t1);
   if (t >= GROOVE.start && t < VERSE.start) path = punched(punched(path, GROOVE_HITS, 0.05), [at('marker-feature')], 0.14);
-  if (t >= VERSE.start) path = punched(path, [at('kick-head')], 0.12);
+  if (t >= VERSE.start && t < sectionNamed('verse2_raspy').start) path = punched(path, [at('kick-head')], 0.12);
+  // orange's metal release on "ORANGE!" and the chorus pulses on the metal half
+  if (t >= at('tok-13-0') - 0.01) path = punched(path, [at('tok-13-0'), ...CHORUS_PULSE_TIMES], 0.05);
   return { pose: path(t), base: c.from, typeZ: c.typeZ };
 };
 if (CAMERA.length !== FRAMINGS.length) throw new Error(`proof: ${CAMERA.length} camera moves for ${FRAMINGS.length} framings`);
@@ -156,6 +206,14 @@ if (CAMERA.length !== FRAMINGS.length) throw new Error(`proof: ${CAMERA.length} 
 export const WHITEOUTS: readonly WhiteoutSpec[] = [
   { id: 'metal-hit', t0: at('metal-hit'), frames: 3, figures: [{ card: GROOVE_CARDS.stage, at: GROOVE_O }], camera: () => HOME },
 ];
-// the white-out (2 swings) and the hard metal -> disco switch on the verse downbeat (1 swing)
-export const SWINGS: Swing[] = [...WHITEOUTS.flatMap(whiteoutSwings), { id: 'disco-switch', t: VERSE.start, swings: 1 }, { id: 'blue-burst', t: BLUE_BURST.t, swings: 1 }];
+// the white-out (2 swings), the hard metal -> disco switch on the verse downbeat, and each entrance burst (1 each)
+export const ORANGE_BURST = { t: at('orange-release') + 1 / 60, origin: [3.9, -0.2, 0.5] as [number, number, number] };
+export const METAL_BURST = { t: at('tok-13-0') + 1 / 60, origin: [3.4, 0.3, 0.5] as [number, number, number] };
+export const SWINGS: Swing[] = [
+  ...WHITEOUTS.flatMap(whiteoutSwings),
+  { id: 'disco-switch', t: VERSE.start, swings: 1 },
+  { id: 'blue-burst', t: BLUE_BURST.t, swings: 1 },
+  { id: 'orange-burst', t: ORANGE_BURST.t, swings: 1 },
+  { id: 'metal-burst', t: METAL_BURST.t, swings: 1 },
+];
 assertFlashBudget(SWINGS, 'proof 0-20 s');

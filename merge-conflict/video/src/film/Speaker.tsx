@@ -27,8 +27,10 @@ const DARK: Grade = { hue: '#3a0a12', rival: '#ff3b3b', amount: 0.25, rim: 0.9, 
 
 const speakers = (): ('O' | 'B')[] => (INTRO_SPEAKER === 'both' ? ['O', 'B'] : [INTRO_SPEAKER]);
 
-/** Where each speaker stands: one held pose for the whole intro (round 4); the face framing is a camera cut. */
-const placeOf = (who: 'O' | 'B'): Placement => (INTRO_SPEAKER === 'both' ? kneeUp(who === 'O' ? -4.6 : 4.6, 9.4) : SPEAKER_AT);
+/** Where each speaker stands: knee-up first, then her close-up card (round 5: a different card, not a zoom). */
+const placeOf = (who: 'O' | 'B', close: boolean): Placement =>
+  close ? { x: INTRO_SPEAKER === 'both' ? (who === 'O' ? -3.6 : 3.6) : -3.0, feet: -7.0, height: 11.5, flip: INTRO_SPEAKER === 'both' && who === 'O' } : INTRO_SPEAKER === 'both' ? kneeUp(who === 'O' ? -4.6 : 4.6, 9.4) : SPEAKER_AT;
+const cardOf = (who: 'O' | 'B', close: boolean): string => (close ? GIRL[who].close : GIRL[who].stand);
 
 export const Speaker = ({ frame }: { frame: number }) => {
   const t = sec(frame);
@@ -57,7 +59,7 @@ export const Speaker = ({ frame }: { frame: number }) => {
         <SetPlate t={t} grade={DARK} wallOnly={close} />
         <Field t={t} grade={DARK} layer="back" density={0.35} alpha={0.7} hueMix={0.6} />
         {who.map((g) => (
-          <Card key={g} id={GIRL[g].stand} t={t} grade={{ ...GRADES.reviewed, rival: '#ff3b3b' }} {...placeOf(g)} rimDir={[1, 0.2]} />
+          <Card key={`${g}-${close}`} id={cardOf(g, close)} t={t} grade={{ ...GRADES.reviewed, rival: '#ff3b3b' }} {...placeOf(g, close)} rimDir={[1, 0.2]} />
         ))}
         <Field t={t} grade={DARK} layer="front" density={0.25} alpha={0.6} hueMix={0.6} />
       </Stage>
@@ -65,7 +67,7 @@ export const Speaker = ({ frame }: { frame: number }) => {
         <FormDefs />
         {/* the speech tail: from her mouth to the panel, so the text visibly comes from her */}
         {who.map((g) => {
-          const [mx, my] = screenOf(GIRL[g].stand, placeOf(g), cam.pose, t, keypoint(GIRL[g].stand, 'head'));
+          const [mx, my] = screenOf(cardOf(g, close), placeOf(g, close), cam.pose, t, keypoint(cardOf(g, close), 'head'));
           const [tx, ty] = plane.map(close ? LINE1.box.x : LINE0.box.x, close ? LINE1.box.y + 60 : LINE0.box.y + LINE0.box.h * 0.5);
           const pulse = t >= at('tok-0-0') ? 1 : 0;
           return <path key={g} d={`M${mx + 40} ${my + 30} Q ${(mx + tx) / 2} ${my - 40} ${tx} ${ty}`} fill="none" stroke="#ff3b3b" strokeWidth={5} strokeDasharray="14 10" strokeDashoffset={-t * 120} opacity={pulse} />;

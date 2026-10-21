@@ -1,5 +1,5 @@
 // The film on take-v4: exactly one shot per frame (each shot owns the frame's single ThreeCanvas), then the
-// white-out hits on top. 0-20 s is the type-led proof (film/proof.ts; the forms are the lyrics, so the old
+// white-out hits on top. 0-64.15 s is the type-led proof (film/proof.ts; the forms are the lyrics, so the old
 // persistent lyric layer is not mounted); the rest of the song is still the placeholder.
 import type { ComponentType } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
@@ -7,7 +7,9 @@ import { HOME } from './camera/camera.ts';
 import { Groove } from './film/Groove.tsx';
 import { GROOVE, PROOF_END, VERSE, WHITEOUTS } from './film/proof.ts';
 import { Speaker } from './film/Speaker.tsx';
-import { Verse1 } from './film/Verse1.tsx';
+import { Verses } from './film/Verses.tsx';
+import { Chorus } from './film/Chorus.tsx';
+import { PING_START } from './film/act.ts';
 import { Whiteout } from './fx/whiteout.tsx';
 import { beatIndexAt, DURATION_FRAMES, f, sec, sectionAt } from './timing.ts';
 import { Fonts } from './type/fonts.tsx';
@@ -28,7 +30,8 @@ const Placeholder = ({ frame }: { frame: number }) => {
 export const SHOTS: Shot[] = [
   { id: 'speaker', from: 0, to: f(GROOVE.start), Component: Speaker },
   { id: 'groove', from: f(GROOVE.start), to: f(VERSE.start), Component: Groove },
-  { id: 'verse1', from: f(VERSE.start), to: f(PROOF_END), Component: Verse1 },
+  { id: 'verses', from: f(VERSE.start), to: f(PING_START), Component: Verses },
+  { id: 'chorus', from: f(PING_START), to: f(PROOF_END), Component: Chorus },
   { id: 'placeholder', from: f(PROOF_END), to: DURATION_FRAMES, Component: Placeholder },
 ];
 // Overlapping shots would mount two ThreeCanvases on one frame (a second canvas renders black in parallel renders).
