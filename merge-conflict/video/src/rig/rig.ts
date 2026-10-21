@@ -1,9 +1,13 @@
 // Soft-bone rig for the pose cards (Live2D-style mesh deformation). Per-card keypoints come from
 // public/cards/<id>.pose.json (u, v in 0..1 from the card's top-left). Bones are rigid 2D transforms
 // driven by closed-form dance motion on the beat grid; the mesh blends up to 4 bones per vertex with smooth
-// inverse-distance weights. Feet are pinned: a static bone holds the ankles and the bottom edge, and the legs
-// are solved with two-bone IK so thigh and shin keep their exact lengths while the hips sway and dip.
-// Erasable TypeScript only: node loads this file in tools/rigcheck.mjs, which measures limb lengths.
+// inverse-distance weights.
+// The whole lower body (pelvis, both legs, the flares, the cloth between the legs) is ONE static bone: the
+// first version hung both thighs from one hip point with IK knees, which pinched the pelvis and folded the
+// flares into a "mermaid tail" (Burak, proof v2, O03 and B01). The dance is from the waist up: spine lean,
+// chest bounce, head nod, arm swing, hair follow-through; the beat dip is a small vertical squash of the
+// whole figure anchored at the soles (card bottom), with no horizontal change.
+// Erasable TypeScript only: node loads this file in tools/rigcheck.mjs (limb lengths and quad areas).
 import { beatPos } from '../timing.ts';
 
 export type P = [number, number];
@@ -16,7 +20,7 @@ export interface PoseFile {
   hairRoot: Q; hairTips: P[];
 }
 
-export const BONES = ['static', 'thighL', 'shinL', 'thighR', 'shinR', 'spine', 'upper', 'head', 'uarmL', 'farmL', 'uarmR', 'farmR', 'hair0', 'hair1', 'hair2'] as const;
+export const BONES = ['static', 'spine', 'upper', 'head', 'uarmL', 'farmL', 'uarmR', 'farmR', 'hair0', 'hair1', 'hair2'] as const;
 export type BoneName = (typeof BONES)[number];
 export const MAX_BONES = BONES.length;
 
@@ -27,8 +31,10 @@ export interface Joints {
   lKnee: Q; lAnkle: Q; rKnee: Q; rAnkle: Q;
   hairRoot: Q; hairTips: P[];
   aspect: number;
-  /** Full-body card with both legs solvable by IK. */
+  /** Which legs are drawn (their segments weight the static lower body). */
   legs: { L: boolean; R: boolean };
+  /** Full-body card (has hips); close-ups dance with the head only. */
+  body: boolean;
 }
 
 const toCard = (q: Q, aspect: number): Q => (q ? [(q[0] - 0.5) * aspect, 0.5 - q[1]] : null);
@@ -49,6 +55,7 @@ export const restJoints = (pose: PoseFile, aspect: number): Joints => {
     hairRoot: c(pose.hairRoot), hairTips: pose.hairTips.slice(0, 3).map((t) => c(t) as P),
     aspect,
     legs: { L: !!(pose.hips && pose.lKnee && pose.lAnkle), R: !!(pose.hips && pose.rKnee && pose.rAnkle) },
+    body: !!pose.hips,
   };
   return j;
 };
@@ -61,16 +68,23 @@ export const boneSegments = (j: Joints): [P, P][][] => {
   };
   const half = j.aspect / 2;
   add('static', [-half, -0.5], [half, -0.5]);
+  // The lower body is one static bone: legs, pelvis, and a pelvis bar across the hips.
   for (const s of ['L', 'R'] as const) {
     const knee = s === 'L' ? j.lKnee : j.rKnee;
     const ankle = s === 'L' ? j.lAnkle : j.rAnkle;
     if (ankle) add('static', ankle, [ankle[0], -0.5]);
     if (j.legs[s]) {
-      add(s === 'L' ? 'thighL' : 'thighR', j.hips, knee);
-      add(s === 'L' ? 'shinL' : 'shinR', knee, ankle);
+      add('static', j.hips, knee);
+      add('static', knee, ankle);
     }
   }
-  add('spine', j.hips, j.chest);
+  if (j.body) {
+    const w = Math.max(0.04, ...[j.lKnee, j.rKnee].filter(Boolean).map((k) => Math.abs((k as P)[0] - j.hips[0]) * 0.6));
+    add('static', [j.hips[0] - w, j.hips[1]], [j.hips[0] + w, j.hips[1]]);
+  }
+  // The spine's weight starts a quarter of the way up to the chest, so the waist blends from the static
+  // pelvis into the moving torso without a seam (the spine still pivots at the hips).
+  add('spine', [j.hips[0] + (j.chest[0] - j.hips[0]) * 0.25, j.hips[1] + (j.chest[1] - j.hips[1]) * 0.25], j.chest);
   add('upper', j.chest, j.neck);
   add('upper', j.chest, j.lShoulder);
   add('upper', j.chest, j.rShoulder);
@@ -108,25 +122,67 @@ const POWER = 4;
 /** Hair bones reach less far than body bones, so a long hair segment never drags the face or torso. */
 const REACH: Partial<Record<BoneName, number>> = { hair0: 0.45, hair1: 0.45, hair2: 0.45, static: 1.4 };
 
-/** Up to 4 bone indices and normalised weights for a point (card units). */
-export const weightsAt = (p: P, segs: readonly (readonly [P, P][])[]): { idx: number[]; w: number[] } => {
+/** Raw normalised weights of every bone at a point (card units), before smoothing. */
+const rawWeights = (p: P, segs: readonly (readonly [P, P][])[]): number[] => {
   const dist = segs.map((list) => (list.length ? Math.min(...list.map(([a, b]) => segDist(p, a, b))) : Infinity));
-  // Hair never drags a limb or the torso: where any body bone is near, the hair weight fades out smoothly
-  // (an arm lying across a long strand would otherwise swing with the hair and stretch).
-  const body = Math.min(...dist.filter((_, i) => !(BONES[i] as string).startsWith('hair') && BONES[i] !== 'static'));
+  // Hair never drags a limb, the torso or the legs: where any body bone is near, the hair weight fades out
+  // smoothly (an arm lying across a long strand would otherwise swing with the hair and stretch).
+  const body = Math.min(...dist.filter((_, i) => !(BONES[i] as string).startsWith('hair')));
   const hairGate = Math.min(1, Math.max(0, (body - 0.015) / 0.07)) ** 2;
-  const all: { i: number; w: number }[] = [];
-  dist.forEach((d, i) => {
-    if (d === Infinity) return;
+  const w = dist.map((d, i) => {
+    if (d === Infinity) return 0;
     const name = BONES[i] as BoneName;
-    const gate = name.startsWith('hair') ? hairGate : 1;
-    all.push({ i, w: ((REACH[name] ?? 1) * gate) / (d + EPS) ** POWER });
+    return ((REACH[name] ?? 1) * (name.startsWith('hair') ? hairGate : 1)) / (d + EPS) ** POWER;
   });
-  all.sort((a, b) => b.w - a.w);
-  const top = all.slice(0, 4);
-  const sum = top.reduce((s, x) => s + x.w, 0);
-  while (top.length < 4) top.push({ i: 0, w: 0 });
-  return { idx: top.map((x) => x.i), w: top.map((x) => x.w / sum) };
+  const sum = w.reduce((s, x) => s + x, 0);
+  return w.map((x) => x / sum);
+};
+
+// ---- smoothed weight field ----------------------------------------------------------------------------
+// The raw inverse-distance weights change fast between neighbouring vertices (near a segment's end, where
+// the hair gate closes), and with long-lever bones that folds the mesh (rigcheck's quad metric caught it:
+// thousands of folds). So the weights live on the card's mesh grid, each bone channel is blurred, and every
+// point (mesh vertex, scribble outline, white-out silhouette, rigcheck probe) samples the same field.
+export const GRID_COLS = 40;
+export const GRID_ROWS = 60;
+const BLUR_PASSES = 40;
+
+export interface WeightGrid { aspect: number; w: Float32Array }
+export const weightGrid = (segs: readonly (readonly [P, P][])[], aspect: number): WeightGrid => {
+  const nb = BONES.length;
+  const W = GRID_COLS + 1;
+  const H = GRID_ROWS + 1;
+  let a = new Float32Array(W * H * nb);
+  for (let i = 0; i < H; i++)
+    for (let k = 0; k < W; k++) {
+      const r = rawWeights([-aspect / 2 + (k * aspect) / GRID_COLS, 0.5 - i / GRID_ROWS], segs);
+      for (let b = 0; b < nb; b++) a[(i * W + k) * nb + b] = r[b] as number;
+    }
+  // separable 1-2-1 blur, clamped at the edges; each pass keeps every vertex's weights summing to 1
+  let t = new Float32Array(a.length);
+  const at = (x: Float32Array, i: number, k: number, b: number) => x[(Math.min(H - 1, Math.max(0, i)) * W + Math.min(W - 1, Math.max(0, k))) * nb + b] as number;
+  for (let pass = 0; pass < BLUR_PASSES; pass++) {
+    for (let i = 0; i < H; i++) for (let k = 0; k < W; k++) for (let b = 0; b < nb; b++) t[(i * W + k) * nb + b] = (at(a, i, k - 1, b) + 2 * at(a, i, k, b) + at(a, i, k + 1, b)) / 4;
+    for (let i = 0; i < H; i++) for (let k = 0; k < W; k++) for (let b = 0; b < nb; b++) a[(i * W + k) * nb + b] = (at(t, i - 1, k, b) + 2 * at(t, i, k, b) + at(t, i + 1, k, b)) / 4;
+  }
+  t = a;
+  return { aspect, w: t };
+};
+
+/** The weight of every bone at a point (card units), bilinear from the smoothed grid. All bones are kept
+ *  (11, three vec4 attributes in the shader): truncating to the 4 strongest made the smoothed field steep
+ *  where many bones overlap (rigcheck: 9 % area change with the dance switched off). */
+export const weightsAt = (p: P, g: WeightGrid): number[] => {
+  const nb = BONES.length;
+  const W = GRID_COLS + 1;
+  const fx = Math.min(GRID_COLS, Math.max(0, ((p[0] + g.aspect / 2) / g.aspect) * GRID_COLS));
+  const fy = Math.min(GRID_ROWS, Math.max(0, (0.5 - p[1]) * GRID_ROWS));
+  const k0 = Math.min(GRID_COLS - 1, Math.floor(fx));
+  const i0 = Math.min(GRID_ROWS - 1, Math.floor(fy));
+  const u = fx - k0;
+  const v = fy - i0;
+  const c = (i: number, k: number, b: number) => g.w[(i * W + k) * nb + b] as number;
+  return BONES.map((_, b) => (1 - v) * ((1 - u) * c(i0, k0, b) + u * c(i0, k0 + 1, b)) + v * ((1 - u) * c(i0 + 1, k0, b) + u * c(i0 + 1, k0 + 1, b)));
 };
 
 /** A rigid bone transform: x' = q + R(theta) (x - p). */
@@ -159,21 +215,14 @@ const ARMS: Record<string, number> = { B01: 0.15, O03: 0.1, B04: 0.6, O04: 0.5, 
 export const danceOf = (id: string, energy = 1): Dance => ({ energy, arms: ARMS[id] ?? 1 });
 
 const TAU = Math.PI * 2;
-const rot = (v: P, a: number): P => [Math.cos(a) * v[0] - Math.sin(a) * v[1], Math.sin(a) * v[0] + Math.cos(a) * v[1]];
-const sub = (a: P, b: P): P => [a[0] - b[0], a[1] - b[1]];
+// Amplitude scales, tuned against tools/rigcheck.mjs (quad area within [0.85, 1.15], no folds, limbs <= 6 %).
+const BODY_AMP = 0.45;
+const HAIR_AMP = 0.2;
+const ARM_AMP = 0.35;
 const add = (a: P, b: P): P => [a[0] + b[0], a[1] + b[1]];
-const len = (a: P): number => Math.hypot(a[0], a[1]);
-const ang = (a: P): number => Math.atan2(a[1], a[0]);
 
-/** Two-bone IK: the knee for a hip at h, a pinned ankle at a, segment lengths l1, l2, on the side `side`. */
-const knee = (h: P, a: P, l1: number, l2: number, side: number): P => {
-  const d = Math.min(len(sub(a, h)), l1 + l2 - 1e-6);
-  const cosA = Math.max(-1, Math.min(1, (l1 * l1 + d * d - l2 * l2) / (2 * l1 * d)));
-  const base = ang(sub(a, h));
-  return add(h, rot([l1, 0], base + side * Math.acos(cosA)));
-};
-
-export interface Frame { xf: Xf[]; joints: Record<string, P> }
+/** squash: the beat dip as a vertical scale about the soles (y = -0.5), 0..0.03. */
+export interface Frame { xf: Xf[]; squash: number; joints: Record<string, P> }
 
 /** Bone transforms of a card at t seconds. Pure function of (joints, t, dance). */
 export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
@@ -182,59 +231,32 @@ export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
   const fr = bp - Math.floor(bp);
   // downbeats are beats with index % 4 == 1 (mc-timing.json downbeat_note)
   const bar = (bp - 1) / 4;
-  const sway = E * 0.03 * Math.sin(TAU * bar);
-  const dip = E * 0.024 * (0.5 + 0.5 * Math.cos(TAU * fr)) ** 2;
-  const lean = -E * 0.065 * Math.sin(TAU * bar + 0.35);
-  const chest = E * 0.045 * Math.sin(Math.PI * bp + 0.3);
-  const nod = E * 0.075 * Math.sin(Math.PI * (bp - 0.18));
+  const dip = E * 0.025 * (0.5 + 0.5 * Math.cos(TAU * fr)) ** 2;
+  const lean = -E * BODY_AMP * 0.075 * Math.sin(TAU * bar + 0.35);
+  const chest = E * BODY_AMP * 0.045 * Math.sin(Math.PI * bp + 0.3);
+  const nod = E * BODY_AMP * 0.075 * Math.sin(Math.PI * (bp - 0.18));
   const breath = 0.0022 * Math.sin((TAU * t) / 3.4);
-  const armU = E * d.arms * 0.1;
-  const armF = E * d.arms * 0.08;
-
+  const armU = E * d.arms * 0.1 * ARM_AMP;
+  const armF = E * d.arms * 0.08 * ARM_AMP;
   const H = j.hips;
-  const legs = (['L', 'R'] as const).filter((s) => j.legs[s]).map((s) => {
-    const k = (s === 'L' ? j.lKnee : j.rKnee) as P;
-    const a = (s === 'L' ? j.lAnkle : j.rAnkle) as P;
-    const l1 = len(sub(k, H));
-    const l2 = len(sub(a, k));
-    const cr = (a[0] - H[0]) * (k[1] - H[1]) - (a[1] - H[1]) * (k[0] - H[0]);
-    // bend the knee the way it is bent at rest; a straight rest leg bends outward, away from the body
-    const side = Math.abs(cr) > 1e-4 * l1 * l2 ? -Math.sign(cr) : k[0] < H[0] ? -1 : 1;
-    return { s, k, a, l1, l2, d0: len(sub(a, H)), side };
-  });
-  // Hip offset: the sway and the beat dip, plus whatever extra dip keeps every leg within its rest reach
-  // (so IK never has to stretch a leg). Bisection: closed form per frame, deterministic.
-  const reach = (extra: number) => legs.every((g) => len(sub(g.a, [H[0] + sway, H[1] - dip - extra])) <= g.d0 + 1e-9);
-  let extra = 0;
-  if (!reach(0)) {
-    let lo = 0;
-    let hi = 0.08;
-    for (let i = 0; i < 24; i++) {
-      const m = (lo + hi) / 2;
-      if (reach(m)) hi = m;
-      else lo = m;
-    }
-    extra = hi;
-  }
-  const hasLegs = legs.length > 0;
-  const H2: P = hasLegs ? [H[0] + sway, H[1] - dip - extra] : H;
-  // Close-ups pivot on the pinned bottom edge, so the "sway" becomes a rock of the whole bust.
-  const spineTheta = hasLegs ? lean : lean * 0.5 - sway * 1.2;
+  // Close-ups dance with the head only: the bust stays on the pinned bottom edge.
+  const spineTheta = j.body ? lean : 0;
+  const chestTheta = j.body ? chest : chest * 0.25;
   const xf: Xf[] = BONES.map(() => ID);
   const set = (b: BoneName, x: Xf) => {
     xf[BONES.indexOf(b)] = x;
   };
-  const spine: Xf = { theta: spineTheta, p: H, q: H2 };
+  const spine: Xf = { theta: spineTheta, p: H, q: H };
   set('spine', spine);
   const C2 = add(apply(spine, j.chest), [0, breath]);
-  const upperT = spineTheta + chest;
+  const upperT = spineTheta + chestTheta;
   const upper: Xf = { theta: upperT, p: j.chest, q: C2 };
   set('upper', upper);
   const N2 = apply(upper, j.neck);
   const headT = upperT + nod;
   const head: Xf = { theta: headT, p: j.neck, q: N2 };
   set('head', head);
-  const joints: Record<string, P> = { hips: H2, chest: C2, neck: N2, head: apply(head, j.head) };
+  const joints: Record<string, P> = { hips: H, chest: C2, neck: N2, head: apply(head, j.head) };
   for (const s of ['L', 'R'] as const) {
     const sh = s === 'L' ? j.lShoulder : j.rShoulder;
     const el = s === 'L' ? j.lElbow : j.rElbow;
@@ -251,36 +273,31 @@ export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
     joints[`${s.toLowerCase()}Elbow`] = E2;
     if (wr) joints[`${s.toLowerCase()}Wrist`] = apply(fa, wr);
   }
-  for (const g of legs) {
-    const K2 = knee(H2, g.a, g.l1, g.l2, g.side);
-    const thigh: Xf = { theta: ang(sub(K2, H2)) - ang(sub(g.k, H)), p: H, q: H2 };
-    const shin: Xf = { theta: ang(sub(g.a, K2)) - ang(sub(g.a, g.k)), p: g.k, q: K2 };
-    set(g.s === 'L' ? 'thighL' : 'thighR', thigh);
-    set(g.s === 'L' ? 'shinL' : 'shinR', shin);
-    joints[`${g.s.toLowerCase()}Knee`] = K2;
-    joints[`${g.s.toLowerCase()}Ankle`] = apply(shin, g.a);
-  }
   if (j.hairRoot) {
     const R2 = apply(head, j.hairRoot);
     // Hair follows through: the same bar and beat motion, lagged, with a little overshoot (hair only).
-    const follow = E * (0.085 * Math.sin(TAU * bar - 1.15) + 0.05 * Math.sin(Math.PI * bp - 1.0) + 0.02 * Math.sin(Math.PI * 2 * bp - 2.0));
+    const follow = E * HAIR_AMP * (0.085 * Math.sin(TAU * bar - 1.15) + 0.05 * Math.sin(Math.PI * bp - 1.0) + 0.02 * Math.sin(Math.PI * 2 * bp - 2.0));
     j.hairTips.forEach((_, k) => {
-      set(`hair${k}` as BoneName, { theta: headT + follow * (1 - 0.2 * k), p: j.hairRoot as P, q: R2 });
+      // Hair takes only half of the head's turn: long hair hangs down by the pelvis, which does not move.
+      set(`hair${k}` as BoneName, { theta: headT * 0.5 + follow * (1 - 0.2 * k), p: j.hairRoot as P, q: R2 });
     });
   }
-  return { xf, joints };
+  const squash = j.body ? dip : 0;
+  const sq = (p: P): P => [p[0], -0.5 + (p[1] + 0.5) * (1 - squash)];
+  for (const k of Object.keys(joints)) joints[k] = sq(joints[k] as P);
+  return { xf, squash, joints };
 };
 
-/** Deform one point with given weights. */
-export const deform = (f: Frame, v: P, w: { idx: number[]; w: number[] }): P => {
+/** Deform one point with its bone weights (one per bone), then the sole-anchored squash. */
+export const deform = (f: Frame, v: P, w: readonly number[]): P => {
   let x = 0;
   let y = 0;
-  for (let k = 0; k < 4; k++) {
-    const wk = w.w[k] as number;
+  for (let k = 0; k < w.length; k++) {
+    const wk = w[k] as number;
     if (!wk) continue;
-    const p = apply(f.xf[w.idx[k] as number] as Xf, v);
+    const p = apply(f.xf[k] as Xf, v);
     x += p[0] * wk;
     y += p[1] * wk;
   }
-  return [x, y];
+  return [x, -0.5 + (y + 0.5) * (1 - f.squash)];
 };
