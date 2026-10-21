@@ -41,13 +41,14 @@ export const ImpactBurst = ({ frame, duration, seed, x, y, size, flash = 2 }: Im
   const rays = seeded(`rays:${seed}`);
   const filterId = inkFilterId(seed, 8);
   const inFlash = frame < flash;
+  const step = Math.floor(frame);
   // Inverted flash frames swap ink and paper for the star itself.
-  const [paper, ink] = inFlash && frame !== 1 ? (frame === 0 ? [INK, IVORY] : [IVORY, INK]) : [IVORY, INK];
+  const [paper, ink] = inFlash && step !== 1 ? (step === 0 ? [INK, IVORY] : [IVORY, INK]) : [IVORY, INK];
   return (
     <>
-      {inFlash && frame === 0 ? <AbsoluteFill style={{ background: IVORY }} /> : null}
-      {inFlash && frame === 1 ? <AbsoluteFill style={{ backdropFilter: 'grayscale(1) contrast(6) invert(1) sepia(0.25) brightness(0.98)' }} /> : null}
-      {inFlash && frame === 2 ? <AbsoluteFill style={{ background: INK }} /> : null}
+      {inFlash && step === 0 ? <AbsoluteFill style={{ background: IVORY }} /> : null}
+      {inFlash && step === 1 ? <AbsoluteFill style={{ backdropFilter: 'grayscale(1) contrast(6) invert(1) sepia(0.25) brightness(0.98)' }} /> : null}
+      {inFlash && step === 2 ? <AbsoluteFill style={{ background: INK }} /> : null}
       <Overlay style={{ opacity: 1 - late ** 2 }}>
         <defs>
           <InkFilter seed={seed} rough={8} />
