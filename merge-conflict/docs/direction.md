@@ -107,3 +107,43 @@ Rejected:
 - The location per section.
 - How the two girls look: style frames.
 - Where the big performance moment goes.
+
+## Concept (Burak, 2026-10-21)
+
+- The two-worlds split (one half per girl) is dropped: Her Sabah Baştan already did it.
+- New concept: a heavy-metal disco. The two girls fight to be the star: a dance battle in which each keeps shoving the other out of the spotlight and the foreground.
+- Git commands are the dance battle's moves: "git push --force" lights up word by word, each word in a different colour.
+- Built like "Nothing Went Foom!": living particles and dynamic interface typography.
+- Look: Arcane-like painterly characters as still poses. We cannot do Arcane's 3D acting; we take its transitions and colour language.
+- The first character designs were rejected. Each style round now lets the style invent its own pair. Only the orange/blue signature colours are fixed.
+
+## References seen first-hand (2026-10-21, 720p contact sheets)
+
+- **Arcane "Enemy" from 2:18.**
+  - Every shot is drenched in ONE saturated hue: magenta, cyan, red or green.
+  - The figure is cut by the complementary light. One eye close-up is split down the middle, cyan on one half and pink on the other.
+  - Overexposed white frames carry a flat figure, RGB-offset ghost outlines and a rainbow spray bursting out of the body.
+  - Figures appear as flat poster cut-outs (green on red) with diagonal brush slashes.
+  - Neon chalk scribbles trace the silhouettes.
+  - Group shots stand on a diagonal "X" of colour bands; backlit silhouettes stand against hard light rays.
+  - Poses hold while the graphic layer moves.
+- **Arcane "Ma Meilleure Ennemie".**
+  - Darker and moodier.
+  - Faces are split-lit (red vs teal).
+  - Coloured confetti floats as particles.
+  - The type slams in with a silhouette behind it ("JE T'AIME / JE TE HAIS").
+  - Its CRT-TV framing is banned here.
+- **"Nothing Went Foom!".**
+  - Dark navy/black stages with particle floors.
+  - Each scene is monochrome (red, gold, violet).
+  - Kinetic type:
+    - stamped "RIGHT ✓" plates multiply and scale-hit;
+    - words dissolve into scattered letters and particles;
+    - a light burst sits behind the posed character;
+    - framed word panels fill on the beat.
+- **What we take:**
+  - one hue per shot, with the rival's colour as the cutting light;
+  - flat cut-out and white-out frames on hits;
+  - neon scribbles over still poses;
+  - confetti and mirror-ball particles as the living layer;
+  - NWF-style kinetic git-command type.
