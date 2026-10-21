@@ -71,7 +71,7 @@ const useRigGeometry = (id: string) =>
 const FRAG = /* glsl */ `
 uniform sampler2D map; uniform vec3 uHue; uniform vec3 uRival; uniform float uAmount; uniform float uRim;
 uniform vec2 uTexel; uniform vec2 uRimDir; uniform float uSplit; uniform float uOpacity; uniform float uLit; uniform vec3 uFlat; uniform float uFlatMix;
-uniform vec2 uClip; uniform float uSoft;
+uniform vec2 uClip; uniform float uSoft; uniform float uGround;
 varying vec2 vUv; varying float vWorldX;
 ${GRADE_GLSL}
 void main() {
@@ -97,6 +97,10 @@ void main() {
   vec3 col = gradeTint(c.rgb, uHue, uAmount) * uLit;
   float lum = dot(col, vec3(0.299, 0.587, 0.114));
   col = mix(col, vec3(lum), 0.25 * uSoft) * (1.0 - 0.3 * uSoft);
+  // Set light: a figure standing on the floor darkens toward her feet and takes the set's hue there (the
+  // floor bounce), and keeps the light from above, so she sits in the set instead of on top of it.
+  float low = smoothstep(0.42, 0.0, vUv.y);
+  col = mix(col, col * (uHue * 1.5 + 0.1), 0.35 * low * uGround) * (1.0 - 0.3 * low * uGround);
   // Split light: the rival's colour washes the side of the figure it comes from (the "cutting light").
   float side = smoothstep(-0.15, 0.45, (vUv.x - 0.5) * sign(uRimDir.x + 1e-4));
   col = mix(col, col * (uRival * 1.7 + 0.15), side * uSplit);
@@ -105,6 +109,11 @@ void main() {
   col += uRival * edge * facing * uRim;
   gl_FragColor = vec4(min(col, vec3(1.0)), c.a * uOpacity);
 }`;
+
+const SHADOW_VERT = /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+/** A soft contact shadow: an elliptical falloff, darkest under the feet. */
+const SHADOW_FRAG = /* glsl */ `uniform float uOpacity; varying vec2 vUv;
+void main() { float r = length((vUv - 0.5) * 2.0); float a = (1.0 - smoothstep(0.0, 1.0, r)) * uOpacity; gl_FragColor = vec4(0.0, 0.0, 0.0, a); }`;
 
 export const useCardTexture = (id: string) => {
   const tex = useLoader(TextureLoader, staticFile(cardEntry(id).file));
@@ -139,11 +148,14 @@ export interface CardProps extends Placement {
   stretch?: [number, number];
   /** Depth softness 0..1: blurred, dimmed and a little desaturated behind the type; 0 = sharp. */
   soft?: number;
+  /** Grounding (default on for a figure whose feet stand on the floor): a soft contact shadow, a faint
+   *  floor reflection and the floor bounce of the set light. Off for silhouettes in the air, close-ups. */
+  ground?: boolean;
   /** Split-screen clip: keep the side of world x = `x` given by `keep`. */
   clip?: { x: number; keep: 'left' | 'right' };
 }
 
-export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 1, stretch = [1, 1], clip, soft = 0 }: CardProps) => {
+export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 1, stretch = [1, 1], clip, soft = 0, ground }: CardProps) => {
   const tex = useCardTexture(id);
   const geo = useRigGeometry(id);
   const e = cardEntry(id);
@@ -160,6 +172,8 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
   const dl = Math.hypot(dir[0], dir[1]) || 1;
   // the rim and split light work in texture space, which a mirrored card reverses
   const sx = flip ? -1 : 1;
+  const fy = feet ?? FLOOR_Y;
+  const grounded = ground ?? Math.abs(fy - FLOOR_Y) < 0.01;
   const u = useUniforms({
     map: tex,
     uR0: r0,
@@ -178,14 +192,38 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uLit: lit,
     uFlat: rgb(flat?.color ?? '#000000'),
     uFlatMix: flat?.mix ?? 0,
+    uGround: grounded ? 1 : 0,
   });
   // The mesh is in card units; the group places its feet and scales it (smears squash about the feet).
-  const fy = feet ?? FLOOR_Y;
+  // the reflection: the same skinned card mirrored below the floor line, faint and soft
+  const refl = useUniforms({
+    map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
+    uAmount: Math.min(1, grade.amount + 0.3), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
+    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.16 : 0,
+    uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0,
+  });
+  const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.6 : 0 });
+  const w = height * cardAspect(id);
   return (
-    <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], height * stretch[1], 1]} visible={opacity > 0.001}>
-      <mesh geometry={geo} position={[0, 0.5, 0]} renderOrder={ORDER.card} frustumCulled={false}>
-        <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
-      </mesh>
-    </group>
+    <>
+      {grounded && (
+        <>
+          <mesh position={[x + dx, FLOOR_Y + 0.004, z ?? 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool + 1} visible={opacity > 0.001}>
+            <planeGeometry args={[w * 1.15, height * 0.16]} />
+            <shaderMaterial {...shadow} vertexShader={SHADOW_VERT} fragmentShader={SHADOW_FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
+          </mesh>
+          <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], -height * stretch[1] * 0.55, 1]} visible={opacity > 0.001}>
+            <mesh geometry={geo} position={[0, 0.5, 0]} renderOrder={ORDER.pool + 1} frustumCulled={false}>
+              <shaderMaterial {...refl} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
+            </mesh>
+          </group>
+        </>
+      )}
+      <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], height * stretch[1], 1]} visible={opacity > 0.001}>
+        <mesh geometry={geo} position={[0, 0.5, 0]} renderOrder={ORDER.card} frustumCulled={false}>
+          <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
+        </mesh>
+      </group>
+    </>
   );
 };
