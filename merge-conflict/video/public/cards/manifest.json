@@ -163,6 +163,38 @@
     ],
     "source": "BC1-tile-stomp.png"
   },
+  "BC1b": {
+    "file": "cards/hd/BC1b.webp",
+    "w": 931,
+    "h": 1490,
+    "px": [
+      1862,
+      2980
+    ],
+    "bbox": [
+      49,
+      10,
+      980,
+      1500
+    ],
+    "source": "BC1b-action.png"
+  },
+  "BC1c": {
+    "file": "cards/hd/BC1c.webp",
+    "w": 931,
+    "h": 1490,
+    "px": [
+      1862,
+      2980
+    ],
+    "bbox": [
+      49,
+      10,
+      980,
+      1500
+    ],
+    "source": "BC1c-action.png"
+  },
   "BC2": {
     "file": "cards/hd/BC2.webp",
     "w": 940,
@@ -179,6 +211,38 @@
     ],
     "source": "BC2-no-push.png"
   },
+  "BC2b": {
+    "file": "cards/hd/BC2b.webp",
+    "w": 940,
+    "h": 1497,
+    "px": [
+      1880,
+      2994
+    ],
+    "bbox": [
+      28,
+      12,
+      968,
+      1509
+    ],
+    "source": "BC2b-action.png"
+  },
+  "BC2c": {
+    "file": "cards/hd/BC2c.webp",
+    "w": 940,
+    "h": 1497,
+    "px": [
+      1880,
+      2994
+    ],
+    "bbox": [
+      28,
+      12,
+      968,
+      1509
+    ],
+    "source": "BC2c-action.png"
+  },
   "BC3": {
     "file": "cards/BC3.png",
     "w": 926,
@@ -190,6 +254,30 @@
       1511
     ],
     "source": "BC3-palm-slap.png"
+  },
+  "BC3b": {
+    "file": "cards/BC3b.png",
+    "w": 926,
+    "h": 1500,
+    "bbox": [
+      54,
+      11,
+      980,
+      1511
+    ],
+    "source": "BC3b-action.png"
+  },
+  "BC3c": {
+    "file": "cards/BC3c.png",
+    "w": 926,
+    "h": 1500,
+    "bbox": [
+      54,
+      11,
+      980,
+      1511
+    ],
+    "source": "BC3c-action.png"
   },
   "BD1": {
     "file": "cards/BD1.png",
@@ -239,6 +327,30 @@
     ],
     "source": "BD4-y-arms.png"
   },
+  "BD4b": {
+    "file": "cards/BD4b.png",
+    "w": 971,
+    "h": 1523,
+    "bbox": [
+      53,
+      13,
+      1024,
+      1536
+    ],
+    "source": "BD4b-idle.png"
+  },
+  "BD4c": {
+    "file": "cards/BD4c.png",
+    "w": 971,
+    "h": 1523,
+    "bbox": [
+      53,
+      13,
+      1024,
+      1536
+    ],
+    "source": "BD4c-idle.png"
+  },
   "BD5": {
     "file": "cards/BD5.png",
     "w": 1001,
@@ -250,6 +362,30 @@
       1536
     ],
     "source": "BD5-crouch-snap.png"
+  },
+  "BD5b": {
+    "file": "cards/BD5b.png",
+    "w": 1001,
+    "h": 1517,
+    "bbox": [
+      23,
+      19,
+      1024,
+      1536
+    ],
+    "source": "BD5b-action.png"
+  },
+  "BD5c": {
+    "file": "cards/BD5c.png",
+    "w": 1001,
+    "h": 1517,
+    "bbox": [
+      23,
+      19,
+      1024,
+      1536
+    ],
+    "source": "BD5c-action.png"
   },
   "BD6": {
     "file": "cards/BD6.png",
@@ -278,6 +414,38 @@
       1536
     ],
     "source": "BD7-point-cross.png"
+  },
+  "BD7b": {
+    "file": "cards/hd/BD7b.webp",
+    "w": 969,
+    "h": 1525,
+    "px": [
+      1938,
+      3050
+    ],
+    "bbox": [
+      55,
+      11,
+      1024,
+      1536
+    ],
+    "source": "BD7b-action.png"
+  },
+  "BD7c": {
+    "file": "cards/hd/BD7c.webp",
+    "w": 969,
+    "h": 1525,
+    "px": [
+      1938,
+      3050
+    ],
+    "bbox": [
+      55,
+      11,
+      1024,
+      1536
+    ],
+    "source": "BD7c-action.png"
   },
   "BD8": {
     "file": "cards/BD8.png",
@@ -851,6 +1019,38 @@
     ],
     "source": "BX3-shock.png"
   },
+  "BX3b": {
+    "file": "cards/hd/BX3b.webp",
+    "w": 1024,
+    "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
+    "bbox": [
+      0,
+      14,
+      1024,
+      1536
+    ],
+    "source": "BX3b-face.png"
+  },
+  "BX3c": {
+    "file": "cards/hd/BX3c.webp",
+    "w": 1024,
+    "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
+    "bbox": [
+      0,
+      14,
+      1024,
+      1536
+    ],
+    "source": "BX3c-face.png"
+  },
   "BX4": {
     "file": "cards/hd/BX4.webp",
     "w": 1024,
@@ -866,6 +1066,38 @@
       1536
     ],
     "source": "BX4-shout.png"
+  },
+  "BX4b": {
+    "file": "cards/hd/BX4b.webp",
+    "w": 1024,
+    "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
+    "bbox": [
+      0,
+      14,
+      1024,
+      1536
+    ],
+    "source": "BX4b-face.png"
+  },
+  "BX4c": {
+    "file": "cards/hd/BX4c.webp",
+    "w": 1024,
+    "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
+    "bbox": [
+      0,
+      14,
+      1024,
+      1536
+    ],
+    "source": "BX4c-face.png"
   },
   "BX5": {
     "file": "cards/hd/BX5.webp",
@@ -1043,6 +1275,38 @@
     ],
     "source": "OC1-fist-slam.png"
   },
+  "OC1b": {
+    "file": "cards/hd/OC1b.webp",
+    "w": 888,
+    "h": 1511,
+    "px": [
+      1776,
+      3022
+    ],
+    "bbox": [
+      70,
+      7,
+      958,
+      1518
+    ],
+    "source": "OC1b-action.png"
+  },
+  "OC1c": {
+    "file": "cards/hd/OC1c.webp",
+    "w": 888,
+    "h": 1511,
+    "px": [
+      1776,
+      3022
+    ],
+    "bbox": [
+      70,
+      7,
+      958,
+      1518
+    ],
+    "source": "OC1c-action.png"
+  },
   "OC2": {
     "file": "cards/OC2.png",
     "w": 874,
@@ -1054,6 +1318,30 @@
       1518
     ],
     "source": "OC2-no-point.png"
+  },
+  "OC2b": {
+    "file": "cards/OC2b.png",
+    "w": 874,
+    "h": 1512,
+    "bbox": [
+      91,
+      6,
+      965,
+      1518
+    ],
+    "source": "OC2b-action.png"
+  },
+  "OC2c": {
+    "file": "cards/OC2c.png",
+    "w": 874,
+    "h": 1512,
+    "bbox": [
+      91,
+      6,
+      965,
+      1518
+    ],
+    "source": "OC2c-action.png"
   },
   "OC3": {
     "file": "cards/hd/OC3.webp",
@@ -1070,6 +1358,38 @@
       1516
     ],
     "source": "OC3-horns-stomp.png"
+  },
+  "OC3b": {
+    "file": "cards/hd/OC3b.webp",
+    "w": 899,
+    "h": 1513,
+    "px": [
+      1798,
+      3026
+    ],
+    "bbox": [
+      76,
+      3,
+      975,
+      1516
+    ],
+    "source": "OC3b-action.png"
+  },
+  "OC3c": {
+    "file": "cards/hd/OC3c.webp",
+    "w": 899,
+    "h": 1513,
+    "px": [
+      1798,
+      3026
+    ],
+    "bbox": [
+      76,
+      3,
+      975,
+      1516
+    ],
+    "source": "OC3c-action.png"
   },
   "OD1": {
     "file": "cards/OD1.png",
@@ -1339,6 +1659,38 @@
     ],
     "source": "OM3-power-stance.png"
   },
+  "OM3b": {
+    "file": "cards/hd/OM3b.webp",
+    "w": 973,
+    "h": 1534,
+    "px": [
+      1946,
+      3068
+    ],
+    "bbox": [
+      51,
+      2,
+      1024,
+      1536
+    ],
+    "source": "OM3b-idle.png"
+  },
+  "OM3c": {
+    "file": "cards/hd/OM3c.webp",
+    "w": 973,
+    "h": 1534,
+    "px": [
+      1946,
+      3068
+    ],
+    "bbox": [
+      51,
+      2,
+      1024,
+      1536
+    ],
+    "source": "OM3c-idle.png"
+  },
   "OM4": {
     "file": "cards/OM4.png",
     "w": 1005,
@@ -1439,6 +1791,38 @@
     ],
     "source": "OMX2-snarl.png"
   },
+  "OMX2b": {
+    "file": "cards/hd/OMX2b.webp",
+    "w": 1024,
+    "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
+    "bbox": [
+      0,
+      52,
+      1024,
+      1536
+    ],
+    "source": "OMX2b-face.png"
+  },
+  "OMX2c": {
+    "file": "cards/hd/OMX2c.webp",
+    "w": 1024,
+    "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
+    "bbox": [
+      0,
+      52,
+      1024,
+      1536
+    ],
+    "source": "OMX2c-face.png"
+  },
   "OMX3": {
     "file": "cards/hd/OMX3.webp",
     "w": 1024,
@@ -1455,6 +1839,38 @@
     ],
     "source": "OMX3-scream.png"
   },
+  "OMX3b": {
+    "file": "cards/hd/OMX3b.webp",
+    "w": 1024,
+    "h": 1486,
+    "px": [
+      2048,
+      2972
+    ],
+    "bbox": [
+      0,
+      50,
+      1024,
+      1536
+    ],
+    "source": "OMX3b-face.png"
+  },
+  "OMX3c": {
+    "file": "cards/hd/OMX3c.webp",
+    "w": 1024,
+    "h": 1486,
+    "px": [
+      2048,
+      2972
+    ],
+    "bbox": [
+      0,
+      50,
+      1024,
+      1536
+    ],
+    "source": "OMX3c-face.png"
+  },
   "OMX4": {
     "file": "cards/hd/OMX4.webp",
     "w": 1024,
@@ -1470,6 +1886,38 @@
       1536
     ],
     "source": "OMX4-tongue.png"
+  },
+  "OMX4b": {
+    "file": "cards/hd/OMX4b.webp",
+    "w": 1024,
+    "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
+    "bbox": [
+      0,
+      52,
+      1024,
+      1536
+    ],
+    "source": "OMX4b-face.png"
+  },
+  "OMX4c": {
+    "file": "cards/hd/OMX4c.webp",
+    "w": 1024,
+    "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
+    "bbox": [
+      0,
+      52,
+      1024,
+      1536
+    ],
+    "source": "OMX4c-face.png"
   },
   "OMX5": {
     "file": "cards/hd/OMX5.webp",
