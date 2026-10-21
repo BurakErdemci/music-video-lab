@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "studio": "remotion studio src/index.ts",
-    "sync-timing": "node -e \"require('fs').copyFileSync('../data/take-2026-10-20/mc-timing.json','src/data/mc-timing.json')\"",
+    "sync-timing": "node -e \"const f=require('fs');f.copyFileSync('../data/take-v4/mc-timing.json','src/data/mc-timing.json');f.copyFileSync('../data/take-v4/token_map.json','src/data/token_map.json')\"",
     "check": "tsc --noEmit",
     "stills": "node ../tools/stills.mjs",
     "beatcheck": "node ../tools/beatcheck.mjs",

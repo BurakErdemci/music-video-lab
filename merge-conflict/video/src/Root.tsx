@@ -10,7 +10,7 @@ const SMOKE_FRAMES = 240;
 const Video = () => (
   <AbsoluteFill>
     <Film />
-    <Audio src={staticFile('audio/merge-conflict.wav')} />
+    <Audio src={staticFile('audio/merge-conflict-v4.wav')} />
   </AbsoluteFill>
 );
 

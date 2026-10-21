@@ -1,16 +1,17 @@
-// Typed view of ../data/take-2026-10-20/mc-timing.json (copied here by `npm run sync-timing`; tools/beatcheck.mjs
-// requires the copy to be byte-identical). The scene clock is in SECONDS; frames only appear at render time.
+// Typed view of ../data/take-v4/mc-timing.json and its token_map.json (the final song; copied here by
+// `npm run sync-timing`; tools/beatcheck.mjs requires both copies to be byte-identical). The scene clock is in SECONDS; frames only appear at render time.
 // Erasable TypeScript only: node loads this file in tools/.
 import raw from './data/mc-timing.json' with { type: 'json' };
+import tokenMap from './data/token_map.json' with { type: 'json' };
 import type { MapToken } from './lyrics/bind.ts';
 import { gridLenAt, gridPos, gridTime, medianStep } from './timing/grid.ts';
 
 export interface TimingWord { w: string; s: number; e: number; p: number }
 export interface TimingSection { name: string; start: number; end: number }
-export interface TimingBar { bar: number; start: number; end: number }
+export interface TimingBar { bar: number; start: number; end: number; /** measured heaviness 0-100 (take-v4) */ heavy: number }
 export interface TimingStop { start: number; end: number; note?: string }
 /** A lyric line; `tokens` is the token-to-word map (docs/architecture.md "Lyric token map"). */
-export interface TimingLine { section: string; text: string; ratio: number; start: number; end: number; heard: string; tokens?: MapToken[] }
+export interface TimingLine { section: string; text: string; ratio: number; start: number; end: number; heard: string; singer?: 'B' | 'O' | 'both'; tokens?: MapToken[] }
 /** [time in seconds, first word as heard, second word as heard] */
 export type TimingHook = [number, string, string];
 export interface Timing {
@@ -28,7 +29,11 @@ export interface Timing {
   micro_gaps: [number, number][];
 }
 
-export const TIMING = raw as unknown as Timing;
+const MAP = tokenMap as unknown as { line: number; tokens: MapToken[] }[];
+const BASE = raw as unknown as Timing;
+if (MAP.length !== BASE.lyric_alignment.length) throw new Error(`token_map.json has ${MAP.length} lines, mc-timing.json ${BASE.lyric_alignment.length}`);
+/** The timing with each lyric line's token-to-word map merged in (docs/architecture.md "Lyric token map"). */
+export const TIMING: Timing = { ...BASE, lyric_alignment: BASE.lyric_alignment.map((l, i) => ({ ...l, tokens: (MAP[i] as { tokens: MapToken[] }).tokens })) };
 export const FPS = 60;
 export const DURATION_SEC = TIMING.duration;
 export const DURATION_FRAMES = Math.ceil(DURATION_SEC * FPS);

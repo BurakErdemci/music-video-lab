@@ -6,12 +6,13 @@
 //   node tools/beatcheck.mjs --selftest [gap|drift]
 //
 // Loads EVENTS from video/src/events.ts directly (node strips the types) and recomputes every expected
-// time from data/take-2026-10-20/mc-timing.json, read independently of video/src/timing.ts. The scene
+// time from data/take-v4/mc-timing.json, read independently of video/src/timing.ts. The scene
 // clock is in seconds and the film renders at 60 fps, so drift is measured in frames at 60 fps:
 //   anchor 'beat':     ref = beat index        -> beats[ref]
 //   anchor 'downbeat': ref = downbeat index    -> downbeats[ref]
 //   anchor 'hook':     ref = accept_hooks index -> accept_hooks[ref][0]
 //   anchor 'word':     ref = "<text>#<nth>"    -> start of the nth phrase match
+//   anchor 'token':    ref = "<line>:<token>"  -> the token's time through the token map (video/src/lyrics/bind.ts)
 // --range A-B (seconds) clips every section to [A, B) and skips sections outside it, so a film built up to
 // B seconds is checked only where it exists. Without --range the whole song is checked, and a section with
 // no events is dead air: an empty list FAILS (it used to pass "by construction").
@@ -33,14 +34,21 @@ const optVal = (name) => {
 };
 const FPS = 60;
 
-const rawBytes = readFileSync(path.join(ROOT, 'data/take-2026-10-20/mc-timing.json'));
+const TAKE = 'data/take-v4';
+const rawBytes = readFileSync(path.join(ROOT, TAKE, 'mc-timing.json'));
+const mapBytes = readFileSync(path.join(ROOT, TAKE, 'token_map.json'));
+const mapCopy = readFileSync(path.join(ROOT, 'video/src/data/token_map.json'));
 const T = JSON.parse(rawBytes.toString('utf8'));
 const copyBytes = readFileSync(path.join(ROOT, 'video/src/data/mc-timing.json'));
 const { EVENTS: AUTHORED } = await import(pathToFileURL(path.join(ROOT, 'video/src/events.ts')).href);
+const { bindLine } = await import(pathToFileURL(path.join(ROOT, 'video/src/lyrics/bind.ts')).href);
+const MAPPED = JSON.parse(mapBytes.toString('utf8'));
+const LINES = T.lyric_alignment.map((l, i) => ({ ...l, tokens: MAPPED[i]?.tokens }));
 
 const sha = (b) => createHash('sha256').update(b).digest('hex').slice(0, 12);
 const errors = [];
-if (sha(rawBytes) !== sha(copyBytes)) errors.push('video/src/data/mc-timing.json differs from data/take-2026-10-20/mc-timing.json (run: npm run sync-timing in video/)');
+if (sha(rawBytes) !== sha(copyBytes)) errors.push(`video/src/data/mc-timing.json differs from ${TAKE}/mc-timing.json (run: npm run sync-timing in video/)`);
+if (sha(mapBytes) !== sha(mapCopy)) errors.push(`video/src/data/token_map.json differs from ${TAKE}/token_map.json (run: npm run sync-timing in video/)`);
 
 const norm = (s) => s.toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
 const wordStart = (text, nth) => {
@@ -56,6 +64,10 @@ const anchorTime = (e) => {
   if (e.anchor === 'beat') return T.beats[e.ref];
   if (e.anchor === 'downbeat') return T.downbeats[e.ref];
   if (e.anchor === 'hook') return T.accept_hooks[e.ref]?.[0];
+  if (e.anchor === 'token') {
+    const [li, ki] = String(e.ref).split(':').map(Number);
+    try { return bindLine(LINES, T.words, li)[ki]?.start; } catch { return undefined; }
+  }
   if (e.anchor === 'word') {
     const [text, nth] = String(e.ref).split('#');
     return wordStart(text, Number(nth ?? 0));
@@ -63,7 +75,8 @@ const anchorTime = (e) => {
   return undefined;
 };
 
-const intro = T.sections.find((s) => s.name === 'intro');
+// the first intro section of the take (take-v4: intro_robot)
+const intro = T.sections.find((s) => /^intro/.test(s.name));
 const selftest = argv.includes('--selftest');
 const mode = selftest ? (['gap', 'drift'].includes(optVal('--selftest')) ? optVal('--selftest') : 'both') : null;
 const synthetic = () => {
@@ -86,7 +99,7 @@ const ids = new Set();
 for (const e of EVENTS) {
   if (ids.has(e.id)) errors.push(`duplicate id ${e.id}`);
   ids.add(e.id);
-  if (!['beat', 'downbeat', 'hook', 'word'].includes(e.anchor)) {
+  if (!['beat', 'downbeat', 'hook', 'word', 'token'].includes(e.anchor)) {
     errors.push(`${e.id}: unknown anchor ${e.anchor}`);
     continue;
   }
