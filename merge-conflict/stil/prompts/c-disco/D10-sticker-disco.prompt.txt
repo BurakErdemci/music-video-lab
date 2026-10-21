@@ -1,0 +1,19 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./D10-sticker-disco.png
+
+CONCEPT: a key frame for a 'heavy metal disco' music video. A kawaii heavy metal disco sticker party: the two girls drawn as glossy die-cut stickers with thick white borders, dancing, surrounded by stickers of mirror balls, platform boots, roller skates, chrome hearts, lightning bolts, spikes and rainbow stripes.
+
+ART STYLE: kawaii sticker collage, glossy vinyl stickers with hard flat drop shadows, candy and neon colours, vector-sharp edges.
+
+The two girls (keep these identity anchors in every version):
+- The BLUE girl: sweet idol type, about 19, long straight electric-blue hair with a perfectly straight fringe, a small white hair clip shaped like an arrow pointing down, big bright eyes.
+- The ORANGE girl: rock type, about 19, messy short wolf-cut orange hair with dark tips, one small fang in her grin, a band-aid on her cheek.
+Their outfits are a fusion of 1970s disco and heavy metal: sequins, platform boots, flared trousers or mini dresses, mixed with studded leather, spikes and chains. They are rivals in a comic way, full of attitude.
+
+Composition: landscape 1536x1024, both girls clearly visible and large enough to read their faces.
+
+Strict rules:
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks anywhere.
+- NO halftone dot screens, NO print grain, NO paper texture, NO film noise, NO scanlines, NO VHS or broken-TV effects laid over the image. Light spots from a mirror ball are fine; every edge stays clean and sharp.
+- A saturated colour riot: many colours, never muddy, never washed out; blue and orange are the two leading colours.
+
+After copying, print the output path and pixel size.

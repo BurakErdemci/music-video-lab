@@ -1,0 +1,21 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./orange.png
+
+Subject: the model sheet of the LEFT girl of the attached key frame, the ORANGE girl. These features are FIXED:
+1. A huge wild spiky mane of hot orange hair with red-orange depth, like a lion's mane, falling past the shoulders.
+2. A cocky wide toothy grin, sharp confident eyes with winged liner; she is loud and sure she is the star.
+3. Star-shaped earrings.
+4. A cropped jacket covered in orange and gold sequins with spiky studded shoulders, a black top under it.
+5. Chains with little star charms hanging around her hips.
+6. Wide flared trousers in orange-and-gold sequins.
+7. Huge black glossy platform boots.
+Signature colour orange; black and gold as accents only.
+Expressions (bottom-right): cocky grin, shouting, smug wink, furious.
+
+The attached image is the APPROVED key frame of the music video: keep its art style exactly (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions, long legs, chunky platform boots) and keep the character's design from it. In that frame everything is drenched in magenta light; here show her TRUE colours under neutral even light.
+
+Composition: an official character model sheet for animation on a plain flat light grey #D9D9DE background, no scenery, no graffiti layer, no particles. Top row: three full-body views of the same character, FRONT, SIDE (profile) and BACK, identical proportions and details, each about 70 percent of the frame height. Bottom-right corner: four small head close-ups with different expressions. Landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, labels, arrows, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

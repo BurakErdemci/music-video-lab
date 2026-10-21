@@ -1,0 +1,38 @@
+[
+ {
+  "id": "F1-eye-split",
+  "prompt": "stil/prompts/f-arcane-foom/F1-eye-split.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/f-arcane-foom/out/F1-eye-split.png"
+ },
+ {
+  "id": "F2-spotlight-shove",
+  "prompt": "stil/prompts/f-arcane-foom/F2-spotlight-shove.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/f-arcane-foom/out/F2-spotlight-shove.png"
+ },
+ {
+  "id": "F3-git-push-force",
+  "prompt": "stil/prompts/f-arcane-foom/F3-git-push-force.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/f-arcane-foom/out/F3-git-push-force.png"
+ },
+ {
+  "id": "F4-white-out",
+  "prompt": "stil/prompts/f-arcane-foom/F4-white-out.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/f-arcane-foom/out/F4-white-out.png"
+ },
+ {
+  "id": "F5-magenta-backlight",
+  "prompt": "stil/prompts/f-arcane-foom/F5-magenta-backlight.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/f-arcane-foom/out/F5-magenta-backlight.png"
+ },
+ {
+  "id": "F6-gradient-finale",
+  "prompt": "stil/prompts/f-arcane-foom/F6-gradient-finale.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/f-arcane-foom/out/F6-gradient-finale.png"
+ }
+]

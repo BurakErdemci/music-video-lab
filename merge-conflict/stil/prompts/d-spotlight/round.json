@@ -1,0 +1,74 @@
+[
+ {
+  "id": "S01-jrpg-ui",
+  "prompt": "stil/prompts/d-spotlight/S01-jrpg-ui.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S01-jrpg-ui.png"
+ },
+ {
+  "id": "S02-silhouettes",
+  "prompt": "stil/prompts/d-spotlight/S02-silhouettes.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S02-silhouettes.png"
+ },
+ {
+  "id": "S03-neon-wireframe",
+  "prompt": "stil/prompts/d-spotlight/S03-neon-wireframe.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S03-neon-wireframe.png"
+ },
+ {
+  "id": "S04-particle-bodies",
+  "prompt": "stil/prompts/d-spotlight/S04-particle-bodies.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S04-particle-bodies.png"
+ },
+ {
+  "id": "S05-claymation",
+  "prompt": "stil/prompts/d-spotlight/S05-claymation.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S05-claymation.png"
+ },
+ {
+  "id": "S06-y2k-chrome",
+  "prompt": "stil/prompts/d-spotlight/S06-y2k-chrome.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S06-y2k-chrome.png"
+ },
+ {
+  "id": "S07-90s-cartoon",
+  "prompt": "stil/prompts/d-spotlight/S07-90s-cartoon.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S07-90s-cartoon.png"
+ },
+ {
+  "id": "S08-psychedelic-70s",
+  "prompt": "stil/prompts/d-spotlight/S08-psychedelic-70s.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S08-psychedelic-70s.png"
+ },
+ {
+  "id": "S09-true-pixel",
+  "prompt": "stil/prompts/d-spotlight/S09-true-pixel.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S09-true-pixel.png"
+ },
+ {
+  "id": "S10-memphis",
+  "prompt": "stil/prompts/d-spotlight/S10-memphis.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S10-memphis.png"
+ },
+ {
+  "id": "S11-origami",
+  "prompt": "stil/prompts/d-spotlight/S11-origami.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S11-origami.png"
+ },
+ {
+  "id": "S12-light-painting",
+  "prompt": "stil/prompts/d-spotlight/S12-light-painting.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/d-spotlight/out/S12-light-painting.png"
+ }
+]

@@ -1,0 +1,21 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./blue.png
+
+Subject: the model sheet of the RIGHT girl of the attached key frame, the BLUE girl. These features are FIXED:
+1. Very long, sleek, straight electric-blue hair in a high ponytail that reaches below her hips, a few loose strands framing the face.
+2. A proud, cool expression with a small smirk, chin up; she is sharp, precise and sure she is the star.
+3. A star-shaped earring.
+4. A fitted long-sleeve jacket covered in deep blue and silver sequins, a high collar.
+5. A chain belt hanging around her hips with little star charms.
+6. Wide flared trousers in deep blue and silver sequins.
+7. Huge black glossy platform boots.
+Signature colour blue; black and silver as accents only.
+Expressions (bottom-right): cool smirk, shouting, eye-roll, furious.
+
+The attached image is the APPROVED key frame of the music video: keep its art style exactly (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions, long legs, chunky platform boots) and keep the character's design from it. In that frame everything is drenched in magenta light; here show her TRUE colours under neutral even light.
+
+Composition: an official character model sheet for animation on a plain flat light grey #D9D9DE background, no scenery, no graffiti layer, no particles. Top row: three full-body views of the same character, FRONT, SIDE (profile) and BACK, identical proportions and details, each about 70 percent of the frame height. Bottom-right corner: four small head close-ups with different expressions. Landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, labels, arrows, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

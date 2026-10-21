@@ -1,0 +1,5 @@
+[
+  {"id": "A-neon-cel", "prompt": "stil/prompts/a-style/A-neon-cel.prompt.txt", "refs": [], "out": "stil/prompts/a-style/out/A-neon-cel.png"},
+  {"id": "B-sticker-collage", "prompt": "stil/prompts/a-style/B-sticker-collage.prompt.txt", "refs": [], "out": "stil/prompts/a-style/out/B-sticker-collage.png"},
+  {"id": "C-angular-action", "prompt": "stil/prompts/a-style/C-angular-action.prompt.txt", "refs": [], "out": "stil/prompts/a-style/out/C-angular-action.png"}
+]

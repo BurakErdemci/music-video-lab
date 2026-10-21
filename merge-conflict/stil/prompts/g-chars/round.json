@@ -1,0 +1,4 @@
+[
+ {"id": "orange", "prompt": "stil/prompts/g-chars/orange.prompt.txt", "refs": ["stil/onayli/01-tarz-ve-ikili-F5.png"], "out": "stil/prompts/g-chars/out/orange.png"},
+ {"id": "blue", "prompt": "stil/prompts/g-chars/blue.prompt.txt", "refs": ["stil/onayli/01-tarz-ve-ikili-F5.png"], "out": "stil/prompts/g-chars/out/blue.png"}
+]

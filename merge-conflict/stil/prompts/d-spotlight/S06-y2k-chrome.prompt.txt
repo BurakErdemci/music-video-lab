@@ -1,0 +1,17 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./S06-y2k-chrome.png
+
+ART STYLE: Y2K liquid chrome and iridescent 3D render: glossy metallic bubble shapes, holographic surfaces, inflated chrome lettering style, candy translucent plastic, sparkles, futuristic 1999 pop music video look.
+
+SHOT: Two chrome-and-plastic pop star girls strike poses on a glossy disco stage, one pushing the other off the edge of a floating podium.
+
+CONCEPT: a key frame for a heavy-metal disco music video. Two rival girls fight to be the star: a dance battle on a disco floor where each one tries to shove the other out of the spotlight and take the foreground for herself. One girl's signature colour is ORANGE, the other's is BLUE. Invent BOTH characters freshly in this art style's own language (faces, hair, outfits, proportions); do NOT default to generic anime girls. They must be clearly two different personalities.
+
+The image must look like it comes from a completely different medium than anime illustration: commit fully to the art style above, its materials, its proportions and its rendering.
+
+Rules:
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines, NO VHS or broken-TV effects laid over the image. Light spots, glows and particles inside the scene are fine.
+- A saturated colour riot: many colours, never muddy or washed out; orange and blue lead.
+- Landscape 1536x1024.
+- The ONLY text allowed: the three words GIT PUSH FORCE as huge disco-sign letters in the scene, each word lit in a different colour, spelled exactly like that. No other text, numbers, logos or watermarks.
+
+After copying, print the output path and pixel size.

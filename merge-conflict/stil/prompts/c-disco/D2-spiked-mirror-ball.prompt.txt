@@ -1,0 +1,19 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./D2-spiked-mirror-ball.png
+
+CONCEPT: a key frame for a 'heavy metal disco' music video. A heavy metal disco temple: an enormous mirror ball covered in metal spikes hangs over a stage, shooting sharp coloured light beams in every direction through haze. The two girls strike mirrored power poses on top of two giant speaker stacks on either side, one pointing a finger up like a disco dancer, the other throwing the horns hand sign.
+
+ART STYLE: epic heavy metal album cover painting with razor-sharp edges, dramatic lighting, chrome and glossy highlights, bold saturated colours.
+
+The two girls (keep these identity anchors in every version):
+- The BLUE girl: sweet idol type, about 19, long straight electric-blue hair with a perfectly straight fringe, a small white hair clip shaped like an arrow pointing down, big bright eyes.
+- The ORANGE girl: rock type, about 19, messy short wolf-cut orange hair with dark tips, one small fang in her grin, a band-aid on her cheek.
+Their outfits are a fusion of 1970s disco and heavy metal: sequins, platform boots, flared trousers or mini dresses, mixed with studded leather, spikes and chains. They are rivals in a comic way, full of attitude.
+
+Composition: landscape 1536x1024, both girls clearly visible and large enough to read their faces.
+
+Strict rules:
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks anywhere.
+- NO halftone dot screens, NO print grain, NO paper texture, NO film noise, NO scanlines, NO VHS or broken-TV effects laid over the image. Light spots from a mirror ball are fine; every edge stays clean and sharp.
+- A saturated colour riot: many colours, never muddy, never washed out; blue and orange are the two leading colours.
+
+After copying, print the output path and pixel size.

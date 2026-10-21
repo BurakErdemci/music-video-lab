@@ -1,0 +1,17 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./S04-particle-bodies.png
+
+ART STYLE: both girls are made entirely of thousands of tiny glowing particles and light points that form their bodies, hair and motion trails, on a dark disco floor; particles stream off them as they move. Volumetric light beams from a mirror ball.
+
+SHOT: Mid-spin, one girl's particles scatter as the other bursts through her to take the spotlight.
+
+CONCEPT: a key frame for a heavy-metal disco music video. Two rival girls fight to be the star: a dance battle on a disco floor where each one tries to shove the other out of the spotlight and take the foreground for herself. One girl's signature colour is ORANGE, the other's is BLUE. Invent BOTH characters freshly in this art style's own language (faces, hair, outfits, proportions); do NOT default to generic anime girls. They must be clearly two different personalities.
+
+The image must look like it comes from a completely different medium than anime illustration: commit fully to the art style above, its materials, its proportions and its rendering.
+
+Rules:
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines, NO VHS or broken-TV effects laid over the image. Light spots, glows and particles inside the scene are fine.
+- A saturated colour riot: many colours, never muddy or washed out; orange and blue lead.
+- Landscape 1536x1024.
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks.
+
+After copying, print the output path and pixel size.

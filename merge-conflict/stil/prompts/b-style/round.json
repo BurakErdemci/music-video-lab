@@ -1,0 +1,56 @@
+[
+ {
+  "id": "D-constructivist",
+  "prompt": "stil/prompts/b-style/D-constructivist.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/D-constructivist.png"
+ },
+ {
+  "id": "E-stained-glass",
+  "prompt": "stil/prompts/b-style/E-stained-glass.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/E-stained-glass.png"
+ },
+ {
+  "id": "F-paper-diorama",
+  "prompt": "stil/prompts/b-style/F-paper-diorama.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/F-paper-diorama.png"
+ },
+ {
+  "id": "G-neon-signs",
+  "prompt": "stil/prompts/b-style/G-neon-signs.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/G-neon-signs.png"
+ },
+ {
+  "id": "H-ukiyo-e",
+  "prompt": "stil/prompts/b-style/H-ukiyo-e.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/H-ukiyo-e.png"
+ },
+ {
+  "id": "I-art-nouveau",
+  "prompt": "stil/prompts/b-style/I-art-nouveau.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/I-art-nouveau.png"
+ },
+ {
+  "id": "J-80s-ova",
+  "prompt": "stil/prompts/b-style/J-80s-ova.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/J-80s-ova.png"
+ },
+ {
+  "id": "K-graffiti-mural",
+  "prompt": "stil/prompts/b-style/K-graffiti-mural.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/K-graffiti-mural.png"
+ },
+ {
+  "id": "L-fighting-game",
+  "prompt": "stil/prompts/b-style/L-fighting-game.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/b-style/out/L-fighting-game.png"
+ }
+]

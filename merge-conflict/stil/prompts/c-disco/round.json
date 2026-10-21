@@ -1,0 +1,62 @@
+[
+ {
+  "id": "D1-led-floor-duel",
+  "prompt": "stil/prompts/c-disco/D1-led-floor-duel.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D1-led-floor-duel.png"
+ },
+ {
+  "id": "D10-sticker-disco",
+  "prompt": "stil/prompts/c-disco/D10-sticker-disco.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D10-sticker-disco.png"
+ },
+ {
+  "id": "D2-spiked-mirror-ball",
+  "prompt": "stil/prompts/c-disco/D2-spiked-mirror-ball.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D2-spiked-mirror-ball.png"
+ },
+ {
+  "id": "D3-roller-rink",
+  "prompt": "stil/prompts/c-disco/D3-roller-rink.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D3-roller-rink.png"
+ },
+ {
+  "id": "D4-70s-album-cover",
+  "prompt": "stil/prompts/c-disco/D4-70s-album-cover.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D4-70s-album-cover.png"
+ },
+ {
+  "id": "D5-space-disco",
+  "prompt": "stil/prompts/c-disco/D5-space-disco.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D5-space-disco.png"
+ },
+ {
+  "id": "D6-mirror-shard-world",
+  "prompt": "stil/prompts/c-disco/D6-mirror-shard-world.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D6-mirror-shard-world.png"
+ },
+ {
+  "id": "D7-soul-train-line",
+  "prompt": "stil/prompts/c-disco/D7-soul-train-line.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D7-soul-train-line.png"
+ },
+ {
+  "id": "D8-dance-game",
+  "prompt": "stil/prompts/c-disco/D8-dance-game.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D8-dance-game.png"
+ },
+ {
+  "id": "D9-disco-inferno",
+  "prompt": "stil/prompts/c-disco/D9-disco-inferno.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/c-disco/out/D9-disco-inferno.png"
+ }
+]

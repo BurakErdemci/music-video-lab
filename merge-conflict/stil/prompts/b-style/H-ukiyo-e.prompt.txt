@@ -1,0 +1,21 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./H-ukiyo-e.png
+
+ART STYLE: a bold Japanese woodblock print reimagined for a metal music video: flat colour areas, strong confident outlines, stylised waves, clouds and wind patterns. The blue world is a towering stylised wave, the orange world is a roaring stylised fire with curling flame patterns; they crash together at the seam. Clean flat colour, no paper grain, no texture.
+
+Subject: a music video key frame. Two rival girls face off nose to nose across a glowing vertical seam that splits the frame exactly in half, both leaning in and shouting at each other, mouths wide open, fists clenched, pure comic rivalry (not hatred).
+- LEFT half is the BLUE girl's world: calm, clean, perfectly ordered: crisp geometric grid architecture, white and electric blue #1E6BFF, cyan #3FD8FF, everything aligned.
+- RIGHT half is the ORANGE girl's world: wild midnight energy: spray-paint marks, jagged shapes, stickers, sparks, hot orange #FF6A1A, magenta #FF2E88, deep purple night.
+- The SEAM in the middle is a thick bar of white-hot light; the two colours collide on it with sharp sparks. Each girl is rim-lit on her face by the OTHER girl's colour (blue light on the orange girl, orange light on the blue girl).
+
+The BLUE girl (left, facing right): sweet idol type, about 19, neat long straight electric-blue hair with a perfectly straight fringe, a small white hair clip shaped like an arrow pointing down, big bright eyes, a crisp white and blue idol stage outfit with clean geometric trims, white gloves. Prim, confident, offended.
+
+The ORANGE girl (right, facing left): rock type, about 19, messy short wolf-cut orange hair with dark tips, one small fang in her grin, black cropped hoodie with orange panels and safety pins, a band-aid on her cheek, an orange electric guitar slung on her back, a spray can in one hand. Cocky, loud.
+
+Composition: landscape 1536x1024, the two faces and upper bodies large in the frame, the seam exactly at the centre, generous dynamic angle, both full of energy.
+
+Strict rules:
+- ABSOLUTELY NO text, letters, numbers, symbols that look like code, logos or watermarks anywhere.
+- NO halftone dots, NO dot screens, NO print grain, NO paper texture, NO noise, NO scanlines, NO VHS or broken-TV effects. Every edge is clean and sharp.
+- Saturated colour riot built on blue versus orange; never muddy, never washed out.
+
+After copying, print the output path and pixel size.

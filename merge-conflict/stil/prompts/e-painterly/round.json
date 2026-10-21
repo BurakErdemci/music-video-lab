@@ -1,0 +1,14 @@
+[
+ {
+  "id": "P1-painterly-feature",
+  "prompt": "stil/prompts/e-painterly/P1-painterly-feature.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/e-painterly/out/P1-painterly-feature.png"
+ },
+ {
+  "id": "P2-painterly-graffiti",
+  "prompt": "stil/prompts/e-painterly/P2-painterly-graffiti.prompt.txt",
+  "refs": [],
+  "out": "stil/prompts/e-painterly/out/P2-painterly-graffiti.png"
+ }
+]

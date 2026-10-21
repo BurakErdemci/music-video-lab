@@ -1,0 +1,18 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./F5-magenta-backlight.png
+
+SHOT: The whole frame drenched in deep magenta: both girls as near-silhouettes back to back, backlit by a blinding mirror-ball burst behind them with hard light rays, their outlines traced by hand-drawn neon orange and neon blue scribbles. Floating confetti catches the light.
+
+ART STYLE (all of it matters):
+- A painterly 2D/3D hybrid animated series look: stylised characters with hand-painted textures and visible confident brushstrokes, angular graphic faces with strong simple shapes and big expressive eyes, stylised proportions. NOT a fantasy book cover, NOT glamour, NOT anime.
+- Graded like a neon music video: the frame is dominated by ONE saturated colour of light, and the characters are cut by the complementary colour as a hard rim or a split light across the face.
+- A hand-drawn 2D graphic layer on top of the painting: neon chalk scribbles tracing silhouettes, spray-paint splatter, rough diagonal colour slashes, crude doodled stars and arrows.
+- Living particles everywhere: confetti, light sparks and mirror-ball sparkles floating in the air, crisp and colourful.
+
+CHARACTERS: two rival girls, about 19-20, a heavy-metal disco duo fighting to be the star. One girl's signature colour is ORANGE, the other's is BLUE. Design both characters freshly with strong, memorable silhouettes and clearly different personalities (one loud and cocky, one sharp and proud). Disco-metal street fashion: sequin jackets, platform boots, studs, chains, flares. Fully clothed, not sexualised.
+
+Rules:
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines, NO VHS or broken-TV effects over the image.
+- Landscape 1536x1024.
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks.
+
+After copying, print the output path and pixel size.

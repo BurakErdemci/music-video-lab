@@ -1,0 +1,17 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./P1-painterly-feature.png
+
+ART STYLE: a painterly 2D/3D hybrid animated feature film frame: stylised 3D characters with hand-painted textures and visible brushstrokes on skin, hair and clothes, angular sculpted faces with strong cheekbones and expressive eyes, dramatic rim light in saturated colours, hand-drawn 2D effects (sparks, smoke, light flares) painted on top, a moody painted background with deep shadows and glowing coloured light, cinematic composition like a gritty steampunk-city animated series.
+
+SHOT: Close two-shot under a disco spotlight: the orange girl steps in front, chin up and smirking, while the blue girl grabs her shoulder to pull her back, their faces lit from opposite sides in orange and blue.
+
+CONCEPT: a key frame for a heavy-metal disco music video. Two rival girls fight to be the star: a dance battle on a disco floor where each one tries to shove the other out of the spotlight and take the foreground for herself. One girl's signature colour is ORANGE, the other's is BLUE. Invent BOTH characters freshly in this art style's own language (faces, hair, outfits, proportions); do NOT default to generic anime girls. They must be clearly two different personalities.
+
+The image must look like it comes from a painterly animated feature film, not from anime illustration: commit fully to the art style above, its materials, its proportions and its rendering.
+
+Rules:
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines, NO VHS or broken-TV effects laid over the image. Light spots, glows and particles inside the scene are fine.
+- A saturated colour riot: many colours, never muddy or washed out; orange and blue lead.
+- Landscape 1536x1024.
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks.
+
+After copying, print the output path and pixel size.
