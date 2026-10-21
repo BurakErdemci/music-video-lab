@@ -51,33 +51,45 @@ import type { FramingKind } from './framing.ts';
 
 export interface Girl { full: string; close: string; color: Hex }
 type Draw = Omit<CardProps, 'grade'> & { key: string };
+/** Full-figure height cap (world units at z = 0): 60 % of the 9-unit frame (Burak: the girls read too tall).
+ *  Closer framings crop the figure at the frame bottom instead of growing a full figure. */
+export const FULL_MAX = 5.4;
+/** Knee-up and waist-up placements: the knee (about 28 % up the card) or the waist (about 52 %) sits on the
+ *  frame bottom (y = -4.5 at z = 0), the head under the top with room for type. */
+export const kneeUp = (x: number, height = 10.6): Placement => ({ x, height, feet: -4.5 - 0.28 * height });
+export const waistUp = (x: number, height = 15): Placement => ({ x, height, feet: -4.5 - 0.52 * height });
+
 /** What a framing puts on the stage: the camera and the cards (grade added by the caller). */
-export const framing = (kind: FramingKind, t: number, singer: Girl, other: Girl): { pose: CameraPose; cards: Draw[]; split?: boolean } => {
-  const at = (x: number, height: number, extra: Partial<Placement> = {}): Placement => ({ x, height, ...extra });
+export const framing = (kind: FramingKind, t: number, singer: Girl, other: Girl, x = 0): { pose: CameraPose; cards: Draw[]; split?: boolean } => {
+  const at = (cx: number, height: number, extra: Partial<Placement> = {}): Placement => ({ x: cx, height, ...extra });
   switch (kind) {
     case 'face':
-      return { pose: HOME, cards: [{ key: 'face', id: singer.close, t, ...at(0, 12, { feet: -7.2 }) }] };
+      return { pose: HOME, cards: [{ key: 'face', id: singer.close, t, ...at(x, 12, { feet: -7.2 }) }] };
+    case 'knee':
+      return { pose: HOME, cards: [{ key: 'knee', id: singer.full, t, ...kneeUp(x) }] };
+    case 'waist':
+      return { pose: HOME, cards: [{ key: 'waist', id: singer.full, t, ...waistUp(x) }] };
     case 'tiny':
-      return { pose: HOME, cards: [{ key: 'tiny', id: singer.full, t, ...at(0, 2.6) }] };
+      return { pose: HOME, cards: [{ key: 'tiny', id: singer.full, t, ...at(x, 2.6) }] };
     case 'low':
-      return { pose: { position: [0, -2.6, HOME_Z - 3], target: [0, 1.2, 0], fov: 46 }, cards: [{ key: 'low', id: singer.full, t, ...at(0, 7.4) }] };
+      return { pose: { position: [0, -2.6, HOME_Z - 3], target: [0, 1.2, 0], fov: 46 }, cards: [{ key: 'low', id: singer.full, t, ...at(x, 4.4) }] };
     case 'clones':
       // five copies in a row, each a little later in the dance (phase-offset), alternating mirror
       return {
         pose: HOME,
-        cards: [-2, -1, 0, 1, 2].map((k) => ({ key: `clone${k}`, id: singer.full, t: t + k * 0.13, ...at(k * 3.1, 5.2 - Math.abs(k) * 0.5, { z: -Math.abs(k) * 0.6, flip: k % 2 !== 0 }), soft: Math.abs(k) * 0.25 })),
+        cards: [-2, -1, 0, 1, 2].map((k) => ({ key: `clone${k}`, id: singer.full, t: t + k * 0.13, ...at(k * 3.1, 4.6 - Math.abs(k) * 0.45, { z: -Math.abs(k) * 0.6, flip: k % 2 !== 0 }), soft: Math.abs(k) * 0.25 })),
       };
     case 'split':
       return {
         pose: HOME,
         split: true,
         cards: [
-          { key: 'splitO', id: singer.full, t, ...at(-2.6, 7), clip: { x: 0, keep: 'left' } },
-          { key: 'splitB', id: other.full, t, ...at(2.6, 7), clip: { x: 0, keep: 'right' } },
+          { key: 'splitO', id: singer.full, t, ...at(-2.6, FULL_MAX), clip: { x: 0, keep: 'left' } },
+          { key: 'splitB', id: other.full, t, ...at(2.6, FULL_MAX), clip: { x: 0, keep: 'right' } },
         ],
       };
     default:
-      return { pose: shifted(HOME, [0, 0, -0.5]), cards: [{ key: 'stage', id: singer.full, t, ...at(-2.4, 6.6), soft: 0.6 }] };
+      return { pose: shifted(HOME, [0, 0, -0.5]), cards: [{ key: 'stage', id: singer.full, t, ...at(x || -2.4, FULL_MAX), soft: 0.4 }] };
   }
 };
 

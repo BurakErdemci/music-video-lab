@@ -3,7 +3,7 @@
 // this file to prove the check throws.
 import { barLengthAt, barPos, f } from '../timing.ts';
 
-export type FramingKind = 'stage' | 'face' | 'tiny' | 'low' | 'clones' | 'split';
+export type FramingKind = 'stage' | 'face' | 'tiny' | 'low' | 'clones' | 'split' | 'knee' | 'waist';
 export interface FramingCue { t: number; kind: FramingKind }
 /** Length (s) of the bar t falls in, from the measured downbeats (kept for callers; the check counts bars). */
 export const barAt = (t: number): number => barLengthAt(t);
