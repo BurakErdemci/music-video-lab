@@ -4,6 +4,7 @@
 import { type Hex, mixHex } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { type Face, CAP, familyOf, layout } from './fonts.tsx';
+import { slamScale } from './Slam.tsx';
 import { GLOW } from './Svg.tsx';
 
 export interface LightBoxSpec {
@@ -20,6 +21,8 @@ export interface LightBoxSpec {
   face?: Face;
   /** Seconds before t0 the dark sign is already visible (default: always). */
   pre?: number;
+  /** Slam the whole sign in (1.6 -> 1 in 8 frames) when its first letter lights. */
+  slam?: boolean;
   /** Draw the box around the letters. */
   box?: boolean;
 }
@@ -47,7 +50,7 @@ export const LightBox = ({ spec, t }: { spec: LightBoxSpec; t: number }) => {
   const capH = spec.size * (face === 'mono' ? 0.7 : CAP);
   let lit = 0;
   return (
-    <g transform={`translate(${spec.x - width / 2} ${spec.y})`} fontFamily={familyOf(face)} fontSize={spec.size}>
+    <g transform={`translate(${spec.x} ${spec.y - capH / 2}) scale(${spec.slam && t >= spec.t0 ? slamScale(t, spec.t0) : 1}) translate(${-width / 2} ${capH / 2})`} fontFamily={familyOf(face)} fontSize={spec.size}>
       {spec.box && (
         <rect x={-pad} y={-capH - pad} width={width + 2 * pad} height={capH + 2 * pad} rx={spec.size * 0.08} fill="#07030c" fillOpacity={0.78} stroke="#3a2a4a" strokeWidth={spec.size * 0.035} />
       )}

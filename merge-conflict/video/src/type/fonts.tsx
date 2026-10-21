@@ -29,7 +29,7 @@ export const MONO_ADV = 0.6;
 export type Face = 'display' | 'mono';
 
 /** x of each letter's left edge and the total width, in px, at `size` px with `track` em extra spacing. */
-export const layout = (text: string, size: number, face: Face = 'display', track = 0.02): { xs: number[]; ws: number[]; width: number } => {
+export const layout = (text: string, size: number, face: Face = 'display', track = face === 'mono' ? 0 : 0.02): { xs: number[]; ws: number[]; width: number } => {
   const xs: number[] = [];
   const ws: number[] = [];
   let x = 0;
