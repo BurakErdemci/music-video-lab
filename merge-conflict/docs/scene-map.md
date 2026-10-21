@@ -474,3 +474,21 @@ painting; the blue girl was missing. Shot by shot (the subject card >= 60 % of t
 - Plates are upscaled 2x with Upscayl's digital-art-4x model (3072x2048).
 - No plate or card is ever shown above 1.25x its native pixel scale at the 2K output; `tools/framecheck.mjs` measures this.
 - Cards shown large (face close-ups and big action shots) get an upscaled copy the same way.
+
+## Drawn motion loops everywhere (Burak, 2026-10-22: "this method is good; use it really, not in one or two places, this kind of motion brings life")
+
+Proven by the headbang test (OH1 plus two Codex in-betweens on the same base frame: the lower body stays put, only
+the head, hair and arms change). Every card that is on screen for more than a beat plays a short **drawn loop**
+instead of a still:
+- **Drawings:** each card gets 2-3 Codex in-betweens made from the card itself as the base frame, with the same framing,
+  scale, stance and feet, changing only what the loop is about. Loop types:
+  - **face:** mouth and eyes while singing;
+  - **idle:** breath plus a hair or cloth blow, for full-body holds;
+  - **action:** anticipation and follow-through around the key pose.
+  Ids: <card>b, <card>c (e.g. OH1b, OH1c), cut out with tools/imagegen/cutout.py, inheriting the base card's face/action boxes.
+- **Timing:** stepped, never tweened, at about 10 drawings per second (holds of 5-7 frames at 60 fps). The phase is locked
+  to the beat grid; the key pose lands on the beat. Speed follows the section energy: the piano is slow and sparse, the
+  verses medium, the choruses and metal fast. Never a free-running cycle at one tempo.
+- **Combined with** the camera, the shake and the hair/cloth ripple, but the ripple is turned down on cards that
+  already loop drawn hair.
+- **Order of work:** the most-seen cards first (measured screen time), then every action card.
