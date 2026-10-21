@@ -2,9 +2,10 @@
 // (health, wings, rage), each used the moment it returns. No two attacks share a type or a camera.
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
+import { AdditiveBlending, DoubleSide } from 'three';
 import { handheld, hold, SHAKE_PCT, sequence, tween, withShake, type CameraPath, type CameraPose } from '../../../camera/api.ts';
 import { VORATHUL_RIG, texOf } from '../../../rig/model.ts';
-import { Card, type Vec3 } from '../../../stage/Card.tsx';
+import { Card, useCardTexture, type Vec3 } from '../../../stage/Card.tsx';
 import { Stage } from '../../../stage/Stage.tsx';
 import { BossNameplate, Cursor, Desktop, HealthBar, RevertDialog } from '../../../ui/kit.ts';
 import { DuotoneFlash, ImpactBurst, InkSplash, Overlay, seeded, Shards, SpeedLines, taperedPath } from '../../../vfx/effects.ts';
@@ -13,7 +14,6 @@ import { clamp01, E, inOut, lerp, outBack, outCubic, prog, project, pxPerUnit, u
 import { Chair, Desk, Dev, LightStrip, Monitor3D, O, Rect } from '../lib/Office.tsx';
 import { AVAILABLE } from '../../../cast/available.ts';
 import { Asset } from '../lib/PlateCard.tsx';
-import { DomPlate } from '../lib/DomPlate.tsx';
 import { AfterRoom, DESKS } from '../lib/Room.tsx';
 import { rigPoints, solveAt } from '../lib/rigPoints.ts';
 import { Shot } from '../lib/Shell.tsx';
@@ -435,6 +435,18 @@ const pitched = (p: Vec3): Vec3 => {
 };
 const STRIPS: Vec3[] = [[-5.0, 4.9, -6.5], [5.2, 4.9, -7.4], [-4.4, 4.9, -12.6], [4.8, 4.9, -13.2]];
 
+/** The painted light layer (LX-rays, added to the picture, low) as a card behind him (his cards sit at renderOrder 1000+), so the burst comes from behind his body instead of striping it. Never a flat strip. */
+const BlastRays = ({ opacity }: { opacity: number }) => {
+  const tex = useCardTexture('assets/LX-rays.png');
+  if (opacity <= 0) return null;
+  return (
+    <mesh position={[0, S103_BASE.target[1] + 0.4, S103_AT[2] - 2]} rotation={[PITCH, 0, 0]} renderOrder={900}>
+      <planeGeometry args={[27, 18]} />
+      <meshBasicMaterial map={tex} opacity={opacity} transparent blending={AdditiveBlending} depthWrite={false} depthTest={false} toneMapped={false} side={DoubleSide} />
+    </mesh>
+  );
+};
+
 export const S103 = ({ frame }: { frame: number }) => {
   const cam = S103_CAM(frame);
   const pts = rigPoints(S103_TL, frame, { at: S103_AT });
@@ -448,6 +460,7 @@ export const S103 = ({ frame }: { frame: number }) => {
         <AfterRoom frame={frame} strips={false} />
         <Vorathul tl={S103_TL} frame={frame} at={S103_AT} pitch={PITCH} />
         {strips < 0 ? STRIPS.map((s, i) => <LightStrip key={i} at={s} len={5} />) : null}
+        <BlastRays opacity={frame >= BLAST ? 0.55 * (1 - clamp01((frame - BLAST) / 18)) : 0} />
       </Paint>
       </Stage>
       <Overlay>
@@ -483,8 +496,6 @@ export const S103 = ({ frame }: { frame: number }) => {
         const p = project(cam, [d[0], d[1] + 1.8, d[2]]);
         return <InkSplash key={`sw${i}`} frame={frame - SWAP_AT - 1 - (i % 2) * 2} duration={20} seed={1090 + i} x={p.x} y={p.y} size={190} variant={i % 2 ? 'violet' : 'black'} fade={8} direction={i < 2 ? Math.PI : 0} />;
       })}
-      {/* The painted light layer (LX-rays, screen blend, low opacity) instead of flat solid beams. */}
-      <DomPlate id="LX-rays" plate="03-kanat-yelpaze.jpg" crop={[0, 0, 1536, 1024]} x={0} y={0} width={W} style={{ mixBlendMode: 'screen', opacity: frame >= BLAST ? 0.55 * (1 - clamp01((frame - BLAST) / 18)) : 0 }} />
       {STRIPS.map((s, i) => {
         const p = project(cam, s);
         return <Shards key={i} frame={strips - (i % 2)} duration={30} seed={1033 + i} origin={[p.x, p.y]} direction={Math.atan2(p.y - H / 2, p.x - W / 2)} spread={Math.PI * 0.9} speed={34} size={34} count={14} fills={[O.white, O.white, O.mid]} />;
