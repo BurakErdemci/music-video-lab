@@ -2,7 +2,8 @@
 // Scalar (docs/scene-map.md): every beat-locked event drifts 0 frames from its measured anchor, and no
 // section breaks the dead-air rule.
 //
-//   node tools/beatcheck.mjs [--verbose]
+//   node tools/beatcheck.mjs [--verbose] [--range A-B]
+//   node tools/beatcheck.mjs --selftest [gap|drift]
 //
 // Loads EVENTS from video/src/events.ts directly (node strips the types) and recomputes every expected
 // time from data/take-2026-10-20/mc-timing.json, read independently of video/src/timing.ts. The scene
@@ -11,21 +12,31 @@
 //   anchor 'downbeat': ref = downbeat index    -> downbeats[ref]
 //   anchor 'hook':     ref = accept_hooks index -> accept_hooks[ref][0]
 //   anchor 'word':     ref = "<text>#<nth>"    -> start of the nth phrase match
-// Drift errors fail the run (exit 1). Dead air is reported per section and also fails the run (exit 2).
-// An empty EVENTS list passes with a note: there is nothing to drift or to leave dead yet.
+// --range A-B (seconds) clips every section to [A, B) and skips sections outside it, so a film built up to
+// B seconds is checked only where it exists. Without --range the whole song is checked, and a section with
+// no events is dead air: an empty list FAILS (it used to pass "by construction").
+// --selftest replaces EVENTS with a synthetic list on the REAL timing data (one event per intro beat):
+// 'gap' removes beats 8-13 (a 6-beat hole, limit 2: dead air), 'drift' moves one event 2 frames off its beat,
+// no argument does both. The selftest must exit non-zero: it proves both failure paths fire.
+// Exit code: bit 1 = drift errors, bit 2 = dead air (both = 3).
 import { createHash } from 'node:crypto';
 import { readFileSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const verbose = process.argv.includes('--verbose');
+const argv = process.argv.slice(2);
+const verbose = argv.includes('--verbose');
+const optVal = (name) => {
+  const i = argv.indexOf(name);
+  return i === -1 ? undefined : argv[i + 1];
+};
 const FPS = 60;
 
 const rawBytes = readFileSync(path.join(ROOT, 'data/take-2026-10-20/mc-timing.json'));
 const T = JSON.parse(rawBytes.toString('utf8'));
 const copyBytes = readFileSync(path.join(ROOT, 'video/src/data/mc-timing.json'));
-const { EVENTS } = await import(pathToFileURL(path.join(ROOT, 'video/src/events.ts')).href);
+const { EVENTS: AUTHORED } = await import(pathToFileURL(path.join(ROOT, 'video/src/events.ts')).href);
 
 const sha = (b) => createHash('sha256').update(b).digest('hex').slice(0, 12);
 const errors = [];
@@ -52,6 +63,24 @@ const anchorTime = (e) => {
   return undefined;
 };
 
+const intro = T.sections.find((s) => s.name === 'intro');
+const selftest = argv.includes('--selftest');
+const mode = selftest ? (['gap', 'drift'].includes(optVal('--selftest')) ? optVal('--selftest') : 'both') : null;
+const synthetic = () => {
+  let evs = T.beats.map((b, i) => ({ id: `st-beat-${i}`, anchor: 'beat', ref: i, t: b })).filter((e) => e.t >= intro.start && e.t < intro.end);
+  if (mode !== 'drift') evs = evs.filter((e) => e.ref < 8 || e.ref > 13);
+  if (mode !== 'gap') evs[3] = { ...evs[3], id: 'st-drifted', t: evs[3].t + 2 / FPS };
+  return evs;
+};
+const EVENTS = selftest ? synthetic() : AUTHORED;
+let range = selftest ? [0, intro.end] : [0, Infinity];
+if (optVal('--range')) {
+  const [a, b] = optVal('--range').split('-').map(Number);
+  if (!(b > a)) throw new Error(`bad --range ${optVal('--range')}`);
+  range = [a, b];
+}
+if (selftest) console.log(`SELFTEST (${mode}): ${EVENTS.length} synthetic events on the real timing data; this run MUST fail.`);
+
 let maxDrift = 0;
 const ids = new Set();
 for (const e of EVENTS) {
@@ -69,10 +98,9 @@ for (const e of EVENTS) {
   const drift = Math.abs(Math.round(e.t * FPS) - Math.round(t * FPS));
   maxDrift = Math.max(maxDrift, drift);
   if (drift > 0) errors.push(`${e.id}: frame ${Math.round(e.t * FPS)} expected ${Math.round(t * FPS)} (drift ${drift})`);
-  if (verbose) console.log(`${drift ? 'DRIFT' : 'ok   '} ${e.id.padEnd(20)} ${e.anchor.padEnd(8)} ${String(e.ref).padEnd(18)} f${String(Math.round(e.t * FPS)).padStart(6)} (${t.toFixed(3)} s)`);
+  if (verbose) console.log(`${drift ? 'DRIFT' : 'ok   '} ${e.id.padEnd(22)} ${e.anchor.padEnd(8)} ${String(e.ref).padEnd(18)} f${String(Math.round(e.t * FPS)).padStart(6)} (${t.toFixed(3)} s)`);
 }
 console.log(`beatcheck drift @ ${FPS} fps: ${EVENTS.length} events, max drift = ${maxDrift} frames, timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
-if (!EVENTS.length) console.log('note: video/src/events.ts holds no events yet; drift and dead air have nothing to measure (PASS by construction).');
 
 // Dead air, in beats between consecutive events within each section (docs/direction.md "Pace").
 const beatPos = (t) => {
@@ -81,16 +109,21 @@ const beatPos = (t) => {
   for (let i = 0; i < b.length - 1; i++) if (t < b[i + 1]) return i + (t - b[i]) / (b[i + 1] - b[i]);
   return b.length - 1;
 };
-// direction.md: chorus, build, final: at most 2 beats; verse: at most 4. Every other section defaults to 4
-// (an assumption, not a measured rule); the hard stop and the end silence are dead air by design.
-const limitFor = (name) => (/^(chorus|final|build|outro)/i.test(name) ? 2 : 4);
+// direction.md: chorus, build, final, outro, and the intro (an event-less opening was rejected): at most
+// 2 beats; verse: at most 4. Every other section (prechorus, postchorus, breakdown, solo, piano, tail)
+// defaults to 4, an assumption, not a measured rule. The hard stop and the end silence are dead by design.
+const limitFor = (name) => (/^(chorus|final|build|outro|intro)/i.test(name) ? 2 : 4);
 const EXEMPT = /^(hard_stop|silence_end)/;
 const beatLen = 60 / T.bpm_mean;
 const violations = [];
-for (const s of T.sections) {
-  if (EXEMPT.test(s.name)) continue;
+for (const s0 of T.sections) {
+  if (EXEMPT.test(s0.name)) continue;
+  const s = { name: s0.name, start: Math.max(s0.start, range[0]), end: Math.min(s0.end, range[1]) };
+  if (s.end <= s.start) continue;
+  const clipped = s.start !== s0.start || s.end !== s0.end;
   const evs = EVENTS.filter((e) => e.t >= s.start && e.t < s.end).sort((a, b) => a.t - b.t);
-  const pts = [{ pos: beatPos(s.start), id: '(section start)' }, ...evs.map((e) => ({ pos: beatPos(e.t), id: e.id })), { pos: beatPos(s.end), id: '(section end)' }];
+  const endId = s.end < s0.end ? '(range end)' : '(section end)';
+  const pts = [{ pos: beatPos(s.start), id: '(section start)' }, ...evs.map((e) => ({ pos: beatPos(e.t), id: e.id })), { pos: beatPos(s.end), id: endId }];
   let worst = 0;
   let where = '';
   for (let k = 1; k < pts.length; k++) {
@@ -102,10 +135,11 @@ for (const s of T.sections) {
   }
   const limit = limitFor(s.name);
   // One frame of tolerance absorbs rounding of both ends to whole frames.
-  const bad = EVENTS.length > 0 && worst > limit + 1 / FPS / beatLen;
+  const bad = worst > limit + 1 / FPS / beatLen;
   if (bad) violations.push(s.name);
-  console.log(`${bad ? 'FAIL' : 'ok  '} ${s.name.padEnd(26)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(1).padStart(5)} beats (limit ${limit})  ${where}`);
+  console.log(`${bad ? 'FAIL' : 'ok  '} ${(s.name + (clipped ? '*' : '')).padEnd(26)} ${String(evs.length).padStart(3)} ev  max gap ${worst.toFixed(1).padStart(5)} beats (limit ${limit})  ${where}`);
 }
+if (range[0] > 0 || range[1] !== Infinity) console.log(`* clipped to the range ${range[0]}-${range[1]} s`);
 for (const m of errors) console.log(`ERROR ${m}`);
 console.log(`beatcheck: drift ${errors.length ? 'FAIL' : 'PASS'}, dead air ${violations.length ? `FAIL in ${violations.length} sections` : 'PASS'}`);
-process.exit(errors.length ? 1 : violations.length ? 2 : 0);
+process.exit((errors.length ? 1 : 0) | (violations.length ? 2 : 0));
