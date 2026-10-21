@@ -1,4 +1,4 @@
-// Lab: every engine module alone for 4 s, in sequence, for inspection (architecture.md "order of work" 2).
+// Lab: every engine module alone (type and girls segments replay take-v4's verse-1 lines 2-5) for 4 s, in sequence, for inspection (architecture.md "order of work" 2).
 // Each segment owns the frame's single ThreeCanvas; t is the segment-local clock in seconds.
 import type { ReactNode } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
@@ -27,10 +27,18 @@ import { lineTokens, type Token } from '../lyrics/LyricLayer.tsx';
 import type { CameraPose } from '../camera/camera.ts';
 import type { CardProps, Placement } from '../cards/Card.tsx';
 import type { Hex } from '../lib/ease.ts';
-import { downbeat } from '../timing.ts';
-import { HoopType, type HoopPlan, kickCards, kickPlan, KickWord, perchDy, perchPlacement, perchVisible, PerchWord, RevealBoard, type RevealPlan, revealDone, throwPlan, throwRecoil, ThrowWords } from '../girls/interact.tsx';
+import { barPos, downbeat, downbeats } from '../timing.ts';
+/** The time `n` measured bars after t. */
+const barTimeAfter = (t: number, n: number): number => {
+  const p = barPos(t) + n;
+  const i = Math.floor(p);
+  const a = downbeats[i] as number;
+  const b = (downbeats[i + 1] ?? a + 1.333) as number;
+  return a + (p - i) * (b - a);
+};
+import { HoopType, type HoopPlan, hoopPlan, kickCards, kickPlan, KickWord, perchDy, perchPlacement, perchVisible, PerchWord, RevealBoard, type RevealPlan, revealDone, throwPlan, throwRecoil, ThrowWords } from '../girls/interact.tsx';
 import { Fill, Knockout } from '../girls/inside.tsx';
-import { DANCE_POOL, focusAt, focusLook, focusPlan, framing, type FramingKind, framingPlan, type Girl, poseBarDraws, poseBarPlan } from '../girls/staging.tsx';
+import { DANCE_POOL, focusAt, focusLook, focusPlan, framing, framingAt, type FramingKind, framingPlan, type Girl, poseBarDraws, poseBarPlan } from '../girls/staging.tsx';
 import { hueAt, keyFill } from '../type/forms/common.tsx';
 import { LightBox } from '../type/LightBox.tsx';
 import { Slam } from '../type/Slam.tsx';
@@ -304,16 +312,16 @@ const wordEl = (w: WordAt) => (
 );
 
 const TYPE: Segment[] = [
-  formSeg('stack', 'form STACK: line 0, key HEAD', startOf(0, 0, 0.2), (st) => <Stack spec={spec('lab-stack', 0, 1, 'B')} t={st} />),
-  formSeg('code', 'form CODE: line 1 words 0-4, key 42', startOf(1, 0, 0.2), (st) => <Code spec={spec('lab-code', 1, 1, 'B', [0, 5])} t={st} opt={{ gutter: '42', size: 64 }} />),
-  formSeg('diff', 'form DIFF: line 1 words 5-9, key BLUE', startOf(1, 5, 0.3), (st) => <Diff spec={spec('lab-diff', 1, 5, 'B', [5, 10])} t={st} opt={{ minus: 'color: orange;', size: 60 }} />),
-  formSeg('ring', 'form RING: line 3 around a centre, key WHO', startOf(3, 0, 0.2), (st) => <Ring spec={spec('lab-ring', 3, 5, 'O')} t={st} opt={{ cx: 960, cy: 700, r: 420, size: 110 }} />),
-  formSeg('wave', 'form WAVE: line 2 on a beat-kicked baseline, key APPROVED', startOf(2, 0, 0.2), (st) => <Wave spec={spec('lab-wave', 2, 2, 'both')} t={st} opt={{ size: 130 }} />),
-  formSeg('floor', 'form FLOOR: line 0 lit in the floor tiles, key HEAD', startOf(0, 0, 0.2), (st) => <Floor spec={spec('lab-floor', 0, 1, 'B')} t={st} opt={{ pose: HOME, x: 1.2, z: 1.6, tile: 0.36 }} />),
-  formSeg('marquee', 'form MARQUEE: line 0 in bulbs, key HEAD', startOf(0, 0, 0.2), (st) => <Marquee spec={spec('lab-marquee', 0, 1, 'O')} t={st} />),
-  formSeg('stamp', 'form STAMP: line 2 plates, key APPROVED multiplies', startOf(2, 0, 0.2), (st) => <StampForm spec={spec('lab-stamp', 2, 2, 'B')} t={st} />),
-  formSeg('flap', 'form FLAP: line 3 split-flap board', startOf(3, 0, 0.2), (st) => <Flap spec={spec('lab-flap', 3, 5, 'O')} t={st} />),
-  formSeg('extrude', 'form EXTRUDE: line 0 turning 2.5D letters, key HEAD', startOf(0, 0, 0.2), (st) => <Extrude spec={spec('lab-extrude', 0, 1, 'both')} t={st} opt={{ size: 420 }} />),
+  formSeg('stack', 'form STACK: line 0, key HEAD', startOf(2, 0, 0.2), (st) => <Stack spec={spec('lab-stack', 2, 1, 'B')} t={st} />),
+  formSeg('code', 'form CODE: line 1 words 0-4, key 42', startOf(3, 0, 0.2), (st) => <Code spec={spec('lab-code', 3, 1, 'B', [0, 5])} t={st} opt={{ gutter: '42', size: 64 }} />),
+  formSeg('diff', 'form DIFF: line 1 words 5-9, key BLUE', startOf(3, 5, 0.3), (st) => <Diff spec={spec('lab-diff', 3, 5, 'B', [5, 10])} t={st} opt={{ minus: 'color: orange;', size: 60 }} />),
+  formSeg('ring', 'form RING: line 3 around a centre, key WHO', startOf(5, 0, 0.2), (st) => <Ring spec={spec('lab-ring', 5, 5, 'O')} t={st} opt={{ cx: 960, cy: 700, r: 420, size: 110 }} />),
+  formSeg('wave', 'form WAVE: line 2 on a beat-kicked baseline, key APPROVED', startOf(4, 0, 0.2), (st) => <Wave spec={spec('lab-wave', 4, 2, 'both')} t={st} opt={{ size: 130 }} />),
+  formSeg('floor', 'form FLOOR: line 0 lit in the floor tiles, key HEAD', startOf(2, 0, 0.2), (st) => <Floor spec={spec('lab-floor', 2, 1, 'B')} t={st} opt={{ pose: HOME, x: 1.2, z: 1.6, tile: 0.36 }} />),
+  formSeg('marquee', 'form MARQUEE: line 0 in bulbs, key HEAD', startOf(2, 0, 0.2), (st) => <Marquee spec={spec('lab-marquee', 2, 1, 'O')} t={st} />),
+  formSeg('stamp', 'form STAMP: line 2 plates, key APPROVED multiplies', startOf(4, 0, 0.2), (st) => <StampForm spec={spec('lab-stamp', 4, 2, 'B')} t={st} />),
+  formSeg('flap', 'form FLAP: line 3 split-flap board', startOf(5, 0, 0.2), (st) => <Flap spec={spec('lab-flap', 5, 5, 'O')} t={st} />),
+  formSeg('extrude', 'form EXTRUDE: line 0 turning 2.5D letters, key HEAD', startOf(2, 0, 0.2), (st) => <Extrude spec={spec('lab-extrude', 2, 1, 'both')} t={st} opt={{ size: 420 }} />),
   {
     id: 'morph',
     title: 'transition LETTER MORPH: CLEAN -> LINE, shared L I N E',
@@ -372,16 +380,16 @@ const draw = (d: { card: string; opacity: number; dx: number; stretch: [number, 
   <Card key={key} id={d.card} t={st} grade={gradeOf(d.card)} {...at} dx={d.dx} stretch={d.stretch} opacity={d.opacity} {...extra} />
 );
 
-const W0 = lineTokens(0);
-const W2 = lineTokens(2);
-const W3 = lineTokens(3);
+const W0 = lineTokens(2);
+const W2 = lineTokens(4);
+const W3 = lineTokens(5);
 const tok = (line: readonly Token[], i: number) => line[i] as Token;
 
 const KICK_AT: Placement = { x: -1.6, height: 6.6 };
 const KICK = kickPlan({ id: 'lab-kick', word: { text: 'HEAD', x: 980, y: 900, size: 230, face: 'display', fill: '#19c8ff' }, tok: tok(W0, 1), kick: tok(W0, 3).start, idle: 'BD3', kickCard: 'BD6', at: KICK_AT, dir: 1 });
 const PERCH = { id: 'lab-perch', word: { text: 'HEAD', x: 300, y: 1010, size: 520, face: 'bungee' as const, fill: '#ff7a1a' as Hex }, letter: 2, tok: tok(W0, 1), land: tok(W0, 3).start, card: 'O11', height: 4.6, pose: HOME };
 const HOOP_AT: Placement = { x: 0, height: 7 };
-const hoopPlan = (): HoopPlan => ({ id: 'lab-hoop', tokens: W3.slice(0, 5), key: 2, card: 'O06', at: HOOP_AT, pose: HOME, rx: 360, ry: 80, size: 72, speed: 1.7, fill: (i) => hueAt('O', 0, i), keyFill: keyFill('O') });
+const labHoop = (): HoopPlan => hoopPlan({ id: 'lab-hoop', tokens: W3.slice(5, 8), key: 0, card: 'O06', at: HOOP_AT, pose: HOME, rx: 520, ry: 130, size: 112, speed: 1.5, fill: (i) => hueAt('O', 0, i), keyFill: keyFill('O') });
 const REVEAL_FLAP: RevealPlan = { id: 'lab-reveal-flap', text: 'WHO ARE YOU?', box: { x: 360, y: 260, w: 1200, h: 560 }, reveal: tok(W3, 5).start, kind: 'flap', color: '#ffd23a' };
 const REVEAL_SLIDE: RevealPlan = { id: 'lab-reveal-slide', text: 'APPROVED', box: { x: 420, y: 380, w: 1080, h: 300 }, reveal: tok(W2, 2).start + 0.4, kind: 'slide', color: '#19c8ff' };
 const THROW_A: Placement = { x: -4.2, height: 5.6 };
@@ -399,8 +407,8 @@ const THROW = throwPlan({
   size: 110,
 });
 const FOCUS = focusPlan([
-  { t: tok(W0, 1).start, singer: 'O', frames: 36 },
-  { t: tok(W0, 3).start, singer: 'B', frames: 36 },
+  { t: tok(W0, 1).start, singer: 'O', frames: 30 },
+  { t: tok(W0, 3).start, singer: 'B', frames: 30 },
   { t: tok(W0, 5).start, singer: 'O', frames: 30 },
   { t: tok(W0, 7).start, singer: 'both', frames: 30 },
 ]);
@@ -408,11 +416,13 @@ const ORANGE_GIRL: Girl = { full: 'O06', close: 'O05', color: '#ff7a1a' };
 const BLUE_GIRL: Girl = { full: 'B04', close: 'B09', color: '#2f7bff' };
 const FR_FROM = tok(W0, 0).start - 0.2;
 const framingSeg = (kind: FramingKind, title: string) => {
-  framingPlan([{ t: FR_FROM, kind }], FR_FROM + GSEG);
+  // the framing holds 2 measured bars, then hands over to the plain stage (the 2-bar rule, checked)
+  const plan = framingPlan([{ t: FR_FROM, kind }, { t: barTimeAfter(FR_FROM, 2), kind: kind === 'stage' ? 'face' : 'stage' }], FR_FROM + GSEG);
   return girlSeg(`framing-${kind}`, title, FR_FROM, (st) => {
-    const f = framing(kind, st, kind === 'split' ? ORANGE_GIRL : BLUE_GIRL, kind === 'split' ? BLUE_GIRL : ORANGE_GIRL);
+    const k = framingAt(plan, st);
+    const f = framing(k, st, k === 'split' ? ORANGE_GIRL : BLUE_GIRL, k === 'split' ? BLUE_GIRL : ORANGE_GIRL);
     return { pose: f.pose, split: f.split, cards: f.cards.map(({ key, ...c }) => <Card key={key} grade={gradeOf(c.id)} {...c} />) };
-  }, (st) => <Stack spec={{ id: `fr-${kind}`, line: 0, key: 1, singer: 'B', t0: -Infinity, t1: Infinity, box: { x: 260, y: 200, w: 1400, h: 620 } }} t={st} />);
+  }, (st) => <Stack spec={{ id: `fr-${kind}`, line: 2, key: 1, singer: 'B', t0: -Infinity, t1: Infinity, box: { x: 260, y: 200, w: 1400, h: 620 } }} t={st} />);
 };
 const POSEBAR = poseBarPlan('lab-posebar', DANCE_POOL.B, 7, 2, '#19c8ff');
 const POSE_AT: Placement = { x: 0, height: 7 };
@@ -423,7 +433,7 @@ const GIRLS: Segment[] = [
     pose: HOME,
     cards: perchVisible(PERCH, st) ? <Card id={PERCH.card} t={st} grade={O_GRADE} {...perchPlacement(PERCH)} dy={perchDy(PERCH, st)} /> : null,
   }), (st) => <PerchWord plan={PERCH} t={st} />),
-  girlSeg('hoop', 'girls HOOP: the RING orbits her waist, in front, then behind', tok(W3, 0).start - 0.2, (st) => ({ pose: HOME, cards: <Card id="O06" t={st} grade={O_GRADE} {...HOOP_AT} /> }), (st) => <HoopType plan={hoopPlan()} t={st} />),
+  girlSeg('hoop', 'girls HOOP: a short line orbits her waist, in front, then behind', tok(W3, 5).start - 0.3, (st) => ({ pose: HOME, cards: <Card id="O06" t={st} grade={O_GRADE} {...HOOP_AT} /> }), (st) => <HoopType plan={labHoop()} t={st} />),
   girlSeg('reveal-flap', 'girls REVEAL: a FLAP board folds away on "who" to show her', tok(W3, 5).start - 1.6, (st) => ({ pose: HOME, cards: <Card id="B04" t={st} grade={B} x={0} height={7} soft={revealDone(REVEAL_FLAP, st) ? 0 : 0.8} /> }), (st) => <RevealBoard plan={REVEAL_FLAP} t={st} />),
   girlSeg('reveal-slide', 'girls REVEAL: a STAMP plate slides off to show her', tok(W2, 2).start - 1.4, (st) => ({ pose: HOME, cards: <Card id="B10" t={st} grade={B} x={0} height={7} /> }), (st) => <RevealBoard plan={REVEAL_SLIDE} t={st} />),
   girlSeg('throw', 'girls THROW: who / are / you? thrown across, each knocks her back', tok(W3, 5).start - 0.5, (st) => ({
