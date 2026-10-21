@@ -20,7 +20,6 @@ import pBD5 from '../../public/cards/BD5.pose.json' with { type: 'json' };
 import pBD6 from '../../public/cards/BD6.pose.json' with { type: 'json' };
 import pBD7 from '../../public/cards/BD7.pose.json' with { type: 'json' };
 import pBD8 from '../../public/cards/BD8.pose.json' with { type: 'json' };
-import pBMT from '../../public/cards/BMT.pose.json' with { type: 'json' };
 import pO01 from '../../public/cards/O01.pose.json' with { type: 'json' };
 import pO02 from '../../public/cards/O02.pose.json' with { type: 'json' };
 import pO03 from '../../public/cards/O03.pose.json' with { type: 'json' };
@@ -41,7 +40,6 @@ import pOD5 from '../../public/cards/OD5.pose.json' with { type: 'json' };
 import pOD6 from '../../public/cards/OD6.pose.json' with { type: 'json' };
 import pOD7 from '../../public/cards/OD7.pose.json' with { type: 'json' };
 import pOD8 from '../../public/cards/OD8.pose.json' with { type: 'json' };
-import pOMT from '../../public/cards/OMT.pose.json' with { type: 'json' };
 import type { PoseFile } from './rig.ts';
 
 export const POSES: Record<string, PoseFile> = {
@@ -65,7 +63,6 @@ export const POSES: Record<string, PoseFile> = {
   BD6: pBD6 as unknown as PoseFile,
   BD7: pBD7 as unknown as PoseFile,
   BD8: pBD8 as unknown as PoseFile,
-  BMT: pBMT as unknown as PoseFile,
   O01: pO01 as unknown as PoseFile,
   O02: pO02 as unknown as PoseFile,
   O03: pO03 as unknown as PoseFile,
@@ -86,5 +83,4 @@ export const POSES: Record<string, PoseFile> = {
   OD6: pOD6 as unknown as PoseFile,
   OD7: pOD7 as unknown as PoseFile,
   OD8: pOD8 as unknown as PoseFile,
-  OMT: pOMT as unknown as PoseFile,
 };
