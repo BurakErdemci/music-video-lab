@@ -34,6 +34,27 @@ OVERRIDES = {
         46: [None, 255],                                              # "Build" not measured
         47: [258, 259, 260, 261, 261],                                # "line forty-two" measured as "942"
     },
+    'take-v4': {
+        0: [0, 1, 2],                                                 # "failed" heard as "Well," (the only word in its slot, 1.34 s)
+        3: [18, [19, 20], 21, 22, 23, 24, 25, 26, 27, 28],            # "forty-two" sung as "forty two"; "blue" heard as "glued"
+        5: [37, 38, 39, 40, 41, 42, 43, 44],                          # "Then" heard as "And"
+        9: [73, 73, 74, 75, 76, 77, 78, 79],                          # "Three hundred" measured as "300"
+        22: [128, 129, 130, 131, 132, 133, 134, 135],                 # "conflict" heard as "conflicts" (x2)
+        23: [136, 137, 138, 139, 140, 141, 142, 143],                 # "rebased" heard as "repaste"
+        25: [152, 153, 154, 155, 156, 157, 158, 159, 160],            # "sorries" heard as "stories"
+        26: [161, 163, 164, 165, 166, 167, 168, 169, 170, 171],      # "git blame" heard as "Get Brained"; the stray "your" 162 is not sung in the lyric
+        29: [180, 181, [182, 183], 184, 185, 186, 187, 188],          # "standup's" heard as "stand -up's"; "on" heard as "saw"
+        32: [197, 198, 199, 200, 201, 202, 203, 204, 205],            # "line" heard as "mind"
+        33: [206, 207, 208, 209, 210, 211, 212],                      # "conflict" heard as "conflicts" (x2)
+        37: [230, 231, 232, 233, 234, 235, 236, 237],                 # "conflict" heard as "conflicts" (x2)
+        40: [244, 245, 246, 247, [248, 249]],                         # "data2" measured as "data too"
+        45: [268],                                                    # "GIT" heard as "Get,"
+        53: [307, 308, 309, 310],                                     # "(YES!)" heard as "yeah"; the stray "Except" 311 belongs to the next line
+        54: [312, 313, 314, 315],                                     # "(YES!)" heard as "yeah"
+        57: [333, 334, 335, 336],                                     # "(YES!)" heard as "yeah"
+        65: [383, 384],                                               # "Build failed" heard as "Failed, failed"
+        66: [385, 386, 387, 388, [389, 390]],                         # "forty-two" sung as "forty two"
+    },
 }
 
 norm = lambda s: re.sub(r'[^\w]', '', s.lower())

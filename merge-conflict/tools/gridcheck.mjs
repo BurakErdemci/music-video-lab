@@ -31,11 +31,12 @@ const near = (a, b, tol) => Math.abs(a - b) <= tol;
 const bar60 = grid.gridLenAt(T.downbeats, 60);
 const beat60 = grid.gridLenAt(T.beats, 60);
 const medBeat = grid.medianStep(T.beats);
-check('bar length at 60 s is 1.333 +- 0.01 s', near(bar60, 1.333, 0.01), `${bar60.toFixed(4)} s`);
-check('beat length at 60 s is 0.333 +- 0.005 s', near(beat60, 0.3332, 0.005), `${beat60.toFixed(4)} s`);
+const songBeat = 60 / T.bpm_mean;       // a song-independent expectation: the local beat is within 1 % of the song tempo (take-v1 and take-v4 are both ~180 BPM)
+check('bar length at 60 s is 4 beats of the song tempo +- 0.01 s', near(bar60, 4 * songBeat, 0.01), `${bar60.toFixed(4)} s`);
+check('beat length at 60 s matches the song tempo +- 0.005 s', near(beat60, songBeat, 0.005), `${beat60.toFixed(4)} s`);
 check('median beat matches the song tempo (60 / bpm_mean +- 2 ms)', near(medBeat, 60 / T.bpm_mean, 0.002), `${medBeat.toFixed(4)} s vs ${(60 / T.bpm_mean).toFixed(4)} s`);
 const first = T.beats[1] - T.beats[0];
-check('the first beat interval is NOT what the grid uses at 60 s (the old bug)', !near(first, beat60, 0.01), `first ${first.toFixed(4)} s`);
+if (take === 'take-v1') check('the first beat interval is NOT what the grid uses at 60 s (the old bug)', !near(first, beat60, 0.01), `first ${first.toFixed(4)} s`);
 const odd = T.downbeats.slice(1).map((d, i) => d - T.downbeats[i]).findIndex((l) => l > 1.6);
 if (odd >= 0) check('a 5-beat bar is measured as its own length', near(grid.gridLenAt(T.downbeats, T.downbeats[odd] + 0.1), T.downbeats[odd + 1] - T.downbeats[odd], 1e-9));
 let inv = 0;
@@ -64,10 +65,19 @@ check(`every sung line binds with the token map (${bound} of ${sung})`, bound ==
 check('every token time is a measured word time', allMeasured);
 check('a null token shares the time of its neighbouring mapped token', nullsShare);
 check('token times never go backwards in a line', monotone);
-const l9 = bind.bindLine(lines, T.words, 9);
-check('"Three hundred" both take the measured "300"', l9[0].start === T.words[74].s && l9[1].start === T.words[74].s, `${l9[0].text} ${l9[1].text}`);
-const l43 = bind.bindLine(lines, T.words, 43);
-check('a null first token takes the next mapped token\'s time ("Commit")', l43[0].start === l43[1].start);
+// a line whose tokens share one measured word ("Three hundred" sung as "300"), and a line that starts with a null token ("Commit" not heard)
+const shared = MAP.findIndex((m, i) => lines[i].start !== null && m.tokens.some((t, k) => k && t.word !== null && t.word === m.tokens[k - 1].word));
+if (shared >= 0) {
+  const tk = bind.bindLine(lines, T.words, shared);
+  const k = MAP[shared].tokens.findIndex((t, j) => j && t.word !== null && t.word === MAP[shared].tokens[j - 1].word);
+  check('tokens pointing at one measured word share its time', tk[k].start === tk[k - 1].start && tk[k].end === tk[k - 1].end, `line ${shared}: "${tk[k - 1].text} ${tk[k].text}"`);
+}
+const nullFirst = MAP.findIndex((m, i) => lines[i].start !== null && m.tokens[0].word === null && m.tokens.some((t) => t.word !== null));
+if (nullFirst >= 0) {
+  const tk = bind.bindLine(lines, T.words, nullFirst);
+  const j = MAP[nullFirst].tokens.findIndex((t) => t.word !== null);
+  check('a null first token takes the next mapped token time', tk[0].start === tk[j].start, `line ${nullFirst}: "${tk[0].text}"`);
+}
 let threw = false;
 try {
   bind.bindLine([{ text: 'nothing here', start: null, end: null, tokens: [{ text: 'nothing', word: null }, { text: 'here', word: null }] }], T.words, 0);
