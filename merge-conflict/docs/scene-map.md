@@ -173,3 +173,21 @@ Burak loves the type library and the fonts. His one concern is a girl standing b
 5. **Become part of the type.** The silhouette filled with text, or the girl seen through knockout letters.
 
 These are measurable and checked in the review: the longest hold of one framing (≤ 2 bars), the number of poses per chorus bar (≥ 1), and that every line has at least one action from the list.
+
+## Final song and the pop–metal blend (Burak, 2026-10-21)
+
+- **Song:** `audio/merge-conflict-v4.wav`, timing `data/take-v4/`.
+  - 180.09 BPM, F minor, 3:52, 173 bars.
+  - A Suno Cover of v1 with "orange", a new rebase verse, a second chorus, a guitar solo and the "Ship it" chant.
+  - Burak: "the best thing I have made in Suno". The audio is kept as is: no voice post-processing, even though the measured voice contrast is weak.
+- **The blend:** "metal and pop are interleaved; metal shoots up in places, but overall they are mixed." There is no hard mode switch. A continuous METAL AMOUNT per frame is driven by the measured per-bar heaviness (`bars[].heavy`, 0–100), smoothed across bar boundaries.
+  - **Low:** disco-pop. Candy palette, confetti, rounded neon type.
+  - **Rising:** the palette darkens toward black, red and steel; embers and sparks mix into the confetti; blackletter and jagged faces start to take over the type.
+  - **Surges (heavy ≥ 65):** the girls swap to their metal forms (`stil/prompts/k-metal`), and swap back when the bar falls below the threshold. A hysteresis keeps them from flickering.
+  - **Per singer:** the blue (sweet) lines sit one step toward pop, the orange (raspy) lines one step toward metal.
+- **Measured surges:**
+  - 117–140 s: the scream, GIT! PUSH! FORCE!, the whisper and the guitar solo; the solo is the mid-clip dance duel.
+  - 181–193 s: the "Ship it" chant.
+  - 196–232 s: the scream ending and outro, the all-out metal finale.
+  - The piano (140–149 s) drops to 4, the calm After Hours.
+  - The final chorus (160–181 s) is mid, the fusion and gradient moment.
