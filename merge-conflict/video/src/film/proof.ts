@@ -8,8 +8,8 @@
 //  4.37     a whip into the ALL-METAL groove (no ball, no checker floor, no confetti; blue not shown): orange's
 //           backlit metal silhouettes, the conflict markers slamming, OURS, a dive through its O into THEIRS,
 //           then the MERGE CONFLICT logo (LOGO_DESIGN); a metal hit every second beat; framings every 2 bars.
-//  16.33    one hard switch to disco on the downbeat: set, palette and type family; blue gathers out of the
-//           particles while a whip carries the logo off.
+//  16.33    the logo whips out over the groove's last 12 frames; one hard switch to disco on the downbeat (set,
+//           palette, type family) with blue cut in crisp, full pose, on the downbeat; her particles burst after.
 //  16.88    "I'm HEAD, I'm main, I'm stable and clean" as STACK beside her (knee-up); she KICKS "HEAD" off on
 //           "stable"; a small full figure on the next downbeat but one; CLEAN morphs into LINE, which opens
 //           "Line forty-two..." as a DIFF.
@@ -23,7 +23,6 @@ import { kickPlan } from '../girls/interact.tsx';
 import { FULL_MAX, kneeUp } from '../girls/staging.tsx';
 import { assertFlashBudget, type Swing } from '../lib/flash.ts';
 import { lineTokens } from '../lyrics/LyricLayer.tsx';
-import { dissolvePlan } from '../particles/dissolve.tsx';
 import { beat, sectionNamed } from '../timing.ts';
 import { widthOf } from '../type/fonts.tsx';
 import type { FormSpec } from '../type/forms/common.tsx';
@@ -49,7 +48,9 @@ export const GIRL = {
   O: { stand: 'O03', close: 'O10', verse: 'OD3', kick: 'OD6', next: 'OD1' },
 } as const;
 /** The groove's orange metal silhouettes, one per framing. */
-export const GROOVE_CARDS = { stage: 'OM3', clones: 'OM1', low: 'OM2', tiny: 'OM6', waist: 'OM8' } as const;
+export const GROOVE_CARDS = { stage: 'OM3', clones: 'OM1', low: 'OM2', knee: 'OM5', tiny: 'OM6', waist: 'OM8' } as const;
+/** The big backlit silhouette (knee-up, dancing) with THEIRS behind her (round 3). */
+export const GROOVE_BIG: Placement = kneeUp(5.2, 10.6);
 
 // ---- 0-4.37 the speaker ------------------------------------------------------------------------------------
 export const SPEAKER_AT: Placement = kneeUp(-3.6);
@@ -70,8 +71,10 @@ export const GROOVE_O: Placement = { x: 3.6, height: FULL_MAX };
 // ---- 16.33-20 verse 1 ---------------------------------------------------------------------------------------
 export const VERSE_B: Placement = kneeUp(-3.9, 10.2);
 export const VERSE_FULL: Placement = { x: -4.4, height: 4.6 };
-export const WHIP_VERSE = whipPlan({ id: 'whip-verse', t0: at('whip-verse'), dir: -1, frames: 12 });
-export const BLUE_ENTER = dissolvePlan({ id: 'blue-enter', t0: at('blue-enter'), gatherFrames: 18, to: { card: GIRL.B.verse, at: VERSE_B } });
+/** The logo whips out over the groove's last 12 frames, so the verse downbeat is a clean cut onto blue. */
+export const WHIP_OUT = whipPlan({ id: 'whip-out', t0: at('whip-verse') - 12 / 60, dir: -1, frames: 12 });
+/** Her entrance burst: particles fly OUT from her chest after the hit (field burst origin, world units). */
+export const BLUE_BURST = { t: at('blue-enter') + 1 / 60, origin: [VERSE_B.x + 0.6, (VERSE_B.feet ?? 0) + 0.68 * VERSE_B.height, 0.5] as [number, number, number] };
 export const STACK2: FormSpec = { id: 'verse-2', line: 2, key: 1, singer: 'B', t0: VERSE.start, t1: at('morph-line') + 0.02, box: { x: 760, y: 120, w: 1090, h: 800 } };
 const keyAt = stackLayout(STACK2, lineTokens(2)[1]?.start ?? VERSE.start).find((w) => w.tok === 1);
 if (!keyAt) throw new Error('proof: the STACK has no key word');
@@ -110,6 +113,7 @@ export const FRAMINGS = framingPlan(
     { t: GROOVE.start, kind: 'stage' },
     { t: at('framing-clones'), kind: 'clones' },
     { t: at('framing-low'), kind: 'low' },
+    { t: at('framing-knee'), kind: 'knee' },
     { t: at('framing-tiny'), kind: 'tiny' },
     { t: at('framing-waist'), kind: 'waist' },
     { t: VERSE.start, kind: 'knee' },
@@ -123,5 +127,5 @@ export const WHITEOUTS: readonly WhiteoutSpec[] = [
   { id: 'metal-hit', t0: at('metal-hit'), frames: 3, figures: [{ card: GROOVE_CARDS.stage, at: GROOVE_O }], camera: () => HOME },
 ];
 // the white-out (2 swings) and the hard metal -> disco switch on the verse downbeat (1 swing)
-export const SWINGS: Swing[] = [...WHITEOUTS.flatMap(whiteoutSwings), { id: 'disco-switch', t: VERSE.start, swings: 1 }];
+export const SWINGS: Swing[] = [...WHITEOUTS.flatMap(whiteoutSwings), { id: 'disco-switch', t: VERSE.start, swings: 1 }, { id: 'blue-burst', t: BLUE_BURST.t, swings: 1 }];
 assertFlashBudget(SWINGS, 'proof 0-20 s');
