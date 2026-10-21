@@ -56,3 +56,25 @@ The code half of `direction.md` and `scene-map.md`. The project lives in `merge-
 1. Scaffold and tools, plus the cut-outs (lane A).
 2. The engine modules above, with a `Lab` composition showing each one in isolation for 4 s, and a 20-second proof: the intro (0-10.05 s) plus the start of verse 1 to 20 s, built from the scene map with the real cards. That proof is the first thing Burak sees in motion.
 3. The sections in order, each through: tsc, purity, beatcheck, flashcheck, and own-eyes stills of every transition at full frame rate.
+
+## Lyric token map (the measurement step writes it; the engine consumes it)
+
+Every lyric line in `mc-timing.json` (`lyric_alignment[i]`) carries `tokens`: the line's text split on spaces, each token pointing at the measured word(s) it is sung on (`words` is the measured word list of the same file).
+
+```json
+{ "text": "Three hundred commits and I never asked once!", "start": 36.22, "end": 38.56,
+  "tokens": [ { "text": "Three", "word": 74 }, { "text": "hundred", "word": 74 }, { "text": "commits", "word": 75 }, ... ] }
+```
+
+- `word: i` binds the token to `words[i]` (start..end). Several tokens may point at one word ("Three hundred" sung as "300").
+- `word: [a, b]` binds one token to the span from `words[a].s` to `words[b].e` ("data2" heard as "data too").
+- `word: null` means not measured. The engine shows such a token together with the previous mapped token, at its time; a `null` at the start of a line takes the next mapped token's time. It never gets a time of its own.
+- Word indices never go backwards inside a line. A line with no mapped token throws when bound. An unsung line (start null) may map every token to null; it is then not drawn.
+- A line without `tokens` binds only if its tokens pair one-to-one with the measured words between its start and the next sung line's start; otherwise it throws. Nothing is matched fuzzily at render time: a time is either a measured word's time or the binding fails.
+
+Consumer: `video/src/lyrics/bind.ts` (`bindLine`), used by `lineTokens` in `lyrics/LyricLayer.tsx` and every type form.
+Producer for take-v1: `tools/token_map.py data/take-v1` writes `data/take-v1/token_map.json` (lines read by eye are listed in its OVERRIDES). Test: `node tools/gridcheck.mjs take-v1`.
+
+## Beat grid lengths
+
+A beat or a bar is the spacing of the measured beats or downbeats around t (`video/src/timing/grid.ts`: `beatLengthAt`, `barLengthAt`, `beatPos`, `barPos`, `beatTime` in timing.ts). Bar counts (for example the framing rule's "2 bars") are differences of `barPos`, so 3- and 5-beat bars count as one bar. Only outside the measured grid does a length fall back to the median spacing. Nothing reads the first interval or the mean BPM as the tempo (take-v1's intro is fitted at 156 BPM in a 180 BPM song).
