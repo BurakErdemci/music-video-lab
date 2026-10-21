@@ -35,8 +35,8 @@ Each clip README has animated excerpts, the pipeline, what was tried and dropped
 The longer making-of for Vorathul starts at
 [part 1: from song to style](vorathul-nerfed/docs/making-of/01-from-song-to-style.md).
 
-Finished videos are published as **GitHub Releases** (one tag per clip). Song files are not stored
-in git; each clip's README says which release holds its audio.
+Song files and finished videos are not stored in git; each clip's README says where its audio
+and video stand.
 
 ## How a clip is made
 

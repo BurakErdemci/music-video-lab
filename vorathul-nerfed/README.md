@@ -8,8 +8,8 @@ studio. Developers change him through the painting. Their patches land in his wo
 wings and a stamp that says NERFED. He slowly notices the sky is a canvas, and in the final chorus he
 breaks out of the frame and floods the flat grey office with black ink and gold paint.
 
-Final render: 2560x1440, 60 fps, 16,430 frames, 273.83 s. Song made with Suno (Pro). Video code, assets and
-audio are released open source; finished videos are published as GitHub Releases.
+Final render: 2560x1440, 60 fps, 16,430 frames, 273.83 s. Song made with Suno (Pro). The video code and assets
+are in this folder; the song and the finished video are not in git (see Known issues).
 
 ## Excerpts
 
