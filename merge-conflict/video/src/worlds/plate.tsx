@@ -64,14 +64,15 @@ const Layer = ({ tex, base, dist, near, gain, margin }: { tex: unknown; base: Ca
   );
 };
 
-/** The plate `id` (W01..W11, public/plates/) behind the world, anchored on the shot's opening camera `base`. */
-export const PlateLayer = ({ id, base, dist = 46, gain = 0.92, margin = 1.3 }: { id: string; base: CameraPose; dist?: number; gain?: number; margin?: number }) => {
-  const tex = useLoader(TextureLoader, staticFile(`plates/${id}.png`));
+/** The plate `id` (W01..W11, public/plates/) behind the world, anchored on the shot's opening camera `base`.
+ *  `panel`: a full-frame moment painting (QK1-QK5, public/panels/) on the far plane only, no floor layer. */
+export const PlateLayer = ({ id, base, dist = 46, gain = 0.92, margin = 1.3, panel = false }: { id: string; base: CameraPose; dist?: number; gain?: number; margin?: number; panel?: boolean }) => {
+  const tex = useLoader(TextureLoader, staticFile(`${panel ? 'panels' : 'plates'}/${id}.png`));
   tex.colorSpace = NoColorSpace;
   return (
     <>
       <Layer tex={tex} base={base} dist={dist} near={false} gain={gain} margin={margin} />
-      <Layer tex={tex} base={base} dist={dist * 0.45} near gain={gain} margin={margin} />
+      {!panel && <Layer tex={tex} base={base} dist={dist * 0.45} near gain={gain} margin={margin} />}
     </>
   );
 };
