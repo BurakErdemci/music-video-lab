@@ -1,14 +1,18 @@
-// STACK: a truly justified block of words in mixed faces and sizes: every row is exactly the box width.
+// STACK: a justified block of words in mixed faces and sizes: every row fills the box width.
 // The key word gets a row to itself (the biggest); the other words share rows, grouped so the block fits
-// the box height. A row that would be too tall at full width is set smaller and justified with letter
-// tracking instead. Words land on their measured starts with a no-bounce slam; unsung words keep their slot.
+// the box height. A row whose full-width size would be too tall (a short row, like "I'M") is set at its height
+// limit and widened instead: first a horizontal stretch of the letters (up to 1.6x, as on posters), then
+// tracking (up to 0.25 em). Only a row still short after both is centred. Words land on their measured
+// starts with a no-bounce slam; unsung words keep their slot.
 import { capOf, type Face, familyOf, layout, widthOf } from '../fonts.tsx';
 import { appear, clean, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, tokensOf, visible } from './common.tsx';
 
 const FACES: Face[] = ['bebas', 'display', 'righteous', 'bungee'];
 const GAP = 14;
 const KEY_SHARE = 0.4;
-export interface PlacedWord { text: string; x: number; y: number; size: number; face: Face; tok: number; track: number }
+export interface PlacedWord { text: string; x: number; y: number; size: number; face: Face; tok: number; track: number; sx: number }
+const MAX_STRETCH = 1.6;
+const MAX_TRACK = 0.25;
 
 interface Row { toks: number[]; face: Face; text: string }
 const rowsFor = (s: FormSpec, perRow: number): Row[] => {
@@ -27,17 +31,20 @@ const rowsFor = (s: FormSpec, perRow: number): Row[] => {
 
 export const stackLayout = (s: FormSpec): PlacedWord[] => {
   const k = keyIndex(s);
-  const capFor = (r: Row) => (r.toks[0] === k ? (s.box.h * KEY_SHARE) / capOf(r.face) : Infinity);
+  const others = (rows: Row[]) => Math.max(1, rows.filter((r) => r.toks[0] !== k).length);
+  let current: Row[] = [];
+  const capFor = (r: Row) => (s.box.h * (r.toks[0] === k ? KEY_SHARE : (1 - KEY_SHARE) / others(current))) / capOf(r.face);
   const heightOf = (rows: Row[], f: number) => rows.reduce((a, r) => a + Math.min(s.box.w / widthOf(r.text, 1, r.face), capFor(r)) * f * capOf(r.face), 0) + GAP * (rows.length - 1);
   // fewest words per row whose block fits the box height; failing that, the densest grouping scaled down
   let rows = rowsFor(s, 4);
   for (let per = 1; per <= 4; per++) {
-    const r = rowsFor(s, per);
-    if (heightOf(r, 1) <= s.box.h) {
-      rows = r;
+    current = rowsFor(s, per);
+    if (heightOf(current, 1) <= s.box.h) {
+      rows = current;
       break;
     }
   }
+  current = rows;
   const total = heightOf(rows, 1);
   const f = Math.min(1, (s.box.h - GAP * (rows.length - 1)) / (total - GAP * (rows.length - 1)));
   const out: PlacedWord[] = [];
@@ -45,15 +52,19 @@ export const stackLayout = (s: FormSpec): PlacedWord[] => {
   const toks = tokensOf(s);
   for (const r of rows) {
     const size = Math.min(s.box.w / widthOf(r.text, 1, r.face), capFor(r)) * f;
-    // tracking (em) that stretches the row to exactly the box width
     const natural = widthOf(r.text, size, r.face, 0);
-    const track = r.text.length > 1 ? (s.box.w - natural) / (size * (r.text.length - 1)) : 0;
+    // widen a short row: horizontal stretch first, then tracking, each capped; centre what is left
+    const sx = Math.min(MAX_STRETCH, s.box.w / natural);
+    const gaps = Math.max(1, r.text.length - 1);
+    const track = Math.min(MAX_TRACK, Math.max(0, (s.box.w - natural * sx) / (size * sx * gaps)));
     const l = layout(r.text, size, r.face, track);
+    const rowW = l.width * sx;
+    const x0 = s.box.x + (s.box.w - rowW) / 2;
     y += size * capOf(r.face);
     let c = 0;
     for (const n of r.toks) {
       const text = clean(toks[n]?.text ?? '').toUpperCase();
-      out.push({ text, x: s.box.x + (l.xs[c] as number), y, size, face: r.face, tok: n, track });
+      out.push({ text, x: x0 + (l.xs[c] as number) * sx, y, size, face: r.face, tok: n, track, sx });
       c += text.length + 1;
     }
     y += GAP;
@@ -73,11 +84,11 @@ export const Stack = ({ spec, t, hide = [] }: { spec: FormSpec; t: number; hide?
         const a = appear(t, tok);
         if (a <= 0) return null;
         const s = landScale(t, tok);
-        const cx = w.x + widthOf(w.text, w.size, w.face, w.track) / 2;
+        const cx = w.x + (widthOf(w.text, w.size, w.face, w.track) * w.sx) / 2;
         const cy = w.y - (w.size * capOf(w.face)) / 2;
         const isKey = w.tok === k;
         return (
-          <g key={w.tok} transform={`translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy})`} opacity={a}>
+          <g key={w.tok} transform={`translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy}) translate(${w.x} 0) scale(${w.sx} 1) translate(${-w.x} 0)`} opacity={a}>
             <text x={w.x} y={w.y} fontFamily={familyOf(w.face)} fontSize={w.size} letterSpacing={w.track * w.size} fill={isKey ? keyFill(spec.singer) : hueAt(spec.singer, t, w.tok)} stroke={INK} strokeWidth={w.size * (isKey ? 0.05 : 0.035)} strokeLinejoin="round" paintOrder="stroke">
               {w.text}
             </text>
