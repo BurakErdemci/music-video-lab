@@ -4,6 +4,7 @@
 // knee-up (she fills the frame from the first frame, the terminal beside her), then her face close-up on the
 // next downbeat but one (never longer than 2 bars).
 import { AbsoluteFill } from 'remotion';
+import type { ShotState } from './framing.ts';
 import { typePlane } from '../camera/camera.ts';
 import { Card, type Placement } from '../cards/Card.tsx';
 import { at } from '../events.ts';
@@ -37,6 +38,12 @@ const placeOf = (who: 'O' | 'B', close: boolean): Placement =>
   close ? { x: INTRO_SPEAKER === 'both' ? (who === 'O' ? -3.6 : 3.6) : -3.0, feet: -7.0, height: 11.5, flip: INTRO_SPEAKER === 'both' && who === 'O' } : INTRO_SPEAKER === 'both' ? kneeUp(who === 'O' ? -4.6 : 4.6, 9.4) : SPEAKER_AT;
 const cardOf = (who: 'O' | 'B', close: boolean): string => (close ? GIRL[who].close : GIRL[who].stand);
 
+/** The intro at t: knee-up first (a deliberate knee crop), then her close-up card. */
+export const speakerStateAt = (t: number): ShotState => {
+  const close = framingAt(FRAMINGS, t) === 'face';
+  return { pose: cameraAt(t).pose, shot: close ? 'speaker-face' : 'speaker-knee', subjects: speakers().map((g) => ({ card: cardOf(g, close), at: placeOf(g, close), ...(close ? {} : { crop: 'knee' as const }) })) };
+};
+
 export const Speaker = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const close = framingAt(FRAMINGS, t) === 'face';
@@ -62,11 +69,11 @@ export const Speaker = ({ frame }: { frame: number }) => {
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={cam.pose}>
         <TerminalWorld t={t} fail={FAIL_T} />
-        <Field t={t} grade={DARK} layer="back" density={0.35} alpha={0.7} hueMix={0.6} />
+        <Field t={t} grade={DARK} layer="back" density={0.35} alpha={0.7} hueMix={0.6} dust />
         {who.map((g) => (
           <Card key={`${g}-${close}`} id={cardOf(g, close)} t={t} grade={{ ...GRADES.reviewed, rival: '#ff3b3b' }} {...placeOf(g, close)} rimDir={[1, 0.2]} light={{ key: '#5fb8ff', keyAmt: 0.35, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.8, amt: 0.35, color: '#ff6a5a', slope: 0.3 }, rim: 1.3 }} />
         ))}
-        <Field t={t} grade={DARK} layer="front" density={0.25} alpha={0.6} hueMix={0.6} />
+        <Field t={t} grade={DARK} layer="front" density={0.25} alpha={0.6} hueMix={0.6} dust />
       </Stage>
       <Svg>
         <FormDefs />

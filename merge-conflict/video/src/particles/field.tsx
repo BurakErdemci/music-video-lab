@@ -22,7 +22,7 @@ export type FieldLayer = keyof typeof LAYERS;
 
 const VERT = /* glsl */ `
 uniform float uTime; uniform float uDensity; uniform float uPx; uniform float uSpanX; uniform vec2 uZ;
-uniform vec4 uBurstT; uniform vec3 uBurstO[4]; uniform float uMetal;
+uniform vec4 uBurstT; uniform vec3 uBurstO[4]; uniform float uMetal; uniform float uDust;
 attribute vec4 aSeed; attribute vec4 aRnd; attribute vec3 aCol; attribute float aKind;
 varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind; varying float vEmber;
 const float TOP = 7.5; const float BOT = -4.2;
@@ -38,10 +38,12 @@ void main() {
   // so the all-metal groove has no disco confetti (scene-map.md, 23d272a)
   vEmber = step(aRnd.y, uMetal);
   if (aKind < 0.5) {
-    float fall = mix(0.35, 0.95, aSeed.w) * mix(1.0, -1.6, vEmber);
+    // dust (outside the choruses) floats slowly instead of falling like confetti
+    float fall = mix(0.35, 0.95, aSeed.w) * mix(1.0, -1.6, vEmber) * mix(1.0, 0.25, uDust * (1.0 - vEmber));
     float y = BOT + mod(aSeed.y * (TOP - BOT) - fall * t, TOP - BOT);
     p = vec3((aSeed.x - 0.5) * uSpanX + 0.35 * sin(t * (0.5 + aSeed.w) + aSeed.x * 30.0), y, mix(uZ.x, uZ.y, aSeed.z));
     alpha = step(aRnd.z, uDensity);
+    size *= mix(1.0, 0.55, uDust * (1.0 - vEmber));
   } else if (aKind < 1.5) {
     // Mirror-ball spots sweeping the back of the room.
     float x = mod(aSeed.x * uSpanX + t * mix(0.35, 0.9, aSeed.w), uSpanX) - uSpanX * 0.5;
@@ -73,7 +75,7 @@ void main() {
 }`;
 
 const FRAG = /* glsl */ `
-uniform vec3 uHue; uniform float uHueMix; uniform float uAlpha; uniform float uMetal;
+uniform vec3 uHue; uniform float uHueMix; uniform float uAlpha; uniform float uMetal; uniform float uDust;
 varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind; varying float vEmber;
 void main() {
   vec2 c = gl_PointCoord - 0.5;
@@ -89,6 +91,16 @@ void main() {
     float r = length(c);
     a = (1.0 - smoothstep(0.08, 0.5, r));
     col = mix(vec3(1.0, 0.35, 0.05), vec3(1.0, 0.85, 0.4), exp(-r * 8.0)) * (0.7 + 0.3 * vFlip);
+  } else if (uDust > 0.5 && vKind < 0.5) {
+    // dust: a soft cool mote caught in the light
+    float r = length(c);
+    a = (1.0 - smoothstep(0.05, 0.5, r)) * 0.55;
+    col = mix(vec3(0.85, 0.9, 1.0), uHue + 0.3, 0.3);
+  } else if ((uDust > 0.5 || uMetal > 0.5) && vKind > 1.5) {
+    // outside the choruses a burst throws sparks, not confetti
+    float r = length(c);
+    a = 1.0 - smoothstep(0.04, 0.45, r);
+    col = mix(vec3(1.0, 0.95, 0.85), vec3(1.0, 0.55, 0.15), uMetal) * (0.8 + 0.4 * exp(-r * 10.0));
   } else {
     float s = sin(vAngle), co = cos(vAngle);
     vec2 r = vec2(co * c.x - s * c.y, s * c.x + co * c.y);
@@ -138,9 +150,11 @@ export interface FieldProps {
   bursts?: readonly Burst[];
   /** metal amount 0..1: embers rise among the confetti, sparks run hot */
   metal?: number;
+  /** Outside the choruses (round 7c): dust motes instead of confetti, and sparks instead of confetti bursts. */
+  dust?: boolean;
 }
 
-export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, bursts = [], metal = 0 }: FieldProps) => {
+export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, bursts = [], metal = 0, dust = false }: FieldProps) => {
   if (bursts.length > MAX_BURSTS) throw new Error(`field: ${bursts.length} bursts (max ${MAX_BURSTS})`);
   const geo = useMemo(() => build(layer), [layer]);
   const L = LAYERS[layer];
@@ -158,6 +172,7 @@ export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, 
     uHueMix: hueMix,
     uAlpha: alpha,
     uMetal: metal,
+    uDust: dust ? 1 : 0,
   });
   return (
     <points geometry={geo} frustumCulled={false} renderOrder={layer === 'back' ? ORDER.fieldBack : ORDER.fieldFront}>

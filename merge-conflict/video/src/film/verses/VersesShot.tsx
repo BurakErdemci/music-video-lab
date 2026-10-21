@@ -26,6 +26,7 @@ import { Arena, BLUE, CYAN, InsertWorld, pulseAt, RED, RunwayWorld, SplitWorld }
 import { PRE_T, type VerseScene, VBLUE, VERSE_TYPE, VORANGE, type VPose, VSHOTS, type VShot } from './plan.ts';
 import { hoopFill, hoopKey, VerseType } from './type.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
+import type { ShotState, Subject } from '../framing.ts';
 
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
 const RUNWAY_CAMERA: Hero = { from: cam([2.6, -1.4, 9.5], [0, -1.4, -12], 42), to: cam([1.4, -2.0, 7.5], [0, -1.2, -12], 42) };
@@ -69,21 +70,43 @@ const lightOf = (who: 'B' | 'O', t: number, scene: VerseScene, metal: boolean): 
   return { key, keyAmt: 0.4, sweep: { x: sweepX, width: 0.9, amt: 0.45, color: v1 ? '#c8f0ff' : '#ffd6f0', slope: 0.3 }, dots: v1 ? 0.45 : scene === 'arena' ? 0.5 : 0.15, ball: [0, 5.3, -6], rim: 1.4 };
 };
 
-export const VersesShot = ({ frame }: { frame: number }) => {
-  const t = sec(frame);
+/** The verses' camera and girls at t: the shot's variant of its world's hero move, a punch on every downbeat. */
+const verseCamera = (t: number) => {
   const { shot, k } = shotIn(VSHOTS, t);
   const scene = shot.scene;
   const blueP = poseAt(VBLUE, t);
   const orangeP = poseAt(VORANGE, t);
   const focus = focusOf(scene === 'subway' || scene === 'runway' || scene === 'press' || (scene === 'clock' && t < tk(5, 7)) ? blueP : orangeP ?? blueP);
-  // the camera: the shot's variant, plus a punch on every downbeat (the chorus punches on every beat)
   const base = variant(HERO[scene], shot.cam, k, focus);
   const db = [...downbeats].reverse().find((x) => t >= x) ?? 0;
   const pose: CameraPose = { ...base, fov: base.fov * (1 - 0.05 * (1 - outQuad(clamp01((t - db) * 6)))) };
-  const plane = typePlane(pose, variant(HERO[scene], shot.cam, 0, focus), 1);
   const planeBase = variant(HERO[scene], shot.cam, 0, focus);
+  return { shot, k, scene, blueP, orangeP, pose, planeBase };
+};
+const throwOf = (pose: CameraPose) => throwPlan({ id: 'v-css', throws: [{ tok: lineTokens(8)[3] as never, from: 'A', land: tk(8, 4) }], A: { card: 'OD7', at: { x: 2.6, height: 4.8 }, color: '#ff7a1a' }, B: { card: 'BD2', at: { x: -2.6, height: 4.8 }, color: '#2f7bff' }, pose, size: 130 });
+const clipOf = (scene: VerseScene, who: 'B' | 'O') => (scene === 'strobe' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
+
+/** What the verses show at t, for tools/framecheck.mjs: the same pose and cards the component draws. */
+export const versesStateAt = (t: number): ShotState => {
+  const { shot, scene, blueP, orangeP, pose } = verseCamera(t);
+  const throwP = throwOf(pose);
+  const subjects: Subject[] = [];
+  const add = (who: 'B' | 'O', pp: VPose | null) => {
+    if (!pp?.at || !pp.card) return;
+    if (who === 'O' && pp.card === 'OI1' && dissolveState(INTRUDER, t).toOpacity < 0.5) return;
+    subjects.push({ card: pp.card, at: pp.at, dx: scene === 'alley' ? throwRecoil(throwP, who === 'B' ? 'B' : 'A', t) : 0, clip: clipOf(scene, who) });
+  };
+  add('B', blueP);
+  add('O', orangeP);
+  return { pose, shot: shot.id, subjects };
+};
+
+export const VersesShot = ({ frame }: { frame: number }) => {
+  const t = sec(frame);
+  const { shot, k, scene, blueP, orangeP, pose, planeBase } = verseCamera(t);
+  const plane = typePlane(pose, planeBase, 1);
   const p = pulseAt(t);
-  const throwP = throwPlan({ id: 'v-css', throws: [{ tok: lineTokens(8)[3] as never, from: 'A', land: tk(8, 4) }], A: { card: 'OD7', at: { x: 2.6, height: 4.8 }, color: '#ff7a1a' }, B: { card: 'BD2', at: { x: -2.6, height: 4.8 }, color: '#2f7bff' }, pose, size: 130 });
+  const throwP = throwOf(pose);
   const hoop = orangeP?.at && t < tk(6, 3) && t >= tk(6, 0) - 0.05 ? hoopPlan({ id: 'v-hoop', tokens: lineTokens(6).slice(0, 3), key: 1, card: orangeP.card as string, at: orangeP.at, pose, rx: 430, ry: 120, size: 96, speed: 1.4, fill: hoopFill, keyFill: hoopKey }) : undefined;
   // anchors: where the world objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);
@@ -135,7 +158,7 @@ export const VersesShot = ({ frame }: { frame: number }) => {
     if (!pp?.at) return null;
     const grade = who === 'B' ? BLUE_GRADE : metal ? ORANGE_METAL : ORANGE_DISCO;
     const dx = scene === 'alley' ? throwRecoil(throwP, who === 'B' ? 'B' : 'A', t) : 0;
-    const clip = scene === 'strobe' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined;
+    const clip = clipOf(scene, who);
     const grounded = (pp.at.feet ?? FLOOR_Y) === FLOOR_Y;
     return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={grade} {...pp.at} dx={dx} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff7a1a' : '#19c8ff'} clip={clip} light={lightOf(who, t, scene, metal)} ground={grounded ? undefined : false} />;
   };
@@ -147,11 +170,11 @@ export const VersesShot = ({ frame }: { frame: number }) => {
       <Stage pose={pose}>
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
         {world}
-        <Field t={t} grade={metal ? ORANGE_METAL : scene === 'subway' || scene === 'runway' || scene === 'press' || scene === 'clock' ? BLUE_GRADE : ORANGE_DISCO} layer="back" density={0.6} hueMix={0.5} bursts={bursts} />
+        <Field t={t} grade={metal ? ORANGE_METAL : scene === 'subway' || scene === 'runway' || scene === 'press' || scene === 'clock' ? BLUE_GRADE : ORANGE_DISCO} layer="back" density={0.6} hueMix={0.5} bursts={bursts} dust />
         {figure('B', blueP)}
         {orangeFig}
         {intr.active && <Dissolve plan={INTRUDER} t={t} grade={ORANGE_DISCO} />}
-        <Field t={t} grade={BLUE_GRADE} layer="front" density={0.5} hueMix={0.5} bursts={bursts} />
+        <Field t={t} grade={BLUE_GRADE} layer="front" density={0.5} hueMix={0.5} bursts={bursts} dust />
       </Stage>
       <Svg>
         <FormDefs />
