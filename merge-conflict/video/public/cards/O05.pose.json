@@ -1,0 +1,50 @@
+{
+ "id": "O05",
+ "head": [
+  0.44,
+  0.3
+ ],
+ "neck": [
+  0.466,
+  0.491
+ ],
+ "chest": [
+  0.466,
+  0.582
+ ],
+ "hips": null,
+ "lShoulder": [
+  0.251,
+  0.509
+ ],
+ "lElbow": null,
+ "lWrist": null,
+ "rShoulder": [
+  0.706,
+  0.482
+ ],
+ "rElbow": null,
+ "rWrist": null,
+ "lKnee": null,
+ "lAnkle": null,
+ "rKnee": null,
+ "rAnkle": null,
+ "hairRoot": [
+  0.643,
+  0.136
+ ],
+ "hairTips": [
+  [
+   0.037,
+   0.6
+  ],
+  [
+   0.971,
+   0.491
+  ],
+  [
+   0.88,
+   0.173
+  ]
+ ]
+}
