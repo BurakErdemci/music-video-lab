@@ -11,6 +11,7 @@ import manifestJson from '../../public/cards/manifest.json' with { type: 'json' 
 import { type Hex, rgb } from '../lib/ease.ts';
 import { GRADE_GLSL, type Grade, rivalOf } from '../grade/grade.ts';
 import { cardRig, frameOf } from '../rig/cardRig.ts';
+import { RIPPLE_MAX, rippleAmp, ripplePhase, rippleWeight } from '../rig/ripple.ts';
 import { GRID_COLS, GRID_ROWS, MAX_BONES, rows, weightsAt } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
 import { ORDER, useUniforms } from '../stage/Stage.tsx';
@@ -33,8 +34,8 @@ export const cardCentre = (p: Placement): [number, number, number] => [p.x, (p.f
 
 // All 11 bones per vertex, no truncation: weights in three vec4 attributes, bone i in slot i.
 const VERT = /* glsl */ `
-uniform vec3 uR0[${MAX_BONES}]; uniform vec3 uR1[${MAX_BONES}]; uniform float uSquash;
-attribute vec4 aW0; attribute vec4 aW1; attribute vec4 aW2;
+uniform vec3 uR0[${MAX_BONES}]; uniform vec3 uR1[${MAX_BONES}]; uniform float uSquash; uniform float uRipAmp; uniform float uRipPhase;
+attribute float aRipple; attribute vec4 aW0; attribute vec4 aW1; attribute vec4 aW2;
 varying vec2 vUv; varying float vWorldX; varying vec3 vWorld;
 vec2 bone(int i, vec2 p) { vec3 a = uR0[i]; vec3 b = uR1[i]; return vec2(a.x * p.x + a.y * p.y + a.z, b.x * p.x + b.y * p.y + b.z); }
 void main() {
@@ -45,6 +46,8 @@ void main() {
   w[8] = aW2.x; w[9] = aW2.y; w[10] = aW2.z; w[11] = aW2.w;
   vec2 q = vec2(0.0);
   for (int i = 0; i < ${MAX_BONES}; i++) q += bone(i, p) * w[i];
+  // the hair and cloth ripple (rig/ripple.ts rippleOffset): outer silhouette only, uv.y is up, the weights' v is down
+  q += aRipple * uRipAmp * vec2(0.94 * sin(uRipPhase + 7.0 * (1.0 - uv.y) + 3.0 * uv.x), 0.33 * cos(uRipPhase + 5.0 * (1.0 - uv.y)));
   // the beat dip: a vertical squash about the soles (card bottom), no horizontal change
   q.y = -0.5 + (q.y + 0.5) * (1.0 - uSquash);
   vWorld = (modelMatrix * vec4(q, 0.0, 1.0)).xyz;
@@ -65,6 +68,9 @@ const useRigGeometry = (id: string) =>
         (ws[b >> 2] as Float32Array)[i * 4 + (b & 3)] = w;
       });
     }
+    const rip = new Float32Array(n);
+    for (let i = 0; i < n; i++) rip[i] = rippleWeight(id, pos.getX(i) / r.aspect + 0.5, 0.5 - pos.getY(i));
+    g.setAttribute('aRipple', new BufferAttribute(rip, 1));
     ws.forEach((a, k) => g.setAttribute(`aW${k}`, new BufferAttribute(a, 4)));
     return g;
   }, [id]);
@@ -227,6 +233,8 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uR0: r0,
     uR1: r1,
     uSquash: f.squash,
+    uRipAmp: RIPPLE_MAX * rippleAmp(t),
+    uRipPhase: ripplePhase(t),
     uHue: rgb(grade.hue),
     uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: grade.amount,
@@ -246,7 +254,7 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
   // The mesh is in card units; the group places its feet and scales it (smears squash about the feet).
   // the reflection: the same skinned card mirrored below the floor line, faint and soft
   const refl = useUniforms({
-    map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
+    map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uRipAmp: RIPPLE_MAX * rippleAmp(t), uRipPhase: ripplePhase(t), uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: Math.min(1, grade.amount + 0.3), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
     uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.16 : 0,
     uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
