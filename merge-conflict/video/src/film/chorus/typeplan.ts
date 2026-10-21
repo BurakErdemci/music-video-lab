@@ -3,7 +3,7 @@
 // row). Data only (no JSX), so tools/typecheck.mjs can read it; film/chorus/type.tsx draws it.
 import { at } from '../../events.ts';
 import type { Singer } from '../../type/forms/common.tsx';
-import { after, type ChorusLines } from './plan.ts';
+import { after, type ChorusLines, twoGirlsAt } from './plan.ts';
 
 export type FormName = 'Stack' | 'Shout' | 'Stamp' | 'RunwayLine' | 'FlameText' | 'Logo' | 'Wave' | 'Extrude' | 'Marquee' | 'GlitchText' | 'Slam' | 'Flap' | 'Diff' | 'Code' | 'Counter' | 'LightBox' | 'Hoop' | 'Ring' | 'DissolveText' | 'CodeLine' | 'Fill' | 'Knockout' | 'Kick' | 'Floor';
 export interface TypeEntry { id: string; line: number; range: [number, number]; form: FormName; t0: number; t1: number; singer: Singer; key: number; style?: 'chrome' | 'steel'; text?: string }
@@ -14,8 +14,8 @@ export const chorusType = (L: ChorusLines): TypeEntry[] => {
     { id: 'cur1', line: L.cur1, range: [0, 3], form: 'Stack', t0: tk(L.cur1, 0) - 0.02, t1: tk(L.cur1, 3), singer: 'B', key: 1 },
     { id: 'no1', line: L.cur1, range: [3, 4], form: 'Shout', t0: tk(L.cur1, 3), t1: after(tk(L.cur1, 3)), singer: 'O', key: 3, style: 'steel', text: 'NO!' },
     { id: 'inc1', line: L.inc1, range: [0, 3], form: 'Stamp', t0: after(tk(L.cur1, 3)), t1: tk(L.inc1, 3), singer: 'O', key: 1 },
-    { id: 'no2', line: L.inc1, range: [3, 4], form: 'Shout', t0: tk(L.inc1, 3), t1: tk(L.fire, 0), singer: 'B', key: 3, style: 'chrome', text: 'NO!' },
-    { id: 'one-line', line: L.fire, range: [0, 4], form: 'RunwayLine', t0: tk(L.fire, 0), t1: tk(L.fire, 5), singer: 'both', key: 3 },
+    { id: 'no2', line: L.inc1, range: [3, 4], form: 'Shout', t0: tk(L.inc1, 3), t1: twoGirlsAt(L), singer: 'B', key: 3, style: 'chrome', text: 'NO!' },
+    { id: 'one-line', line: L.fire, range: [0, 4], form: 'RunwayLine', t0: twoGirlsAt(L), t1: tk(L.fire, 5), singer: 'both', key: 3 },
     { id: 'on-fire', line: L.fire, range: [4, 9], form: 'FlameText', t0: tk(L.fire, 4), t1: tk(L.merge1, 0), singer: 'both', key: 8 },
     { id: 'merge1', line: L.merge1, range: [0, 4], form: 'Logo', t0: tk(L.merge1, 0), t1: tk(L.merge1, 4), singer: 'both', key: 0 },
     { id: 'haywire', line: L.merge1, range: [4, 7], form: 'Wave', t0: tk(L.merge1, 4), t1: tk(L.cur2, 0) - 0.02, singer: 'both', key: 2 },

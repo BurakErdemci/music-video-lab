@@ -43,8 +43,16 @@ export const poseOfShot = (s: Shot, k: number): CameraPose => blendPose(s.from, 
 /** The first beat at least `min` seconds after t (a cut never lands right on top of the previous one). */
 export const after = (t: number, min = 0.25): number => beats.find((x) => x >= t + min) ?? t + min;
 
+/** When "Two girls" starts: on its word, but never less than 0.3 s after the "(NO!)" before it (chorus 2 sings
+ *  them 0.08 s apart, and the NO! close-up must read). */
+export const twoGirlsAt = (L: ChorusLines): number => Math.max(at(`tok-${L.fire}-0`), at(`tok-${L.inc1}-3`) + 0.3);
+
 export const chorusPlan = (L: ChorusLines) => {
   const tk = (line: number, k: number) => at(`tok-${line}-${k}`);
+  const two = twoGirlsAt(L);
+  // the chorus end: the last spin, then everything bursts into particles on the next beat
+  const controlOut = after(tk(L.merge2, 7), 0.3);
+  const burstAt = after(controlOut, 0.25);
   const b = (t: number) => after(t); // the next beat after t
   const blueArena = (k: number): Vec3 => [ARENA.blueX + 1.6, -1.2 - k * 0.3, 8.5 - k];
   const SHOTS: Shot[] = [
@@ -61,7 +69,7 @@ export const chorusPlan = (L: ChorusLines) => {
     // "(NO!)": blue's shouting face, a giant pop NO!
     { id: 'no2', t: tk(L.inc1, 3), scene: 'insert', from: cam([0, 0, HOME_Z], [0, 0, 0]), to: cam([0, 0.2, HOME_Z - 1.4], [0, 0.2, 0]), into: 'dissolve' },
     // "Two girls, one line,": both on the glowing line-42 runway, back to back
-    { id: 'line-two', t: tk(L.fire, 0), scene: 'runway', from: cam([0, -1.6, 10], [0, -1.2, -12], 44), to: cam([0, -2.1, 8], [0, -1.4, -12], 44), into: 'dissolve' },
+    { id: 'line-two', t: two, scene: 'runway', from: cam([0, -1.6, 10], [0, -1.2, -12], 44), to: cam([0, -2.1, 8], [0, -1.4, -12], 44), into: 'dissolve' },
     { id: 'line-one', t: tk(L.fire, 2), scene: 'runway', from: cam([-5.5, -2.6, 5], [0, -0.6, -2], 46, -0.12), to: cam([-4.6, -2.4, 4.4], [0, -0.6, -2], 46, -0.04), into: 'shock' },
     { id: 'line-line', t: tk(L.fire, 3), scene: 'runway', from: cam([3.5, 5, 9], [0, -3, -4], 46), to: cam([2.4, 4.4, 7.5], [0, -3, -5], 46), into: 'mirror' },
     // "the build is on fire": the whole arena ignites, a burning server hall
@@ -105,9 +113,9 @@ export const chorusPlan = (L: ChorusLines) => {
     { id: 'control-i', t: tk(L.merge2, 4), scene: 'spin', from: cam([0, 6, 10], [0, -2, -1], 46, 0), to: cam([0, 5.4, 9], [0, -2, -1], 46, 0.9), into: 'diff' },
     { id: 'control-take', t: tk(L.merge2, 6), scene: 'spin', from: cam([-6, -1.8, 8], [0, -0.6, -1], 48, -0.4), to: cam([-5, -1.6, 7], [0, -0.6, -1], 48, 0.2), into: 'shock' },
     { id: 'control', t: tk(L.merge2, 7), scene: 'spin', from: cam([0, 2.2, 15], [0, -1, -1], 44, 0.3), to: cam([0, 2, 12], [0, -1, -1], 44, -0.6), into: 'mirror' },
-    { id: 'control-out', t: beat(beatIndexAt(L.end) - 3), scene: 'spin', from: cam([5, 3, 12], [0, -1, -1], 46, -0.6), to: cam([3, 2.6, 10], [0, -1, -1], 46, -1.4), into: 'shock' },
+    { id: 'control-out', t: controlOut, scene: 'spin', from: cam([5, 3, 12], [0, -1, -1], 46, -0.6), to: cam([3, 2.6, 10], [0, -1, -1], 46, -1.4), into: 'shock' },
     // the chorus end: everything bursts into particles
-    { id: 'burst', t: beat(beatIndexAt(L.end) - 2), scene: 'burst', from: cam([0, 1, 13], [0, -0.6, -1], 44), to: cam([0, 1.4, 16], [0, -0.6, -1], 48), into: 'dissolve' },
+    { id: 'burst', t: burstAt, scene: 'burst', from: cam([0, 1, 13], [0, -0.6, -1], 44), to: cam([0, 1.4, 16], [0, -0.6, -1], 48), into: 'dissolve' },
   ];
   // round 7: the logo crashes, the line of light and "I can't" held 0.68-0.72 s (2.1 beats); one more cut on the
   // first beat inside each, a closer angle of the same world
@@ -132,7 +140,7 @@ export const chorusPlan = (L: ChorusLines) => {
     { t: tk(L.cur1, 3), card: 'BX2', at: half(-5.4) }, // the insert: blue smug at the edge while orange screams
     { t: b(tk(L.cur1, 3)), card: 'BD7', at: full(ARENA.blueX) },
     { t: tk(L.inc1, 3), card: 'BX4', at: bust(-1.2) },
-    { t: tk(L.fire, 0), card: 'BD4', at: { x: -0.75, height: 4.8, flip: true } },
+    { t: two, card: 'BD4', at: { x: -0.75, height: 4.8, flip: true } },
     { t: tk(L.fire, 5), card: 'BC3', at: full(-3.6, 4.8) },
     { t: tk(L.merge1, 0), card: 'BC2', at: full(-5.6, 5.6) },
     { t: tk(L.merge1, 4), card: 'BX3', at: half(-4.2) },
@@ -148,7 +156,7 @@ export const chorusPlan = (L: ChorusLines) => {
     { t: tk(L.merge2, 0), card: 'BC2', at: full(-5.6, 5.6) },
     { t: tk(L.merge2, 4), card: 'BC3', at: full(ARENA.blueX) },
     { t: tk(L.merge2, 7), card: 'BC1', at: full(ARENA.blueX) },
-    { t: beat(beatIndexAt(L.end) - 2), card: null },
+    { t: burstAt, card: null },
   ];
   const ORANGE: Pose[] = [
     { t: tk(L.cur1, 0), card: 'OM3', at: full(ARENA.orangeX) },
@@ -156,7 +164,7 @@ export const chorusPlan = (L: ChorusLines) => {
     { t: b(tk(L.cur1, 3)), card: 'OM4', at: full(ARENA.orangeX) },
     { t: tk(L.inc1, 1), card: 'OC1', at: full(ARENA.orangeX) },
     { t: tk(L.inc1, 3), card: 'OMX5', at: half(5.4, true) },
-    { t: tk(L.fire, 0), card: 'OM3', at: { x: 0.75, height: 4.8 } },
+    { t: two, card: 'OM3', at: { x: 0.75, height: 4.8 } },
     { t: tk(L.fire, 5), card: 'OC3', at: full(3.6, 4.8) },
     { t: tk(L.merge1, 0), card: 'OC1', at: full(5.6, 5.6) },
     { t: tk(L.merge1, 4), card: 'OMX4', at: half(4.2, true) },
@@ -171,7 +179,7 @@ export const chorusPlan = (L: ChorusLines) => {
     { t: tk(L.merge2, 0), card: 'OC1', at: full(5.6, 5.6) },
     { t: tk(L.merge2, 4), card: 'OC3', at: full(ARENA.orangeX) },
     { t: tk(L.merge2, 7), card: 'OC2', at: full(ARENA.orangeX) },
-    { t: beat(beatIndexAt(L.end) - 2), card: null },
+    { t: burstAt, card: null },
   ];
   /** The chorus's beats: a camera punch on every one. */
   const start = SHOTS[0]?.t ?? 0;
@@ -186,7 +194,7 @@ export const chorusPlan = (L: ChorusLines) => {
     walls: [tk(L.equals, 0), tk(L.equals, 1), tk(L.equals, 2)],
     crush: tk(L.equals, 3),
     fire: tk(L.fire, 5),
-    burst: beat(beatIndexAt(L.end) - 2),
+    burst: burstAt,
   };
   return { SHOTS, BLUE, ORANGE, BEATS, HITS, F };
 };
