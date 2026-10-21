@@ -161,3 +161,15 @@ Transitions (the "elite" part):
 - **Whip:** a smear whip.
 
 Assets still needed: the 16 disco dance cards (j-dance) for the dancing girls behind the type, and the SET-disco-club plate. Cancelled: the metal forms (k-metal) and the metal, ash and fusion plates.
+
+## The girls are never wallpaper (Burak, 2026-10-21)
+
+Burak loves the type library and the fonts. His one concern is a girl standing behind the type, lightly dancing: "that will make it very monotonous". Rule: on every lyric line the girls do at least ONE of these:
+
+1. **Play with the type.** Kick a word off screen, sit or lean on a letter, spin the RING like a hula hoop, appear from behind a flipping FLAP board, throw words at each other (the call-and-response becomes literal throwing).
+2. **The singer steps forward.** Whoever sings the line is big and sharp; the other is soft behind. In call-and-response the focus ping-pongs left and right.
+3. **Change the framing.** A giant face close-up, a tiny figure behind huge type, a low angle, cloned copies, a split screen. The same framing never holds longer than 2 bars.
+4. **Change the pose on the beat.** In choruses, a new dance pose every bar, leaving coloured ghost trails (Arcane graphic layer).
+5. **Become part of the type.** The silhouette filled with text, or the girl seen through knockout letters.
+
+These are measurable and checked in the review: the longest hold of one framing (≤ 2 bars), the number of poses per chorus bar (≥ 1), and that every line has at least one action from the list.
