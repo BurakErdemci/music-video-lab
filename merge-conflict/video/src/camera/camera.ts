@@ -65,7 +65,7 @@ const norm = (a: Vec3): Vec3 => {
 const cross = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
 /** The camera basis (forward, right, up) with the roll applied, as the Stage's camera.rotateZ(roll) gives. */
-const basis = (pose: CameraPose): [Vec3, Vec3, Vec3] => {
+export const basis = (pose: CameraPose): [Vec3, Vec3, Vec3] => {
   const fwd = norm(sub(pose.target, pose.position));
   const r0 = norm(cross(fwd, [0, 1, 0]));
   const u0 = cross(r0, fwd);

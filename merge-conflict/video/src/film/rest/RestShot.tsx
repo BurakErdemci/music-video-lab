@@ -7,7 +7,7 @@
 import { AbsoluteFill } from 'remotion';
 import { useLayer, useShotBackground } from '../../layer.ts';
 import { type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
-import { Card, type CardLight } from '../../cards/Card.tsx';
+import { Card, type CardLight, type Placement } from '../../cards/Card.tsx';
 import { EVENTS } from '../../events.ts';
 import { GRADES, type Grade, metalGrade } from '../../grade/grade.ts';
 import { clamp01, type Hex, outQuad } from '../../lib/ease.ts';
@@ -17,7 +17,7 @@ import { Dissolve, dissolvePlan, dissolveState } from '../../particles/dissolve.
 import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { FLOOR_Y } from '../../stage/floor.ts';
-import { barPos, sec } from '../../timing.ts';
+import { barPos, sec, sectionNamed } from '../../timing.ts';
 import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { familyOf } from '../../type/fonts.tsx';
@@ -25,6 +25,7 @@ import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
 import { GlowBox } from '../../worlds/kit/index.ts';
 import type { ShotState, Subject } from '../framing.ts';
+import { liveCamera } from '../livecam.ts';
 import { PlateLayer } from '../../worlds/plate.tsx';
 import { SUBWAY_CAMERA, SubwayWorld, TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
 import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
@@ -115,7 +116,8 @@ const BLUE_METAL: Grade = metalGrade({ ...GRADES.reviewed, amount: 0.42 }, 1);
 const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
 
 // blue turns metal on the scream's downbeat: her shocked disco face scatters, her metal scream gathers
-const BLUE_TURN = dissolvePlan({ id: 'r-blue-metal', t0: SCREAM.start - 20 / 60, scatterFrames: 20, gatherFrames: 12, from: { card: 'BX3', at: { x: -4.4, feet: -5.4, height: 10.5, z: 0 } }, to: { card: 'BMX2', at: { x: -4.2, feet: -5.4, height: 10.5, z: 0 } } });
+// (round 7c: both placements come from the plan, where the faces are sized by their face boxes)
+const BLUE_TURN = dissolvePlan({ id: 'r-blue-metal', t0: SCREAM.start - 20 / 60, scatterFrames: 20, gatherFrames: 12, from: { card: 'BX3', at: poseAt(RBLUE, SCREAM.start - 0.01)?.at as Placement }, to: { card: 'BMX2', at: poseAt(RBLUE, SCREAM.start)?.at as Placement } });
 
 const lightOf = (who: 'B' | 'O', t: number, scene: RestScene): CardLight => {
   const metalScene = scene === 'cathedral' || scene === 'forge' || scene === 'tunnel' || scene === 'warning' || scene === 'pushface';
@@ -135,7 +137,8 @@ const restCamera = (t: number) => {
   const chosen = shot.move ?? MOVES[idx % MOVES.length];
   const move: Move | undefined = scene === 'whisper' ? undefined : t >= SOLO.start && chosen !== 'push' ? 'push' : chosen;
   const dir = idx % 2 ? 1 : -1;
-  const raw = variant(HERO[scene], shot.cam, k, focus);
+  // the tunnel's hero move flies the camera through the girls standing in it; a shot travels its first 45 %
+  const raw = variant(HERO[scene], shot.cam, scene === 'tunnel' ? k * 0.45 : k, focus);
   const base = move ? moved(raw, move, k, t - shot.t, focus, dir) : raw;
   const planeBase = variant(HERO[scene], shot.cam, 0, focus);
   // the punch: every sung word and second beat in the verses, every kick in the scream, breakdown and solo (with a
@@ -154,21 +157,33 @@ const restCamera = (t: number) => {
 };
 
 /** What verse 3 through the solo shows at t, for tools/framecheck.mjs (the cards the component draws). */
-export const restStateAt = (t: number): ShotState => {
+const rawRestStateAt = (t: number): ShotState => {
   const { shot, scene, blueP, orangeP, pose } = restCamera(t);
   const clip = (who: 'B' | 'O') => (scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
   const turn = dissolveState(BLUE_TURN, t);
   const subjects: Subject[] = [];
   const b = turn.active ? (turn.toOpacity >= 0.5 ? { card: 'BMX2', at: BLUE_TURN.to?.at } : { card: 'BX3', at: BLUE_TURN.from?.at }) : blueP;
-  if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B') });
-  if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O') });
+  // the close variant frames from the chest: a deliberate cut at the knees or below
+  const crop = shot.cam === 'close' ? ('knee' as const) : undefined;
+  if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop });
+  if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O'), crop });
   return { pose, shot: shot.id, subjects };
 };
+
+const live = liveCamera(rawRestStateAt, (t) => {
+  const { shot } = shotIn(RSHOTS, t);
+  const next = RSHOTS[RSHOTS.indexOf(shot) + 1];
+  // verse 3 ends at chorus 2, the solo at the piano
+  const stop = shot.t < sectionNamed('chorus2').start ? sectionNamed('chorus2').start : sectionNamed('piano_interlude').start;
+  return { t0: shot.t, t1: Math.min(next?.t ?? stop, stop), key: `r-${shot.id}` };
+});
+export const restStateAt = live.stateAt;
 
 export const RestShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const layer = useLayer();
-  const { shot, scene, blueP, orangeP, pose, planeBase, quiet } = restCamera(t);
+  const { shot, scene, blueP, orangeP, planeBase, quiet } = restCamera(t);
+  const pose = live.poseAt(t);
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);

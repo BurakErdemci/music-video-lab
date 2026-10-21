@@ -19,6 +19,7 @@ import { FormDefs } from '../../type/forms/common.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { PlateLayer } from '../../worlds/plate.tsx';
 import type { ShotState, Subject } from '../framing.ts';
+import { liveCamera } from '../livecam.ts';
 import { ARENA, CHORUS1, CHORUS2, type ChorusLines, chorusPlan, type Pose, poseOfShot, type Scene, type Shot, shotAt } from './plan.ts';
 import { ChorusType, logoApart } from './type.tsx';
 import { chorusType } from './typeplan.ts';
@@ -112,10 +113,15 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     }
     return out;
   };
-  const stateAt = (t: number): ShotState => {
+  const rawStateAt = (t: number): ShotState => {
     const { pose, shot } = cameraAt(t);
     return { pose, shot: `ch${v}-${shot.id}`, subjects: girlsAt(t, shot) };
   };
+  const liveCam = liveCamera(rawStateAt, (t) => {
+    const { shot, next } = shotAt(P.SHOTS, t);
+    return { t0: shot.t, t1: next?.t ?? L.end, key: `ch${v}-${shot.id}` };
+  });
+  const stateAt = liveCam.stateAt;
 
   const sceneLight = (who: 'B' | 'O', t: number, scene: Scene): CardLight => {
     const bar = barPos(t);
@@ -141,7 +147,8 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
   const Shot = ({ frame }: { frame: number }) => {
     const t = sec(frame);
     const layer = useLayer();
-    const { pose, shot, base } = cameraAt(t);
+    const { shot, base } = cameraAt(t);
+    const pose = liveCam.poseAt(t);
     const plane = typePlane(pose, base, 1);
     const H = P.HITS;
     const stomps = [...H.stompBlue.map((x) => ({ t: x, x: ARENA.blueX })), ...H.slamOrange.map((x) => ({ t: x, x: ARENA.orangeX }))];

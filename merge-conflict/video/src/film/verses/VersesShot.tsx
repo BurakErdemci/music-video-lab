@@ -15,7 +15,7 @@ import { Dissolve, dissolvePlan, dissolveState } from '../../particles/dissolve.
 import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { FLOOR_Y } from '../../stage/floor.ts';
-import { barPos, downbeats, sec } from '../../timing.ts';
+import { barPos, downbeats, sec, sectionNamed } from '../../timing.ts';
 import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { RunwayLine } from '../../type/forms/Mega.tsx';
@@ -28,6 +28,7 @@ import { PRE_T, type VerseScene, VBLUE, VERSE_TYPE, VORANGE, type VPose, VSHOTS,
 import { hoopFill, hoopKey, VerseType } from './type.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import type { ShotState, Subject } from '../framing.ts';
+import { liveCamera } from '../livecam.ts';
 
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
 const RUNWAY_CAMERA: Hero = { from: cam([2.6, -1.4, 9.5], [0, -1.4, -12], 42), to: cam([1.4, -2.0, 7.5], [0, -1.2, -12], 42) };
@@ -88,24 +89,32 @@ const throwOf = (pose: CameraPose) => throwPlan({ id: 'v-css', throws: [{ tok: l
 const clipOf = (scene: VerseScene, who: 'B' | 'O') => (scene === 'strobe' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
 
 /** What the verses show at t, for tools/framecheck.mjs: the same pose and cards the component draws. */
-export const versesStateAt = (t: number): ShotState => {
+const rawVersesStateAt = (t: number): ShotState => {
   const { shot, scene, blueP, orangeP, pose } = verseCamera(t);
   const throwP = throwOf(pose);
   const subjects: Subject[] = [];
   const add = (who: 'B' | 'O', pp: VPose | null) => {
     if (!pp?.at || !pp.card) return;
     if (who === 'O' && pp.card === 'OI1' && dissolveState(INTRUDER, t).toOpacity < 0.5) return;
-    subjects.push({ card: pp.card, at: pp.at, dx: scene === 'alley' ? throwRecoil(throwP, who === 'B' ? 'B' : 'A', t) : 0, clip: clipOf(scene, who) });
+    subjects.push({ card: pp.card, at: pp.at, dx: scene === 'alley' ? throwRecoil(throwP, who === 'B' ? 'B' : 'A', t) : 0, clip: clipOf(scene, who), crop: shot.cam === 'close' ? 'knee' : undefined });
   };
   add('B', blueP);
   add('O', orangeP);
   return { pose, shot: shot.id, subjects };
 };
 
+const live = liveCamera(rawVersesStateAt, (t) => {
+  const { shot } = shotIn(VSHOTS, t);
+  const next = VSHOTS[VSHOTS.indexOf(shot) + 1];
+  return { t0: shot.t, t1: next?.t ?? sectionNamed('chorus1').start, key: `v-${shot.id}` };
+});
+export const versesStateAt = live.stateAt;
+
 export const VersesShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const layer = useLayer();
-  const { shot, k, scene, blueP, orangeP, pose, planeBase } = verseCamera(t);
+  const { shot, k, scene, blueP, orangeP, planeBase } = verseCamera(t);
+  const pose = live.poseAt(t);
   const plane = typePlane(pose, planeBase, 1);
   const p = pulseAt(t);
   const throwP = throwOf(pose);

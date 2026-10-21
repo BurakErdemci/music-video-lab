@@ -27,7 +27,8 @@ import { Flap } from '../type/forms/Letters.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { LetterMorph, MarkerWipe, type WordAt } from '../type/transitions/transitions.tsx';
 import { kneeUp } from '../girls/staging.tsx';
-import { cameraAt, CODE_OPT, FIX, FRAMINGS, GIRL, INTRO_SPEAKER, LINE0, LINE1, MORPH_FIX, SPEAKER_AT, WIPE_FLAP } from './proof.ts';
+import { liveCamera } from './livecam.ts';
+import { cameraAt, CODE_OPT, FIX, FRAMINGS, framingSpan, GIRL, INTRO_SPEAKER, LINE0, LINE1, MORPH_FIX, SPEAKER_AT, WIPE_FLAP } from './proof.ts';
 
 /** A dark, near-empty club: the error is the only colour. */
 const DARK: Grade = { hue: '#3a0a12', rival: '#ff3b3b', amount: 0.25, rim: 0.9, stage: 0.35 };
@@ -40,15 +41,17 @@ const placeOf = (who: 'O' | 'B', close: boolean): Placement =>
 const cardOf = (who: 'O' | 'B', close: boolean): string => (close ? GIRL[who].close : GIRL[who].stand);
 
 /** The intro at t: knee-up first (a deliberate knee crop), then her close-up card. */
-export const speakerStateAt = (t: number): ShotState => {
+const rawSpeakerStateAt = (t: number): ShotState => {
   const close = framingAt(FRAMINGS, t) === 'face';
   return { pose: cameraAt(t).pose, shot: close ? 'speaker-face' : 'speaker-knee', subjects: speakers().map((g) => ({ card: cardOf(g, close), at: placeOf(g, close), ...(close ? {} : { crop: 'knee' as const }) })) };
 };
+const live = liveCamera(rawSpeakerStateAt, framingSpan);
+export const speakerStateAt = live.stateAt;
 
 export const Speaker = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const close = framingAt(FRAMINGS, t) === 'face';
-  const cam = cameraAt(t);
+  const cam = { ...cameraAt(t), pose: live.poseAt(t) };
   const plane = typePlane(cam.pose, cam.base, cam.typeZ);
   const who = speakers();
   const fixWord: WordAt = FIX;

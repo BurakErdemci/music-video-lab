@@ -201,6 +201,12 @@ export const cameraAt = (t: number): { pose: CameraPose; base: CameraPose; typeZ
   if (t >= at('tok-13-0') - 0.01) path = punched(path, [at('tok-13-0'), ...CHORUS_PULSE_TIMES], 0.05);
   return { pose: path(t), base: c.from, typeZ: c.typeZ };
 };
+/** The framing playing at t, for the living camera (film/livecam.ts). */
+export const framingSpan = (t: number): { t0: number; t1: number; key: string } => {
+  let i = 0;
+  while (i < FRAMINGS.length - 1 && t >= (FRAMINGS[i + 1] as { t: number }).t - 1e-9) i++;
+  return { t0: (FRAMINGS[i] as { t: number }).t, t1: (FRAMINGS[i + 1] as { t: number } | undefined)?.t ?? PROOF_END, key: `proof-${i}` };
+};
 if (CAMERA.length !== FRAMINGS.length) throw new Error(`proof: ${CAMERA.length} camera moves for ${FRAMINGS.length} framings`);
 
 // ---- flash budget ------------------------------------------------------------------------------------------

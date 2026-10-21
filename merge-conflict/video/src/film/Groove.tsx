@@ -34,7 +34,8 @@ import { MergeConflictLogo } from '../type/logo/Logo.tsx';
 import { Slam } from '../type/Slam.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { ThroughCounter, TypeWhip } from '../type/transitions/transitions.tsx';
-import { cameraAt, COUNTER_DIVE, FRAMINGS, GROOVE_CROUCH_AT, GROOVE_BIG, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, LOGO_DESIGN, OURS, WHIP_GROOVE, WHIP_OUT } from './proof.ts';
+import { liveCamera } from './livecam.ts';
+import { cameraAt, COUNTER_DIVE, FRAMINGS, framingSpan, GROOVE_CROUCH_AT, GROOVE_BIG, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, LOGO_DESIGN, OURS, WHIP_GROOVE, WHIP_OUT } from './proof.ts';
 
 const RED: Hex = '#e01b1b';
 const STEEL: Hex = '#c8ced6';
@@ -135,7 +136,8 @@ const grooveSubjects = (t: number): Subject[] => {
   if (kind === 'tiny') return [{ card: C.tiny, at: { x: 0, height: 2.6 }, ...sil }];
   return [{ card: C.waist, at: waistUp(4.4, 13), crop: 'knee', ...sil }];
 };
-export const grooveStateAt = (t: number): ShotState => ({ pose: cameraAt(t).pose, shot: `groove-${framingAt(FRAMINGS, t)}`, subjects: grooveSubjects(t) });
+const live = liveCamera((t) => ({ pose: cameraAt(t).pose, shot: `groove-${framingAt(FRAMINGS, t)}`, subjects: grooveSubjects(t) }), framingSpan);
+export const grooveStateAt = live.stateAt;
 
 export const Groove = ({ frame }: { frame: number }) => {
   const t = sec(frame);
@@ -153,7 +155,7 @@ export const Groove = ({ frame }: { frame: number }) => {
   });
   // the camera moves continuously in every framing, with a fov punch every second beat (proof.ts cameraAt)
   const cam = cameraAt(t);
-  const pose = cam.pose;
+  const pose = live.poseAt(t);
   const plane = typePlane(pose, cam.base, cam.typeZ);
   const oursT = at('slam-ours');
   const theirsT = at('slam-theirs');

@@ -37,27 +37,23 @@ const outDir = path.join(VIDEO, 'out', '.framecheck');
 mkdirSync(outDir, { recursive: true });
 const outfile = path.join(outDir, 'state.mjs');
 await esbuild.build({
-  stdin: { contents: "export { filmStateAt } from './Film.tsx';\nexport { project, HOME } from './camera/camera.ts';\nexport { sectionAt } from './timing.ts';", resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
+  stdin: {
+    contents: [
+      "export { filmStateAt } from './Film.tsx';",
+      "export { project, HOME } from './camera/camera.ts';",
+      "export { sectionAt } from './timing.ts';",
+      "export { screenBox, CARD_FRAMES } from './film/framing.ts';",
+      "export { KNEE_V } from './film/livecam.ts';",
+    ].join('\n'),
+    resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
   bundle: true, platform: 'node', format: 'esm', outfile, jsx: 'automatic', packages: 'external', logLevel: 'error',
 });
 process.removeAllListeners('warning');
 const M = await import(pathToFileURL(outfile).href);
-const manifest = JSON.parse(readFileSync(path.join(VIDEO, 'public/cards/manifest.json'), 'utf8'));
-const frames = JSON.parse(readFileSync(path.join(VIDEO, 'public/cards/frames.json'), 'utf8'));
+const frames = M.CARD_FRAMES;
 
 const FLOOR_Y = -3.4;
-/** A normalised card point (u right, v down) in world space, placed as <Card> places it. */
-const worldOf = (s, u, v) => {
-  const e = manifest[s.card];
-  const aspect = e.w / e.h;
-  const sx = s.at.flip ? -1 : 1;
-  const h = s.at.height;
-  return [s.at.x + (s.dx ?? 0) + sx * h * (u - 0.5) * aspect, (s.at.feet ?? FLOOR_Y) + (s.dy ?? 0) + h * (1 - v), s.at.z ?? 0];
-};
-const screenBox = (pose, s, box) => {
-  const pts = [[box[0], box[1]], [box[2], box[1]], [box[0], box[3]], [box[2], box[3]]].map(([u, v]) => M.project(pose, worldOf(s, u, v)));
-  return { x0: Math.min(...pts.map((p) => p.x)), x1: Math.max(...pts.map((p) => p.x)), y0: Math.min(...pts.map((p) => p.y)), y1: Math.max(...pts.map((p) => p.y)) };
-};
+const screenBox = M.screenBox;
 
 /** The failures of one frame's state. */
 const check = (state) => {
@@ -71,17 +67,29 @@ const check = (state) => {
       const c = M.project(state.pose, [s.clip.x, (s.at.feet ?? FLOOR_Y) + s.at.height * 0.8, s.at.z ?? 0]).x;
       if (s.clip.keep === 'left') R = Math.min(R, c); else L = Math.max(L, c);
     }
+    // a card the camera does not show at all (its whole figure off the frame, the other girl while the shot is on
+    // one) is not a subject in this frame
+    const ab = screenBox(state.pose, s, f.action);
+    if (ab.x1 <= L || ab.x0 >= R || ab.y1 <= 0 || ab.y0 >= H) continue;
+    // how far (px) a box crosses each edge of its allowed area
+    const over = (b, l, r, t, bt) => ['left', l - b.x0, 'right', b.x1 - r, 'top', t - b.y0, 'bottom', b.y1 - bt]
+      .reduce((a, v, i, arr) => (i % 2 === 0 && arr[i + 1] > 0 ? [...a, `${v} ${Math.round(arr[i + 1])}`] : a), []);
     if (!s.silhouette) {
       const fb = screenBox(state.pose, s, f.face);
       const mx = 0.04 * W, my = 0.04 * H;
-      if (fb.x0 < L + mx || fb.x1 > R - mx || fb.y0 < my || fb.y1 > H - my) out.push({ s, why: 'face leaves the frame' });
+      const fo = over(fb, L + mx, R - mx, my, H - my);
+      if (fo.length) out.push({ s, why: `face leaves the frame (${fo.join(', ')} px)` });
       if (fb.y1 - fb.y0 > 0.7 * H) out.push({ s, why: `face ${(100 * (fb.y1 - fb.y0) / H).toFixed(0)} % of the frame height` });
     }
     if (f.kind === 'full') {
-      const ab = screenBox(state.pose, s, f.action);
       const m = 0.01 * H;
-      const cut = ab.x0 < L - m || ab.x1 > R + m || ab.y0 < -m || (s.crop !== 'knee' && ab.y1 > H + m);
-      if (cut) out.push({ s, why: s.crop === 'knee' ? 'action cut at the sides or top' : 'action box cut' });
+      const ao = over(ab, L - m, R + m, -m, s.crop === 'knee' ? Infinity : H + m);
+      if (ao.length) out.push({ s, why: `${s.crop === 'knee' ? 'action cut at the sides or top' : 'action box cut'} (${ao.join(', ')} px)` });
+      if (s.crop === 'knee') {
+        // a knee framing must still cut at the knees or below
+        const knee = screenBox(state.pose, s, [(f.action[0] + f.action[2]) / 2, M.KNEE_V, (f.action[0] + f.action[2]) / 2, M.KNEE_V]);
+        if (knee.y0 > H + m) out.push({ s, why: `knee framing cut above the knees (${Math.round(knee.y0 - H)} px)` });
+      }
     }
   }
   return out;
@@ -95,6 +103,21 @@ if (selftest) {
   console.log(`selftest on ${card}: oversized -> ${big.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; fitted -> ${ok.map((b) => b.why).join('; ') || 'passed'}`);
   rmSync(outDir, { recursive: true, force: true });
   process.exit(big.length > 0 && ok.length === 0 ? 1 : 0);
+}
+
+if (arg('dump')) {
+  // the projected face and action boxes of the listed frames, for drawing them over stills
+  const out = arg('dump').split(',').map(Number).map((fr) => {
+    const st = M.filmStateAt(fr);
+    if (!st) return { frame: fr, shot: null, subjects: [] };
+    return { frame: fr, shot: st.shot, fit: st.fit, subjects: st.subjects.filter((x) => frames[x.card]).map((x) => {
+      const box = (b) => { const r = screenBox(st.pose, x, b); return [r.x0, r.y0, r.x1, r.y1].map((v) => Math.round(v)); };
+      return { card: x.card, face: box(frames[x.card].face), action: box(frames[x.card].action), fails: check({ ...st, subjects: [x] }).map((f) => f.why) };
+    }) };
+  });
+  console.log(JSON.stringify(out));
+  rmSync(outDir, { recursive: true, force: true });
+  process.exit(0);
 }
 
 if (process.argv.includes('--type')) {
@@ -137,18 +160,23 @@ if (process.argv.includes('--type')) {
 const open = new Map();
 const list = [];
 let checked = 0;
+let widened = 0;
+const maxZ = [1, -1];
 for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += step) {
   const st = M.filmStateAt(fr);
   if (!st) continue;
   checked++;
+  if (st.fit && st.fit.z > 1.005) { widened++; if (st.fit.z > maxZ[0]) maxZ.splice(0, 2, st.fit.z, fr); }
   for (const fail of check(st)) {
-    const key = `${st.shot}|${fail.s.card}|${fail.why.replace(/\d+ %/, 'N %')}`;
+    const key = `${st.shot}|${fail.s.card}|${fail.why.replace(/ \(.*$/, '').replace(/\d+ %/, 'N %')}`;
+    // a run reports its worst frame: the largest overshoot in px or share of the frame
+    const size = Math.max(0, ...(fail.why.match(/\d+/g) ?? []).map(Number));
     const r = open.get(key);
     if (r && fr - r.last <= step) {
       r.last = fr;
-      r.worst = fail.why;
+      if (size >= r.size) { r.worst = fail.why; r.size = size; }
     } else {
-      const run = { shot: st.shot, card: fail.s.card, first: fr, last: fr, worst: fail.why };
+      const run = { shot: st.shot, card: fail.s.card, first: fr, last: fr, worst: fail.why, size };
       open.set(key, run);
       list.push(run);
     }
@@ -162,6 +190,7 @@ for (const r of list) {
 console.log(`framecheck ${A}-${B} s: ${checked} frames checked (every ${step}), ${list.length} failing shot runs`);
 for (const r of list) console.log(`  ${(r.first / FPS).toFixed(2)}-${((r.last + 1) / FPS).toFixed(2)}  ${r.shot.padEnd(22)} ${r.card.padEnd(5)} ${r.worst}`);
 for (const [sec, n] of bySection) console.log(`  section ${sec}: ${n}`);
+console.log(`  live camera guard: widened in ${widened} frames (${(100 * widened / Math.max(1, checked)).toFixed(1)} %), most ${maxZ[0].toFixed(3)}x at ${(maxZ[1] / FPS).toFixed(2)} s`);
 console.log(list.length ? `framecheck: FAIL (${list.length})` : 'framecheck: PASS');
 rmSync(outDir, { recursive: true, force: true });
 process.exit(list.length ? 1 : 0);
