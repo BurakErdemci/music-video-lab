@@ -34,8 +34,9 @@ void main() {
   float spin = mix(1.5, 4.5, aRnd.x) * (aRnd.y < 0.5 ? -1.0 : 1.0);
   vAngle = aSeed.w * 6.2832 + t * spin;
   vFlip = 0.15 + 0.85 * abs(cos(t * mix(2.0, 6.0, aRnd.z) + aSeed.x * 40.0));
-  // With the metal amount, a share of the confetti turns into embers that RISE (and flicker), the rest stays
-  vEmber = step(aRnd.y, uMetal * 0.75);
+  // With the metal amount the confetti turns into embers that RISE (and flicker): all of it at full metal,
+  // so the all-metal groove has no disco confetti (scene-map.md, 23d272a)
+  vEmber = step(aRnd.y, uMetal);
   if (aKind < 0.5) {
     float fall = mix(0.35, 0.95, aSeed.w) * mix(1.0, -1.6, vEmber);
     float y = BOT + mod(aSeed.y * (TOP - BOT) - fall * t, TOP - BOT);
@@ -46,7 +47,7 @@ void main() {
     float x = mod(aSeed.x * uSpanX + t * mix(0.35, 0.9, aSeed.w), uSpanX) - uSpanX * 0.5;
     p = vec3(x, mix(-1.5, 6.5, aSeed.y), mix(uZ.x, uZ.y * 0.5 + uZ.x * 0.5, aSeed.z));
     float tw = pow(max(0.0, sin(t * mix(2.0, 6.5, aRnd.x) + aSeed.w * 30.0)), 10.0);
-    alpha = tw * step(aRnd.z, uDensity);
+    alpha = tw * step(aRnd.z, uDensity) * (1.0 - uMetal); // mirror-ball spots are disco: gone at full metal
     size = mix(0.28, 0.6, aRnd.w);
   } else {
     int slot = int(aSeed.w * 3.999);

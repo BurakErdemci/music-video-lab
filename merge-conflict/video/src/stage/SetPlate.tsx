@@ -19,7 +19,7 @@ const HASH = /* glsl */ `
 float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }`;
 
 const WALL_FRAG = /* glsl */ `
-uniform float uTime; uniform vec3 uHue; uniform float uStage; uniform vec2 uAspect; uniform vec3 uHue2; uniform float uSplit;
+uniform float uTime; uniform vec3 uHue; uniform float uStage; uniform vec2 uAspect; uniform vec3 uHue2; uniform float uSplit; uniform float uMetal;
 varying vec2 vUv;
 void main() {
   vec2 p = (vUv - vec2(0.5, 0.80)) * uAspect;
@@ -33,6 +33,28 @@ void main() {
   vec3 base = mix(vec3(0.012, 0.004, 0.03), hue * 0.16, uStage);
   vec3 col = base + hue * uStage * (0.55 * rays + 0.35 * rays2 + 0.9 * glow) + vec3(1.0) * uStage * 0.35 * glow * glow;
   col *= mix(1.0, smoothstep(-0.05, 0.45, vUv.y), 0.6);
+  // the metal set: harder, narrower red rays cut by drifting smoke (closed-form sums of sines)
+  float smoke = 0.5 + 0.5 * sin(vUv.x * 7.0 + uTime * 0.35 + sin(vUv.y * 5.0 - uTime * 0.21) * 1.7) * sin(vUv.y * 4.0 - uTime * 0.18 + 2.0);
+  smoke *= smoothstep(0.85, 0.15, vUv.y);
+  col = mix(col, col * 0.55 + vec3(0.09, 0.08, 0.08) * smoke, 0.6 * uMetal);
+  gl_FragColor = vec4(col, 1.0);
+}`;
+
+/** The metal floor: dark steel plates with rivet lines and a hot sheen from the light, no coloured tiles. */
+const METAL_FLOOR_FRAG = /* glsl */ `
+uniform float uTime; uniform vec3 uHue; uniform float uStage;
+varying vec3 vWorld;
+${HASH}
+void main() {
+  vec2 q = vWorld.xz / vec2(2.4, 1.2);
+  vec2 id = floor(q);
+  vec2 g = fract(q);
+  float seam = smoothstep(0.0, 0.02, g.x) * smoothstep(0.0, 0.03, g.y);
+  float h = hash12(id);
+  float far = smoothstep(4.0, -14.0, vWorld.z);
+  float sheen = exp(-abs(vWorld.x) * 0.25) * (0.6 + 0.4 * far);
+  vec3 steel = vec3(0.05, 0.05, 0.06) * (0.7 + 0.5 * h);
+  vec3 col = steel * seam + uHue * uStage * 0.22 * sheen * seam;
   gl_FragColor = vec4(col, 1.0);
 }`;
 
@@ -99,14 +121,16 @@ export interface SetProps {
   split?: Hex;
   /** Only the back wall (close-ups: no floor, no mirror ball peeking behind the heads). */
   wallOnly?: boolean;
+  /** The all-metal set (scene-map.md, 23d272a): no mirror ball, steel floor plates, smoke. */
+  metal?: boolean;
 }
 
-export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wallOnly = false }: SetProps) => {
+export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wallOnly = false, metal = false }: SetProps) => {
   const g = gradeUniform(grade);
   const depth = HOME_Z - WALL_Z;
   const wallH = 2 * depth * Math.tan((40 * Math.PI) / 360) * 1.6;
   const wallW = wallH * 1.9;
-  const wall = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAspect: [wallW / wallH, 1], uHue2: rgb(split ?? grade.hue), uSplit: split ? 1 : 0 });
+  const wall = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAspect: [wallW / wallH, 1], uHue2: rgb(split ?? grade.hue), uSplit: split ? 1 : 0, uMetal: metal ? 1 : 0 });
   const floor = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAlign: align, uDust: dust });
   const ball = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uSpin: t * spin });
   return (
@@ -119,9 +143,9 @@ export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wal
         <>
       <mesh position={[0, FLOOR_Y, -6]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.floor}>
         <planeGeometry args={[60, 20]} />
-        <shaderMaterial {...floor} vertexShader={VERT} fragmentShader={FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
+        <shaderMaterial key={metal ? 'metal' : 'disco'} {...floor} vertexShader={VERT} fragmentShader={metal ? METAL_FLOOR_FRAG : FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
-      <mesh position={[0, 5.3, -7]} renderOrder={ORDER.ball}>
+      <mesh position={[0, 5.3, -7]} renderOrder={ORDER.ball} visible={!metal}>
         <sphereGeometry args={[1.9, 64, 32]} />
         <shaderMaterial {...ball} vertexShader={VERT} fragmentShader={BALL_FRAG} depthTest={false} depthWrite={false} />
       </mesh>
