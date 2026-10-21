@@ -20,6 +20,14 @@ import pBD5 from '../../public/cards/BD5.pose.json' with { type: 'json' };
 import pBD6 from '../../public/cards/BD6.pose.json' with { type: 'json' };
 import pBD7 from '../../public/cards/BD7.pose.json' with { type: 'json' };
 import pBD8 from '../../public/cards/BD8.pose.json' with { type: 'json' };
+import pBM1 from '../../public/cards/BM1.pose.json' with { type: 'json' };
+import pBM2 from '../../public/cards/BM2.pose.json' with { type: 'json' };
+import pBM3 from '../../public/cards/BM3.pose.json' with { type: 'json' };
+import pBM4 from '../../public/cards/BM4.pose.json' with { type: 'json' };
+import pBM5 from '../../public/cards/BM5.pose.json' with { type: 'json' };
+import pBM6 from '../../public/cards/BM6.pose.json' with { type: 'json' };
+import pBM7 from '../../public/cards/BM7.pose.json' with { type: 'json' };
+import pBM8 from '../../public/cards/BM8.pose.json' with { type: 'json' };
 import pO01 from '../../public/cards/O01.pose.json' with { type: 'json' };
 import pO02 from '../../public/cards/O02.pose.json' with { type: 'json' };
 import pO03 from '../../public/cards/O03.pose.json' with { type: 'json' };
@@ -40,6 +48,14 @@ import pOD5 from '../../public/cards/OD5.pose.json' with { type: 'json' };
 import pOD6 from '../../public/cards/OD6.pose.json' with { type: 'json' };
 import pOD7 from '../../public/cards/OD7.pose.json' with { type: 'json' };
 import pOD8 from '../../public/cards/OD8.pose.json' with { type: 'json' };
+import pOM1 from '../../public/cards/OM1.pose.json' with { type: 'json' };
+import pOM2 from '../../public/cards/OM2.pose.json' with { type: 'json' };
+import pOM3 from '../../public/cards/OM3.pose.json' with { type: 'json' };
+import pOM4 from '../../public/cards/OM4.pose.json' with { type: 'json' };
+import pOM5 from '../../public/cards/OM5.pose.json' with { type: 'json' };
+import pOM6 from '../../public/cards/OM6.pose.json' with { type: 'json' };
+import pOM7 from '../../public/cards/OM7.pose.json' with { type: 'json' };
+import pOM8 from '../../public/cards/OM8.pose.json' with { type: 'json' };
 import type { PoseFile } from './rig.ts';
 
 export const POSES: Record<string, PoseFile> = {
@@ -63,6 +79,14 @@ export const POSES: Record<string, PoseFile> = {
   BD6: pBD6 as unknown as PoseFile,
   BD7: pBD7 as unknown as PoseFile,
   BD8: pBD8 as unknown as PoseFile,
+  BM1: pBM1 as unknown as PoseFile,
+  BM2: pBM2 as unknown as PoseFile,
+  BM3: pBM3 as unknown as PoseFile,
+  BM4: pBM4 as unknown as PoseFile,
+  BM5: pBM5 as unknown as PoseFile,
+  BM6: pBM6 as unknown as PoseFile,
+  BM7: pBM7 as unknown as PoseFile,
+  BM8: pBM8 as unknown as PoseFile,
   O01: pO01 as unknown as PoseFile,
   O02: pO02 as unknown as PoseFile,
   O03: pO03 as unknown as PoseFile,
@@ -83,4 +107,12 @@ export const POSES: Record<string, PoseFile> = {
   OD6: pOD6 as unknown as PoseFile,
   OD7: pOD7 as unknown as PoseFile,
   OD8: pOD8 as unknown as PoseFile,
+  OM1: pOM1 as unknown as PoseFile,
+  OM2: pOM2 as unknown as PoseFile,
+  OM3: pOM3 as unknown as PoseFile,
+  OM4: pOM4 as unknown as PoseFile,
+  OM5: pOM5 as unknown as PoseFile,
+  OM6: pOM6 as unknown as PoseFile,
+  OM7: pOM7 as unknown as PoseFile,
+  OM8: pOM8 as unknown as PoseFile,
 };
