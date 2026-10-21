@@ -4,7 +4,7 @@
 // scene; orange gathers out of particles as the intruder on "you?" and turns metal through a particle dissolve on
 // "ORANGE!" through the OT1-OT5 sequence; a cover transition when the world changes, a shock inside one.
 import { AbsoluteFill } from 'remotion';
-import { blendPose, type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
+import { type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
 import { Card, type CardLight, type Placement } from '../../cards/Card.tsx';
 import { hoopPlan, throwPlan, throwRecoil } from '../../girls/interact.tsx';
 import { GRADES, type Grade, metalGrade } from '../../grade/grade.ts';
@@ -23,10 +23,10 @@ import { PlateLayer } from '../../worlds/plate.tsx';
 import { CLOCK_CAMERA, CLOCK_FACE, ClockWorld, PRESS_CAMERA, PressWorld, SUBWAY_CAMERA, SubwayWorld } from '../../worlds/v1.tsx';
 import { ALLEY_CAMERA, AlleyWorld, GRAFFITI_CAMERA, GRAFFITI_PANEL, GraffitiWorld, RAILS_CAMERA, RailsWorld, SCOREBOARD, STADIUM_CAMERA, StadiumWorld } from '../../worlds/v2.tsx';
 import { Arena, BLUE, CYAN, InsertWorld, pulseAt, RED, RunwayWorld, SplitWorld } from '../chorus/worlds.tsx';
-import { type CamVariant, PRE_T, type VerseScene, VBLUE, VERSE_TYPE, VORANGE, type VPose, VSHOTS, type VShot } from './plan.ts';
+import { PRE_T, type VerseScene, VBLUE, VERSE_TYPE, VORANGE, type VPose, VSHOTS, type VShot } from './plan.ts';
 import { hoopFill, hoopKey, VerseType } from './type.tsx';
+import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 
-type Hero = { from: CameraPose; to: CameraPose };
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
 const RUNWAY_CAMERA: Hero = { from: cam([2.6, -1.4, 9.5], [0, -1.4, -12], 42), to: cam([1.4, -2.0, 7.5], [0, -1.2, -12], 42) };
 const STROBE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
@@ -36,39 +36,8 @@ const HERO: Record<VerseScene, Hero> = {
   alley: ALLEY_CAMERA, stadium: STADIUM_CAMERA, strobe: STROBE_CAMERA, transform: STROBE_CAMERA, arena: ARENA_CAMERA,
 };
 
-const lerp3 = (a: Vec3, b: Vec3, k: number): Vec3 => [a[0] + (b[0] - a[0]) * k, a[1] + (b[1] - a[1]) * k, a[2] + (b[2] - a[2]) * k];
-/** A camera variant of the hero move at progress k, around the girl at `focus` (world, chest height). */
-const variant = (h: Hero, v: CamVariant, k: number, focus: Vec3): CameraPose => {
-  const p = blendPose(h.from, h.to, k);
-  switch (v) {
-    case 'close':
-      return { ...p, position: lerp3(p.position, [focus[0] * 0.6, focus[1] + 0.3, focus[2] + 6.2], 0.75), target: lerp3(p.target, focus, 0.8), fov: 38 };
-    case 'low':
-      return { ...p, position: [p.position[0] * 0.8 + focus[0] * 0.2, FLOOR_Y + 0.6, p.position[2] * 0.8 + 1], target: [p.target[0], p.target[1] + 1.6, p.target[2]], fov: p.fov + 6 };
-    case 'reverse': {
-      const r = blendPose(h.to, h.from, k);
-      return { ...r, position: [-r.position[0] - 1.5, r.position[1], r.position[2]] };
-    }
-    case 'wide':
-      return { ...p, position: lerp3(p.target, p.position, 1.35) };
-    default:
-      return p;
-  }
-};
 
 const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;
-const poseOf = (list: readonly VPose[], t: number): VPose | null => {
-  let p: VPose | null = null;
-  for (const e of list) if (t >= e.t - 1e-9) p = e;
-  return p && p.card ? p : null;
-};
-const shotAt = (t: number): { shot: VShot; k: number } => {
-  let i = 0;
-  for (let j = 0; j < VSHOTS.length; j++) if (t >= (VSHOTS[j] as VShot).t - 1e-9) i = j;
-  const shot = VSHOTS[i] as VShot;
-  const end = VSHOTS[i + 1]?.t ?? shot.t + 1;
-  return { shot, k: clamp01((t - shot.t) / (end - shot.t)) };
-};
 
 /** The painted plates behind the verse worlds (trial, 21 Oct 2026). */
 const PLATES: Partial<Record<VerseScene, string>> = { subway: 'W10', runway: 'W01', press: 'W08', clock: 'W06', rails: 'W12', graffiti: 'W03', alley: 'W01', stadium: 'W07', transform: 'W11', arena: 'W09' };
@@ -102,11 +71,10 @@ const lightOf = (who: 'B' | 'O', t: number, scene: VerseScene, metal: boolean): 
 
 export const VersesShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
-  const { shot, k } = shotAt(t);
+  const { shot, k } = shotIn(VSHOTS, t);
   const scene = shot.scene;
-  const blueP = poseOf(VBLUE, t);
-  const orangeP = poseOf(VORANGE, t);
-  const focusOf = (p: VPose | null): Vec3 => (p?.at ? [p.at.x, (p.at.feet ?? FLOOR_Y) + p.at.height * 0.62, p.at.z ?? 0] : [0, 0, 0]);
+  const blueP = poseAt(VBLUE, t);
+  const orangeP = poseAt(VORANGE, t);
   const focus = focusOf(scene === 'subway' || scene === 'runway' || scene === 'press' || (scene === 'clock' && t < tk(5, 7)) ? blueP : orangeP ?? blueP);
   // the camera: the shot's variant, plus a punch on every downbeat (the chorus punches on every beat)
   const base = variant(HERO[scene], shot.cam, k, focus);
