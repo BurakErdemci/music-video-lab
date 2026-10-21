@@ -29,7 +29,10 @@ export const rippleWeightFor = (fr: CardFrames, aspect: number, u: number, v: nu
   const cu = faceCells / GRID_COLS;
   const cv = faceCells / GRID_ROWS;
   const a: [number, number, number, number] = [f[0] - cu, f[1] - cv, f[2] + cu, f[3] + cv];
-  const b: [number, number, number, number] = [f[0] - 0.6 * fw, f[1], f[2] + 0.6 * fw, fr.kind === 'bust' ? 1 : Math.min(1, f[3] + 2.6 * fh)];
+  // the torso core takes one grid cell of margin, so no triangle touching the torso box moves (round 7c)
+  const tu = 1 / GRID_COLS;
+  const tv = 1 / GRID_ROWS;
+  const b: [number, number, number, number] = [f[0] - 0.6 * fw - tu, f[1] - tv, f[2] + 0.6 * fw + tu, fr.kind === 'bust' ? 1 : Math.min(1, f[3] + 2.6 * fh + tv)];
   const d = Math.min(boxDist(a, aspect, u, v), boxDist(b, aspect, u, v));
   if (d <= 0) return 0;
   const w = smooth(0, 0.12, d);

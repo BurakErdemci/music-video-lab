@@ -1,14 +1,12 @@
 #!/usr/bin/env node
 // ripplecheck.mjs - measures the hair/cloth ripple (scene-map.md "Living motion", video/src/rig/ripple.ts):
 //  - face: on the mesh vertex grid, the max ripple weight over every vertex of every grid cell that overlaps the
-//    face box (a triangle touching the box moves pixels inside it); must be exactly 0. Torso: the same over the
-//    vertices inside the torso box (must be 0); the cell-overlap version is printed as the torso edge leak, which the
-//    rule's torso box (no margin) cannot make 0: its border cells have vertices just outside it;
+//    face box (a triangle touching the box moves pixels inside it); must be exactly 0. The same for the torso box;
 //  - max displacement: max over frames of RIPPLE_MAX * rippleAmp(t) * max weight, in % of the card height, <= 0.6;
 //  - correlation: Pearson r of rippleAmp(t) per frame with (i) the bass smoothed over one bar and (ii) the mean
 //    bass of the frame's section; printed with a per-section table (no threshold).
 //   node tools/ripplecheck.mjs [--range 0-140.04] [--selftest]
-// Exit 1 on a face/torso displacement or a max above 0.6 %. --selftest shrinks the face core box to nothing and must
+// Exit 1 on a face/torso displacement or a max above 0.6 %. --selftest ripples every vertex (no face or torso core) and must
 // exit 1.
 import { createRequire } from 'node:module';
 import { mkdirSync, rmSync } from 'node:fs';
@@ -48,7 +46,6 @@ try {
 }
 
 const { GRID_COLS: C, GRID_ROWS: R, CARD_FRAMES, RIPPLE_MAX } = M;
-const faceCells = selftest ? 0 : 1.5;
 let fail = false;
 
 // ---- 1. face and torso: the max weight over the vertices of every cell overlapping the box -----------------------
@@ -57,10 +54,11 @@ const cells = (box) => {
   const j0 = Math.max(0, Math.floor(box[1] * R)), j1 = Math.min(R - 1, Math.ceil(box[3] * R) - 1);
   return { i0, i1, j0, j1 };
 };
-let maxW = 0, faceMax = 0, torsoMax = 0, leakMax = 0, n = 0;
+let maxW = 0, faceMax = 0, torsoMax = 0, n = 0;
 for (const [id, fr] of Object.entries(CARD_FRAMES)) {
   const asp = M.cardAspectOf(id);
-  const w = (i, j) => M.rippleWeightFor(fr, asp, i / C, j / R, faceCells);
+  // the selftest drops the cores (every vertex ripples): the face and torso rules must catch it
+  const w = selftest ? () => 1 : (i, j) => M.rippleWeightFor(fr, asp, i / C, j / R);
   const f = fr.face, fw = f[2] - f[0], fh = f[3] - f[1];
   const torso = [f[0] - 0.6 * fw, f[1], f[2] + 0.6 * fw, fr.kind === 'bust' ? 1 : Math.min(1, f[3] + 2.6 * fh)];
   const over = (box) => {
@@ -69,21 +67,13 @@ for (const [id, fr] of Object.entries(CARD_FRAMES)) {
     for (let j = j0; j <= j1 + 1; j++) for (let i = i0; i <= i1 + 1; i++) m = Math.max(m, w(i, j));
     return m;
   };
-  const inside = (box) => {
-    let m = 0;
-    for (let j = 0; j <= R; j++) for (let i = 0; i <= C; i++) {
-      if (i / C >= box[0] && i / C <= box[2] && j / R >= box[1] && j / R <= box[3]) m = Math.max(m, w(i, j));
-    }
-    return m;
-  };
-  const fm = over(f), tm = inside(torso);
-  faceMax = Math.max(faceMax, fm); torsoMax = Math.max(torsoMax, tm); leakMax = Math.max(leakMax, over(torso));
+  const fm = over(f), tm = over(torso);
+  faceMax = Math.max(faceMax, fm); torsoMax = Math.max(torsoMax, tm);
   if (fm > 0 || tm > 0) console.log(`  ${id}: face weight ${fm.toFixed(4)}, torso weight ${tm.toFixed(4)}`);
   for (let j = 0; j <= R; j++) for (let i = 0; i <= C; i++) maxW = Math.max(maxW, w(i, j));
   n++;
 }
-console.log(`cards ${n}, grid ${C + 1}x${R + 1}: face-box displacement weight ${faceMax}, torso-box weight (vertices inside) ${torsoMax}, max weight ${maxW.toFixed(4)}`);
-console.log(`torso edge leak (border cells, informational): weight ${leakMax.toFixed(4)} = ${(RIPPLE_MAX * leakMax * 100).toFixed(4)} % of the card height at full amplitude`);
+console.log(`cards ${n}, grid ${C + 1}x${R + 1}: face-box displacement weight ${faceMax}, torso-box weight ${torsoMax}, max weight ${maxW.toFixed(4)}`);
 if (faceMax > 0 || torsoMax > 0) { fail = true; console.log('  face/torso displacement > 0 -> FAIL'); }
 
 // ---- 2. max displacement and 3. correlation over the frames -------------------------------------------------------
