@@ -228,3 +228,4 @@ Rules:
 - **The camera carries the motion:** dolly, push, parallax, travel, plus beat punches in the metal parts.
 - **Poses change by a cut on a beat, a particle dissolve or a reveal.** Holds are 2-3 bars in the pop parts, 1-2 in the metal ones.
 - **The rig only plays single eased accents** (a kick, a point, a head turn), then holds.
+- **Accents are stepped on threes (measured):** the "Scroll Up!" mascot face close-up at 3:18.7-3:19.2 changes once every 3 frames of its 30 fps (about 10 drawings/s), while the camera stays smooth. Our rig accents hold each state 6 frames at 60 fps; camera, type and particles stay smooth. Accents are rare and deliberate (Burak: "very cute and rare").
