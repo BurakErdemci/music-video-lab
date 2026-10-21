@@ -248,3 +248,42 @@ Burak: "take the good things that fit our theme, but overall it is a different t
 - the anime/VTuber mascot look;
 - the text mosaic as the main look;
 - the life-in-questions content.
+
+## Type: every line is a git object (lesson from LGTM, Burak 2026-10-21: "the peak of type in a clip")
+
+Measured from LGTM (Degenerative Pixels, youtube 3TNpOD6bov8; 5 s contact sheets):
+- Every sung line lives INSIDE a software object that means it: a Slack message, an org chart ("right-sized"), a roadmap Gantt, a PR with a racing "+90,112" counter, a status page, an incident channel, a postmortem form ("Root cause: unclear."), an ID badge, code with "// DON'T TOUCH THIS", a stamped ticket ("WE DID!"), a 3:00 alarm.
+- One bold grotesk plus one monospace UI face. Lines are revealed word by word as they are sung; the key word turns the accent colour (green, red for the crisis).
+- Editing as type: a typed line with a cursor, a strike-through correction, red handwritten notes ("(IT ISN'T)"), rubber stamps ("APPROVED", "BLAMELESS").
+- The title recurs as PHYSICAL OBJECTS: LGTM as boxes, ship containers, server-rack lights, keycaps. Counters grow every chorus (90 thousand → a million lines).
+- Big left-aligned text, generous empty space, the object beside it; dark scenes broken by light-mode scenes.
+
+Ours (keep our two families: pop/blue against metal/orange; the logo B is the recurring title object):
+
+| Line | Git object |
+|---|---|
+| intro "Automatic merge failed. Fix conflicts..." | the real terminal message (done) |
+| "I'm HEAD, I'm main, I'm stable and clean" | `git branch` list with `* main` highlighted |
+| "Line forty-two, the button was blue" | the CSS file, line 42 `color: blue;` |
+| "Reviewed and approved by the whole design team" | a PR with APPROVED stamps from reviewers |
+| "Then someone pushed at midnight... who are you?" | a push notification at 00:00, unknown author avatar |
+| "I'm feature branch, I'm fresh from the night" | `git log --graph`, a new branch line splitting off |
+| "The button is ORANGE now" | the same line 42, diff `- blue` / `+ orange` |
+| "Three hundred commits and I never asked once!" | a racing commit counter 0 → 300 |
+| pre-chorus "Blue! Orange!" | the two conflict halves flipping |
+| chorus "Accept current change! / Accept incoming change!" | the editor's conflict buttons "Accept Current Change \| Accept Incoming Change \| Accept Both Changes", pressed on the word; "(NO!)" as a red stamp |
+| "Merge conflict, merge conflict" | logo B (the signature move) |
+| "Equals, equals, equals in the middle of my soul" | the `=======` divider filling the frame |
+| V3 "I rebased your history" / "squashed all your sorries into one tiny line" | commits sliding and collapsing into one |
+| "git blame says it's YOUR name on every line" | the blame gutter, one name repeated |
+| "The pipeline is red!" | CI checks turning red one by one |
+| "the standup's in five" | a calendar alert, 5-minute countdown |
+| V4 "You use tabs! / You use spaces!" | whitespace shown as arrows and dots |
+| "You named a variable data2" / "a comment that just says don't touch" | code lines; "I TOUCHED IT" as a strike-through edit |
+| GIT! PUSH! FORCE! | `git push --force` typed word by word, the warning screen |
+| final "Accept both changes!" / "Commit and push it!" | the Accept Both button; a green commit, then a push progress bar |
+| "Merge conflict resolved inside my soul" | logo B resolved |
+| chant "Ship it" | a deploy counter, "SHIPPED" stamps |
+| "Build failed. Syntax error on line forty-two." | the red build log pointing at line 42 |
+
+Title objects for logo B (recurring like LGTM's boxes): disco floor tiles and a light-box sign (pop), amp stacks and a stage banner (metal).
