@@ -460,9 +460,13 @@
     "source": "BD8-shimmy.png"
   },
   "BF1": {
-    "file": "cards/BF1.png",
+    "file": "cards/hd/BF1.webp",
     "w": 912,
     "h": 1390,
+    "px": [
+      1824,
+      2780
+    ],
     "bbox": [
       23,
       80,
