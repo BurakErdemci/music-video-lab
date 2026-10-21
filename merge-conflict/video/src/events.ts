@@ -52,7 +52,7 @@ export const EVENTS: FilmEvent[] = [
   ev('slam-merge', 'type', 'downbeat', 9),
   ev('framing-tiny', 'framing', 'downbeat', 11),
   ev('slam-conflict', 'type', 'downbeat', 11),
-  ev('counter-dive', 'transition', 'beat', 48),
+  ev('counter-dive', 'transition', 'beat', 47),
   // verse 1 from 16.33 s: the blue girl alone, back in her disco form
   ev('handoff-swap', 'smear', 'downbeat', 12),
   ...tokens(2, 8, 'type'),

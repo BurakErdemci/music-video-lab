@@ -1,5 +1,5 @@
-// verse1_sweet from 16.33 s (to the proof end): the blue girl alone, smearing from her metal form back into
-// disco on the downbeat while the palette and type slide toward pop over a bar (metalAt's one-bar slide out).
+// verse1_sweet from 16.33 s (to the proof end): the blue girl alone in her disco costume; the set slides from
+// the groove's metal toward pop over a bar (metalAt's one-bar slide out) and the type is the pop family.
 // "I'm HEAD, I'm main, I'm stable and clean" is a STACK; she KICKS "HEAD" off on "stable" (kick card BD6);
 // CLEAN morphs into LINE, which opens "Line forty-two, the button was blue..." as a DIFF. Framing: stage for
 // two bars, then a low angle with the next pose.
@@ -30,8 +30,8 @@ export const Verse1 = ({ frame }: { frame: number }) => {
   const m = metalFor(t, 'B');
   const grade = metalGrade(GRADES.reviewed, m);
   const low = framingAt(FRAMINGS, t) === 'low';
-  const pose = low ? framing('low', t, { full: GIRL.B.next, close: GIRL.B.close, color: '#2f7bff' }, { full: GIRL.O.verse, close: GIRL.O.close, color: '#ff7a1a' }).pose : shifted(HOME, [0, 0, -0.5]);
-  const draws = poseTrack(GIRL.B.metal, VERSE_SMEARS, t, VERSE_B.height);
+  const pose = low ? framing('low', t, { full: GIRL.B.next, close: GIRL.B.close, color: '#2f7bff' }, { full: GIRL.B.next, close: GIRL.B.close, color: '#2f7bff' }).pose : shifted(HOME, [0, 0, -0.5]);
+  const draws = poseTrack(VERSE_SMEARS[0].from, VERSE_SMEARS, t, VERSE_B.height);
   const morphOn = t >= MORPH_LINE.t0 && t < MORPH_LINE.t0 + MORPH_LINE.dur;
   return (
     <AbsoluteFill style={{ background: '#000' }}>

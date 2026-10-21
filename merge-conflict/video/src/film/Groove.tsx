@@ -1,5 +1,6 @@
-// intro_groove 4.37-16.33 s: HARD METAL by Burak's ear (metal/metal.ts EAR_OVERRIDES). Both girls in their
-// metal forms (temporary front-view cards until the metal pose cards land), introduced through framings that
+// intro_groove 4.37-16.33 s: HARD METAL by Burak's ear (metal/metal.ts EAR_OVERRIDES, the SET). Costumes follow
+// girls/costume.ts: blue dances in disco, orange appears only as backlit metal silhouettes (a foreshadowing).
+// All type here is the metal family. The girls are introduced through framings that
 // change every 2 bars (stage with focus ping-pong, clones, split, low, tiny), a metal hit (brush slashes) on
 // every second beat, the conflict markers slamming on the first three downbeats, MERGE and CONFLICT slamming
 // in a jagged face; the groove ends by diving through the O of CONFLICT into verse 1.
@@ -8,8 +9,8 @@ import { HOME } from '../camera/camera.ts';
 import { Card } from '../cards/Card.tsx';
 import { at } from '../events.ts';
 import { framingAt } from '../girls/framing.ts';
-import { focusAt, focusLook, framing, type Girl } from '../girls/staging.tsx';
-import { GRADES, metalGrade } from '../grade/grade.ts';
+import { focusAt, focusLook, framing } from '../girls/staging.tsx';
+import { GRADES, type Grade, metalGrade } from '../grade/grade.ts';
 import type { Hex } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { metalAt } from '../metal/metal.ts';
@@ -23,12 +24,13 @@ import { LightBox, type LightBoxSpec } from '../type/LightBox.tsx';
 import { Slam } from '../type/Slam.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { ThroughCounter, TypeWhip } from '../type/transitions/transitions.tsx';
-import { CONFLICT, COUNTER_DIVE, FOCUS, FRAMINGS, GIRL, GROOVE, GROOVE_B, GROOVE_HITS, GROOVE_O, LINE1, MERGE, WHIP_GROOVE } from './proof.ts';
+import { CONFLICT, COUNTER_DIVE, FOCUS, FRAMINGS, GROOVE, GROOVE_B, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, MERGE, WHIP_GROOVE } from './proof.ts';
 
 const RED: Hex = '#e01b1b';
 const STEEL: Hex = '#c8ced6';
-const ORANGE_M: Girl = { full: GIRL.O.metal, close: GIRL.O.metal, color: '#ff4a1a' };
-const BLUE_M: Girl = { full: GIRL.B.metal, close: GIRL.B.metal, color: '#4a7bff' };
+/** Orange in the groove: a metal silhouette glimpse, flat black with a hot backlit rim (no costume detail). */
+const SILHOUETTE = { flat: { color: '#050208' as Hex, mix: 0.97 }, rival: '#ff3a1a' as Hex };
+const silGrade = (g: Grade): Grade => ({ ...g, rim: 1.9 });
 
 const MARKERS: LightBoxSpec[] = [
   { id: 'm-head', words: [{ text: '<<<<<<<', color: STEEL }, { text: 'HEAD', color: '#4a7bff' }], t0: at('marker-head'), stagger: 0.03, x: 360, y: 92, size: 50, face: 'mono', box: true, slam: true, pre: 0 },
@@ -65,6 +67,7 @@ export const Groove = ({ frame }: { frame: number }) => {
   const m = metalAt(t);
   const grade = metalGrade(GRADES.mainline, m);
   const kind = framingAt(FRAMINGS, t);
+  const C = GROOVE_CARDS;
   let cards;
   if (kind === 'stage') {
     const w = focusAt(FOCUS, t);
@@ -72,17 +75,28 @@ export const Groove = ({ frame }: { frame: number }) => {
     const b = focusLook(1 - w);
     cards = (
       <>
-        <Card id={GIRL.O.metal} t={t} grade={grade} {...GROOVE_O} height={GROOVE_O.height * o.scale} soft={o.soft * 0.6} lit={o.lit} rimDir={[1, 0.3]} />
-        <Card id={GIRL.B.metal} t={t} grade={grade} {...GROOVE_B} height={GROOVE_B.height * b.scale} soft={b.soft * 0.6} lit={b.lit} rimDir={[-1, 0.3]} />
+        <Card id={C.stage.O} t={t} grade={silGrade(grade)} {...GROOVE_O} height={GROOVE_O.height * o.scale} lit={o.lit} rimDir={[1, 0.3]} {...SILHOUETTE} />
+        <Card id={C.stage.B} t={t} grade={grade} {...GROOVE_B} height={GROOVE_B.height * b.scale} soft={b.soft * 0.6} lit={b.lit} rimDir={[-1, 0.3]} />
       </>
     );
+  } else if (kind === 'clones') {
+    cards = [-2, -1, 0, 1, 2].map((k) => (
+      <Card key={k} id={C.clones.O} t={t + k * 0.13} grade={silGrade(grade)} x={k * 3.1} height={5.4 - Math.abs(k) * 0.5} z={-Math.abs(k) * 0.6} flip={k % 2 !== 0} rimDir={[k < 0 ? 1 : -1, 0.3]} {...SILHOUETTE} />
+    ));
+  } else if (kind === 'split') {
+    cards = (
+      <>
+        <Card id={C.split.O} t={t} grade={silGrade(grade)} x={-2.6} height={7} clip={{ x: 0, keep: 'left' }} rimDir={[1, 0.3]} {...SILHOUETTE} />
+        <Card id={C.split.B} t={t} grade={grade} x={2.6} height={7} clip={{ x: 0, keep: 'right' }} rimDir={[-1, 0.3]} />
+      </>
+    );
+  } else if (kind === 'low') {
+    cards = <Card id={C.low.B} t={t} grade={grade} x={0} height={7.4} />;
   } else {
-    const lead = kind === 'clones' ? ORANGE_M : BLUE_M;
-    const other = lead === ORANGE_M ? BLUE_M : ORANGE_M;
-    const f = framing(kind, t, kind === 'split' ? ORANGE_M : lead, kind === 'split' ? BLUE_M : other);
-    cards = f.cards.map(({ key, ...c }) => <Card key={key} grade={grade} {...c} />);
+    cards = <Card id={C.tiny.O} t={t} grade={silGrade(grade)} x={0} height={2.6} {...SILHOUETTE} />;
   }
-  const pose = kind === 'low' ? framing('low', t, BLUE_M, ORANGE_M).pose : HOME;
+  const lowGirl = { full: C.low.B, close: C.low.B, color: '#2f7bff' as Hex };
+  const pose = kind === 'low' ? framing('low', t, lowGirl, lowGirl).pose : HOME;
   const mergeT = at('slam-merge');
   const conflictT = at('slam-conflict');
   const typeLayer = (

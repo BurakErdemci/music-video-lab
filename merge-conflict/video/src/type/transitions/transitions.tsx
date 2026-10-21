@@ -154,7 +154,9 @@ export const ThroughCounter = ({ plan, t, from, to }: { plan: CounterPlan; t: nu
   return (
     <g>
       <g transform={`translate(960 540) scale(${inS}) translate(-960 -540)`} opacity={inO}>{to}</g>
-      {u < PUNCH && <g transform={`translate(${px} ${py}) scale(${s}) translate(${-cx} ${-cy})`}>{from}</g>}
+      {/* the old layer fades while it grows: big letter stems sweeping the frame at full strength measured as
+          5 flashes in a second (flashcheck, proof v4 15.2-16.2 s) */}
+      {u < PUNCH && <g transform={`translate(${px} ${py}) scale(${s}) translate(${-cx} ${-cy})`} opacity={1 - clamp01((u - 0.2) / 0.5)}>{from}</g>}
     </g>
   );
 };

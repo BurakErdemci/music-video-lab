@@ -3,11 +3,11 @@
 // break a binding rule (framing holds, focus moves, transition lengths, flash budget) throw here at load.
 //  0-4.37   intro_robot: the blue girl reads git's error out loud, deadpan; the words come from her as a red
 //           terminal (CODE), "failed." morphs into FIX, a >>>>>>> wipe opens the FLAP board of line 1.
-//  4.37     a whip into the HARD METAL groove (Burak's ear override): both girls in their metal forms, a
-//           metal hit every second beat, the conflict markers slam, framings change every 2 bars, focus
+//  4.37     a whip into the HARD METAL groove (Burak's ear override on the SET): blue dancing in disco, orange
+//           only as backlit metal silhouettes (her costume schedule), a metal hit every second beat, the conflict markers slam, framings change every 2 bars, focus
 //           ping-pongs; MERGE and CONFLICT slam in a jagged face.
-//  16.33    through the O of CONFLICT into verse 1; the blue girl smears from her metal form into disco on
-//           the downbeat while the palette and type slide toward pop over a bar.
+//  16.33    through the O of CONFLICT into verse 1: the set and the type turn from the metal to the pop family
+//           (blue's disco costume) and the palette slides toward pop over a bar.
 //  16.88    "I'm HEAD, I'm main, I'm stable and clean" as STACK; she KICKS "HEAD" off on "stable"; CLEAN
 //           morphs into LINE, which opens "Line forty-two..." as a DIFF.
 import { HOME } from '../camera/camera.ts';
@@ -36,10 +36,19 @@ export const ROBOT = sectionNamed('intro_robot');
 export const GROOVE = sectionNamed('intro_groove');
 export const VERSE = sectionNamed('verse1_sweet');
 
-/** The cards of each girl: her disco speaker poses, her metal form (temporary front views until OM/BM land). */
+/** The cards of each girl in the proof. Costumes follow girls/costume.ts: blue is disco throughout; orange
+ *  shows only as metal silhouettes in the groove (OM cards, drawn flat and backlit). */
 export const GIRL = {
-  B: { stand: 'B01', close: 'B06', metal: 'BMT', verse: 'BD3', kick: 'BD6', next: 'BD1' },
-  O: { stand: 'O03', close: 'O10', metal: 'OMT', verse: 'OD3', kick: 'OD6', next: 'OD1' },
+  B: { stand: 'B01', close: 'B06', verse: 'BD3', kick: 'BD6', next: 'BD1' },
+  O: { stand: 'O03', close: 'O10', verse: 'OD3', kick: 'OD6', next: 'OD1' },
+} as const;
+/** The groove's cards per framing: blue's disco dance poses, orange's metal silhouettes. */
+export const GROOVE_CARDS = {
+  stage: { B: 'BD2', O: 'OM3' },
+  clones: { O: 'OM1' },
+  split: { B: 'BD4', O: 'OM2' },
+  low: { B: 'BD5' },
+  tiny: { O: 'OM6' },
 } as const;
 
 // ---- 0-4.37 the speaker ------------------------------------------------------------------------------------
@@ -55,7 +64,7 @@ export const WHIP_GROOVE = whipPlan({ id: 'whip-groove', t0: at('whip-groove'), 
 export const GROOVE_HITS = Array.from({ length: 18 }, (_, k) => beat(13 + 2 * k));
 export const MERGE: WordAt = { text: 'MERGE', x: 0, y: 0, size: 300, face: 'metalmania', fill: '#c8ced6' };
 export const CONFLICT: WordAt = { text: 'CONFLICT', x: 960 - widthOf('CONFLICT', 330, 'metalmania') / 2, y: 700, size: 330, face: 'metalmania', fill: '#e01b1b' };
-export const COUNTER_DIVE = counterPlan({ id: 'counter-dive', t0: at('counter-dive'), frames: 20, center: counterOf(CONFLICT, 1), hole: holeOf(CONFLICT, 1) });
+export const COUNTER_DIVE = counterPlan({ id: 'counter-dive', t0: at('counter-dive'), frames: 40, center: counterOf(CONFLICT, 1), hole: holeOf(CONFLICT, 1) });
 export const GROOVE_O: Placement = { x: -3.1, height: 6.6 };
 export const GROOVE_B: Placement = { x: 3.1, height: 6.6 };
 export const FOCUS = focusPlan([
@@ -78,9 +87,9 @@ export const KICK = kickPlan({
   at: VERSE_B,
   dir: 1,
 });
-/** The blue girl's verse track: metal -> disco on the downbeat, the kick, the next pose on the next 2 bars. */
+/** The blue girl's verse track: a pose change on the verse downbeat, the kick, the next pose 2 bars later. */
 export const VERSE_SMEARS = [
-  smearPlan({ id: 'handoff-swap', t: at('handoff-swap'), from: GIRL.B.metal, to: GIRL.B.verse, dir: -1, frames: 12 }),
+  smearPlan({ id: 'handoff-swap', t: at('handoff-swap'), from: GROOVE_CARDS.low.B, to: GIRL.B.verse, dir: -1, frames: 12 }),
   smearPlan({ id: 'kick-head', t: at('kick-head'), from: GIRL.B.verse, to: GIRL.B.kick, dir: 1, frames: 8 }),
   smearPlan({ id: 'pose-bd1', t: at('pose-bd1'), from: GIRL.B.kick, to: GIRL.B.next, dir: -1, frames: 10 }),
 ];
@@ -114,7 +123,7 @@ export const FRAMINGS = framingPlan(
 
 // ---- flash budget ------------------------------------------------------------------------------------------
 export const WHITEOUTS: readonly WhiteoutSpec[] = [
-  { id: 'metal-hit', t0: at('metal-hit'), frames: 3, figures: [{ card: GIRL.O.metal, at: GROOVE_O }, { card: GIRL.B.metal, at: GROOVE_B }], camera: () => HOME },
+  { id: 'metal-hit', t0: at('metal-hit'), frames: 3, figures: [{ card: GROOVE_CARDS.stage.O, at: GROOVE_O }, { card: GROOVE_CARDS.stage.B, at: GROOVE_B }], camera: () => HOME },
 ];
 export const SWINGS: Swing[] = [...WHITEOUTS.flatMap(whiteoutSwings)];
 assertFlashBudget(SWINGS, 'proof 0-20 s');
