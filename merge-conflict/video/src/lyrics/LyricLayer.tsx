@@ -5,23 +5,14 @@
 import { AbsoluteFill } from 'remotion';
 import { BLUE, CYAN, ORANGE } from '../grade/grade.ts';
 import { type Hex, lerp, outQuad, ramp } from '../lib/ease.ts';
-import { lyricLine, lines, words } from '../timing.ts';
+import { lines, words } from '../timing.ts';
+import { bindLine, type Token } from './bind.ts';
 import { DISPLAY, SANS } from '../type/fonts.tsx';
 
-export interface Token { text: string; start: number; end: number }
+export type { Token } from './bind.ts';
 
-/** The lyric line's tokens with the measured start/end of the word each one is sung on. */
-export const lineTokens = (i: number): Token[] => {
-  const line = lyricLine(i);
-  const next = lines[i + 1];
-  const until = next && next.start !== null ? next.start : line.end + 1.5;
-  const sung = words.filter((w) => w.s >= line.start - 0.005 && w.s < until - 0.005);
-  const toks = line.text.split(/\s+/).filter(Boolean);
-  if (toks.length !== sung.length) {
-    throw new Error(`lyric line ${i} "${line.text}": ${toks.length} tokens but ${sung.length} measured words (${sung.map((w) => w.w).join(' ')})`);
-  }
-  return toks.map((text, k) => ({ text, start: (sung[k] as { s: number }).s, end: (sung[k] as { e: number }).e }));
-};
+/** The lyric line's tokens with the measured start/end of the word(s) each one is sung on (lyrics/bind.ts). */
+export const lineTokens = (i: number): Token[] => bindLine(lines, words, i);
 
 export interface LineDesign { line: number; key: number; keyColor: Hex; x: number; y: number; /** key outline (default ink) */ keyStroke?: Hex }
 
