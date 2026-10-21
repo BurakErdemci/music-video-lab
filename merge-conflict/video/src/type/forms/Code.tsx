@@ -13,7 +13,9 @@ const SYNTAX = { keyword: '#c792ea', number: '#ffd23a', plain: '#e6edf3', punct:
 const KEYWORDS = /^(the|was|and|by|at|i'm|then|who|are|you)$/i;
 const classOf = (w: string): Hex => (/^\d/.test(w) ? SYNTAX.number : KEYWORDS.test(clean(w)) ? SYNTAX.keyword : /^[A-Z]/.test(w) ? SYNTAX.fn : SYNTAX.plain);
 
-export interface CodeOptions { gutter: string; size: number; keyScale?: number; chrome?: string }
+/** terminal: git's error in red on black (the intro), instead of editor syntax colours */
+export interface CodeOptions { gutter: string; size: number; keyScale?: number; chrome?: string; terminal?: boolean }
+const TERMINAL_RED = '#ff3b3b';
 
 /** Characters of a token visible at t: typed across its measured start..end. */
 export const typed = (text: string, t: number, start: number, end: number): number =>
@@ -35,9 +37,9 @@ const runsOf = (spec: FormSpec, size: number, keyScale: number, x0: number): Run
   });
 };
 
-const Panel = ({ x, y, w, h, title }: { x: number; y: number; w: number; h: number; title: string }) => (
+const Panel = ({ x, y, w, h, title, terminal = false }: { x: number; y: number; w: number; h: number; title: string; terminal?: boolean }) => (
   <g>
-    <rect x={x} y={y} width={w} height={h} rx={18} fill="#0d1117" fillOpacity={0.88} stroke="#30363d" strokeWidth={3} />
+    <rect x={x} y={y} width={w} height={h} rx={18} fill={terminal ? '#050203' : '#0d1117'} fillOpacity={0.9} stroke={terminal ? '#7a1010' : '#30363d'} strokeWidth={3} />
     <rect x={x} y={y} width={w} height={46} rx={18} fill="#161b22" />
     {['#ff5f57', '#febc2e', '#28c840'].map((c, i) => <circle key={c} cx={x + 30 + i * 26} cy={y + 23} r={8} fill={c} />)}
     <text x={x + 120} y={y + 31} fontFamily={MONO} fontSize={22} fill="#8b949e">{title}</text>
@@ -57,7 +59,7 @@ export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOpt
   const blink = beatPos(t) % 1 < 0.55;
   return (
     <g fontFamily={MONO} fontWeight={700}>
-      <Panel x={box.x} y={box.y} w={box.w} h={box.h} title={opt.chrome ?? 'button.css'} />
+      <Panel x={box.x} y={box.y} w={box.w} h={box.h} title={opt.chrome ?? 'button.css'} terminal={opt.terminal} />
       <text x={box.x + 40} y={base} fontSize={size} fill="#6e7681">{opt.gutter}</text>
       {runs.map((r) => {
         const n = typed(r.text, t, r.start, r.end);
@@ -67,12 +69,12 @@ export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOpt
           const w = r.text.length * MONO_ADV * r.size;
           return (
             <g key={r.tok}>
-              <rect x={r.x - 8} y={base - r.size * 0.86} width={w + 16} height={r.size * 1.08} rx={8} fill={keyFill(spec.singer)} fillOpacity={0.28 * pop} />
-              <text x={r.x} y={base} fontSize={r.size} fill={keyFill(spec.singer)} stroke="#0d1117" strokeWidth={r.size * 0.04} paintOrder="stroke">{r.text.slice(0, n)}</text>
+              <rect x={r.x - 8} y={base - r.size * 0.86} width={w + 16} height={r.size * 1.08} rx={8} fill={opt.terminal ? TERMINAL_RED : keyFill(spec.singer, t)} fillOpacity={(opt.terminal ? 0.85 : 0.28) * pop} />
+              <text x={r.x} y={base} fontSize={r.size} fill={opt.terminal ? '#ffffff' : keyFill(spec.singer, t)} stroke="#0d1117" strokeWidth={r.size * 0.04} paintOrder="stroke">{r.text.slice(0, n)}</text>
             </g>
           );
         }
-        return <text key={r.tok} x={r.x} y={base} fontSize={r.size} fill={r.color}>{r.text.slice(0, n)}</text>;
+        return <text key={r.tok} x={r.x} y={base} fontSize={r.size} fill={opt.terminal ? TERMINAL_RED : r.color}>{r.text.slice(0, n)}</text>;
       })}
       {blink && <rect x={cursorX + 4} y={base - size * 0.82} width={size * 0.12} height={size} fill="#e6edf3" />}
     </g>
@@ -104,7 +106,7 @@ export const Diff = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: DiffOpt
         const n = typed(r.text, t, r.start, r.end);
         if (!n) return null;
         return (
-          <text key={r.tok} x={r.x} y={y2} fontSize={r.size} fill={r.isKey ? keyFill(spec.singer) : mixHex('#5cff9f', '#ffffff', 0.35)} stroke={r.isKey ? '#0d1117' : 'none'} strokeWidth={r.size * 0.05} paintOrder="stroke">
+          <text key={r.tok} x={r.x} y={y2} fontSize={r.size} fill={r.isKey ? keyFill(spec.singer, t) : mixHex('#5cff9f', '#ffffff', 0.35)} stroke={r.isKey ? '#0d1117' : 'none'} strokeWidth={r.size * 0.05} paintOrder="stroke">
             {r.text.slice(0, n)}
           </text>
         );

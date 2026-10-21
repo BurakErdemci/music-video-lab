@@ -1,70 +1,56 @@
-// Verse 1 to 20 s (scene-map.md, the Reviewed Stage): the blue girl alone in cyan/blue with an orange rim,
-// dancing on the beat grid. B03 gathers out of the "head" burst, then a new pose every 2 bars on the
-// downbeat through a smear (B04, B07, B02); the mirror tiles align on "stable" and sweep on "clean";
-// "line forty-two" lights a "LINE 42" plate; "approved by the whole design team" multiplies check stamps.
+// verse1_sweet from 16.33 s (to the proof end): the blue girl alone, smearing from her metal form back into
+// disco on the downbeat while the palette and type slide toward pop over a bar (metalAt's one-bar slide out).
+// "I'm HEAD, I'm main, I'm stable and clean" is a STACK; she KICKS "HEAD" off on "stable" (kick card BD6);
+// CLEAN morphs into LINE, which opens "Line forty-two, the button was blue..." as a DIFF. Framing: stage for
+// two bars, then a low angle with the next pose.
 import { AbsoluteFill } from 'remotion';
 import { Card } from '../cards/Card.tsx';
-import { poseTrack, SmearStreaks, smearSpan } from '../cards/smear.tsx';
-import { at } from '../events.ts';
-import { BLUE, CYAN, GRADES, ORANGE } from '../grade/grade.ts';
-import { ramp } from '../lib/ease.ts';
-import { litAt, spotAt, Spotlight } from '../light/spotlight.tsx';
-import { Dissolve, dissolveState } from '../particles/dissolve.tsx';
+import { poseTrack, SmearStreaks } from '../cards/smear.tsx';
+import { framingAt } from '../girls/framing.ts';
+import { KickWord } from '../girls/interact.tsx';
+import { framing } from '../girls/staging.tsx';
+import { GRADES, metalGrade } from '../grade/grade.ts';
+import { metalFor } from '../metal/metal.ts';
 import { Field } from '../particles/field.tsx';
 import { Scribble } from '../scribble/Scribble.tsx';
 import { SetPlate } from '../stage/SetPlate.tsx';
+import { shifted } from '../camera/camera.ts';
+import { HOME } from '../camera/camera.ts';
 import { Stage } from '../stage/Stage.tsx';
-import { beat, sec } from '../timing.ts';
-import { LightBox, type LightBoxSpec } from '../type/LightBox.tsx';
-import { Stamp, type StampSpec } from '../type/Stamp.tsx';
+import { sec } from '../timing.ts';
+import { Diff } from '../type/forms/Code.tsx';
+import { FormDefs } from '../type/forms/common.tsx';
+import { Stack } from '../type/forms/Stack.tsx';
 import { Svg } from '../type/Svg.tsx';
-import { alignAt, fieldClock, HEAD_BURST, SCRIBBLE_B07_FROM, VERSE_B, VERSE_CAM, VERSE_FIRST, VERSE_GATHER, VERSE_SMEARS, VERSE_SPOT } from './proof.ts';
-
-const G = GRADES.reviewed;
-const RIM: [number, number] = [1, 0.25];
-
-const MAIN: LightBoxSpec = { id: 'sign-main', words: [{ text: 'HEAD', color: BLUE }, { text: '->', color: '#ffffff' }, { text: 'main', color: CYAN }], t0: at('sign-main'), stagger: 0.03, t1: at('plate-42'), x: 330, y: 1010, size: 40, face: 'mono', box: true, pre: 0 };
-const PLATE_42: LightBoxSpec = { id: 'plate-42', words: [{ text: 'LINE', color: CYAN }, { text: '42', color: '#ffd23a' }], t0: at('plate-42'), stagger: 0.05, t1: at('cam-pull-2'), x: 1440, y: 760, size: 230, box: true, pre: 0 };
-const STAMPS: StampSpec = {
-  id: 'approved',
-  label: 'APPROVED',
-  times: [at('stamp-1'), at('stamp-2'), at('stamp-3'), at('stamp-4'), at('stamp-5'), at('stamp-6')],
-  slots: [[1250, 560], [1640, 560], [1250, 720], [1640, 720], [1250, 880], [1640, 880]],
-  size: 58,
-  color: CYAN,
-  t1: beat(52),
-};
+import { LetterMorph } from '../type/transitions/transitions.tsx';
+import { DIFF3, DIFF_OPT, FRAMINGS, GIRL, KICK, MORPH_LINE, STACK2, VERSE, VERSE_B, VERSE_SMEARS } from './proof.ts';
 
 export const Verse1 = ({ frame }: { frame: number }) => {
   const t = sec(frame);
-  const pose = VERSE_CAM(t);
-  const spot = spotAt(VERSE_SPOT, t);
-  const ft = fieldClock(t);
-  const hit = 1 + 0.06 * (1 - ramp(t, at('plate-42-hit'), 6 / 60)) * (t >= at('plate-42-hit') ? 1 : 0);
-  const gather = dissolveState(VERSE_GATHER, t);
-  const draws = poseTrack(VERSE_FIRST, VERSE_SMEARS, t, VERSE_B.height).map((d) => ({ ...d, opacity: d.opacity * gather.toOpacity }));
-  const b07In = smearSpan(VERSE_SMEARS[1])[0];
+  const m = metalFor(t, 'B');
+  const grade = metalGrade(GRADES.reviewed, m);
+  const low = framingAt(FRAMINGS, t) === 'low';
+  const pose = low ? framing('low', t, { full: GIRL.B.next, close: GIRL.B.close, color: '#2f7bff' }, { full: GIRL.O.verse, close: GIRL.O.close, color: '#ff7a1a' }).pose : shifted(HOME, [0, 0, -0.5]);
+  const draws = poseTrack(GIRL.B.metal, VERSE_SMEARS, t, VERSE_B.height);
+  const morphOn = t >= MORPH_LINE.t0 && t < MORPH_LINE.t0 + MORPH_LINE.dur;
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={pose}>
-        <SetPlate t={t} grade={G} align={alignAt(t)} />
-        <Field t={ft} grade={G} layer="back" density={0.75} hueMix={0.5} bursts={[HEAD_BURST]} />
-        <Spotlight plan={VERSE_SPOT} t={t} tint="#eaf6ff" />
+        <SetPlate t={t} grade={grade} />
+        <Field t={t} grade={grade} layer="back" density={0.75} hueMix={0.5} metal={m} />
         {draws.map((d, i) => (
-          <Card key={`${d.card}-${i}`} id={d.card} t={t} grade={G} {...VERSE_B} dx={d.dx} stretch={d.stretch} opacity={d.opacity} lit={litAt(spot, VERSE_B.x)} rimDir={RIM} />
+          <Card key={`${d.card}-${i}`} id={d.card} t={t} grade={grade} {...VERSE_B} dx={d.dx} stretch={d.stretch} opacity={d.opacity} rimDir={[1, 0.25]} />
         ))}
-        <Dissolve plan={VERSE_GATHER} t={t} grade={G} rival={ORANGE} />
-        <Field t={ft} grade={G} layer="front" density={0.6} hueMix={0.5} bursts={[HEAD_BURST]} />
+        <Field t={t} grade={grade} layer="front" density={0.6} hueMix={0.5} metal={m} />
       </Stage>
       <Svg>
-        <LightBox spec={MAIN} t={t} />
-        <g transform={`translate(1440 680) scale(${hit}) translate(-1440 -680)`}>
-          <LightBox spec={PLATE_42} t={t} />
-        </g>
-        <Scribble spec={{ id: 'scr-b04', card: 'B04', at: VERSE_B, t0: at('scribble-b04'), draw: 0.55, t1: b07In, color: BLUE, stars: 4 }} t={t} pose={pose} />
-        <Scribble spec={{ id: 'scr-b07', card: 'B07', at: VERSE_B, t0: SCRIBBLE_B07_FROM, draw: 0.5, t1: smearSpan(VERSE_SMEARS[2])[0], color: CYAN, stars: 3 }} t={t} pose={pose} />
-        <SmearStreaks smears={VERSE_SMEARS} t={t} at={VERSE_B} pose={pose} color={CYAN} />
-        <Stamp spec={STAMPS} t={t} />
+        <FormDefs />
+        <Scribble spec={{ id: 'v-kick', card: GIRL.B.kick, at: VERSE_B, t0: KICK.kick + 0.1, draw: 0.3, t1: VERSE_SMEARS[2].t - 0.1, color: '#19c8ff', stars: 3 }} t={t} pose={pose} />
+        <SmearStreaks smears={VERSE_SMEARS} t={t} at={VERSE_B} pose={pose} color="#19c8ff" />
+        <Stack spec={STACK2} t={t} hide={[1, ...(morphOn ? [7] : [])]} />
+        <KickWord plan={KICK} t={t} />
+        <LetterMorph plan={MORPH_LINE} t={t} />
+        {t >= MORPH_LINE.t0 + MORPH_LINE.dur - 1 / 60 && t >= VERSE.start && <Diff spec={DIFF3} t={t} opt={DIFF_OPT} />}
       </Svg>
     </AbsoluteFill>
   );

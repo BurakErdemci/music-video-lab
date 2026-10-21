@@ -1,16 +1,14 @@
-// The film: exactly one shot per frame (each shot owns the frame's single ThreeCanvas), then the persistent
-// layers outside the shots: the lyric layer and the white-out hits. 0-20 s is the proof (film/proof.ts);
-// the rest of the song is still the placeholder.
+// The film on take-v4: exactly one shot per frame (each shot owns the frame's single ThreeCanvas), then the
+// white-out hits on top. 0-20 s is the type-led proof (film/proof.ts; the forms are the lyrics, so the old
+// persistent lyric layer is not mounted); the rest of the song is still the placeholder.
 import type { ComponentType } from 'react';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { HOME } from './camera/camera.ts';
-import { at } from './events.ts';
-import { EyeSplit } from './film/EyeSplit.tsx';
-import { Intro } from './film/Intro.tsx';
-import { PROOF_END, WHITEOUTS } from './film/proof.ts';
+import { Groove } from './film/Groove.tsx';
+import { GROOVE, PROOF_END, VERSE, WHITEOUTS } from './film/proof.ts';
+import { Speaker } from './film/Speaker.tsx';
 import { Verse1 } from './film/Verse1.tsx';
 import { Whiteout } from './fx/whiteout.tsx';
-import { LyricLayer } from './lyrics/LyricLayer.tsx';
 import { beatIndexAt, DURATION_FRAMES, f, sec, sectionAt } from './timing.ts';
 import { Fonts } from './type/fonts.tsx';
 
@@ -28,9 +26,9 @@ const Placeholder = ({ frame }: { frame: number }) => {
 };
 
 export const SHOTS: Shot[] = [
-  { id: 'intro', from: 0, to: f(at('eye-split')), Component: Intro },
-  { id: 'eye-split', from: f(at('eye-split')), to: f(at('head-burst')), Component: EyeSplit },
-  { id: 'verse1', from: f(at('head-burst')), to: f(PROOF_END), Component: Verse1 },
+  { id: 'speaker', from: 0, to: f(GROOVE.start), Component: Speaker },
+  { id: 'groove', from: f(GROOVE.start), to: f(VERSE.start), Component: Groove },
+  { id: 'verse1', from: f(VERSE.start), to: f(PROOF_END), Component: Verse1 },
   { id: 'placeholder', from: f(PROOF_END), to: DURATION_FRAMES, Component: Placeholder },
 ];
 // Overlapping shots would mount two ThreeCanvases on one frame (a second canvas renders black in parallel renders).
@@ -48,7 +46,6 @@ export const Film = () => {
     <AbsoluteFill style={{ background: '#000' }}>
       <Fonts />
       {shot ? <shot.Component frame={frame} /> : null}
-      <LyricLayer t={t} until={PROOF_END} />
       {WHITEOUTS.map((w) => <Whiteout key={w.id} spec={w} t={t} pose={HOME} />)}
     </AbsoluteFill>
   );

@@ -1,98 +1,120 @@
-// The 0-20 s proof plan (scene-map.md: the intro and the start of verse 1). Every time is an event from
-// events.ts, a measured word, or derived from those. Plans that break a binding rule (camera move or whip
-// length, dissolve frame counts, flash budget) throw here, at module load.
-import { HOME, type Move, movesPath, shifted } from '../camera/camera.ts';
+// The 0-20 s type-led proof on take-v4 (scene-map.md "Typography-led clip", "The girls are never wallpaper",
+// "Final song and the pop-metal blend"). Every time is an event from events.ts or a measured token; plans that
+// break a binding rule (framing holds, focus moves, transition lengths, flash budget) throw here at load.
+//  0-4.37   intro_robot: the blue girl reads git's error out loud, deadpan; the words come from her as a red
+//           terminal (CODE), "failed." morphs into FIX, a >>>>>>> wipe opens the FLAP board of line 1.
+//  4.37     a whip into the HARD METAL groove (Burak's ear override): both girls in their metal forms, a
+//           metal hit every second beat, the conflict markers slam, framings change every 2 bars, focus
+//           ping-pongs; MERGE and CONFLICT slam in a jagged face.
+//  16.33    through the O of CONFLICT into verse 1; the blue girl smears from her metal form into disco on
+//           the downbeat while the palette and type slide toward pop over a bar.
+//  16.88    "I'm HEAD, I'm main, I'm stable and clean" as STACK; she KICKS "HEAD" off on "stable"; CLEAN
+//           morphs into LINE, which opens "Line forty-two..." as a DIFF.
+import { HOME } from '../camera/camera.ts';
 import type { Placement } from '../cards/Card.tsx';
+import { smearPlan } from '../cards/smear.tsx';
 import { at } from '../events.ts';
 import { whiteoutSwings, type WhiteoutSpec } from '../fx/whiteout.tsx';
-import { inQuad, ramp } from '../lib/ease.ts';
+import { framingPlan } from '../girls/framing.ts';
+import { kickPlan } from '../girls/interact.tsx';
+import { focusPlan } from '../girls/staging.tsx';
 import { assertFlashBudget, type Swing } from '../lib/flash.ts';
-import { spotPlan } from '../light/spotlight.tsx';
-import { smearPlan, smearSpan } from '../cards/smear.tsx';
-import { dissolvePlan } from '../particles/dissolve.tsx';
-import type { Burst } from '../particles/field.tsx';
-import { microGaps } from '../timing.ts';
+import { lineTokens } from '../lyrics/LyricLayer.tsx';
+import { beat, sectionNamed } from '../timing.ts';
+import { widthOf } from '../type/fonts.tsx';
+import type { FormSpec } from '../type/forms/common.tsx';
+import { stackLayout } from '../type/forms/Stack.tsx';
+import { counterOf, counterPlan, holeOf, morphPlan, whipPlan, wipePlan, type WordAt } from '../type/transitions/transitions.tsx';
 
 export const PROOF_END = 20;
 
-// Placements (world units; 1 unit = 120 px at the home camera).
-export const INTRO_O: Placement = { x: -3.0, height: 6.2 };
-export const INTRO_B: Placement = { x: 3.0, height: 6.2 };
-export const VERSE_B: Placement = { x: -2.4, height: 6.6 };
-export const INTRO_CARD = { O: 'O03', B: 'B01' } as const;
+/** Who reads git's error in the intro (0-4.37 s). Burak 2026-10-21: the girl who starts the lyrics, the sweet
+ *  blue girl. 'O' or 'both' are kept as options (both girls in frame, the text between them). */
+export const INTRO_SPEAKER: 'O' | 'B' | 'both' = 'B';
 
-/** Drop-in: the card falls from above the frame and lands on the downbeat (accelerating, no bounce). */
-export const DROP_S = 0.3;
-export const dropDy = (t: number, land: number): number => 9.5 * (1 - inQuad((t - (land - DROP_S)) / DROP_S));
-export const dropVisible = (t: number, land: number): boolean => t >= land - DROP_S;
+export const ROBOT = sectionNamed('intro_robot');
+export const GROOVE = sectionNamed('intro_groove');
+export const VERSE = sectionNamed('verse1_sweet');
 
-// The stop at the end of the intro (measured micro gap 10.72-11.02): the particle clock slows to a quarter,
-// so the room holds its breath without a frozen frame.
-const STOP = microGaps[0] as [number, number];
-export const fieldClock = (t: number): number => t - 0.75 * Math.max(0, Math.min(t, STOP[1]) - STOP[0]);
+/** The cards of each girl: her disco speaker poses, her metal form (temporary front views until OM/BM land). */
+export const GIRL = {
+  B: { stand: 'B01', close: 'B06', metal: 'BMT', verse: 'BD3', kick: 'BD6', next: 'BD1' },
+  O: { stand: 'O03', close: 'O10', metal: 'OMT', verse: 'OD3', kick: 'OD6', next: 'OD1' },
+} as const;
 
-export const INTRO_SPOT = spotPlan({
-  label: 'intro',
-  x0: 0,
-  snaps: [{ id: 'spot-on', t: at('spot-on'), on: true }],
-  whips: [
-    { id: 'spot-whip-1', t: at('spot-whip-1'), frames: 36, x: -3.0 },
-    { id: 'spot-whip-2', t: at('spot-whip-2'), frames: 36, x: 3.0 },
-    { id: 'sign-42', t: at('sign-42'), frames: 32, x: 0 },
-    { id: 'spot-whip-3', t: at('spot-whip-3'), frames: 36, x: INTRO_O.x },
-    { id: 'spot-whip-4', t: at('spot-whip-4'), frames: 36, x: INTRO_B.x },
-    { id: 'spot-whip-5', t: at('spot-whip-5'), frames: 40, x: 0 },
-  ],
-});
-export const VERSE_SPOT = spotPlan({ label: 'verse', x0: VERSE_B.x, on0: true, snaps: [], whips: [] });
+// ---- 0-4.37 the speaker ------------------------------------------------------------------------------------
+export const LINE0: FormSpec = { id: 'robot-0', line: 0, key: 2, singer: 'B', t0: 0, t1: at('wipe-flap') + 0.4, box: { x: 960, y: 250, w: 880, h: 300 } };
+export const LINE1: FormSpec = { id: 'robot-1', line: 1, key: 1, singer: 'B', t0: at('wipe-flap'), t1: GROOVE.start + 0.25, box: { x: 900, y: 430, w: 960, h: 420 } };
+export const CODE_OPT = { gutter: '!', size: 54, keyScale: 1.6, chrome: 'git merge feature', terminal: true } as const;
+export const FIX: WordAt = { text: 'FIX', x: 1180, y: 900, size: 300, face: 'display', fill: '#ff3b3b' };
+export const MORPH_FIX = morphPlan({ id: 'morph-fix', t0: at('morph-fix') - 24 / 60, frames: 24, from: { text: 'FAILED.', x: 0, y: 0, size: 54 * 1.6, face: 'jetbrains', fill: '#ff3b3b' }, to: FIX });
+export const WIPE_FLAP = wipePlan({ id: 'wipe-flap', t0: at('wipe-flap'), marker: '>', frames: 22 });
 
-const introMoves: Move[] = [
-  { id: 'cam-push-1', t: at('cam-push-1'), frames: 40, to: shifted(HOME, [0, 0.15, -1.4]) },
-  { id: 'cam-pull-1', t: at('cam-pull-1'), frames: 36, to: shifted(HOME, [0, 0, -0.4]) },
-];
-export const INTRO_CAM = movesPath('intro', HOME, introMoves);
-export const SPLIT_CAM = movesPath('split', HOME, [{ id: 'split-push', t: at('eye-split'), frames: 48, to: shifted(HOME, [0, 0, -0.8]) }]);
-const V0 = shifted(HOME, [-0.3, 0, -0.5]);
-export const VERSE_CAM = movesPath('verse', V0, [
-  { id: 'cam-truck-2', t: at('cam-truck-2'), frames: 36, to: shifted(HOME, [0.5, 0, -0.5]) },
-  { id: 'cam-push-2', t: at('cam-push-2'), frames: 44, to: shifted(HOME, [0.1, 0.35, -1.7]) },
-  { id: 'cam-pull-2', t: at('cam-pull-2'), frames: 40, to: shifted(HOME, [0.4, 0, -0.2]) },
+// ---- 4.37-16.33 the metal groove ---------------------------------------------------------------------------
+export const WHIP_GROOVE = whipPlan({ id: 'whip-groove', t0: at('whip-groove'), dir: 1, frames: 12 });
+export const GROOVE_HITS = Array.from({ length: 18 }, (_, k) => beat(13 + 2 * k));
+export const MERGE: WordAt = { text: 'MERGE', x: 0, y: 0, size: 300, face: 'metalmania', fill: '#c8ced6' };
+export const CONFLICT: WordAt = { text: 'CONFLICT', x: 960 - widthOf('CONFLICT', 330, 'metalmania') / 2, y: 700, size: 330, face: 'metalmania', fill: '#e01b1b' };
+export const COUNTER_DIVE = counterPlan({ id: 'counter-dive', t0: at('counter-dive'), frames: 20, center: counterOf(CONFLICT, 1), hole: holeOf(CONFLICT, 1) });
+export const GROOVE_O: Placement = { x: -3.1, height: 6.6 };
+export const GROOVE_B: Placement = { x: 3.1, height: 6.6 };
+export const FOCUS = focusPlan([
+  { t: at('focus-o'), singer: 'O', frames: 36 },
+  { t: at('focus-b'), singer: 'B', frames: 36 },
 ]);
 
-export const RIFF_BURST: Burst = { t: at('riff-burst'), origin: [0, -2.0, 0.5] };
-export const HEAD_BURST: Burst = { t: at('head-burst'), origin: [VERSE_B.x, -1.0, 0.5] };
-
-export const WHITEOUTS: readonly WhiteoutSpec[] = [
-  { id: 'wo-riff', t0: at('riff-burst'), frames: 3 },
-  { id: 'wo-split', t0: at('eye-split'), frames: 3, figures: [{ card: INTRO_CARD.O, at: INTRO_O }, { card: INTRO_CARD.B, at: INTRO_B }], camera: INTRO_CAM },
-  { id: 'wo-head', t0: at('head-burst'), frames: 3, figures: [{ card: 'B03', at: VERSE_B }], camera: VERSE_CAM },
-];
-
-// Verse 1 poses: B03 gathers out of the "head" burst (a scene change: particle dissolve), then a new pose
-// every 2 bars on the downbeat through a smear (cards/smear.tsx).
-export const VERSE_GATHER = dissolvePlan({ id: 'gather-b03', t0: at('head-burst'), gatherFrames: 18, to: { card: 'B03', at: VERSE_B } });
-export const VERSE_FIRST = 'B03';
+// ---- 16.33-20 verse 1 ---------------------------------------------------------------------------------------
+export const VERSE_B: Placement = { x: -3.2, height: 6.8 };
+export const STACK2: FormSpec = { id: 'verse-2', line: 2, key: 1, singer: 'B', t0: VERSE.start, t1: at('morph-line') + 0.02, box: { x: 640, y: 150, w: 1180, h: 760 } };
+const keyAt = stackLayout(STACK2, lineTokens(2)[1]?.start ?? VERSE.start).find((w) => w.tok === 1);
+if (!keyAt) throw new Error('proof: the STACK has no key word');
+export const KICK = kickPlan({
+  id: 'kick-head',
+  word: { text: keyAt.text, x: keyAt.x, y: keyAt.y, size: keyAt.size, face: keyAt.face, fill: '#00b4ff' },
+  tok: lineTokens(2)[1] as never,
+  kick: at('kick-head'),
+  idle: GIRL.B.verse,
+  kickCard: GIRL.B.kick,
+  at: VERSE_B,
+  dir: 1,
+});
+/** The blue girl's verse track: metal -> disco on the downbeat, the kick, the next pose on the next 2 bars. */
 export const VERSE_SMEARS = [
-  smearPlan({ id: 'pose-b04', t: at('pose-b04'), from: 'B03', to: 'B04', dir: 1 }),
-  smearPlan({ id: 'pose-b07', t: at('pose-b07'), from: 'B04', to: 'B07', dir: -1 }),
-  smearPlan({ id: 'pose-b02', t: at('pose-b02'), from: 'B07', to: 'B02', dir: 1 }),
-] as const;
-export const SCRIBBLE_B07_FROM = smearSpan(VERSE_SMEARS[1])[1] + 0.15;
-
-/** The mirror-tile align sweeps: "stable" lights the rows front to back, "clean" sweeps again. */
-export const alignAt = (t: number): number => {
-  const a = at('tiles-align');
-  const c = at('tiles-clean');
-  if (t >= c && t < c + 0.45) return ramp(t, c, 0.45);
-  if (t >= a && t < a + 0.6) return ramp(t, a, 0.6);
-  return 0;
-};
-
-// Flash budget: every white-out (2 swings), the spotlight snap and each confetti burst (1 each).
-export const SWINGS: Swing[] = [
-  { id: 'spot-on', t: at('spot-on'), swings: 1 },
-  { id: 'riff-confetti', t: RIFF_BURST.t, swings: 1 },
-  { id: 'head-confetti', t: HEAD_BURST.t, swings: 1 },
-  ...WHITEOUTS.flatMap(whiteoutSwings),
+  smearPlan({ id: 'handoff-swap', t: at('handoff-swap'), from: GIRL.B.metal, to: GIRL.B.verse, dir: -1, frames: 12 }),
+  smearPlan({ id: 'kick-head', t: at('kick-head'), from: GIRL.B.verse, to: GIRL.B.kick, dir: 1, frames: 8 }),
+  smearPlan({ id: 'pose-bd1', t: at('pose-bd1'), from: GIRL.B.kick, to: GIRL.B.next, dir: -1, frames: 10 }),
 ];
+const cleanAt = stackLayout(STACK2, at('morph-line')).find((w) => w.tok === 7);
+if (!cleanAt) throw new Error('proof: the STACK has no CLEAN');
+export const DIFF3: FormSpec = { id: 'verse-3', line: 3, key: 5, singer: 'B', t0: at('tok-3-0'), t1: 30, box: { x: 560, y: 300, w: 1300, h: 460 } };
+export const DIFF_OPT = { minus: 'color: orange;', size: 64, keyScale: 1.9 } as const;
+export const MORPH_LINE = morphPlan({
+  id: 'morph-line',
+  t0: at('morph-line'),
+  frames: 16,
+  from: { text: cleanAt.text, x: cleanAt.x, y: cleanAt.y, size: cleanAt.size, face: cleanAt.face, fill: '#7a6cff' },
+  to: { text: 'Line', x: 560 + 40 + 2 * 0.6 * 64, y: 300 + 60 + 460 * 0.36 * 1.85, size: 64, face: 'jetbrains', fill: '#c8ffd9' },
+});
+
+// ---- framings (never longer than 2 bars) -----------------------------------------------------------------
+export const FRAMINGS = framingPlan(
+  [
+    { t: 0, kind: 'stage' },
+    { t: at('framing-face'), kind: 'face' },
+    { t: GROOVE.start, kind: 'stage' },
+    { t: at('framing-clones'), kind: 'clones' },
+    { t: at('framing-split'), kind: 'split' },
+    { t: at('framing-low'), kind: 'low' },
+    { t: at('framing-tiny'), kind: 'tiny' },
+    { t: VERSE.start, kind: 'stage' },
+    { t: at('framing-low-2'), kind: 'low' },
+  ],
+  PROOF_END,
+);
+
+// ---- flash budget ------------------------------------------------------------------------------------------
+export const WHITEOUTS: readonly WhiteoutSpec[] = [
+  { id: 'metal-hit', t0: at('metal-hit'), frames: 3, figures: [{ card: GIRL.O.metal, at: GROOVE_O }, { card: GIRL.B.metal, at: GROOVE_B }], camera: () => HOME },
+];
+export const SWINGS: Swing[] = [...WHITEOUTS.flatMap(whiteoutSwings)];
 assertFlashBudget(SWINGS, 'proof 0-20 s');
