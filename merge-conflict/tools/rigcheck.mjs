@@ -11,7 +11,8 @@
 //
 //   node tools/rigcheck.mjs [--from 0] [--to 1199]
 //   node tools/rigcheck.mjs --selftest      (a deliberate pelvis pinch; MUST exit non-zero)
-// Exit: bit 1 = limb length over the limit, bit 2 = quad fold or area ratio out of range.
+// Exit: bit 1 = limb length over the limit, bit 2 = quad fold or area ratio out of range, bit 4 = off-step motion.
+// (Limbs and areas stress-test the old beat loop, energy 1; the stepping check measures what the film plays.)
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 import { readFileSync } from 'node:fs';
@@ -20,6 +21,7 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const src = (p) => pathToFileURL(path.join(ROOT, 'video/src', p)).href;
 const rig = await import(src('rig/rig.ts'));
 const { POSES } = await import(src('rig/poses.ts'));
+const { ACCENTS } = await import(src('rig/accents.ts'));
 const CARDS = path.join(ROOT, 'video/public/cards');
 const manifest = JSON.parse(readFileSync(path.join(CARDS, 'manifest.json'), 'utf8'));
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i === -1 ? d : Number(process.argv[i + 1]); };
@@ -58,7 +60,7 @@ for (const id of Object.keys(POSES).sort()) {
   const j = rig.restJoints(POSES[id], aspect);
   const segs = rig.boneSegments(j);
   const grid = rig.weightGrid(segs, aspect);
-  const dance = rig.danceOf(id);
+  const dance = rig.danceOf(id, 1);
   const cover = JSON.parse(readFileSync(path.join(CARDS, `${id}.cover.json`), 'utf8'));
   const C = cover.cols, Rn = cover.rows;
   const verts = [];
@@ -107,10 +109,33 @@ for (const id of Object.keys(POSES).sort()) {
   folds += cf;
 }
 console.log(rows.join('\n'));
+
+// 3. Stepping (round 4): the film's card motion (held + accents, no loop) changes only on RIG_STEP-frame steps,
+//    on the global grid (phase 0) or on an accent's own grid (phase = its start frame mod RIG_STEP).
+let stepBad = 0, stepChanges = 0;
+const phases = new Set([0]);
+for (const id of Object.keys(POSES).sort()) {
+  const e = manifest[id];
+  const j = rig.restJoints(POSES[id], e.w / e.h);
+  const acc = ACCENTS[id] ?? [];
+  const allowed = new Set([0, ...acc.map((a) => Math.round(a.t0 * 60) % rig.RIG_STEP)]);
+  acc.forEach((a) => phases.add(Math.round(a.t0 * 60) % rig.RIG_STEP));
+  let prev = null;
+  for (let f = from; f <= to; f++) {
+    const key = JSON.stringify(rig.rigFrame(j, f / 60, rig.danceOf(id, 0, acc)).xf.map((x) => rig.rows(x).map((v) => v.toFixed(7))));
+    if (prev !== null && key !== prev) {
+      stepChanges++;
+      if (!allowed.has(((f % rig.RIG_STEP) + rig.RIG_STEP) % rig.RIG_STEP)) { stepBad++; if (stepBad < 5) console.log(`  off-step change: ${id} @ f${f}`); }
+    }
+    prev = key;
+  }
+}
+const stepFail = stepBad > 0;
 const limbBad = limbWorst.pct > LIMB_PCT;
 const areaBad = folds > 0 || areaMin.r < AREA_MIN || areaMax.r > AREA_MAX;
 if (selftest) console.log('SELFTEST: a deliberate pinch of the lower body (x halved toward the hips); this run MUST fail.');
 console.log(`rigcheck frames ${from}-${to}, ${rows.length} cards:`);
 console.log(`  limb length: max change ${limbWorst.pct.toFixed(2)} % (${limbWorst.id} ${limbWorst.limb} @ f${limbWorst.frame}), limit ${LIMB_PCT} % -> ${limbBad ? 'FAIL' : 'PASS'}`);
 console.log(`  quad area: ${quadsChecked} painted quads per frame, ratio min ${areaMin.r.toFixed(3)} (${areaMin.id} @ f${areaMin.frame}), max ${areaMax.r.toFixed(3)} (${areaMax.id} @ f${areaMax.frame}), folds ${folds}; limits [${AREA_MIN}, ${AREA_MAX}], 0 folds -> ${areaBad ? 'FAIL' : 'PASS'}`);
-process.exit((limbBad ? 1 : 0) | (areaBad ? 2 : 0));
+console.log(`  stepping: the held + accent motion changes only every ${rig.RIG_STEP} frames (phases ${[...phases].sort((a, b) => a - b).join(', ')}): ${stepChanges} changes, ${stepBad} off-step -> ${stepFail ? 'FAIL' : 'PASS'}`);
+process.exit((limbBad ? 1 : 0) | (areaBad ? 2 : 0) | (stepFail ? 4 : 0));
