@@ -86,7 +86,7 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         break;
       case 'r-git':
         // GIT! hits and goes: the long gap before PUSH! belongs to the warning screen
-        out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: Math.min(e.t1 - 0.02, e.t0 + 1.8), x: 960, y: 640, size: 420, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
+        out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: Math.min(e.t1 - 0.02, e.t0 + 1.8), x: 960, y: 380, size: 380, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
         break;
       case 'r-push':
         out.push(<Extrude key={e.id} spec={spec(e, { x: 160, y: 200, w: 1600, h: 560 })} t={t} opt={{ size: 420, face: 'metalmania', depth: 0.35 }} />);

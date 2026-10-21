@@ -91,7 +91,7 @@ const moved = (pose: CameraPose, move: Move, k: number, u: number, focus: Vec3, 
   if (move === 'whip') {
     // a whip pan into the shot: the aim swings in from one side over 11 frames, then drifts on
     const w = 1 - outQuad(clamp01(u / (11 / 60)));
-    return { ...pose, target: [pose.target[0] + dir * 7 * w, pose.target[1], pose.target[2]], roll: (pose.roll ?? 0) + dir * 0.12 * w };
+    return { ...pose, target: [pose.target[0] + dir * 3.5 * w, pose.target[1], pose.target[2]], roll: (pose.roll ?? 0) + dir * 0.1 * w };
   }
   // dolly zoom on the accent: the camera closes in while the lens widens, so she holds size and the world stretches
   const d = 1 - 0.45 * k;
@@ -233,7 +233,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={pose}>
-        {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
+        {/* the moves (whip, orbit, dolly zoom) swing past the opening frame, so the plate overflows more */}
+        {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={1.75} />}
         {world}
         {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.7} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
         {/* GIT!: she stands on a giant glowing ENTER key that pulses with every kick */}
