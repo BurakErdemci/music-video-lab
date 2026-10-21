@@ -23,7 +23,8 @@ export interface WhiteoutSpec {
 }
 
 export const whiteoutSwings = (w: WhiteoutSpec): Swing[] => [{ id: w.id, t: w.t0, swings: 2 }];
-export const whiteoutActive = (w: WhiteoutSpec, t: number): boolean => t >= w.t0 && t < w.t0 + w.frames / 60;
+/** Active on `frames` frames from the 60 fps frame its time falls on. */
+export const whiteoutActive = (w: WhiteoutSpec, t: number): boolean => Math.round(t * 60) >= Math.round(w.t0 * 60) && Math.round(t * 60) < Math.round(w.t0 * 60) + w.frames;
 
 const GHOSTS = [
   { dx: -14, dy: -4, c: '#ff1e3c' },
@@ -34,7 +35,7 @@ const GHOSTS = [
 export const Whiteout = ({ spec, t, pose: fallback }: { spec: WhiteoutSpec; t: number; pose: CameraPose }) => {
   if (!whiteoutActive(spec, t)) return null;
   const pose = spec.camera ? spec.camera(t) : fallback;
-  const k = ((t - spec.t0) * 60 + 1) / spec.frames;
+  const k = (Math.round(t * 60) - Math.round(spec.t0 * 60) + 1) / spec.frames;
   const figs = spec.figures ?? [];
   const paths: string[] = [];
   const cs: [number, number][] = [];

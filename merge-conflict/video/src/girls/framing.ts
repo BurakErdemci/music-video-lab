@@ -1,7 +1,7 @@
 // Framing plans for the girls' layer (scene-map.md "The girls are never wallpaper", 3): the same framing never
 // holds longer than 2 bars; bar lengths come from the measured downbeats. Erasable TypeScript only: node loads
 // this file to prove the check throws.
-import { barLengthAt, barPos } from '../timing.ts';
+import { barLengthAt, barPos, f } from '../timing.ts';
 
 export type FramingKind = 'stage' | 'face' | 'tiny' | 'low' | 'clones' | 'split';
 export interface FramingCue { t: number; kind: FramingKind }
@@ -19,5 +19,6 @@ export const framingPlan = (cues: readonly FramingCue[], end: number): FramingCu
   });
   return [...cues];
 };
-export const framingAt = (plan: readonly FramingCue[], t: number): FramingKind => [...plan].reverse().find((c) => t >= c.t)?.kind ?? 'stage';
+/** The framing at t; a cue owns the 60 fps frame it falls on. */
+export const framingAt = (plan: readonly FramingCue[], t: number): FramingKind => [...plan].reverse().find((c) => f(t) >= f(c.t))?.kind ?? 'stage';
 
