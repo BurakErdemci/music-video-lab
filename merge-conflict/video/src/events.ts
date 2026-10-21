@@ -120,9 +120,10 @@ export const EVENTS: FilmEvent[] = [
   // the scream, the breakdown and the solo hit on every second beat (camera punch, sparks); "AAAAAH!" has no
   // measured word, so the scream's events are its beats
   // round 7b ("No cliff after the chorus"): in the scream, the breakdown and the solo the camera kicks on every
-  // beat and sparks burst on every second offbeat; verses 3 and 4 get a camera accent on every second beat
+  // beat and sparks burst on every second offbeat; verses 3 and 4 get a camera accent on every third beat
   ...[sectionNamed('scream'), sectionNamed('breakdown_git_push_force'), sectionNamed('guitar_solo')].flatMap((sec) => beatsIn(sec.start, sec.end).flatMap((b) => [ev(`hit-${b}`, 'hit', 'beat', b), ...(b % 2 === 0 ? [ev(`spark-${b}`, 'spark', 'offbeat', b)] : [])])),
-  ...[sectionNamed('verse3_rebase'), sectionNamed('verse4_trade')].flatMap((sec) => beatsIn(sec.start, sec.end).filter((b) => b % 2 === 1).map((b) => ev(`accent-${b}`, 'accent', 'beat', b))),
+  // (every third beat: denser accents lifted the verses' events-per-beat mean past what keeps the chorus at 1.5x)
+  ...[sectionNamed('verse3_rebase'), sectionNamed('verse4_trade')].flatMap((sec) => beatsIn(sec.start, sec.end).filter((b) => b % 3 === 1).map((b) => ev(`accent-${b}`, 'accent', 'beat', b))),
 ];
 
 const BY_ID = new Map(EVENTS.map((e) => [e.id, e]));
