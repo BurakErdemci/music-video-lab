@@ -98,15 +98,15 @@ export const SplitWorld = ({ t, hit }: { t: number; hit: number }) => {
   );
 };
 
-export const RunwayWorld = ({ t, on }: { t: number; on: number }) => {
+export const RunwayWorld = ({ t, on, lanes = [BLUE, RED], edges = [CYAN, RED] }: { t: number; on: number; lanes?: [Hex, Hex]; edges?: [Hex, Hex] }) => {
   const p = pulseAt(t);
   return (
     <>
       <Backdrop />
       <LedWall position={[0, 4, -40]} width={70} height={26} cols={70} rows={26} colors={['#2a1660', '#120830']} pattern="scan" pulse={0.2 * p} t={t} />
-      <TilePlatform position={[0, F, -14]} width={3.4} depth={36} cols={4} rows={42} splitX={0} left={BLUE} right={RED} t={t * 2} pulse={0.6 * p} />
-      <NeonTube points={[[-1.75, F + 0.03, 4], [-1.75, F + 0.03, -32]]} color={CYAN} radius={0.05} on={on} />
-      <NeonTube points={[[1.75, F + 0.03, 4], [1.75, F + 0.03, -32]]} color={RED} radius={0.05} on={on} />
+      <TilePlatform position={[0, F, -14]} width={3.4} depth={36} cols={4} rows={42} splitX={0} left={lanes[0]} right={lanes[1]} t={t * 2} pulse={0.6 * p} />
+      <NeonTube points={[[-1.75, F + 0.03, 4], [-1.75, F + 0.03, -32]]} color={edges[0]} radius={0.05} on={on} />
+      <NeonTube points={[[1.75, F + 0.03, 4], [1.75, F + 0.03, -32]]} color={edges[1]} radius={0.05} on={on} />
       <BeamCone from={[0, 8, 1]} to={[0, F, 0]} radius={2.8} color="#ffffff" intensity={0.35 + 0.2 * p} />
       <Embers box={[-14, 14, -2, 9, -30, -2]} count={260} t={t} color="#bfe8ff" />
     </>
