@@ -9,6 +9,7 @@
 // time from data/take-v4/mc-timing.json, read independently of video/src/timing.ts. The scene
 // clock is in seconds and the film renders at 60 fps, so drift is measured in frames at 60 fps:
 //   anchor 'beat':     ref = beat index        -> beats[ref]
+//   anchor 'offbeat':  ref = beat index        -> halfway between beats[ref] and beats[ref + 1]
 //   anchor 'downbeat': ref = downbeat index    -> downbeats[ref]
 //   anchor 'hook':     ref = accept_hooks index -> accept_hooks[ref][0]
 //   anchor 'word':     ref = "<text>#<nth>"    -> start of the nth phrase match
@@ -62,6 +63,7 @@ const wordStart = (text, nth) => {
 };
 const anchorTime = (e) => {
   if (e.anchor === 'beat') return T.beats[e.ref];
+  if (e.anchor === 'offbeat') return (T.beats[e.ref] + T.beats[e.ref + 1]) / 2;
   if (e.anchor === 'downbeat') return T.downbeats[e.ref];
   if (e.anchor === 'hook') return T.accept_hooks[e.ref]?.[0];
   if (e.anchor === 'token') {
@@ -99,7 +101,7 @@ const ids = new Set();
 for (const e of EVENTS) {
   if (ids.has(e.id)) errors.push(`duplicate id ${e.id}`);
   ids.add(e.id);
-  if (!['beat', 'downbeat', 'hook', 'word', 'token'].includes(e.anchor)) {
+  if (!['beat', 'offbeat', 'downbeat', 'hook', 'word', 'token'].includes(e.anchor)) {
     errors.push(`${e.id}: unknown anchor ${e.anchor}`);
     continue;
   }

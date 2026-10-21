@@ -9,11 +9,13 @@ import { acceptHook, beat, beats, downbeat, lines, sectionNamed, word, words } f
 
 const beatsIn = (a: number, b: number): number[] => beats.map((x, i) => [x, i] as const).filter(([x]) => x >= a && x < b).map(([, i]) => i);
 
-export type EventAnchor = 'beat' | 'downbeat' | 'hook' | 'word' | 'token';
+/** 'offbeat': halfway between beat `ref` and the next (the riff's eighth notes, round 7b). */
+export type EventAnchor = 'beat' | 'offbeat' | 'downbeat' | 'hook' | 'word' | 'token';
 export interface FilmEvent { id: string; anchor: EventAnchor; ref: number | string; t: number; kind: string }
 
 const timeOf = (anchor: EventAnchor, ref: number | string): number => {
   if (anchor === 'beat') return beat(ref as number);
+  if (anchor === 'offbeat') return (beat(ref as number) + beat((ref as number) + 1)) / 2;
   if (anchor === 'downbeat') return downbeat(ref as number);
   if (anchor === 'hook') return acceptHook(ref as number)[0];
   if (anchor === 'token') {
@@ -117,7 +119,10 @@ export const EVENTS: FilmEvent[] = [
   ...beatsIn(CHORUS2.start, CHORUS2.end).map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b)),
   // the scream, the breakdown and the solo hit on every second beat (camera punch, sparks); "AAAAAH!" has no
   // measured word, so the scream's events are its beats
-  ...[sectionNamed('scream'), sectionNamed('breakdown_git_push_force'), sectionNamed('guitar_solo')].flatMap((sec) => beatsIn(sec.start, sec.end).filter((b) => b % 2 === 0).map((b) => ev(`hit-${b}`, 'hit', 'beat', b))),
+  // round 7b ("No cliff after the chorus"): in the scream, the breakdown and the solo the camera kicks on every
+  // beat and sparks burst on every second offbeat; verses 3 and 4 get a camera accent on every second beat
+  ...[sectionNamed('scream'), sectionNamed('breakdown_git_push_force'), sectionNamed('guitar_solo')].flatMap((sec) => beatsIn(sec.start, sec.end).flatMap((b) => [ev(`hit-${b}`, 'hit', 'beat', b), ...(b % 2 === 0 ? [ev(`spark-${b}`, 'spark', 'offbeat', b)] : [])])),
+  ...[sectionNamed('verse3_rebase'), sectionNamed('verse4_trade')].flatMap((sec) => beatsIn(sec.start, sec.end).filter((b) => b % 2 === 1).map((b) => ev(`accent-${b}`, 'accent', 'beat', b))),
 ];
 
 const BY_ID = new Map(EVENTS.map((e) => [e.id, e]));
