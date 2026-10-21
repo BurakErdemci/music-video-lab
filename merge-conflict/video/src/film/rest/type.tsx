@@ -40,7 +40,7 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
       case 'r-blame': {
         // blame's gutter is the world's: the line itself is typed beside the canyon's name tags
         const g = anchors.gutter ?? { x: 160, y: 160, w: 1200, h: 520 };
-        out.push(<Code key={e.id} spec={spec(e, g)} t={t} opt={{ gutter: 'blue', size: Math.min(64, g.h / 6), keyScale: 1.6 }} />);
+        out.push(<Code key={e.id} spec={spec(e, g)} t={t} opt={{ gutter: 'blue', size: Math.min(64, g.h / 6), keyScale: 1.6, chrome: 'git blame button.css' }} />);
         break;
       }
       case 'r-red':
@@ -72,7 +72,7 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
       }
       case 'r-touch': {
         const c = anchors.caseLine ?? { x: 560, y: 420, w: 800, h: 140 };
-        out.push(<Code key={e.id} spec={spec(e, { x: c.x - 360, y: c.y - 220, w: c.w + 720, h: c.h + 260 })} t={t} opt={{ gutter: '//', size: Math.min(62, (c.h + 260) / 5.2), keyScale: 1.5 }} />);
+        out.push(<Code key={e.id} spec={spec(e, { x: c.x - 360, y: c.y - 220, w: c.w + 720, h: c.h + 260 })} t={t} opt={{ gutter: '//', size: Math.min(62, (c.h + 260) / 5.2), keyScale: 1.5, chrome: 'comment.js' }} />);
         break;
       }
       case 'r-wrote':
@@ -85,7 +85,8 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 820, w: 1820, rot: -3 }} t={t} />);
         break;
       case 'r-git':
-        out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 640, size: 420, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
+        // GIT! hits and goes: the long gap before PUSH! belongs to the warning screen
+        out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: Math.min(e.t1 - 0.02, e.t0 + 1.8), x: 960, y: 640, size: 420, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
         break;
       case 'r-push':
         out.push(<Extrude key={e.id} spec={spec(e, { x: 160, y: 200, w: 1600, h: 560 })} t={t} opt={{ size: 420, face: 'metalmania', depth: 0.35 }} />);

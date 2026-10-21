@@ -18,6 +18,7 @@ import { FLOOR_Y } from '../../stage/floor.ts';
 import { barPos, downbeats, sec } from '../../timing.ts';
 import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
+import { familyOf } from '../../type/fonts.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
 import { PlateLayer } from '../../worlds/plate.tsx';
@@ -97,7 +98,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const gTop = P(BLAME_GUTTERS.far);
   const gBot = P(BLAME_GUTTERS.near);
   const anchors = {
-    gutter: scene === 'blame' ? { x: gTop.x + 30, y: Math.min(gTop.y, gBot.y) + 60, w: 1100, h: Math.min(560, Math.abs(gBot.y - gTop.y) * 0.8) } : undefined,
+    // the line is typed beside the canyon's gutter column, as large as the frame allows
+    gutter: scene === 'blame' ? { x: Math.max(120, gTop.x + 40), y: 180, w: 1400, h: 560 } : undefined,
     countdown: scene === 'callgrid' ? rect(COUNTDOWN_FRAME) : undefined,
     tag: scene === 'nametag' ? rect(GUILTY_TAG) : undefined,
     caseLine: scene === 'lasercase' ? rect(CASE_LINE) : undefined,
@@ -177,12 +179,31 @@ export const RestShot = ({ frame }: { frame: number }) => {
           <RestType entries={REST_TYPE.filter((e) => e.form !== 'Shout')} t={t} anchors={anchors} />
         </g>
         <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
+        {scene === 'warning' && <WarningScreen t={t} t0={shot.t} />}
         {TRANSITIONS.map((s) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
         })}
       </Svg>
     </AbsoluteFill>
+  );
+};
+
+/** The warning screen of the breakdown: `git push --force` typed key by key, then the remote's refusal and the
+ *  forced update, red on the terminal room's wall. */
+const WARNING = ['$ git push --force origin main', 'warning: you are about to rewrite remote history', '! [remote rejected] main -> main (protected branch)', '+ 4f2c1e9...b07a1d3 main -> main (forced update)'];
+const WarningScreen = ({ t, t0 }: { t: number; t0: number }) => {
+  const u = t - t0;
+  return (
+    <g fontFamily={familyOf('jetbrains')} fontWeight={800}>
+      <rect x={260} y={210} width={1400} height={420} rx={18} fill="#0a0406" fillOpacity={0.82} stroke="#ff3b3b" strokeWidth={4} />
+      {WARNING.map((line, i) => {
+        const start = i * 0.42;
+        const n = Math.max(0, Math.min(line.length, Math.floor((u - start) * (i === 0 ? 22 : 60))));
+        if (n === 0) return null;
+        return <text key={i} x={300} y={300 + i * 92} fontSize={i === 0 ? 46 : 36} fill={i === 0 ? '#ffffff' : i === 2 ? '#ff3b3b' : '#ffb07a'}>{line.slice(0, n)}</text>;
+      })}
+    </g>
   );
 };
 
