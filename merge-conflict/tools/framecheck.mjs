@@ -49,7 +49,7 @@ await esbuild.build({
       "export { screenBox, CARD_FRAMES } from './film/framing.ts';",
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
-      "export { plateView } from './worlds/plategeo.ts';",
+      "export { panelParallax, plateView } from './worlds/plategeo.ts';",
     ].join('\n'),
     resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
   bundle: true, platform: 'node', format: 'esm', outfile, jsx: 'automatic', packages: 'external', logLevel: 'error',
@@ -91,7 +91,11 @@ const plateScales = (state) => {
   const pl = state.plate;
   if (!pl) return [];
   const planes = pl.dist === PANEL_DIST ? [['far', pl.dist, 0.5]] : [['far', pl.dist, 0.5], ['near', pl.dist * 0.45, 0.8]];
-  return planes.map(([name, d, follow]) => ({ id: pl.id, kind: `plate ${name}`, f: M.plateView(state.pose, pl.base, d, pl.margin, follow).scale }));
+  // a moment panel's depth parallax magnifies its near pixels by up to panelParallax's `mag` on top of the plane
+  return planes.map(([name, d, follow]) => {
+    const sc = M.plateView(state.pose, pl.base, d, pl.margin, follow).scale;
+    return { id: pl.id, kind: `plate ${name}`, f: pl.dist === PANEL_DIST ? sc * M.panelParallax(state.pose, pl.base, d, sc).mag : sc };
+  });
 };
 
 /** The scale failures of one frame's state, in the shape of check()'s (plus the run key and the size to rank by). */
