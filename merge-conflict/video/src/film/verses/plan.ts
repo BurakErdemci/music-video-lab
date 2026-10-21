@@ -4,7 +4,7 @@
 // release). Node-safe (no JSX): tools read the type entries.
 import type { Placement } from '../../cards/Card.tsx';
 import { at } from '../../events.ts';
-import { downbeat, sectionNamed } from '../../timing.ts';
+import { downbeats, sectionNamed } from '../../timing.ts';
 import type { TransitionKind } from '../../transitions/scene/scene.tsx';
 import type { TypeEntry } from '../chorus/typeplan.ts';
 
@@ -20,6 +20,8 @@ export const V2S = sectionNamed('verse2_raspy');
 /** The pre-chorus shouts begin before the section's first downbeat. */
 export const PRE_T = tk(10, 0);
 export const VERSES_END = tk(15, 0);
+/** The first downbeat inside "Reviewed and approved": the cut to blue's close-up between two stamps. */
+const PRESS_CLOSE = downbeats.find((x) => x > tk(4, 0) + 0.4) as number;
 
 export const VSHOTS: VShot[] = [
   // V1, blue alone, the neon light-box city
@@ -30,7 +32,7 @@ export const VSHOTS: VShot[] = [
   { id: 'run-line', t: tk(3, 0), scene: 'runway', cam: 'hero', into: 'diff' },
   { id: 'run-blue', t: tk(3, 5), scene: 'runway', cam: 'close', into: 'shock' },
   { id: 'press-wall', t: tk(4, 0), scene: 'press', cam: 'hero', into: 'mirror' },
-  { id: 'press-close', t: downbeat(5), scene: 'press', cam: 'close', into: 'shock' },
+  { id: 'press-close', t: PRESS_CLOSE, scene: 'press', cam: 'close', into: 'shock' },
   { id: 'press-team', t: tk(4, 6), scene: 'press', cam: 'low', into: 'shock' },
   { id: 'clock-tower', t: tk(5, 0), scene: 'clock', cam: 'hero', into: 'ink' },
   { id: 'clock-strike', t: tk(5, 4), scene: 'clock', cam: 'low', into: 'shock' },
@@ -54,6 +56,11 @@ export const VSHOTS: VShot[] = [
   { id: 'resolve', t: tk(14, 0), scene: 'arena', cam: 'wide', into: 'streaks' },
   { id: 'resolve-this', t: tk(14, 2), scene: 'arena', cam: 'low', into: 'shock' },
 ];
+for (let i = 1; i < VSHOTS.length; i++) {
+  const a = VSHOTS[i - 1] as VShot;
+  const b = VSHOTS[i] as VShot;
+  if (b.t - a.t < 0.12) throw new Error(`verse plan: shot ${b.id} at ${b.t.toFixed(2)} s is not after ${a.id} (${a.t.toFixed(2)} s)`);
+}
 
 const full = (x: number, height = 4.8, flip = false, z = 0): Placement => ({ x, height, flip, z });
 const bust = (x: number, height = 10.5, flip = false): Placement => ({ x, feet: -5.4, height, flip, z: 0 });
@@ -67,7 +74,7 @@ export const VBLUE: VPose[] = [
   { t: tk(3, 0), card: 'BD4', at: full(-2.2, 4.8) },
   { t: tk(3, 5), card: 'BX5', at: bust(-2.4) },
   { t: tk(4, 0), card: 'BC3', at: full(-4.2, 4.8, false, 1.5) },
-  { t: downbeat(5), card: 'BX1', at: bust(-3.2) },
+  { t: PRESS_CLOSE, card: 'BX1', at: bust(-3.2) },
   { t: tk(4, 6), card: 'BX2', at: bust(-3.2) },
   { t: tk(5, 0), card: 'BD7', at: full(-4, 4.6, false, 2) },
   { t: tk(5, 4), card: 'BD2', at: full(-4, 4.6, false, 2) },

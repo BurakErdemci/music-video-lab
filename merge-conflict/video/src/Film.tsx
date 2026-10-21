@@ -7,10 +7,8 @@ import { HOME } from './camera/camera.ts';
 import { Groove } from './film/Groove.tsx';
 import { GROOVE, PROOF_END, VERSE, WHITEOUTS } from './film/proof.ts';
 import { Speaker } from './film/Speaker.tsx';
-import { Verses } from './film/Verses.tsx';
-import { Chorus } from './film/Chorus.tsx';
 import { CHORUS_START, ChorusShot } from './film/chorus/ChorusShot.tsx';
-import { PING_START } from './film/act.ts';
+import { VersesShot } from './film/verses/VersesShot.tsx';
 import { Whiteout } from './fx/whiteout.tsx';
 import { beatIndexAt, DURATION_FRAMES, f, sec, sectionAt } from './timing.ts';
 import { Fonts } from './type/fonts.tsx';
@@ -31,8 +29,7 @@ const Placeholder = ({ frame }: { frame: number }) => {
 export const SHOTS: Shot[] = [
   { id: 'speaker', from: 0, to: f(GROOVE.start), Component: Speaker },
   { id: 'groove', from: f(GROOVE.start), to: f(VERSE.start), Component: Groove },
-  { id: 'verses', from: f(VERSE.start), to: f(PING_START), Component: Verses },
-  { id: 'pre', from: f(PING_START), to: f(CHORUS_START), Component: Chorus },
+  { id: 'verses', from: f(VERSE.start), to: f(CHORUS_START), Component: VersesShot },
   { id: 'chorus1', from: f(CHORUS_START), to: f(PROOF_END), Component: ChorusShot },
   { id: 'placeholder', from: f(PROOF_END), to: DURATION_FRAMES, Component: Placeholder },
 ];
