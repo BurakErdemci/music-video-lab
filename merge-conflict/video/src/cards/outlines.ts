@@ -19,6 +19,7 @@ import oBD5 from '../../public/cards/BD5.outline.json' with { type: 'json' };
 import oBD6 from '../../public/cards/BD6.outline.json' with { type: 'json' };
 import oBD7 from '../../public/cards/BD7.outline.json' with { type: 'json' };
 import oBD8 from '../../public/cards/BD8.outline.json' with { type: 'json' };
+import oBMT from '../../public/cards/BMT.outline.json' with { type: 'json' };
 import oO01 from '../../public/cards/O01.outline.json' with { type: 'json' };
 import oO02 from '../../public/cards/O02.outline.json' with { type: 'json' };
 import oO03 from '../../public/cards/O03.outline.json' with { type: 'json' };
@@ -39,6 +40,7 @@ import oOD5 from '../../public/cards/OD5.outline.json' with { type: 'json' };
 import oOD6 from '../../public/cards/OD6.outline.json' with { type: 'json' };
 import oOD7 from '../../public/cards/OD7.outline.json' with { type: 'json' };
 import oOD8 from '../../public/cards/OD8.outline.json' with { type: 'json' };
+import oOMT from '../../public/cards/OMT.outline.json' with { type: 'json' };
 
 export interface Outline { id: string; aspect: number; polylines: number[][] }
 export const OUTLINES: Record<string, Outline> = {
@@ -62,6 +64,7 @@ export const OUTLINES: Record<string, Outline> = {
   BD6: oBD6,
   BD7: oBD7,
   BD8: oBD8,
+  BMT: oBMT,
   O01: oO01,
   O02: oO02,
   O03: oO03,
@@ -82,4 +85,5 @@ export const OUTLINES: Record<string, Outline> = {
   OD6: oOD6,
   OD7: oOD7,
   OD8: oOD8,
+  OMT: oOMT,
 };
