@@ -148,9 +148,13 @@
     "source": "B12-joy-spin.png"
   },
   "BC1": {
-    "file": "cards/BC1.png",
+    "file": "cards/hd/BC1.webp",
     "w": 931,
     "h": 1490,
+    "px": [
+      1862,
+      2980
+    ],
     "bbox": [
       49,
       10,
@@ -760,9 +764,13 @@
     "source": "BV5-run.png"
   },
   "BV6": {
-    "file": "cards/BV6.png",
+    "file": "cards/hd/BV6.webp",
     "w": 1007,
     "h": 1396,
+    "px": [
+      2014,
+      2792
+    ],
     "bbox": [
       16,
       80,
@@ -1160,9 +1168,13 @@
     "source": "OD8-shimmy.png"
   },
   "OF1": {
-    "file": "cards/OF1.png",
+    "file": "cards/hd/OF1.webp",
     "w": 970,
     "h": 1499,
+    "px": [
+      1940,
+      2998
+    ],
     "bbox": [
       38,
       7,
@@ -1188,9 +1200,13 @@
     "source": "OF2-leap.png"
   },
   "OF3": {
-    "file": "cards/OF3.png",
+    "file": "cards/hd/OF3.webp",
     "w": 1013,
     "h": 1306,
+    "px": [
+      2026,
+      2612
+    ],
     "bbox": [
       11,
       111,
@@ -1712,9 +1728,13 @@
     "source": "OT5-landing.png"
   },
   "OV1": {
-    "file": "cards/OV1.png",
+    "file": "cards/hd/OV1.webp",
     "w": 1024,
     "h": 1405,
+    "px": [
+      2048,
+      2810
+    ],
     "bbox": [
       0,
       67,
@@ -1760,9 +1780,13 @@
     "source": "OV2c-squash-line.png"
   },
   "OV3": {
-    "file": "cards/OV3.png",
+    "file": "cards/hd/OV3.webp",
     "w": 974,
     "h": 1514,
+    "px": [
+      1948,
+      3028
+    ],
     "bbox": [
       18,
       6,
