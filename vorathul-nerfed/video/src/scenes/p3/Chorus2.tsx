@@ -341,7 +341,7 @@ export const S72 = ({ frame }: { frame: number }) => {
         <HeldMic st={st} place={place} side="L" />
       </Stage>
       {frame >= KID72 ? (
-          <Nameplate frame={frame} text="LV 12" appearAt={at('s72-lv')} framesPerChar={(at('s72-12') - at('s72-lv')) / 3} x={1060} y={lerp(1180, 930, rise) - wind} width={300} />
+          <Nameplate frame={frame} text="LV 12" appearAt={at('s72-lv')} framesPerChar={(at('s72-12') - at('s72-lv')) / 3} x={1060 - 75} y={lerp(1180, 930, rise) - wind - 25} width={450} />
       ) : null}
     </ShotFrame>
   );

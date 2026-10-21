@@ -151,6 +151,8 @@ export const S47 = ({ frame }: { frame: number }) => {
 };
 
 // ---------------------------------------------------------------- S48 stamp 2, shrink to dust
+/** Deep blue so the readout keeps its contrast once the frame goes grayscale (the UI blue turns mid grey). */
+const SIZE_BLUE = '#1E3A8A';
 const SH1 = at('s48-shrink1');
 const SH2 = at('s48-dust');
 const REFORM = at('s48-reform');
@@ -200,8 +202,8 @@ export const S48 = ({ frame }: { frame: number }) => {
       </Stage>
       {!asDust ? <RubberStamp frame={frame} at={at('s48-cut')} x={chest.x - w / 2} y={chest.y - (w * 0.4) / 2} width={w} rotate={-12} seed={48} /> : null}
       <DustPuff x={feet.x} y={chest.y + 60} size={560} t={prog(frame, SH2, 22)} seed={481} />
-      <DamageNumber frame={frame} text={'−10 % SIZE'} at={SH1} x={chest.x + 260} y={chest.y - 200} size={64} />
-      <DamageNumber frame={frame} text={'−10 % SIZE'} at={SH2} x={chest.x + 240} y={chest.y - 260} size={64} />
+      <DamageNumber frame={frame} text={'−10 % SIZE'} at={SH1} x={chest.x + 260} y={chest.y - 200} size={112} color={SIZE_BLUE} />
+      <DamageNumber frame={frame} text={'−10 % SIZE'} at={SH2} x={chest.x + 240} y={chest.y - 260} size={112} color={SIZE_BLUE} />
       <ComicHpBar value={60} />
     </ShotFrame>
   );
@@ -305,7 +307,7 @@ export const S50 = ({ frame }: { frame: number }) => {
       </Stage>
       <LightRays x={kx} y={ky - kh * 0.62} frame={frame} opacity={0.3} />
       <Kid asset="G32-1" x={kx} y={ky} h={kh} pose={{ armL: 150, armR: 165, head: -6, twirl, lean: -2 }} />
-      <Nameplate frame={frame} text="LV 12" appearAt={at('s50-lv')} framesPerChar={(at('s50-12') - at('s50-lv')) / 3} x={kx - 170} y={ky - kh - 110} width={330} />
+      <Nameplate frame={frame} text="LV 12" appearAt={at('s50-lv')} framesPerChar={(at('s50-12') - at('s50-lv')) / 3} x={kx - 170 - 82} y={ky - kh - 110 - 27} width={495} />
     </ShotFrame>
   );
 };
