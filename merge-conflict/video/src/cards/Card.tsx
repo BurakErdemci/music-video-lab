@@ -11,6 +11,7 @@ import manifestJson from '../../public/cards/manifest.json' with { type: 'json' 
 import { type Hex, rgb } from '../lib/ease.ts';
 import { GRADE_GLSL, type Grade, rivalOf } from '../grade/grade.ts';
 import { cardRig, frameOf } from '../rig/cardRig.ts';
+import { loopIds, loopIndex } from '../rig/loop.ts';
 import { RIPPLE_MAX, rippleAmp, ripplePhase, rippleWeight } from '../rig/ripple.ts';
 import { GRID_COLS, GRID_ROWS, MAX_BONES, rows, weightsAt } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
@@ -212,7 +213,10 @@ export interface CardLight {
 }
 
 export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 0, stretch = [1, 1], clip, soft = 0, ground, light }: CardProps) => {
-  const tex = useCardTexture(id);
+  // a drawn motion loop when the card has in-betweens (rig/loop.ts); three loads always, so the hooks stay fixed
+  const ids = loopIds(id);
+  const texs = [useCardTexture(ids[0]), useCardTexture(ids[1]), useCardTexture(ids[2])];
+  const tex = texs[loopIndex(t)];
   const geo = useRigGeometry(id);
   const e = cardEntry(id);
   const r = cardRig(id);

@@ -45,7 +45,7 @@ export const rippleWeight = (id: string, u: number, v: number): number => {
   return fr ? rippleWeightFor(fr, cardAspectOf(id), u, v) : 0;
 };
 
-const TIER: Record<string, number> = {
+export const TIER: Record<string, number> = {
   intro_robot: 0.3, intro_groove: 1, verse1_sweet: 0.4, verse2_raspy: 0.4, prechorus: 0.5, chorus1: 1, verse3_rebase: 0.45,
   chorus2: 1, verse4_trade: 0.5, scream: 1, breakdown_git_push_force: 1, whisper: 0.2, guitar_solo: 1, piano_interlude: 0,
   build: 0.4, final_chorus: 1, post_chorus_chant: 1, robot_build_failed: 0.2, scream_end: 1, outro: 0.8,
