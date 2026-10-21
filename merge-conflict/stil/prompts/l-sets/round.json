@@ -1,0 +1,34 @@
+[
+ {
+  "id": "SET-chill-ash",
+  "prompt": "stil/prompts/l-sets/SET-chill-ash.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/l-sets/out/SET-chill-ash.png"
+ },
+ {
+  "id": "SET-disco-club",
+  "prompt": "stil/prompts/l-sets/SET-disco-club.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/l-sets/out/SET-disco-club.png"
+ },
+ {
+  "id": "SET-fusion",
+  "prompt": "stil/prompts/l-sets/SET-fusion.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/l-sets/out/SET-fusion.png"
+ },
+ {
+  "id": "SET-metal-cathedral",
+  "prompt": "stil/prompts/l-sets/SET-metal-cathedral.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/l-sets/out/SET-metal-cathedral.png"
+ }
+]

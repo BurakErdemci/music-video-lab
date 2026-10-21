@@ -1,0 +1,162 @@
+[
+ {
+  "id": "BD1-hip-bump",
+  "prompt": "stil/prompts/j-dance/BD1-hip-bump.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD1-hip-bump.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD2-arm-roll",
+  "prompt": "stil/prompts/j-dance/BD2-arm-roll.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD2-arm-roll.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD3-strut",
+  "prompt": "stil/prompts/j-dance/BD3-strut.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD3-strut.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD4-y-arms",
+  "prompt": "stil/prompts/j-dance/BD4-y-arms.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD4-y-arms.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD5-crouch-snap",
+  "prompt": "stil/prompts/j-dance/BD5-crouch-snap.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD5-crouch-snap.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD6-kick",
+  "prompt": "stil/prompts/j-dance/BD6-kick.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD6-kick.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD7-point-cross",
+  "prompt": "stil/prompts/j-dance/BD7-point-cross.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD7-point-cross.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BD8-shimmy",
+  "prompt": "stil/prompts/j-dance/BD8-shimmy.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/j-dance/out/BD8-shimmy.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD1-hip-bump",
+  "prompt": "stil/prompts/j-dance/OD1-hip-bump.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD1-hip-bump.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD2-arm-roll",
+  "prompt": "stil/prompts/j-dance/OD2-arm-roll.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD2-arm-roll.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD3-strut",
+  "prompt": "stil/prompts/j-dance/OD3-strut.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD3-strut.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD4-y-arms",
+  "prompt": "stil/prompts/j-dance/OD4-y-arms.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD4-y-arms.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD5-crouch-snap",
+  "prompt": "stil/prompts/j-dance/OD5-crouch-snap.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD5-crouch-snap.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD6-kick",
+  "prompt": "stil/prompts/j-dance/OD6-kick.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD6-kick.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD7-point-cross",
+  "prompt": "stil/prompts/j-dance/OD7-point-cross.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD7-point-cross.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OD8-shimmy",
+  "prompt": "stil/prompts/j-dance/OD8-shimmy.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/j-dance/out/OD8-shimmy.png",
+  "key": "#808080"
+ }
+]

@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./SET-disco-club.png
+
+Subject: THE MAINLINE, a dazzling heavy-metal disco club stage in its DISCO mode: a light-up dance floor of glowing square tiles in hot pink, magenta, cyan and gold, a giant mirror ball hanging above centre scattering light spots, a rig of stage lights and empty light-box sign frames above the stage, glossy reflections, candy confetti in the air. Cheerful, glamorous, saturated.
+
+The attached image is the approved art style key frame: match its painterly 2D/3D hybrid animated series look (hand-painted textures, visible brushstrokes), its saturated lighting and crisp edges.
+
+Composition: an EMPTY set plate for compositing, no people at all, front-facing camera at stage height looking straight at the stage, a clear open floor area in the lower middle third where two dancers will be placed later, the background wall and lights filling the upper two thirds. Landscape 1536x1024.
+
+- ABSOLUTELY NO people, NO text, letters, numbers, logos or watermarks.
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines.
+
+After copying, print the output path and pixel size.

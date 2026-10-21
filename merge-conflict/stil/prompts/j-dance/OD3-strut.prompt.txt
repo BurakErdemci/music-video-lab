@@ -1,0 +1,14 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./OD3-strut.png
+
+Subject: the ORANGE girl of the attached model sheet, dancing: full body, a disco strut mid-step: one platform boot lifted forward, one hand on her hip, the other arm swinging back, chin up. It is a clear, readable disco dance pose with energy, as one key pose of a dance. She wears EXACTLY the outfit of the model sheet: the cropped jacket covered in orange and gold sequins with spiky studded shoulders over a black top, the hip chains with star charms, wide flared trousers in orange-and-gold sequins with black panels, huge black glossy platform boots, star earrings, the huge wild orange mane.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is the official model sheet of this character: match her face, hair, outfit, accessories and proportions EXACTLY, every fixed feature listed on the sheet.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No floor, no cast shadow, no scenery, no particles, no scribbles, no glow. The whole figure (and all of her hair) stays inside the frame with a clear grey margin on every side. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

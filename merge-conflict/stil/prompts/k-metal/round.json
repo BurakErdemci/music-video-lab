@@ -1,0 +1,20 @@
+[
+ {
+  "id": "orange-metal",
+  "prompt": "stil/prompts/k-metal/orange-metal.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/k-metal/out/orange-metal.png"
+ },
+ {
+  "id": "blue-metal",
+  "prompt": "stil/prompts/k-metal/blue-metal.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/k-metal/out/blue-metal.png"
+ }
+]

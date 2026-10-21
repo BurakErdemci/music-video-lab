@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./SET-metal-cathedral.png
+
+Subject: the same club after it burned and turned METAL: a towering cathedral built of black amplifier stacks and speaker cabinets like gothic pillars, a huge spiked iron ball hanging where the mirror ball was, heavy chains, fire burning along the stage edge, embers and sparks in the air, the floor tiles cracked and glowing ember red. Black, blood red, steel and ember orange, with cold ice-blue highlights on one side. Brutal and epic.
+
+The attached image is the approved art style key frame: match its painterly 2D/3D hybrid animated series look (hand-painted textures, visible brushstrokes), its saturated lighting and crisp edges.
+
+Composition: an EMPTY set plate for compositing, no people at all, front-facing camera at stage height looking straight at the stage, a clear open floor area in the lower middle third where two dancers will be placed later, the background wall and lights filling the upper two thirds. Landscape 1536x1024.
+
+- ABSOLUTELY NO people, NO text, letters, numbers, logos or watermarks.
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines.
+
+After copying, print the output path and pixel size.

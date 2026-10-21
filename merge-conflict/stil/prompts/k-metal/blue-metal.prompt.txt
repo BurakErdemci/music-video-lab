@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./blue-metal.png
+
+Subject: the METAL form of the BLUE girl, for the heavy metal part of the music video. Fixed features: the same very long sleek electric-blue high ponytail, now bound with steel rings along its length and a spiked steel crown-clip; sharp black-and-ice-blue face paint (thin cold geometric lines over the eyes) over her proud cool expression; a fitted black leather long coat with steel plate shoulders, chain-mail panels and high studded collar, cut like a cold dark queen; an ice-blue glowing seam pattern on the leather; black leather gloves with steel knuckle plates; a chain belt with blade-shaped charms; tight black leather trousers flaring into steel-blue at the bottom; huge black platform boots with steel toe caps and spikes. Signature colour blue, now with black, chrome steel and ice blue. Expressions (bottom-right): cold scream, icy smirk, headbang with ponytail flying, furious.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official DISCO model sheet: keep her face, eyes, hair (shape, length, colour), body proportions and earrings EXACTLY the same; only the outfit and make-up change into her METAL form described above. She must be instantly recognisable as the same girl.
+
+Composition: an official character model sheet for animation on a plain flat light grey #D9D9DE background, no scenery, no particles. Top row: three full-body views, FRONT, SIDE (true profile) and BACK, identical proportions, each about 70 percent of the frame height. Bottom-right corner: four small head close-ups with different expressions. Neutral even light, true colours. Landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

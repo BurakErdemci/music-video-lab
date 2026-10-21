@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./SET-chill-ash.png
+
+Subject: the club after the fire, quiet: dark navy shadows, the burnt amplifier pillars dim, a single warm work light on a stand pooling on the stage edge, soft grey ash drifting down through the light like snow, a few last confetti pieces on the floor. Calm, tired, melancholic, beautiful.
+
+The attached image is the approved art style key frame: match its painterly 2D/3D hybrid animated series look (hand-painted textures, visible brushstrokes), its saturated lighting and crisp edges.
+
+Composition: an EMPTY set plate for compositing, no people at all, front-facing camera at stage height looking straight at the stage, a clear open floor area in the lower middle third where two dancers will be placed later, the background wall and lights filling the upper two thirds. Landscape 1536x1024.
+
+- ABSOLUTELY NO people, NO text, letters, numbers, logos or watermarks.
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines.
+
+After copying, print the output path and pixel size.

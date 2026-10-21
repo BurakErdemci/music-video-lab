@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./orange-metal.png
+
+Subject: the METAL form of the ORANGE girl, for the heavy metal part of the music video. Fixed features: the same huge wild spiky orange mane with red-orange depth, now with a few braided strands and small metal rings; sharp black-and-orange face paint (jagged flame strokes under the eyes and down the chin) over her cocky toothy grin; a sleeveless black leather battle vest covered in silver spikes and studs with orange flame patterns painted on it, over a black ripped crop top; studded black leather fingerless gloves and spiked wrist cuffs; a heavy studded belt with hanging chains; tight black leather trousers with orange flame flares at the bottom; huge black platform combat boots with steel spikes and buckles. Signature colour orange, now with black, steel and ember red. Expressions (bottom-right): roaring scream, devil grin, headbang with hair flying, furious.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official DISCO model sheet: keep her face, eyes, hair (shape, length, colour), body proportions and earrings EXACTLY the same; only the outfit and make-up change into her METAL form described above. She must be instantly recognisable as the same girl.
+
+Composition: an official character model sheet for animation on a plain flat light grey #D9D9DE background, no scenery, no particles. Top row: three full-body views, FRONT, SIDE (true profile) and BACK, identical proportions, each about 70 percent of the frame height. Bottom-right corner: four small head close-ups with different expressions. Neutral even light, true colours. Landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.
