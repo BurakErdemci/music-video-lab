@@ -59,11 +59,11 @@ export const GROOVE_BIG: Placement = kneeUp(5.2, 10.6);
 
 // ---- 0-4.37 the speaker ------------------------------------------------------------------------------------
 export const SPEAKER_AT: Placement = kneeUp(-3.6);
-export const LINE0: FormSpec = { id: 'robot-0', line: 0, key: 2, singer: 'B', t0: 0, t1: at('wipe-flap') + 0.4, box: { x: 860, y: 230, w: 980, h: 330 } };
-export const LINE1: FormSpec = { id: 'robot-1', line: 1, key: 1, singer: 'B', t0: at('wipe-flap'), t1: GROOVE.start + 0.25, box: { x: 900, y: 430, w: 960, h: 420 } };
-export const CODE_OPT = { gutter: '!', size: 60, keyScale: 1.6, chrome: 'git merge feature', terminal: true } as const;
+export const LINE0: FormSpec = { id: 'robot-0', line: 0, key: 2, singer: 'B', t0: 0, t1: at('wipe-flap') + 0.4, box: { x: 945, y: 230, w: 775, h: 330 } };
+export const LINE1: FormSpec = { id: 'robot-1', line: 1, key: 1, singer: 'B', t0: at('wipe-flap'), t1: GROOVE.start + 0.25, box: { x: 945, y: 430, w: 845, h: 420 } };
+export const CODE_OPT = { gutter: '!', size: 38, keyScale: 1.6, chrome: 'git merge feature', terminal: true, backing: true } as const;
 export const FIX: WordAt = { text: 'FIX', x: 1120, y: 930, size: 330, face: 'display', fill: '#ff3b3b' };
-export const MORPH_FIX = morphPlan({ id: 'morph-fix', t0: at('morph-fix') - 24 / 60, frames: 24, from: { text: 'FAILED.', x: 0, y: 0, size: 60 * 1.6, face: 'jetbrains', fill: '#ff3b3b' }, to: FIX });
+export const MORPH_FIX = morphPlan({ id: 'morph-fix', t0: at('morph-fix') - 24 / 60, frames: 24, from: { text: 'FAILED.', x: 0, y: 0, size: CODE_OPT.size * 1.6, face: 'jetbrains', fill: '#ff3b3b' }, to: FIX });
 export const WIPE_FLAP = wipePlan({ id: 'wipe-flap', t0: at('wipe-flap'), marker: '>', frames: 22 });
 
 // ---- 4.37-16.33 the all-metal groove ------------------------------------------------------------------------

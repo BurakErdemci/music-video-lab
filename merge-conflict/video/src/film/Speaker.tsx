@@ -24,6 +24,7 @@ import { sec } from '../timing.ts';
 import { Code, codeWordAt } from '../type/forms/Code.tsx';
 import { FormDefs } from '../type/forms/common.tsx';
 import { Flap } from '../type/forms/Letters.tsx';
+import { Knockout, faceBoxes } from '../type/Knockout.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { LetterMorph, MarkerWipe, type WordAt } from '../type/transitions/transitions.tsx';
 import { kneeUp } from '../girls/staging.tsx';
@@ -81,6 +82,7 @@ export const Speaker = ({ frame }: { frame: number }) => {
       </Stage>
       <Svg>
         <FormDefs />
+        <Knockout id="speaker-face-knockout" faces={faceBoxes(speakerStateAt(t))}>
         {/* the speech tail: from her mouth to the panel, so the text visibly comes from her */}
         {who.map((g) => {
           const [mx, my] = screenOf(cardOf(g, close), placeOf(g, close), cam.pose, t, keypoint(cardOf(g, close), 'head'));
@@ -89,8 +91,9 @@ export const Speaker = ({ frame }: { frame: number }) => {
           return <path key={g} d={`M${mx + 40} ${my + 30} Q ${(mx + tx) / 2} ${my - 40} ${tx} ${ty}`} fill="none" stroke="#ff3b3b" strokeWidth={5} strokeDasharray="14 10" strokeDashoffset={-t * 120} opacity={pulse} />;
         })}
         <g transform={plane.transform}>
-          <MarkerWipe plan={WIPE_FLAP} t={t} color="#ff3b3b" from={terminal} to={<Flap spec={LINE1} t={t} cols={13} />} />
+          <MarkerWipe plan={WIPE_FLAP} t={t} color="#ff3b3b" from={terminal} to={<Flap spec={LINE1} t={t} cols={13} backing />} />
         </g>
+        </Knockout>
       </Svg>
     </AbsoluteFill>
   );

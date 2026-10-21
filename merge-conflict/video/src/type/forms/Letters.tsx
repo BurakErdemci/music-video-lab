@@ -7,12 +7,13 @@
 import type { ReactNode } from 'react';
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { beatPos } from '../../timing.ts';
+import { Scrim } from '../Scrim.tsx';
 import { capOf, type Face, familyOf, layout } from '../fonts.tsx';
 import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, solidAt, tokensOf, visible } from './common.tsx';
 
 const MONO = familyOf('jetbrains');
 
-export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?: number }) => {
+export const Flap = ({ spec, t, cols = 16, backing = false }: { spec: FormSpec; t: number; cols?: number; backing?: boolean }) => {
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
@@ -32,6 +33,7 @@ export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?:
   const top = spec.box.y + (spec.box.h - ch * rows.length) / 2;
   return (
     <g fontFamily={MONO} fontWeight={800}>
+      {backing && <Scrim x={spec.box.x} y={top} w={spec.box.w} h={ch * rows.length} pad={6} />}
       {rows.map((row, ri) =>
         Array.from({ length: cols }, (_, ci) => {
           const cell = row[ci];

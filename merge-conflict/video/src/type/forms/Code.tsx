@@ -6,6 +6,7 @@
 import { type Hex, clamp01, mixHex, outQuad } from '../../lib/ease.ts';
 import { beatPos } from '../../timing.ts';
 import { familyOf, MONO_ADV } from '../fonts.tsx';
+import { Scrim } from '../Scrim.tsx';
 import { clean, type FormSpec, keyFill, keyIndex, tokensOf, visible } from './common.tsx';
 
 const MONO = familyOf('jetbrains');
@@ -14,7 +15,7 @@ const KEYWORDS = /^(the|was|and|by|at|i'm|then|who|are|you)$/i;
 const classOf = (w: string): Hex => (/^\d/.test(w) ? SYNTAX.number : KEYWORDS.test(clean(w)) ? SYNTAX.keyword : /^[A-Z]/.test(w) ? SYNTAX.fn : SYNTAX.plain);
 
 /** terminal: git's error in red on black (the intro), instead of editor syntax colours */
-export interface CodeOptions { gutter: string; size: number; keyScale?: number; chrome?: string; terminal?: boolean }
+export interface CodeOptions { gutter: string; size: number; keyScale?: number; chrome?: string; terminal?: boolean; /** a light edge and a soft shadow round the panel, for a plate it would melt into */ backing?: boolean }
 const TERMINAL_RED = '#ff3b3b';
 
 /** Characters of a token visible at t: typed across its measured start..end. */
@@ -59,6 +60,7 @@ export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOpt
   const blink = beatPos(t) % 1 < 0.55;
   return (
     <g fontFamily={MONO} fontWeight={700}>
+      {opt.backing && <Scrim x={box.x} y={box.y} w={box.w} h={box.h} pad={4} opacity={0} />}
       <Panel x={box.x} y={box.y} w={box.w} h={box.h} title={opt.chrome ?? 'button.css'} terminal={opt.terminal} />
       <text x={box.x + 40} y={base} fontSize={size} fill="#6e7681">{opt.gutter}</text>
       {runs.map((r) => {
@@ -81,7 +83,7 @@ export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOpt
   );
 };
 
-export interface DiffOptions { minus: string; size: number; keyScale?: number; title?: string }
+export interface DiffOptions { minus: string; size: number; keyScale?: number; title?: string; backing?: boolean }
 
 export const Diff = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: DiffOptions }) => {
   if (!visible(spec, t)) return null;
@@ -96,6 +98,7 @@ export const Diff = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: DiffOpt
   const mw = opt.minus.length * MONO_ADV * size;
   return (
     <g fontFamily={MONO} fontWeight={700}>
+      {opt.backing && <Scrim x={box.x} y={box.y} w={box.w} h={box.h} pad={4} opacity={0} />}
       <Panel x={box.x} y={box.y} w={box.w} h={box.h} title={opt.title ?? 'git diff button.css'} />
       <rect x={box.x + 6} y={y1 - size * 0.95} width={box.w - 12} height={size * 1.35} fill="#ff4d5e" fillOpacity={0.22 * intro} />
       <text x={box.x + 40} y={y1} fontSize={size} fill="#ff6b7a" opacity={intro}>{`- ${opt.minus}`}</text>
