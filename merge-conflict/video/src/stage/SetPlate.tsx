@@ -123,15 +123,18 @@ export interface SetProps {
   wallOnly?: boolean;
   /** The all-metal set (scene-map.md, 23d272a): no mirror ball, steel floor plates, smoke. */
   metal?: boolean;
+  /** The split stage (the chorus): disco floor and mirror ball on the left half, steel plates on the right. */
+  metalRight?: boolean;
 }
 
-export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wallOnly = false, metal = false }: SetProps) => {
+export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wallOnly = false, metal = false, metalRight = false }: SetProps) => {
   const g = gradeUniform(grade);
   const depth = HOME_Z - WALL_Z;
   const wallH = 2 * depth * Math.tan((40 * Math.PI) / 360) * 1.6;
   const wallW = wallH * 1.9;
   const wall = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAspect: [wallW / wallH, 1], uHue2: rgb(split ?? grade.hue), uSplit: split ? 1 : 0, uMetal: metal ? 1 : 0 });
   const floor = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAlign: align, uDust: dust });
+  const metalFloor = useUniforms({ uTime: t, uHue: rgb(split ?? grade.hue), uStage: g.stage });
   const ball = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uSpin: t * spin });
   return (
     <>
@@ -141,11 +144,17 @@ export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wal
       </mesh>
       {!wallOnly && (
         <>
-      <mesh position={[0, FLOOR_Y, -6]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.floor}>
-        <planeGeometry args={[60, 20]} />
+      <mesh position={[metalRight ? -15 : 0, FLOOR_Y, -6]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.floor}>
+        <planeGeometry args={[metalRight ? 30 : 60, 20]} />
         <shaderMaterial key={metal ? 'metal' : 'disco'} {...floor} vertexShader={VERT} fragmentShader={metal ? METAL_FLOOR_FRAG : FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
-      <mesh position={[0, 5.3, -7]} renderOrder={ORDER.ball} visible={!metal}>
+      {metalRight && (
+        <mesh position={[15, FLOOR_Y, -6]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.floor}>
+          <planeGeometry args={[30, 20]} />
+          <shaderMaterial {...metalFloor} vertexShader={VERT} fragmentShader={METAL_FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
+        </mesh>
+      )}
+      <mesh position={[metalRight ? -4.5 : 0, 5.3, -7]} renderOrder={ORDER.ball} visible={!metal}>
         <sphereGeometry args={[1.9, 64, 32]} />
         <shaderMaterial {...ball} vertexShader={VERT} fragmentShader={BALL_FRAG} depthTest={false} depthWrite={false} />
       </mesh>
