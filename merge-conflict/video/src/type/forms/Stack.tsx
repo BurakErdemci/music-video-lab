@@ -8,7 +8,8 @@ import { capOf, type Face, familyOf, layout, widthOf } from '../fonts.tsx';
 import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, tokensOf, visible } from './common.tsx';
 
 const FACES: Face[] = ['bebas', 'display', 'righteous', 'bungee'];
-const GAP = 14;
+// the gap between rows grows with the rows (a fixed 14 px let the slamming rows touch, round 2)
+const GAP = 30;
 const KEY_SHARE = 0.4;
 export interface PlacedWord { text: string; x: number; y: number; size: number; face: Face; tok: number; track: number; sx: number }
 const MAX_STRETCH = 1.6;
