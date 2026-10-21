@@ -107,3 +107,26 @@ Two girls fight over one line of code the way two divas fight over one spotlight
 
 - SFX plan, built with the beat map (risers into the choruses, the breakdown slams, the hard stop).
 - Whether the solo needs one extra hero card per girl (a signature finishing pose).
+
+## Two modes: DISCO → METAL → FUSION (Burak, 2026-10-21)
+
+"Start as a bright, chirpy disco; in the hard metal parts the colours, the setting and the characters turn metal; chill parts disco; metal parts with a metal font, palette and theme." The turn is also the story: the rivalry starts as a disco flirt and turns serious when the metal hits. The final "gradient now" fuses both.
+
+Mode map. Loudness per section is flat (−15 to −20 dB, a compressed master; only the piano drops to −22 dB with the bass gone). The split therefore follows the measured bass weight and the take's own section tags.
+
+| Time (s) | Sections | Mode |
+|---|---|---|
+| 0-117 | intro, verse 1 (bass out), verse 2, pre-chorus, chorus 1, post-chorus, verse 3 (bass out), chorus 2 | DISCO. The club catches fire on chorus 2's "the build is on fire", the first spark of the turn. |
+| 118-156 | verse 4 (double-kick), GIT! PUSH! FORCE!, guitar solo | METAL. The club burns into a cathedral of amp stacks. The girls take their metal forms. |
+| 156-177 | piano, build | CHILL. Ash and quiet after the fire, still in the metal forms, with the disco slowly returning in the light. |
+| 177.7-end | final chorus, outro, tail | FUSION. The disco and metal worlds and outfits merge on "gradient now". |
+
+| | DISCO | METAL | FUSION |
+|---|---|---|---|
+| Palette | hot pink, magenta, cyan, gold, violet | black, blood red, steel and chrome, ember orange, ice blue for the blue girl | the orange→blue gradient over black with chrome |
+| Particles | candy confetti, mirror-ball sparkles | embers, sparks, ash, fire flecks | confetti and embers together |
+| Set | the Mainline club, mirror ball | the club burnt into an amp-stack cathedral, a spiked iron ball, chains, fire | a chrome mirror ball with spikes, the gradient club |
+| Type | neon-sign and rounded heavy display faces (chrome, glow) | blackletter and jagged band-logo faces, slams with debris | both, the key word in the gradient |
+| Girls | approved disco outfits | metal forms: spiked leather, flames, studs; same faces and hair | disco outfits with metal pieces |
+
+Fonts: OFL faces from Google Fonts, kept as files under `video/public/fonts/` with their licences. These are not npm dependencies.
