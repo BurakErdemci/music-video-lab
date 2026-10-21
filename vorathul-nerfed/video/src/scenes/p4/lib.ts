@@ -33,8 +33,6 @@ export const easeInOut = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - (
 export const mix = lerp;
 export { clamp01, fitDistance };
 
-/** Frames on twos (15 fps), for every 2D overlay. */
-export const twos = (frame: number): number => frame - (frame % 2);
 
 // ---- painting world (inside) ----
 /**

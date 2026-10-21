@@ -421,7 +421,7 @@ export const Hero: React.FC<HeroProps> = ({ kind, pose, frame, x, y, height, fli
   const look = LOOKS[kind];
   const s = (height / 100) * look.H;
   const seed = look.seed;
-  const sway = pose === 'dizzy' ? 6 * Math.sin((2 * Math.PI * (Math.floor(frame / 2) * 2)) / 40) : 0;
+  const sway = pose === 'dizzy' ? 6 * Math.sin((2 * Math.PI * frame) / 40) : 0;
   return (
     <g transform={`translate(${f(x)} ${f(y)})`} filter={`url(#${inkFilterId(seed, 2)})`}>
       <defs>
@@ -448,9 +448,9 @@ const starPath = (r: number, inner: number): string => {
   return `M${p.join('L')}Z`;
 };
 
-/** Three gold stars orbiting above a head, stepped at 15 fps. `size` is the orbit radius. */
+/** Three gold stars orbiting above a head, moving on every frame. `size` is the orbit radius. */
 export const KoStars: React.FC<{ frame: number; x: number; y: number; size: number }> = ({ frame, x, y, size }) => {
-  const step = Math.floor(frame / 2);
+  const step = frame / 2;
   return (
     <g transform={`translate(${f(x)} ${f(y)})`}>
       {[0, 1, 2].map((k) => {

@@ -257,7 +257,11 @@ const Scorch = ({ frame, pose }: { frame: number; pose: CameraPose }) => {
   if (frame < FIRE + 2) return null;
   const end = Math.min(frame, DASH);
   const pts: string[][] = [[], []];
-  for (let f = FIRE; f <= end; f += 2) [-1, 1].forEach((k, j) => {
+  // trail samples every 2 frames plus the beam tip, so the scorch reaches the tip on every frame
+  const samples: number[] = [];
+  for (let f = FIRE; f < end; f += 2) samples.push(f);
+  samples.push(end);
+  for (const f of samples) [-1, 1].forEach((k, j) => {
     const p = project(pose, beamEnd(f, k));
     pts[j]!.push(`${p.x.toFixed(1)} ${p.y.toFixed(1)}`);
   });
@@ -304,6 +308,7 @@ export const S57 = ({ frame }: { frame: number }) => {
   const storm = frame < GONE57;
   const frozen = frame >= TOG;
   const boil = frozen ? TOG : twos(frame);
+  const sway = frozen ? TOG : frame;
   const bolts = frame >= BOLT && storm ? [[300, 260, 520, 1080], [1300, 300, 1100, 1080], [1650, 200, 1820, 900]].slice(0, frame >= BOLT + 8 ? 3 : 2) : [];
   const clouds = easeOut(prog(frame, GONE57, 10));
   return (
@@ -315,7 +320,7 @@ export const S57 = ({ frame }: { frame: number }) => {
         <>
           <AbsoluteFill style={{ background: INK, opacity: 0.72 }} />
           {STORM.map((c, i) => (
-            <Cloud key={i} x={c.x + (frozen ? 0 : Math.sin(boil * 0.4 + i) * 10)} y={c.y + (frozen ? 0 : Math.cos(boil * 0.5 + i) * 8)} w={c.w} seed={570 + i} storm={1} />
+            <Cloud key={i} x={c.x + (frozen ? 0 : Math.sin(sway * 0.4 + i) * 10)} y={c.y + (frozen ? 0 : Math.cos(sway * 0.5 + i) * 8)} w={c.w} seed={570 + i} storm={1} />
           ))}
           {frame >= at('s57-boil') ? <ScribbleBoil frame={frozen ? TOG - at('s57-boil') : frame - at('s57-boil')} duration={200} seed={57} x={960} y={260} rx={760} ry={180} color={VIOLET} width={9} loops={3} /> : null}
           <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>

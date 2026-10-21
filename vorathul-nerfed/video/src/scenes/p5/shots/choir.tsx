@@ -11,7 +11,7 @@ import { DamageNumber } from '../../../ui/kit.ts';
 import { DuotoneFlash, ImpactBurst, InkSplash, Meteor, Overlay, seeded, Shards, SpeedLines, InkFilter, inkFilterId } from '../../../vfx/effects.ts';
 import { DomPlate, DomPlateFilters } from '../lib/DomPlate.tsx';
 import { BLAST_CUES, PANEL_CUES, PANEL_FRAMES, WHITEOUT } from '../lib/flash.ts';
-import { clamp01, E, lerp, outBack, outCubic, pitchOf, prog, project, twos, W, H } from '../lib/geom.ts';
+import { clamp01, E, lerp, outBack, outCubic, pitchOf, prog, project, W, H } from '../lib/geom.ts';
 import { Chair, Dev, O, PaintDecal, Rect, WALL_Z } from '../lib/Office.tsx';
 import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints } from '../lib/rigPoints.ts';
@@ -127,7 +127,7 @@ const FIRST_METEORS: { start: number; from: [number, number]; to: [number, numbe
 
 export const S108 = ({ frame }: { frame: number }) => {
   const cam = S108_CAM(frame);
-  const peel = outCubic(prog(twos(frame), E('s108-peel'), E('s108-sky') - E('s108-peel')));
+  const peel = outCubic(prog(frame, E('s108-peel'), E('s108-sky') - E('s108-peel')));
   const tip = project(cam, rigPoints(S108_TL, frame, { at: S108_AT }).swordTip);
   const cap = frame - E('s108-caption');
   return (
@@ -182,7 +182,7 @@ const SPARE: Vec3[] = [[-5.5, F, -9.5], [5.2, F, -9.6], [3.2, F, -16.5]];
 
 export const S109 = ({ frame }: { frame: number }) => {
   const cam = S109_CAM(frame);
-  const fly = prog(twos(frame), E('s109-tier1') - 18, 18);
+  const fly = prog(frame, E('s109-tier1') - 18, 18);
   const spin = Math.max(0, frame - E('s109-spin'));
   return (
     <Shot>
@@ -226,8 +226,8 @@ const SCATTER: Vec3[] = [[-5.8, F, -8.5], [-4.8, F, -16.2], [7.4, F, -16.4]];
 export const S110 = ({ frame }: { frame: number }) => {
   const cam = S110_CAM(frame);
   const feet = project(cam, S110_AT);
-  const slide = outCubic(prog(twos(frame), E('s110-scatter') - 10, 12));
-  const up = prog(twos(frame), SLAM, E('s110-tier2') - SLAM);
+  const slide = outCubic(prog(frame, E('s110-scatter') - 10, 12));
+  const up = prog(frame, SLAM, E('s110-tier2') - SLAM);
   const ring = frame - SLAM;
   return (
     <Shot>
@@ -297,7 +297,7 @@ export const S111 = ({ frame }: { frame: number }) => {
           {[0, 1].map((k) => {
             const t = run(k);
             if (t <= 0 || t >= 1) return null;
-            const bob = Math.abs(Math.sin(twos(frame) * 0.6 + k)) * 0.3;
+            const bob = Math.abs(Math.sin(frame * 0.6 + k)) * 0.3;
             return <Dev key={k} who={k ? 'bun' : 'hoodie'} at={[lerp(-9, 9, t), F + bob, -6.5 - k * 1.2]} rot={[0, 0, -0.12]} height={3.3} flipX={k === 0} order={3000} />;
           })}
         </SkyRoom>
@@ -408,10 +408,10 @@ export const S113 = ({ frame }: { frame: number }) => {
           </SkyRoom>
         </Paint>
       </Stage>
-        {blast < 0 ? <Meteor frame={Math.round(g * 29)} duration={30} seed={1133} from={from} to={[hitPt.x, hitPt.y]} size={lerp(40, 520, g * g)} trail={lerp(400, 2600, g)} /> : null}
+        {blast < 0 ? <Meteor frame={g * 29} duration={30} seed={1133} from={from} to={[hitPt.x, hitPt.y]} size={lerp(40, 520, g * g)} trail={lerp(400, 2600, g)} /> : null}
         <Shards frame={blast - 9} duration={40} seed={1134} origin={[hitPt.x, hitPt.y]} direction={0} spread={Math.PI * 2} speed={70} size={90} count={44} fills={[GOLD, IVORY, O.white, O.mid]} gravity={1.6} />
         <InkSplash frame={blast - 9} duration={30} seed={1135} x={hitPt.x} y={hitPt.y} size={620} variant="violet" fade={10} />
-        <SpeedLines mode="radial" frame={twos(frame) - WHITEOUT - 9} duration={20} seed={1136} focus={[hitPt.x, hitPt.y]} inner={300} count={70} thickness={18} />
+        <SpeedLines mode="radial" frame={frame - WHITEOUT - 9} duration={20} seed={1136} focus={[hitPt.x, hitPt.y]} inner={300} count={70} thickness={18} />
       </BlastScene>
       {white ? (
         // The white-out, held ivory into the beat-816 grade: K4 is the black silhouette on it (Z6 fix, one swing).
@@ -458,7 +458,6 @@ export const S114 = ({ frame }: { frame: number }) => {
   const chairY = frame < CLONK ? lerp(F + 12, F + 3.2, fall * fall) : F + 3.2 + Math.max(0, Math.sin((frame - CLONK) * 0.35) * 1.4 * Math.exp(-(frame - CLONK) / 10));
   const chairX = frame < CLONK ? lerp(devX - 2.5, lerp(-11, 10, prog(CLONK, CLONK - 26, 60)), fall) : lerp(-11, 10, prog(CLONK, CLONK - 26, 60)) + (frame - CLONK) * 0.12;
   const head = project(cam, [devX, F + 3.2, -7]);
-  const ff = twos(frame);
   return (
     <Shot>
       <BlastScene frame={frame}>
@@ -467,7 +466,7 @@ export const S114 = ({ frame }: { frame: number }) => {
           <SkyRoom>
             <Throne />
             <Vorathul tl={S114_TL} frame={frame} at={THRONE_AT} />
-            {devT > 0 && devT < 1 ? <Dev who="glasses" act="run" at={[devAt[0], F + Math.abs(Math.sin(ff * 0.6)) * 0.25, devAt[2]]} rot={[0, 0, frame >= CLONK && frame < CLONK + 8 ? 0.3 : -0.1]} height={3.2} order={3000} /> : null}
+            {devT > 0 && devT < 1 ? <Dev who="glasses" act="run" at={[devAt[0], F + Math.abs(Math.sin(frame * 0.6)) * 0.25, devAt[2]]} rot={[0, 0, frame >= CLONK && frame < CLONK + 8 ? 0.3 : -0.1]} height={3.2} order={3000} /> : null}
             {frame >= CLONK - 10 && frame < CLONK + 40 ? <Chair at={[chairX, chairY, -6.9]} rot={[0, 0, (frame - CLONK) * 0.2]} size={2.3} order={3001} pose={4} /> : null}
           </SkyRoom>
         </Paint>
@@ -479,12 +478,12 @@ export const S114 = ({ frame }: { frame: number }) => {
           </defs>
           <g filter={`url(#${inkFilterId(114, 14, 0.2)})`}>
             {SMOKE.map((s, i) => (
-              <circle key={i} cx={s.x + s.vx * (ff - E('s114-cut'))} cy={s.y + s.vy * (ff - E('s114-cut'))} r={s.r * (1 + 0.6 * clear)} fill={s.dark ? '#141210' : '#4A3C26'} stroke={INK} strokeWidth={8} />
+              <circle key={i} cx={s.x + s.vx * (frame - E('s114-cut'))} cy={s.y + s.vy * (frame - E('s114-cut'))} r={s.r * (1 + 0.6 * clear)} fill={s.dark ? '#141210' : '#4A3C26'} stroke={INK} strokeWidth={8} />
             ))}
           </g>
         </Overlay>
         <Overlay>
-          {em >= 0 ? EMBERS.map((e, i) => <circle key={i} cx={e.x + Math.sin(ff * e.w * 3 + i) * 30} cy={e.y - e.v * em} r={e.r} fill={e.c} opacity={1 - clamp01(em / 90)} />) : null}
+          {em >= 0 ? EMBERS.map((e, i) => <circle key={i} cx={e.x + Math.sin(frame * e.w * 3 + i) * 30} cy={e.y - e.v * em} r={e.r} fill={e.c} opacity={1 - clamp01(em / 90)} />) : null}
         </Overlay>
         {/* The blast's ink carries over the cut and thins out (measured: a clean cut here was a 4th swing in the second). */}
         <InkSplash frame={frame - WHITEOUT - 9} duration={44} seed={1135} x={BLAST_AT.x} y={BLAST_AT.y} size={620} variant="violet" fade={24} />

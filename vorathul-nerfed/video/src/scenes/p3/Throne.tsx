@@ -9,7 +9,7 @@ import { AssetCard } from '../../cast/AssetCard.tsx';
 import { useCardTexture } from '../../stage/Card.tsx';
 import { Sky } from './Backdrop.tsx';
 import { at } from './events.ts';
-import { easeOut, prog, twos } from './lib.ts';
+import { easeOut, prog } from './lib.ts';
 
 const WALL_H = 74;
 /** The wall image's floor line sits this far (fraction of its height) above its bottom edge. */
@@ -32,7 +32,7 @@ const CLUSTERS: [number, number][] = [[0, 0.317], [0.317, 0.685], [0.685, 1]];
 const Cracks = ({ frame, wallW }: { frame: number; wallW: number }) => {
   const tex = useCardTexture('assets/L3-cracks.png');
   const steps = crackSteps();
-  const f = twos(frame);
+  const f = frame;
   const textures = useMemo(() => CLUSTERS.map(([u0, u1]) => {
     const t = tex.clone();
     t.repeat.set(u1 - u0, 1);
@@ -105,7 +105,7 @@ const ThroneFloor = ({ pitch }: { pitch: number }) => {
 const RUBBLE_W = 30;
 const RUBBLE_H = (RUBBLE_W * 514) / 1521;
 const Rubble = ({ frame }: { frame: number }) => {
-  const rise = easeOut(prog(twos(frame), at('s65-cut'), 8));
+  const rise = easeOut(prog(frame, at('s65-cut'), 8));
   return <AssetCard id="L3-rubble" standIn={{ color: NONE }} height={RUBBLE_H} width={RUBBLE_W} position={[0, RUBBLE_H / 2 - 0.5 - (1 - rise) * RUBBLE_H, -20]} renderOrder={-60} />;
 };
 

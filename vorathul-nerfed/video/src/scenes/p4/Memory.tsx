@@ -3,7 +3,7 @@ import { AbsoluteFill, Img, staticFile } from 'remotion';
 import { UiFonts, C } from '../../ui/kit.ts';
 import { DuotoneFlash, GOLD, IVORY, ImpactBurst, StickerCutout, gradeCues } from '../../vfx/effects.ts';
 import { CUE } from './cues.ts';
-import { H, W, easeInOut, easeOut, mix, prog, twos } from './lib.ts';
+import { H, W, easeInOut, easeOut, mix, prog } from './lib.ts';
 
 const MEMORY_PLATE = 'plates/06-dovus-faz3.jpg';
 const OFFICE_PLATE = 'assets/office-plate.png';
@@ -34,7 +34,7 @@ const MEMORY_GRADE = gradeCues([{ at: { frame: CUE.s76cut.frame }, grade: 'MEMOR
 
 /** The memory still in 1920 x 1080 panel coordinates: ivory ground, torn sticker panel, soft ivory/sky duotone, slow push. */
 const MemoryPanel = ({ frame }: { frame: number }) => {
-  const f = twos(frame);
+  const f = frame;
   const push =
     1 + 0.03 * prog(f, CUE.s76cut.frame, 100) + 0.04 * easeOut(prog(f, CUE.s76push.frame, 24)) + 0.05 * easeOut(prog(f, CUE.s76push2.frame, 24));
   const sword = f - CUE.s76sword.frame;
@@ -64,7 +64,7 @@ const MemoryPanel = ({ frame }: { frame: number }) => {
 /** S76 03:02.13: memory panel full frame, push in; on the second "finally" the camera pulls back: it is a monitor, and the worker at it cheers. */
 export const S76 = ({ frame }: { frame: number }) => {
   const world = camTransform(frame);
-  const f = twos(frame);
+  const f = frame;
   const cheer = f > CUE.s76arms.frame ? Math.sin((f - CUE.s76arms.frame) * 0.7) * 9 * Math.max(0, 1 - (f - CUE.s76arms.frame) / 24) : 0;
   return (
     <AbsoluteFill style={{ background: IVORY }}>

@@ -7,7 +7,7 @@ import { Stage } from '../../../stage/Stage.tsx';
 import { HealthBar, Monitor, PatchNotesCard, RevertDialog, StickyNote } from '../../../ui/kit.ts';
 import { InkSplash, Meteor, playBetween, ScribbleBoil, TimeRemap } from '../../../vfx/effects.ts';
 import { DomPlate } from '../lib/DomPlate.tsx';
-import { E, lerp, outCubic, prog, project, pxPerUnit, twos } from '../lib/geom.ts';
+import { E, lerp, outCubic, prog, project, pxPerUnit } from '../lib/geom.ts';
 import { Chair, Dev, Monitor3D, O, PaintDecal, Rect } from '../lib/Office.tsx';
 import { AfterRoom } from '../lib/Room.tsx';
 import { rigPoints } from '../lib/rigPoints.ts';
@@ -54,7 +54,7 @@ const S105_CAM: CameraPath = handheld(tween({ position: [-2.2, -2.4, 0.5], targe
 const LAST_MON: Vec3 = [-3.6, F + 1.1, -9.8];
 
 export const S105 = ({ frame }: { frame: number }) => {
-  const shiver = Math.sin(twos(frame) * 2.1) * 0.06;
+  const shiver = Math.sin(frame * 2.1) * 0.06;
   return (
     <Shot>
       <Stage camera={S105_CAM}>
@@ -153,8 +153,7 @@ export const S107 = ({ frame }: { frame: number }) => {
   const cam = S107_CAM(frame);
   const head = project(cam, rigPoints(S107_TL, frame, { at: S107_AT }).head);
   const s = pxPerUnit(cam, head.z) / 120;
-  const g = Math.round(REMAP(frame));
-  const lines = (frame - REWIND) % 2 === 0;
+  const lines = Math.floor(frame - REWIND) % 2 === 0;
   return (
     <Shot>
       <Stage camera={S107_CAM}>

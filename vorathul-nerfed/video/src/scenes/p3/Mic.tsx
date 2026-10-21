@@ -9,7 +9,7 @@ import type { HandName, RigState } from '../../rig/types.ts';
 import { useCardTexture } from '../../stage/Card.tsx';
 import { GOLD, IVORY, Shards } from '../../vfx/effects.ts';
 import { at } from './events.ts';
-import { keyed, twos } from './lib.ts';
+import { keyed } from './lib.ts';
 import { FULL_H, nodeAt, type Place } from './nerf.tsx';
 
 const NONE = '#0A0A0A';
@@ -182,11 +182,10 @@ export const flareFrames = (): number[] => [
   at('s68-step'), at('s69-hop1'), at('s69-bonk'), at('s70-swept'), at('s71-sky'), at('s71-edge'), at('s71-ecu'),
 ];
 const decay = (frame: number, f0: number, len: number): number => (frame < f0 ? 0 : Math.exp(-(frame - f0) / len));
-/** 0..1 flare level of the lantern rig (twos). */
+/** 0..1 flare level of the lantern rig. */
 export const flareAt = (frame: number): number => {
-  const f = twos(frame);
   let v = 0;
-  for (const b of flareFrames()) v = Math.max(v, decay(f, b, 7));
+  for (const b of flareFrames()) v = Math.max(v, decay(frame, b, 7));
   return v;
 };
 
@@ -200,9 +199,8 @@ const LIGHTS_CROP = 0.2;
  * card's top edge; each shot hangs it where its camera sees it.
  */
 export const StageLights = ({ frame, top, z, width, rays = 0.35 }: { frame: number; top: number; z: number; width: number; rays?: number }) => {
-  const f = twos(frame);
   let sway = 0;
-  for (const b of flareFrames()) sway += 0.035 * decay(f, b, 16) * Math.sin(0.34 * (f - b));
+  for (const b of flareFrames()) sway += 0.035 * decay(frame, b, 16) * Math.sin(0.34 * (frame - b));
   const flare = flareAt(frame);
   const tex = useCardTexture('assets/P1-stage-lights.png');
   const rayTex = useCardTexture('assets/LX-rays.png');

@@ -1,11 +1,11 @@
-// 2D overlays of the interlude shots (S74-S75). Everything steps on twos and is a pure function of the frame.
+// 2D overlays of the interlude shots (S74-S75). Everything is a pure function of the frame.
 import { Img, staticFile } from 'remotion';
 import { Overlay } from '../../vfx/effects.ts';
 import { seeded } from '../../vfx/seeded.ts';
 import { C, UiFonts } from '../../ui/kit.ts';
 import { UI_FONT } from '../../ui/theme.tsx';
 import type { CameraPose } from '../../stage/Stage.tsx';
-import { H, W, clamp01, easeOut, project, prog, twos } from './lib.ts';
+import { H, W, clamp01, easeOut, project, prog } from './lib.ts';
 
 const GOLD_DUST = '#B98F2E';
 
@@ -20,7 +20,7 @@ export interface DustProps {
 
 /** Slow motes in the light: gold and ink flecks rising, swaying, a gust on the second cue. */
 export const DustMotes = ({ frame, start, gust, seed = 4, count = 46 }: DustProps) => {
-  const f = twos(frame);
+  const f = frame;
   const rng = seeded(`dust:${seed}`);
   const motes = Array.from({ length: count }, (_, i) => ({
     x: rng.range(0.05, 0.95) * W, y: rng.range(0.15, 0.95) * H, r: rng.range(1.6, 4.4), vy: rng.range(0.15, 0.55),
@@ -49,9 +49,9 @@ export const DustLayer = ({ frame, opacity = 0.3 }: { frame: number; opacity?: n
   />
 );
 
-/** Four-point glints on the floor, flickering on twos. */
+/** Four-point glints on the floor, flickering. */
 export const FloorGlints = ({ frame, start, points, seed = 2 }: { frame: number; start: number; points: [number, number][]; seed?: number }) => {
-  const f = twos(frame);
+  const f = frame;
   const rng = seeded(`glint:${seed}`);
   return (
     <Overlay>
@@ -86,7 +86,7 @@ export interface SpawnProps { frame: number; pose: CameraPose; rings: RingSpec[]
 
 /** The four game spawn rings of S75 ("P1 P2 P3 P4"): UI-blue outlines draw in, each fills on its word, all pulse on the beat. */
 export const SpawnRings = ({ frame, pose, rings, outlineAt, pulseAt, radius = 1.25 }: SpawnProps) => {
-  const f = twos(frame);
+  const f = frame;
   const pulse = prog(f, pulseAt, 14);
   const draw = prog(f, outlineAt, 14);
   return (

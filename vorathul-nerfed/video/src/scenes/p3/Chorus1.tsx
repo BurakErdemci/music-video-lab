@@ -11,7 +11,7 @@ import { at } from './events.ts';
 import { BootSole, ComicHpBar, DustPuff, Flakes, Kid, KoStars, LightRays, Tablet, type KidPose } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
 import { G } from './grades.ts';
-import { easeIn, easeInOut, easeOut, easeOutBack, keyed, lerp, project, prog, twos } from './lib.ts';
+import { easeIn, easeInOut, easeOut, easeOutBack, keyed, lerp, project, prog } from './lib.ts';
 import { helmAt, chestAt, nerfTimeline, SCALE_A, SCALE_B, SCALE_C, stateAt, swordTipAt, Vorathul, withHead, FULL_H, type Place } from './nerf.tsx';
 
 const shakeHits = (list: [number, keyof typeof SHAKE_PCT][]) => list.map(([start, k], i) => ({ start, seed: start * 7 + i, amp: { pct: SHAKE_PCT[k] } }));
@@ -58,7 +58,7 @@ export const S46 = ({ frame }: { frame: number }) => {
       </Stage>
       <Flakes frame={frame} start={at('s46-cut') - 40} seed={46} fall={1.4} />
       <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
-        <rect x={-9} y={-6} width={18} height={12} fill={GOLD} stroke={INK} strokeWidth={2} transform={`translate(${helm.x + 6 + Math.sin(tf * 9) * 30 * (1 - tf)} ${fy}) rotate(${tf < 1 ? twos(frame) * 9 : -12})`} />
+        <rect x={-9} y={-6} width={18} height={12} fill={GOLD} stroke={INK} strokeWidth={2} transform={`translate(${helm.x + 6 + Math.sin(tf * 9) * 30 * (1 - tf)} ${fy}) rotate(${tf < 1 ? frame * 9 : -12})`} />
       </svg>
       <HelmNote frame={frame} st={st} place={place} pose={pose} />
       <DustPuff x={helm.x} y={helm.y + 10} size={50} t={prog(frame, at('s46-sigh'), 16)} seed={461} />
@@ -304,7 +304,7 @@ export const S50 = ({ frame }: { frame: number }) => {
         <Vorathul st={st} place={{ pos: [-5, 0, -19], scale: SCALE_C }} />
       </Stage>
       <LightRays x={kx} y={ky - kh * 0.62} frame={frame} opacity={0.3} />
-      <Kid asset="G32-1" x={kx} y={ky} h={kh} pose={{ armL: 150, armR: 165, head: -6, twirl: twos(frame) === frame ? twirl : twirl - speed, lean: -2 }} />
+      <Kid asset="G32-1" x={kx} y={ky} h={kh} pose={{ armL: 150, armR: 165, head: -6, twirl, lean: -2 }} />
       <Nameplate frame={frame} text="LV 12" appearAt={at('s50-lv')} framesPerChar={(at('s50-12') - at('s50-lv')) / 3} x={kx - 170} y={ky - kh - 110} width={330} />
     </ShotFrame>
   );
@@ -405,7 +405,7 @@ export const S53 = ({ frame }: { frame: number }) => {
   const pose = CAM53(frame);
   const t = frame - SHOE;
   // The heroes' S10-S19 flight: a ballistic arc out of frame right, spinning 360 degrees every 12 frames.
-  const place: Place = { pos: [-1 + t * 1.25, 1 + t * 1.15 - 0.045 * t * t, -15], scale: SCALE_C, rot: -twos(t) * 30 };
+  const place: Place = { pos: [-1 + t * 1.25, 1 + t * 1.15 - 0.045 * t * t, -15], scale: SCALE_C, rot: -t * 30 };
   const st = stateAt(TL53, frame);
   const helm = project(pose, helmAt(st, place));
   const sole = easeOut(prog(frame, SHOE, 13));

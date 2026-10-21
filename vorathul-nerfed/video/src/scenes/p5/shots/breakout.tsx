@@ -9,7 +9,7 @@ import { AbsoluteFill } from 'remotion';
 import { AVAILABLE } from '../../../cast/available.ts';
 import { CanvasShatter } from '../lib/CanvasShatter.tsx';
 import { S91_WHITE_FRAMES } from '../lib/flash.ts';
-import { E, outCubic, project, prog, pxPerUnit, twos } from '../lib/geom.ts';
+import { E, outCubic, project, prog, pxPerUnit } from '../lib/geom.ts';
 import { Dev46, Frame, O, PaintDecal, PAINT_Z } from '../lib/Office.tsx';
 import { Inside, PinnedCards, Room } from '../lib/Room.tsx';
 import { conversionAt } from '../lib/Conversion.tsx';
@@ -68,7 +68,6 @@ export const S91 = ({ frame }: { frame: number }) => {
   const stamp = project(cam, [GRIP[0] - 0.5, GRIP[1] + 0.05, PAINT_Z + 0.1]);
   const sw = 3.2 * pxPerUnit(cam, stamp.z);
   const front = frame >= E('s91-creak') ? HANDS : frame >= E('s91-grip') - 4 ? HAND_R : null;
-  const ff = twos(frame);
   return (
     <Shot>
       <Stage camera={S91_CAM}>
@@ -88,7 +87,7 @@ export const S91 = ({ frame }: { frame: number }) => {
           </InFront>
         ) : null}
       </Stage>
-      <SpeedLines mode="radial" frame={ff - SHATTER_AT} duration={16} seed={91} focus={[punch.x, punch.y]} inner={260} count={46} />
+      <SpeedLines mode="radial" frame={frame - SHATTER_AT} duration={16} seed={91} focus={[punch.x, punch.y]} inner={260} count={46} />
       <Shards frame={frame - SHATTER_AT} duration={34} seed={91} origin={[punch.x, punch.y]} spread={Math.PI * 2} direction={0} speed={46} size={40} count={30} fills={[GOLD, IVORY, IVORY]} />
       <ImpactBurst frame={frame - SHATTER_AT} duration={9} seed={91} x={punch.x} y={punch.y} size={240} flash={0} />
       {/* X19: the white-out on the downbeat, then the canvas is already flying at the lens. */}
@@ -113,8 +112,8 @@ const S92_TL = timeline([
   move(E('s92-floor'), pose('burst', { armR: [100, 40, -10, 'fist'], armL: [110, 50, 10, 'spread'], head: [8, -0.005], torso: 6, wings: [null, 10], legs: [8, 8] }), 18),
 ]);
 const S92_X = PUNCH[0];
-// He rises out of the hole on "rise", a 2-step lift on twos (rig root y is in H).
-const s92Y = (frame: number): number => F - 1.5 + 1.6 * outCubic(prog(twos(frame), E('s92-rise'), 14)) + 0.25 * outCubic(prog(twos(frame), E('s92-crown') - 4, 6));
+// He rises out of the hole on "rise" (rig root y is in H).
+const s92Y = (frame: number): number => F - 1.5 + 1.6 * outCubic(prog(frame, E('s92-rise'), 14)) + 0.25 * outCubic(prog(frame, E('s92-crown') - 4, 6));
 // Frontal (review: a low side camera showed the painting as a skewed flat card); a slow push and rise.
 const S92_BASE: CameraPose = { position: [S92_X + 0.4, -1.0, -3.0], target: [S92_X, -0.6, -20], fov: 40 };
 const S92_UP: CameraPose = { position: [S92_X + 0.2, -0.7, -5.0], target: [S92_X, 0.1, -20], fov: 40 };
@@ -164,7 +163,7 @@ export const S92 = ({ frame }: { frame: number }) => {
       </Stage>
       <PaintSpread frame={frame - E('s92-pour')} seed={92} edge={{ x0: l.x, x1: r.x, y: l.y }} floor={floor.y} streams={9} width={Math.max(30, 0.55 * pxPerUnit(cam, l.z))} speed={Math.max(3, ((floor.y - l.y) / (E('s92-skirting') - E('s92-pour'))) * 0.9)} />
       <InkSplash frame={frame - E('s92-crown')} duration={24} seed={923} x={crown.x} y={crown.y} size={150} variant="violet" fade={8} direction={-Math.PI / 2} />
-      <SpeedLines mode="radial" frame={twos(frame) - E('s92-crown')} duration={14} seed={923} focus={[crown.x, crown.y]} inner={220} color={INK} count={36} />
+      <SpeedLines mode="radial" frame={frame - E('s92-crown')} duration={14} seed={923} focus={[crown.x, crown.y]} inner={220} color={INK} count={36} />
     </Shot>
   );
 };
@@ -191,12 +190,11 @@ const S93_CAM: CameraPath = withShake(handheld(tween({ position: [-1.0, -3.0, -4
 export const S93 = ({ frame }: { frame: number }) => {
   const cam = S93_CAM(frame);
   const t = frame - SHATTER_AT;
-  const ff = twos(frame);
   // The cards hang on the rim until torn, then ride his left fist and crumple into a ball.
   const tear = frame >= E('s93-tear');
-  const crumple = outCubic(prog(ff, E('s93-crumple') - 6, 8));
-  const runX = 1.6 - 8.5 * prog(ff, E('s93-cut'), 47);
-  const bob = Math.abs(Math.sin((ff - E('s93-cut')) * 0.55)) * 0.12;
+  const crumple = outCubic(prog(frame, E('s93-crumple') - 6, 8));
+  const runX = 1.6 - 8.5 * prog(frame, E('s93-cut'), 47);
+  const bob = Math.abs(Math.sin((frame - E('s93-cut')) * 0.55)) * 0.12;
   return (
     <Shot>
       <Stage camera={S93_CAM}>
@@ -218,7 +216,7 @@ export const S93 = ({ frame }: { frame: number }) => {
         {/* The fleeing developer (drawn G46), full figure, hurrying out of frame left. */}
         <Dev46 pose="walk" at={[runX, F + bob, -11]} height={3.4} />
       </Stage>
-      <SpeedLines mode="parallel" frame={ff - E('s93-tear')} duration={10} seed={93} angle={-Math.PI * 0.75} count={18} color={INK} speed={90} />
+      <SpeedLines mode="parallel" frame={frame - E('s93-tear')} duration={10} seed={93} angle={-Math.PI * 0.75} count={18} color={INK} speed={90} />
     </Shot>
   );
 };
@@ -260,7 +258,7 @@ export const S94 = ({ frame }: { frame: number }) => {
   const tb = frame - BURST;
   // The chromatic copies trail at 3 frames and close up by "of" (they catch up).
   const catchUp = 1 - prog(frame, E('s94-echo') - 6, 8);
-  const spin = -14 * outCubic(prog(twos(frame), E('s94-airborne') - 2, 8));
+  const spin = -14 * outCubic(prog(frame, E('s94-airborne') - 2, 8));
   const body = project(cam, [S94_X, F + 4, S94_Z0 + 9.5 * outCubic(prog(frame, BURST, 10))]);
   return (
     <Shot>
@@ -271,7 +269,7 @@ export const S94 = ({ frame }: { frame: number }) => {
         <Frame burst={tb} />
         <Vorathul tl={S94_TL} frame={frame} at={[S94_X, F, S94_Z0]} spin={spin} echo={catchUp > 0 ? { copies: 3, delay: 2, offset: [-0.45 * catchUp, 0.1 * catchUp, -0.4 * catchUp] } : undefined} />
       </Stage>
-      <SpeedLines mode="radial" frame={twos(frame) - BURST} duration={18} seed={94} focus={[body.x, body.y]} inner={380} count={56} thickness={14} />
+      <SpeedLines mode="radial" frame={frame - BURST} duration={18} seed={94} focus={[body.x, body.y]} inner={380} count={56} thickness={14} />
       <Shards frame={tb} duration={30} seed={94} origin={[body.x, body.y - 120]} spread={Math.PI * 2} direction={0} speed={52} size={44} count={26} fills={[INK, INK, '#343A40']} gravity={1.2} />
       <InkSplash frame={frame - E('s94-bars')} duration={26} seed={942} x={body.x + 380} y={body.y - 260} size={160} fade={8} direction={0.3} />
       <InkSplash frame={frame - E('s94-bars') - 2} duration={26} seed={943} x={body.x - 420} y={body.y + 120} size={130} variant="violet" fade={8} direction={Math.PI} />
@@ -297,8 +295,8 @@ export const S95 = ({ frame }: { frame: number }) => {
   const feet = project(cam, S95_AT);
   const still = frame < LAND + 2;
   const wave = 26 * outCubic(prog(frame, E('s95-wave'), 30));
-  // Desks on the right jump on beat 711 (a parabola, on twos).
-  const j = prog(twos(frame), E('s95-desks'), 10);
+  // Desks on the right jump on beat 711 (a parabola).
+  const j = prog(frame, E('s95-desks'), 10);
   const jump = j > 0 && j < 1 ? 4 * j * (1 - j) : 0;
   return (
     <Shot>
@@ -313,7 +311,7 @@ export const S95 = ({ frame }: { frame: number }) => {
         )}
       </Stage>
       <ImpactBurst frame={frame - LAND} duration={12} seed={95} x={feet.x} y={feet.y - 40} size={320} flash={2} />
-      <SpeedLines mode="radial" frame={twos(frame) - LAND - 3} duration={14} seed={95} focus={[feet.x, feet.y - 300]} inner={420} count={48} />
+      <SpeedLines mode="radial" frame={frame - LAND - 3} duration={14} seed={95} focus={[feet.x, feet.y - 300]} inner={420} count={48} />
       <Shards frame={frame - LAND - 1} duration={40} seed={95} origin={[feet.x, feet.y]} direction={-Math.PI / 2} spread={Math.PI * 0.9} speed={36} size={40} count={26} fills={[O.mid, O.dark, O.white]} />
       <InkSplash frame={frame - LAND - 2} duration={45} seed={951} x={feet.x + 40} y={feet.y + 10} size={260} fade={10} direction={0} />
       <InkSplash frame={frame - E('s95-wave')} duration={30} seed={952} x={feet.x - 300} y={feet.y + 40} size={120} variant="violet" fade={8} direction={Math.PI} />

@@ -9,7 +9,7 @@ import { Stage } from '../../../stage/Stage.tsx';
 import { BossNameplate, Cursor, Desktop, HealthBar, RevertDialog } from '../../../ui/kit.ts';
 import { DuotoneFlash, ImpactBurst, InkSplash, Overlay, seeded, Shards, SpeedLines, taperedPath } from '../../../vfx/effects.ts';
 import { BOSS_CUES } from '../lib/flash.ts';
-import { clamp01, E, inOut, lerp, outBack, outCubic, prog, project, pxPerUnit, twos, unproject, W, H } from '../lib/geom.ts';
+import { clamp01, E, inOut, lerp, outBack, outCubic, prog, project, pxPerUnit, unproject, W, H } from '../lib/geom.ts';
 import { Chair, Desk, Dev, LightStrip, Monitor3D, O, Rect } from '../lib/Office.tsx';
 import { AVAILABLE } from '../../../cast/available.ts';
 import { Asset } from '../lib/PlateCard.tsx';
@@ -399,7 +399,7 @@ export const S102 = ({ frame }: { frame: number }) => {
         )}
       </Paint>
       </Stage>
-      <SpeedLines mode="radial" frame={twos(frame) - THRUST} duration={18} seed={102} focus={[b[0], b[1]]} inner={180} count={60} thickness={12} />
+      <SpeedLines mode="radial" frame={frame - THRUST} duration={18} seed={102} focus={[b[0], b[1]]} inner={180} count={60} thickness={12} />
       {Array.from({ length: KEBAB }, (_, i) => {
         const u = 0.18 + (i / (KEBAB - 1)) * 0.74;
         const x = lerp(a[0], b[0], u);
@@ -514,7 +514,7 @@ const FLYERS = [
 
 export const S104 = ({ frame }: { frame: number }) => {
   const cam = S104_CAM(frame);
-  const t = prog(twos(frame), SWEEP, E('s104-land') - SWEEP);
+  const t = prog(frame, SWEEP, E('s104-land') - SWEEP);
   const after = frame - E('s104-land');
   const blade = project(cam, [4, -2, -13]);
   return (
@@ -536,7 +536,7 @@ export const S104 = ({ frame }: { frame: number }) => {
         <Dev who="glasses" act="underDesk" at={[-1.3, F, -7.0]} height={1.9} order={3000} />
       </Paint>
       </Stage>
-      <SpeedLines mode="parallel" frame={twos(frame) - SWEEP} duration={14} seed={104} angle={Math.PI} count={30} speed={160} />
+      <SpeedLines mode="parallel" frame={frame - SWEEP} duration={14} seed={104} angle={Math.PI} count={30} speed={160} />
       <BladeTrail pts={[[W + 40, blade.y - 140], [blade.x + 120, blade.y - 40], [blade.x - 500, blade.y + 30], [-60, blade.y - 30]]} width={64} age={frame - SWEEP} life={8} />
       {FLYERS.map((f, i) => {
         const p = project(cam, f.to);

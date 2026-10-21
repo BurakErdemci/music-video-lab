@@ -280,7 +280,7 @@ export const DustPuff = ({ x, y, size, t, seed = 1, color = IVORY }: { x: number
 export const KoStars = ({ x, y, r, frame, n = 4 }: { x: number; y: number; r: number; frame: number; n?: number }) => (
   <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0, overflow: 'visible' }}>
     {Array.from({ length: n }, (_, i) => {
-      const a = (frame - (frame % 2)) * 0.32 + (i / n) * Math.PI * 2;
+      const a = frame * 0.32 + (i / n) * Math.PI * 2;
       const sx = x + Math.cos(a) * r;
       const sy = y + Math.sin(a) * r * 0.35;
       const k = r * 0.28;
@@ -321,7 +321,7 @@ export const Flakes = ({ frame, start, count = 26, seed = 3, fall = 2.4 }: { fra
 const RAYS_APEX = [-130, -880] as const;
 export const LightRays = ({ x, y, frame, opacity = 0.3 }: { x: number; y: number; frame: number; opacity?: number }) => {
   const k = 0.55;
-  const drift = (frame - (frame % 2)) * 0.15;
+  const drift = frame * 0.15;
   return (
     <AbsoluteFill style={{ mixBlendMode: 'screen', opacity, overflow: 'hidden' }}>
       {Array.from({ length: 8 }, (_, i) => (

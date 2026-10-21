@@ -14,7 +14,7 @@ import { at } from './events.ts';
 import { Balloon, DustPuff } from './Figures.tsx';
 import { Letterbox, ShotFrame } from './Frame.tsx';
 import { G } from './grades.ts';
-import { easeIn, easeOut, easeOutBack, lerp, project, prog, twos } from './lib.ts';
+import { easeIn, easeOut, easeOutBack, lerp, project, prog } from './lib.ts';
 import { OfficeWall } from './Office.tsx';
 import { PaintingWindow } from './PaintingView.tsx';
 import { KEPT_PIPES, SCALE_C, helmAt, nerfTimeline, pipeMouthAt, slitAt, stateAt, Vorathul, withCorks, withHead, type Place } from './nerf.tsx';
@@ -186,7 +186,7 @@ const Notes = ({ frame, mouths, corkAt }: { frame: number; mouths: { x: number; 
   <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
     {mouths.flatMap((m, j) => [0, 1, 2, 3].map((n) => {
       const born = C65 + ((j * 5) % 9) + n * 9;
-      const age = twos(frame) - born;
+      const age = frame - born;
       const cork = corkAt[m.key] ?? Infinity;
       if (age < 0 || born >= cork || age > 34) return null;
       const r = seeded(`note:${j}:${n}`);
@@ -248,7 +248,7 @@ export const S66 = ({ frame }: { frame: number }) => {
   const ring = prog(frame, PUFF, 14);
   const pts = [...Array(12).keys()].map((k) => {
     const t = k / 11;
-    return `${(m1.x + Math.sin(t * 7 + twos(frame) * 0.15) * 22 * t).toFixed(1)} ${(m1.y - t * 380 * easeOut(w)).toFixed(1)}`;
+    return `${(m1.x + Math.sin(t * 7 + frame * 0.15) * 22 * t).toFixed(1)} ${(m1.y - t * 380 * easeOut(w)).toFixed(1)}`;
   });
   return (
     <ShotFrame frame={frame}>
@@ -308,7 +308,7 @@ export const S67 = ({ frame }: { frame: number }) => {
       {leak > 0 ? (
         <svg width={1920} height={1080} style={{ position: 'absolute', inset: 0 }}>
           {mouths.flatMap((m, j) => [0, 1, 2].map((n) => {
-            const a = -Math.PI / 2 + (n - 1) * 0.9 + Math.sin(twos(frame) * 0.4 + j) * 0.2;
+            const a = -Math.PI / 2 + (n - 1) * 0.9 + Math.sin(frame * 0.4 + j) * 0.2;
             const len = (30 + 50 * leak) * (1 + 0.3 * Math.sin(frame + n));
             return <path key={`${j}-${n}`} d={`M${m.x} ${m.y} L${m.x + Math.cos(a - 0.15) * len} ${m.y + Math.sin(a - 0.15) * len} L${m.x + Math.cos(a + 0.15) * len} ${m.y + Math.sin(a + 0.15) * len} Z`} fill={n === 1 ? VIOLET_LIGHT : VIOLET} />;
           }))}

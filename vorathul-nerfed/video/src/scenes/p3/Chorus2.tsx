@@ -12,7 +12,7 @@ import { at } from './events.ts';
 import { ComicHpBar, Dim, DustPuff, Kid, Knight } from './Figures.tsx';
 import { ShotFrame } from './Frame.tsx';
 import { G, S73_SHOE_FLASH } from './grades.ts';
-import { clamp01, easeIn, easeInOut, easeOut, easeOutBack, keyed, lerp, project, prog, twos } from './lib.ts';
+import { clamp01, easeIn, easeInOut, easeOut, easeOutBack, keyed, lerp, project, prog } from './lib.ts';
 import { ARM_LOW, ARM_OUT, ARM_UP, Crumble, FloorStand, HANG, HeldMic, HeldStand, REACH, RestingMic, SING, STAND_SHOULDER, STAND_STRIKE, STAND_WIND, StageLights, armKeys, perform, restMic, singKeys, type ArmPose, type Overrides } from './Mic.tsx';
 import { SCALE_C, helmAt, nerfTimeline, stateAt, swordTipAt, Vorathul, withHems, type Place } from './nerf.tsx';
 
@@ -131,7 +131,7 @@ export const S69 = ({ frame }: { frame: number }) => {
   const st = perform(stateAt(TL69, frame), frame, OV69);
   const tip = project(pose, TIP(frame));
   const sweeping = frame >= HOPS[0]! - 2 && frame <= BONK + 2;
-  const laugh = frame >= LAUGH ? Math.abs(Math.sin((twos(frame) - LAUGH) * 0.5)) : 0;
+  const laugh = frame >= LAUGH ? Math.abs(Math.sin((frame - LAUGH) * 0.5)) : 0;
   return (
     <ShotFrame frame={frame}>
       <Stage camera={CAM69}>
@@ -381,7 +381,7 @@ export const S73 = ({ frame }: { frame: number }) => {
       </Stage>
       {[0, 1, 2].map((j) => {
         const p = project(pose, [-5.5 + j * 0.9 + walk * (j % 2 ? -7 : 9), 0, -18 - j]);
-        return <Knight key={j} asset={`G34-${6 + j}`} x={p.x} y={p.y} h={1.4 * p.s} flip={j % 2 === 1} pose={{ hop: walk > 0 ? Math.abs(Math.sin(twos(frame) * 0.5 + j)) * 0.12 : 0, armL: 20, armR: 20 }} seed={730 + j} />;
+        return <Knight key={j} asset={`G34-${6 + j}`} x={p.x} y={p.y} h={1.4 * p.s} flip={j % 2 === 1} pose={{ hop: walk > 0 ? Math.abs(Math.sin(frame * 0.5 + j)) * 0.12 : 0, armL: 20, armR: 20 }} seed={730 + j} />;
       })}
       <Kid asset={frame >= EXIT ? 'G32-6' : after ? 'G32-5' : 'G32-2'} x={kid.x} y={kid.y} h={1.9 * kid.s} flip pose={{ ...k.pose, armL: (k.pose.armL ?? 20) + shrug * 60, armR: (k.pose.armR ?? 20) + shrug * 60 }} />
       {SMACKS73.map((s, i) => <DamageNumber key={i} frame={frame} text={'−1'} at={s} x={helm.x + 40 - i * 34} y={helm.y - 110} size={76} />)}

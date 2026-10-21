@@ -11,7 +11,7 @@ import { CRACK_STEPS, CUE } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
 import { InsideCracks, OfficeCracks, OfficeWall, WallItems } from './office.tsx';
 import { jointWorld } from './rigline.ts';
-import { CANVAS, CANVAS_CAM, H, PALM_UV, W, clamp01, easeInOut, officeCam, paintingWorld, project, prog, twos } from './lib.ts';
+import { CANVAS, CANVAS_CAM, H, PALM_UV, W, clamp01, easeInOut, officeCam, paintingWorld, project, prog } from './lib.ts';
 
 const DRAIN = 'none';
 
@@ -116,7 +116,7 @@ const OFF_STROBE: CameraPath = kicked(
 // ---- small effects ----
 /** Chips of dry paint falling from the crack (S81, "canvas dust falls"). */
 const DustFall = ({ frame, start, seed = 5 }: { frame: number; start: number; seed?: number }) => {
-  const f = twos(frame);
+  const f = frame;
   const t0 = f - start;
   if (t0 < 0 || t0 > 44) return null;
   const rng = seeded(`dustfall:${seed}`);

@@ -31,8 +31,6 @@ export const outBack = (t: number, k = 1.7): number => {
   const x = clamp01(t) - 1;
   return 1 + (k + 1) * x * x * x + k * x * x;
 };
-/** Steps a value on twos (2D overlays move at 15 fps, contract). */
-export const twos = (frame: number): number => frame - (((frame % 2) + 2) % 2);
 
 /** World point -> frame px for a camera pose (three's lookAt with +Y up, vertical fov). z = view depth. */
 export const project = (pose: CameraPose, p: Vec3): { x: number; y: number; z: number } => {
