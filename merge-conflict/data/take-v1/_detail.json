@@ -1,0 +1,1649 @@
+{
+ "sections": [
+  {
+   "name": "intro_robot",
+   "start": 0.0,
+   "end": 4.82,
+   "_b0": 0,
+   "_b1": 3,
+   "_hdr": "Intro",
+   "_rule": "file start; two flat robot lines 0.32-1.2 and 1.9-4.6 over a hit and a short drum fill",
+   "key": {
+    "best": "D# major",
+    "r": 0.577,
+    "second": "C minor",
+    "r2": 0.499
+   },
+   "bars": [
+    0,
+    3
+   ],
+   "n_bars": 3,
+   "beats_in_bars": 12,
+   "mean_db": -22.78,
+   "mean_bass_db": -64.5,
+   "mean_low_pct": 22.5,
+   "mean_heavy": 26.5,
+   "mean_vocal_db": -25.9,
+   "bpm_grid": 156.25,
+   "bpm_onset_comb": null,
+   "bars_x4_x_period_s": 4.0,
+   "length_s": 4.82
+  },
+  {
+   "name": "intro_groove",
+   "start": 4.82,
+   "end": 16.48,
+   "_b0": 3,
+   "_b1": 12,
+   "_hdr": null,
+   "_rule": "instrumental: bass and full drums enter at 4.82 and play to the guitar hit, no sung word",
+   "key": {
+    "best": "F minor",
+    "r": 0.533,
+    "second": "G# major",
+    "r2": 0.416
+   },
+   "bars": [
+    3,
+    12
+   ],
+   "n_bars": 9,
+   "beats_in_bars": 35,
+   "mean_db": -20.74,
+   "mean_bass_db": -31.1,
+   "mean_low_pct": 43.5,
+   "mean_heavy": 65.0,
+   "mean_vocal_db": -33.9,
+   "bpm_grid": 180.23,
+   "bpm_onset_comb": 180.13,
+   "bars_x4_x_period_s": 11.67,
+   "length_s": 11.66
+  },
+  {
+   "name": "verse1_sweet",
+   "start": 16.48,
+   "end": 27.14,
+   "_b0": 12,
+   "_b1": 20,
+   "_hdr": "Verse 1",
+   "_rule": "downbeat of the bar holding the first word (17.10), band stop 17.25-17.75 inside it",
+   "key": {
+    "best": "C major",
+    "r": 0.463,
+    "second": "F minor",
+    "r2": 0.453
+   },
+   "bars": [
+    12,
+    20
+   ],
+   "n_bars": 8,
+   "beats_in_bars": 32,
+   "mean_db": -21.93,
+   "mean_bass_db": -31.0,
+   "mean_low_pct": 30.0,
+   "mean_heavy": 43.9,
+   "mean_vocal_db": -24.4,
+   "bpm_grid": 180.23,
+   "bpm_onset_comb": 180.13,
+   "bars_x4_x_period_s": 10.67,
+   "length_s": 10.66
+  },
+  {
+   "name": "verse2_raspy",
+   "start": 27.14,
+   "end": 39.13,
+   "_b0": 20,
+   "_b1": 29,
+   "_hdr": "Verse 2",
+   "_rule": "downbeat of the bar holding the first word (27.84)",
+   "key": {
+    "best": "C major",
+    "r": 0.599,
+    "second": "F minor",
+    "r2": 0.469
+   },
+   "bars": [
+    20,
+    29
+   ],
+   "n_bars": 9,
+   "beats_in_bars": 36,
+   "mean_db": -21.14,
+   "mean_bass_db": -33.5,
+   "mean_low_pct": 26.5,
+   "mean_heavy": 41.1,
+   "mean_vocal_db": -23.8,
+   "bpm_grid": 180.13,
+   "bpm_onset_comb": 179.8,
+   "bars_x4_x_period_s": 12.0,
+   "length_s": 11.99
+  },
+  {
+   "name": "prechorus",
+   "start": 39.13,
+   "end": 43.13,
+   "_b0": 29,
+   "_b1": 32,
+   "_hdr": "Pre-Chorus",
+   "_rule": "first 'Blue!' (38.56) is a 0.57 s pickup, bound to the next downbeat",
+   "key": {
+    "best": "C minor",
+    "r": 0.718,
+    "second": "C major",
+    "r2": 0.659
+   },
+   "bars": [
+    29,
+    32
+   ],
+   "n_bars": 3,
+   "beats_in_bars": 12,
+   "mean_db": -21.59,
+   "mean_bass_db": -54.8,
+   "mean_low_pct": 27.6,
+   "mean_heavy": 34.2,
+   "mean_vocal_db": -23.7,
+   "bpm_grid": 180.13,
+   "bpm_onset_comb": null,
+   "bars_x4_x_period_s": 4.0,
+   "length_s": 4.0
+  },
+  {
+   "name": "chorus1",
+   "start": 43.13,
+   "end": 64.45,
+   "_b0": 32,
+   "_b1": 48,
+   "_hdr": "Chorus",
+   "_rule": "first 'Accept' 43.08 is on the downbeat (-0.05 s)",
+   "key": {
+    "best": "G# major",
+    "r": 0.872,
+    "second": "F minor",
+    "r2": 0.583
+   },
+   "bars": [
+    32,
+    48
+   ],
+   "n_bars": 16,
+   "beats_in_bars": 64,
+   "mean_db": -20.98,
+   "mean_bass_db": -36.5,
+   "mean_low_pct": 22.2,
+   "mean_heavy": 35.6,
+   "mean_vocal_db": -23.2,
+   "bpm_grid": 179.96,
+   "bpm_onset_comb": 180.13,
+   "bars_x4_x_period_s": 21.33,
+   "length_s": 21.32
+  },
+  {
+   "name": "verse3_trade",
+   "start": 64.45,
+   "end": 75.12,
+   "_b0": 48,
+   "_b1": 56,
+   "_hdr": "Verse 3",
+   "_rule": "drum-led restart on the downbeat (fill from 64.20) after the a cappella stop 62.45-64.15; Whisper's first 'You' is 64.60 but the voice stem rises only at about 65.15",
+   "key": {
+    "best": "F minor",
+    "r": 0.51,
+    "second": "F major",
+    "r2": 0.45
+   },
+   "bars": [
+    48,
+    56
+   ],
+   "n_bars": 8,
+   "beats_in_bars": 32,
+   "mean_db": -21.02,
+   "mean_bass_db": -36.1,
+   "mean_low_pct": 34.4,
+   "mean_heavy": 48.4,
+   "mean_vocal_db": -25.0,
+   "bpm_grid": 180.02,
+   "bpm_onset_comb": 179.96,
+   "bars_x4_x_period_s": 10.67,
+   "length_s": 10.67
+  },
+  {
+   "name": "scream",
+   "start": 75.12,
+   "end": 76.45,
+   "_b0": 56,
+   "_b1": 57,
+   "_hdr": "Both voices scream",
+   "_rule": "'Ah' 75.50 is the first scream; whole band stopped 74.0-75.9",
+   "key": {
+    "best": "C# minor",
+    "r": 0.266,
+    "second": "F minor",
+    "r2": 0.2
+   },
+   "bars": [
+    56,
+    57
+   ],
+   "n_bars": 1,
+   "beats_in_bars": 4,
+   "mean_db": -22.92,
+   "mean_bass_db": -82.4,
+   "mean_low_pct": 3.5,
+   "mean_heavy": 7.3,
+   "mean_vocal_db": -23.3,
+   "bpm_grid": null,
+   "bpm_onset_comb": null,
+   "bars_x4_x_period_s": 1.33,
+   "length_s": 1.33
+  },
+  {
+   "name": "breakdown_git_push_force",
+   "start": 76.45,
+   "end": 83.11,
+   "_b0": 57,
+   "_b1": 62,
+   "_hdr": "Breakdown",
+   "_rule": "heavy riff returns on the downbeat 76.45 (energy step +4.2 dB, bass back); GIT enters at 81.04",
+   "key": {
+    "best": "F major",
+    "r": 0.532,
+    "second": "F minor",
+    "r2": 0.474
+   },
+   "bars": [
+    57,
+    62
+   ],
+   "n_bars": 5,
+   "beats_in_bars": 20,
+   "mean_db": -19.17,
+   "mean_bass_db": -30.5,
+   "mean_low_pct": 50.3,
+   "mean_heavy": 81.2,
+   "mean_vocal_db": -24.8,
+   "bpm_grid": 180.02,
+   "bpm_onset_comb": 180.29,
+   "bars_x4_x_period_s": 6.67,
+   "length_s": 6.66
+  },
+  {
+   "name": "whisper",
+   "start": 83.11,
+   "end": 84.45,
+   "_b0": 62,
+   "_b1": 63,
+   "_hdr": "Sweet voice, horrified",
+   "_rule": "'You wouldn't' 83.28-84.38 inside this bar and the next",
+   "key": {
+    "best": "F major",
+    "r": 0.64,
+    "second": "F minor",
+    "r2": 0.547
+   },
+   "bars": [
+    62,
+    63
+   ],
+   "n_bars": 1,
+   "beats_in_bars": 4,
+   "mean_db": -21.35,
+   "mean_bass_db": -36.4,
+   "mean_low_pct": 29.5,
+   "mean_heavy": 42.9,
+   "mean_vocal_db": -25.4,
+   "bpm_grid": 180.05,
+   "bpm_onset_comb": null,
+   "bars_x4_x_period_s": 1.33,
+   "length_s": 1.34
+  },
+  {
+   "name": "synth_bridge",
+   "start": 84.45,
+   "end": 89.78,
+   "_b0": 63,
+   "_b1": 67,
+   "_hdr": null,
+   "_rule": "instrumental: full band plus bright synth, no voiced vocal 84.5-88.9 (pyin voiced fraction 0)",
+   "key": {
+    "best": "A# major",
+    "r": 0.405,
+    "second": "D minor",
+    "r2": 0.381
+   },
+   "bars": [
+    63,
+    67
+   ],
+   "n_bars": 4,
+   "beats_in_bars": 16,
+   "mean_db": -20.92,
+   "mean_bass_db": -30.8,
+   "mean_low_pct": 46.0,
+   "mean_heavy": 63.7,
+   "mean_vocal_db": -32.3,
+   "bpm_grid": 180.07,
+   "bpm_onset_comb": 180.13,
+   "bars_x4_x_period_s": 5.33,
+   "length_s": 5.33
+  },
+  {
+   "name": "piano_interlude",
+   "start": 89.78,
+   "end": 95.11,
+   "_b0": 67,
+   "_b1": 71,
+   "_hdr": "Soft Interlude",
+   "_rule": "drums and bass leave on this downbeat (stop 89.4-89.75); 'Maybe' is a 0.82 s pickup at 88.96",
+   "key": {
+    "best": "G# major",
+    "r": 0.864,
+    "second": "F minor",
+    "r2": 0.721
+   },
+   "bars": [
+    67,
+    71
+   ],
+   "n_bars": 4,
+   "beats_in_bars": 16,
+   "mean_db": -23.82,
+   "mean_bass_db": -83.5,
+   "mean_low_pct": 3.4,
+   "mean_heavy": 6.8,
+   "mean_vocal_db": -24.2,
+   "bpm_grid": 180.07,
+   "bpm_onset_comb": 180.13,
+   "bars_x4_x_period_s": 5.33,
+   "length_s": 5.33
+  },
+  {
+   "name": "build",
+   "start": 95.11,
+   "end": 101.77,
+   "_b0": 71,
+   "_b1": 76,
+   "_hdr": "Build",
+   "_rule": "drums return at 95.11 under the harmonized 'We're the same file'",
+   "key": {
+    "best": "C minor",
+    "r": 0.704,
+    "second": "D# major",
+    "r2": 0.703
+   },
+   "bars": [
+    71,
+    76
+   ],
+   "n_bars": 5,
+   "beats_in_bars": 20,
+   "mean_db": -20.93,
+   "mean_bass_db": -76.5,
+   "mean_low_pct": 17.8,
+   "mean_heavy": 27.3,
+   "mean_vocal_db": -22.3,
+   "bpm_grid": 180.07,
+   "bpm_onset_comb": 179.96,
+   "bars_x4_x_period_s": 6.67,
+   "length_s": 6.66
+  },
+  {
+   "name": "final_chorus",
+   "start": 101.77,
+   "end": 123.11,
+   "_b0": 76,
+   "_b1": 92,
+   "_hdr": "Final Chorus",
+   "_rule": "first 'Accept' 101.76 is on the downbeat; drum-less held chord 100.4-101.77 before it",
+   "key": {
+    "best": "G# major",
+    "r": 0.87,
+    "second": "F minor",
+    "r2": 0.701
+   },
+   "bars": [
+    76,
+    92
+   ],
+   "n_bars": 16,
+   "beats_in_bars": 64,
+   "mean_db": -19.88,
+   "mean_bass_db": -36.7,
+   "mean_low_pct": 25.5,
+   "mean_heavy": 52.0,
+   "mean_vocal_db": -22.0,
+   "bpm_grid": 180.02,
+   "bpm_onset_comb": 179.96,
+   "bars_x4_x_period_s": 21.33,
+   "length_s": 21.34
+  },
+  {
+   "name": "robot_build_failed",
+   "start": 123.11,
+   "end": 127.1,
+   "_b0": 92,
+   "_b1": 95,
+   "_hdr": "Music stops",
+   "_rule": "drums and bass gone at 123.11, robot 'Failed' 123.66",
+   "key": {
+    "best": "F major",
+    "r": 0.715,
+    "second": "F minor",
+    "r2": 0.685
+   },
+   "bars": [
+    92,
+    95
+   ],
+   "n_bars": 3,
+   "beats_in_bars": 12,
+   "mean_db": -24.65,
+   "mean_bass_db": -82.5,
+   "mean_low_pct": 1.4,
+   "mean_heavy": 5.7,
+   "mean_vocal_db": -28.6,
+   "bpm_grid": 180.02,
+   "bpm_onset_comb": null,
+   "bars_x4_x_period_s": 4.0,
+   "length_s": 3.99
+  },
+  {
+   "name": "scream_end",
+   "start": 127.1,
+   "end": 149.77,
+   "_b0": 95,
+   "_b1": 112,
+   "_hdr": "Both voices scream",
+   "_rule": "heavy band re-enters on the downbeat 127.10 after the stop 124.5-127.1",
+   "key": {
+    "best": "F major",
+    "r": 0.507,
+    "second": "F minor",
+    "r2": 0.485
+   },
+   "bars": [
+    95,
+    112
+   ],
+   "n_bars": 17,
+   "beats_in_bars": 68,
+   "mean_db": -19.15,
+   "mean_bass_db": -30.1,
+   "mean_low_pct": 51.2,
+   "mean_heavy": 83.8,
+   "mean_vocal_db": -28.4,
+   "bpm_grid": 180.02,
+   "bpm_onset_comb": 179.96,
+   "bars_x4_x_period_s": 22.66,
+   "length_s": 22.67
+  },
+  {
+   "name": "outro",
+   "start": 149.77,
+   "end": 152.52,
+   "_b0": 112,
+   "_b1": 114,
+   "_hdr": "Outro",
+   "_rule": "blast beat returns 149.5-150.5, then decay and silence",
+   "key": {
+    "best": "C major",
+    "r": 0.454,
+    "second": "F minor",
+    "r2": 0.453
+   },
+   "bars": [
+    112,
+    114
+   ],
+   "n_bars": 2,
+   "beats_in_bars": 9,
+   "mean_db": -26.83,
+   "mean_bass_db": -60.7,
+   "mean_low_pct": 91.4,
+   "mean_heavy": 53.2,
+   "mean_vocal_db": -64.3,
+   "bpm_grid": 180.02,
+   "bpm_onset_comb": null,
+   "bars_x4_x_period_s": 3.0,
+   "length_s": 2.75
+  }
+ ],
+ "grid_segments": [
+  {
+   "start": 0.0,
+   "end": 4.16,
+   "bpm": 156.25,
+   "period": 0.384
+  },
+  {
+   "start": 4.16,
+   "end": 26.5,
+   "bpm": 180.23,
+   "period": 0.3329
+  },
+  {
+   "start": 26.5,
+   "end": 44.8,
+   "bpm": 180.13,
+   "period": 0.3331
+  },
+  {
+   "start": 44.8,
+   "end": 60.5,
+   "bpm": 179.96,
+   "period": 0.3334
+  },
+  {
+   "start": 60.5,
+   "end": 83.45,
+   "bpm": 180.02,
+   "period": 0.3333
+  },
+  {
+   "start": 83.45,
+   "end": 101.45,
+   "bpm": 180.07,
+   "period": 0.3332
+  },
+  {
+   "start": 101.45,
+   "end": 124.5,
+   "bpm": 180.02,
+   "period": 0.3333
+  },
+  {
+   "start": 124.5,
+   "end": 152.52,
+   "bpm": 180.02,
+   "period": 0.3333
+  }
+ ],
+ "octave_check": {
+  "pulse": {
+   "bpm": 180.07,
+   "score": 2.217
+  },
+  "half_time": {
+   "bpm": 90.04,
+   "score": 2.379
+  },
+  "double_time": {
+   "bpm": 360.14,
+   "score": 1.928
+  }
+ },
+ "onset_residual_ms": {
+  "max": 39.8,
+  "median_abs": 4.7,
+  "n": 456
+ },
+ "key_windows": [
+  {
+   "start": 0.3,
+   "end": 11.15,
+   "bar": 0,
+   "key": "G# major",
+   "r": 0.437,
+   "second": "C minor",
+   "r2": 0.365
+  },
+  {
+   "start": 6.16,
+   "end": 16.48,
+   "bar": 4,
+   "key": "F minor",
+   "r": 0.632,
+   "second": "G# major",
+   "r2": 0.49
+  },
+  {
+   "start": 11.15,
+   "end": 21.8,
+   "bar": 8,
+   "key": "F minor",
+   "r": 0.604,
+   "second": "F major",
+   "r2": 0.434
+  },
+  {
+   "start": 16.48,
+   "end": 27.14,
+   "bar": 12,
+   "key": "C major",
+   "r": 0.463,
+   "second": "F minor",
+   "r2": 0.453
+  },
+  {
+   "start": 21.8,
+   "end": 32.47,
+   "bar": 16,
+   "key": "F minor",
+   "r": 0.515,
+   "second": "C major",
+   "r2": 0.466
+  },
+  {
+   "start": 27.14,
+   "end": 37.8,
+   "bar": 20,
+   "key": "C major",
+   "r": 0.52,
+   "second": "F minor",
+   "r2": 0.505
+  },
+  {
+   "start": 32.47,
+   "end": 43.13,
+   "bar": 24,
+   "key": "C major",
+   "r": 0.607,
+   "second": "C minor",
+   "r2": 0.606
+  },
+  {
+   "start": 37.8,
+   "end": 48.46,
+   "bar": 28,
+   "key": "C minor",
+   "r": 0.788,
+   "second": "C major",
+   "r2": 0.526
+  },
+  {
+   "start": 43.13,
+   "end": 53.79,
+   "bar": 32,
+   "key": "G# major",
+   "r": 0.863,
+   "second": "C minor",
+   "r2": 0.658
+  },
+  {
+   "start": 48.46,
+   "end": 59.13,
+   "bar": 36,
+   "key": "G# major",
+   "r": 0.902,
+   "second": "F minor",
+   "r2": 0.68
+  },
+  {
+   "start": 53.79,
+   "end": 64.45,
+   "bar": 40,
+   "key": "G# major",
+   "r": 0.838,
+   "second": "C# major",
+   "r2": 0.559
+  },
+  {
+   "start": 59.13,
+   "end": 69.78,
+   "bar": 44,
+   "key": "F minor",
+   "r": 0.661,
+   "second": "C# major",
+   "r2": 0.528
+  },
+  {
+   "start": 64.45,
+   "end": 75.12,
+   "bar": 48,
+   "key": "F minor",
+   "r": 0.511,
+   "second": "F major",
+   "r2": 0.45
+  },
+  {
+   "start": 69.78,
+   "end": 80.45,
+   "bar": 52,
+   "key": "F minor",
+   "r": 0.445,
+   "second": "F major",
+   "r2": 0.427
+  },
+  {
+   "start": 75.12,
+   "end": 85.78,
+   "bar": 56,
+   "key": "F major",
+   "r": 0.525,
+   "second": "F minor",
+   "r2": 0.498
+  },
+  {
+   "start": 80.45,
+   "end": 91.11,
+   "bar": 60,
+   "key": "F minor",
+   "r": 0.507,
+   "second": "F major",
+   "r2": 0.422
+  },
+  {
+   "start": 85.78,
+   "end": 96.44,
+   "bar": 64,
+   "key": "G# major",
+   "r": 0.77,
+   "second": "F minor",
+   "r2": 0.574
+  },
+  {
+   "start": 91.11,
+   "end": 101.77,
+   "bar": 68,
+   "key": "G# major",
+   "r": 0.834,
+   "second": "C minor",
+   "r2": 0.832
+  },
+  {
+   "start": 96.44,
+   "end": 107.11,
+   "bar": 72,
+   "key": "D# major",
+   "r": 0.793,
+   "second": "C minor",
+   "r2": 0.714
+  },
+  {
+   "start": 101.77,
+   "end": 112.44,
+   "bar": 76,
+   "key": "G# major",
+   "r": 0.795,
+   "second": "D# major",
+   "r2": 0.618
+  },
+  {
+   "start": 107.11,
+   "end": 117.77,
+   "bar": 80,
+   "key": "G# major",
+   "r": 0.883,
+   "second": "F minor",
+   "r2": 0.648
+  },
+  {
+   "start": 112.44,
+   "end": 123.11,
+   "bar": 84,
+   "key": "G# major",
+   "r": 0.763,
+   "second": "F minor",
+   "r2": 0.723
+  },
+  {
+   "start": 117.77,
+   "end": 128.44,
+   "bar": 88,
+   "key": "F minor",
+   "r": 0.793,
+   "second": "F major",
+   "r2": 0.596
+  },
+  {
+   "start": 123.11,
+   "end": 133.43,
+   "bar": 92,
+   "key": "F major",
+   "r": 0.591,
+   "second": "F minor",
+   "r2": 0.536
+  },
+  {
+   "start": 128.44,
+   "end": 139.1,
+   "bar": 96,
+   "key": "F major",
+   "r": 0.549,
+   "second": "F minor",
+   "r2": 0.486
+  },
+  {
+   "start": 133.43,
+   "end": 144.43,
+   "bar": 100,
+   "key": "F major",
+   "r": 0.518,
+   "second": "F minor",
+   "r2": 0.5
+  },
+  {
+   "start": 139.1,
+   "end": 149.77,
+   "bar": 104,
+   "key": "F minor",
+   "r": 0.488,
+   "second": "F major",
+   "r2": 0.461
+  }
+ ],
+ "key_shift": {
+  "chorus1_vs_final_chorus": {
+   "best_shift_semitones": 0,
+   "r_at_best": 0.978,
+   "r_at_zero": 0.978
+  }
+ },
+ "extra_heard": [
+  {
+   "start": 58.04,
+   "end": 58.52,
+   "text": "pickles, pickles"
+  },
+  {
+   "start": 114.28,
+   "end": 114.8,
+   "text": "yeah, come in"
+  },
+  {
+   "start": 124.68,
+   "end": 125.84,
+   "text": "failed, syntax"
+  },
+  {
+   "start": 126.84,
+   "end": 149.76,
+   "text": "942 you"
+  }
+ ],
+ "hard_stops": [
+  {
+   "start": 3.1,
+   "end": 4.1,
+   "drop_db": 34.7,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-60.4 dB); voice -24.8 dB; mix -24.8 dB"
+  },
+  {
+   "start": 4.2,
+   "end": 4.6,
+   "drop_db": 26.3,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-52.0 dB); voice -25.1 dB; mix -24.9 dB"
+  },
+  {
+   "start": 17.25,
+   "end": 17.75,
+   "drop_db": 37.6,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-63.3 dB); voice -25.4 dB; mix -25.3 dB"
+  },
+  {
+   "start": 26.2,
+   "end": 27.95,
+   "drop_db": 43.1,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-68.8 dB); voice -26.2 dB; mix -26.2 dB"
+  },
+  {
+   "start": 39.85,
+   "end": 40.25,
+   "drop_db": 29.7,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-55.4 dB); voice -28.0 dB; mix -27.8 dB"
+  },
+  {
+   "start": 41.2,
+   "end": 41.75,
+   "drop_db": 34.2,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-59.9 dB); voice -24.4 dB; mix -24.3 dB"
+  },
+  {
+   "start": 44.0,
+   "end": 44.3,
+   "drop_db": 28.0,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-53.7 dB); voice -21.8 dB; mix -21.7 dB"
+  },
+  {
+   "start": 62.5,
+   "end": 64.25,
+   "drop_db": 37.2,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-62.9 dB); voice -26.8 dB; mix -26.7 dB"
+  },
+  {
+   "start": 67.1,
+   "end": 67.45,
+   "drop_db": 23.4,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-49.1 dB); voice -25.4 dB; mix -25.2 dB"
+  },
+  {
+   "start": 74.0,
+   "end": 75.9,
+   "drop_db": 33.0,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-58.8 dB); voice -24.8 dB; mix -24.7 dB"
+  },
+  {
+   "start": 89.4,
+   "end": 89.75,
+   "drop_db": 39.6,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-65.3 dB); voice -23.6 dB; mix -23.6 dB"
+  },
+  {
+   "start": 90.7,
+   "end": 91.0,
+   "drop_db": 23.2,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-49.0 dB); voice -23.3 dB; mix -23.2 dB"
+  },
+  {
+   "start": 93.3,
+   "end": 93.75,
+   "drop_db": 23.2,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-48.9 dB); voice -22.9 dB; mix -22.9 dB"
+  },
+  {
+   "start": 101.25,
+   "end": 103.1,
+   "drop_db": 31.7,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-57.5 dB); voice -21.5 dB; mix -21.5 dB"
+  },
+  {
+   "start": 115.75,
+   "end": 116.1,
+   "drop_db": 28.3,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-54.0 dB); voice -22.7 dB; mix -22.6 dB"
+  },
+  {
+   "start": 124.5,
+   "end": 127.1,
+   "drop_db": 38.7,
+   "kind": "band stop",
+   "note": "drums+bass+other 20 dB under their median (-64.4 dB); voice -26.6 dB; mix -26.6 dB"
+  },
+  {
+   "start": 152.0,
+   "end": 152.52,
+   "drop_db": 18.9,
+   "kind": "true silence",
+   "note": "whole mix under -45 dB (mix -50.4 dB)"
+  }
+ ],
+ "micro_gaps": [
+  [
+   4.1,
+   4.2
+  ]
+ ],
+ "lines": [
+  {
+   "sec": 0,
+   "header": "Intro: chiptune error sound, music stops, flat robotic voice",
+   "text": "Automatic merge failed.",
+   "voice": null,
+   "unmatched": [
+    "failed"
+   ],
+   "ratio": 0.6666666666666666,
+   "anchored": true,
+   "start": 0.32,
+   "end": 1.2,
+   "heard": "automatic merge"
+  },
+  {
+   "sec": 0,
+   "header": "Intro: chiptune error sound, music stops, flat robotic voice",
+   "text": "Fix conflicts and then commit the result.",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 1.9,
+   "end": 4.6,
+   "heard": "Fix conflicts and then commit the results"
+  },
+  {
+   "sec": 2,
+   "header": "Verse 1: sweet idol voice, bouncy",
+   "text": "I'm HEAD, I'm main, I'm stable and clean",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 17.099999999999998,
+   "end": 19.7,
+   "heard": "I'm head, I'm main, I'm stable and clean"
+  },
+  {
+   "sec": 2,
+   "header": "Verse 1: sweet idol voice, bouncy",
+   "text": "Line forty-two, the button was blue, the calmest you've seen",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 19.7,
+   "end": 22.42,
+   "heard": "Line forty the button was blue, the calmest you've seen"
+  },
+  {
+   "sec": 2,
+   "header": "Verse 1: sweet idol voice, bouncy",
+   "text": "Reviewed and approved by the whole design team",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 23.0,
+   "end": 25.14,
+   "heard": "Reviewed and approved by the whole design team"
+  },
+  {
+   "sec": 2,
+   "header": "Verse 1: sweet idol voice, bouncy",
+   "text": "Then someone pushed at midnight... who are you?",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 25.14,
+   "end": 27.84,
+   "heard": "Then someone pushed at midnight, who are you?"
+  },
+  {
+   "sec": 3,
+   "header": "Verse 2: raspy rock voice, aggressive",
+   "text": "I'm feature branch, I'm fresh from the night",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 27.84,
+   "end": 30.38,
+   "heard": "I'm feature branch, I'm fresh from the night"
+  },
+  {
+   "sec": 3,
+   "header": "Verse 2: raspy rock voice, aggressive",
+   "text": "The button is PINK now and baby, the pink is right",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 30.38,
+   "end": 33.04,
+   "heard": "The button is pink now and baby the pink is right"
+  },
+  {
+   "sec": 3,
+   "header": "Verse 2: raspy rock voice, aggressive",
+   "text": "I rewrote your CSS and I'm ready to fight",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 33.04,
+   "end": 35.7,
+   "heard": "I rewrote your CSS and I'm ready to fight"
+  },
+  {
+   "sec": 3,
+   "header": "Verse 2: raspy rock voice, aggressive",
+   "text": "Three hundred commits and I never asked once!",
+   "voice": null,
+   "unmatched": [
+    "three",
+    "hundred"
+   ],
+   "ratio": 0.75,
+   "anchored": true,
+   "start": 36.22,
+   "end": 38.56,
+   "heard": "commits and I never asked once"
+  },
+  {
+   "sec": 4,
+   "header": "Pre-Chorus: both voices alternating, building",
+   "text": "Blue!",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 38.56,
+   "end": 39.120000000000005,
+   "heard": "Blue,"
+  },
+  {
+   "sec": 4,
+   "header": "Pre-Chorus: both voices alternating, building",
+   "text": "Pink!",
+   "voice": "Raspy voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 39.5,
+   "end": 39.8,
+   "heard": "pink,"
+  },
+  {
+   "sec": 4,
+   "header": "Pre-Chorus: both voices alternating, building",
+   "text": "Blue!",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 40.1,
+   "end": 40.46,
+   "heard": "blue,"
+  },
+  {
+   "sec": 4,
+   "header": "Pre-Chorus: both voices alternating, building",
+   "text": "PINK!",
+   "voice": "Raspy voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 40.78,
+   "end": 41.08,
+   "heard": "pink"
+  },
+  {
+   "sec": 4,
+   "header": "Pre-Chorus: both voices alternating, building",
+   "text": "Somebody resolve this!",
+   "voice": "Both voices",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 41.08,
+   "end": 43.08,
+   "heard": "Somebody resolve this"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Accept current change! (NO!)",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 43.08,
+   "end": 44.92,
+   "heard": "Accept current change, no"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Accept incoming change! (NO!)",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 44.92,
+   "end": 46.88,
+   "heard": "Accept incoming change, no"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Two girls, one line, the build is on fire",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 46.88,
+   "end": 49.36,
+   "heard": "Two girls, one line, the build is on fire"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Merge conflict, merge conflict, heart going haywire",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 49.36,
+   "end": 53.17,
+   "heard": "Merge conflicts, merge conflicts Heart going haywire"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Accept current change! (NEVER!)",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 53.4,
+   "end": 55.68,
+   "heard": "Accept current change, never"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Accept incoming change! (NEVER!)",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 55.68,
+   "end": 57.5,
+   "heard": "Accept incoming change, never"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Equals, equals, equals in the middle of my soul",
+   "voice": null,
+   "unmatched": [
+    "equals"
+   ],
+   "ratio": 0.8888888888888888,
+   "anchored": true,
+   "start": 57.5,
+   "end": 59.88,
+   "heard": "Equals, equals in the middle of my soul"
+  },
+  {
+   "sec": 5,
+   "header": "Chorus: heavy, both voices, choir",
+   "text": "Merge conflict, merge conflict, I can't take control",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 59.88,
+   "end": 63.8,
+   "heard": "Merge conflicts, merge conflict I can't take control"
+  },
+  {
+   "sec": 6,
+   "header": "Verse 3: rapid trading, getting faster",
+   "text": "You use tabs!",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 64.6,
+   "end": 65.86,
+   "heard": "You use tabs,"
+  },
+  {
+   "sec": 6,
+   "header": "Verse 3: rapid trading, getting faster",
+   "text": "You use spaces!",
+   "voice": "Raspy voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 66.2,
+   "end": 67.36,
+   "heard": "you use spaces"
+  },
+  {
+   "sec": 6,
+   "header": "Verse 3: rapid trading, getting faster",
+   "text": "You named a variable \"data2\"!",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 67.36,
+   "end": 69.22,
+   "heard": "You named a variable data"
+  },
+  {
+   "sec": 6,
+   "header": "Verse 3: rapid trading, getting faster",
+   "text": "You wrote a comment that just says \"don't touch\"!",
+   "voice": "Raspy voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 69.64,
+   "end": 72.6,
+   "heard": "You wrote a comment that just says don't touch"
+  },
+  {
+   "sec": 6,
+   "header": "Verse 3: rapid trading, getting faster",
+   "text": "I wrote that comment!",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 72.6,
+   "end": 74.02,
+   "heard": "I wrote that comment,"
+  },
+  {
+   "sec": 6,
+   "header": "Verse 3: rapid trading, getting faster",
+   "text": "I KNOW! I TOUCHED IT!",
+   "voice": "Raspy voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 74.14,
+   "end": 75.5,
+   "heard": "I know, I touched it"
+  },
+  {
+   "sec": 7,
+   "header": "Both voices scream",
+   "text": "AAAAAH!",
+   "voice": null,
+   "unmatched": [
+    "aaaaah"
+   ],
+   "ratio": 0.0,
+   "anchored": false,
+   "start": null,
+   "end": null,
+   "heard": ""
+  },
+  {
+   "sec": 8,
+   "header": "Breakdown: slowest and heaviest, raspy voice screaming",
+   "text": "GIT!",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 81.04,
+   "end": 81.51,
+   "heard": "Get,"
+  },
+  {
+   "sec": 8,
+   "header": "Breakdown: slowest and heaviest, raspy voice screaming",
+   "text": "PUSH!",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 82.08,
+   "end": 82.62,
+   "heard": "push,"
+  },
+  {
+   "sec": 8,
+   "header": "Breakdown: slowest and heaviest, raspy voice screaming",
+   "text": "FORCE!",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 82.8,
+   "end": 83.28,
+   "heard": "force"
+  },
+  {
+   "sec": 9,
+   "header": "Sweet voice, horrified, almost whispered",
+   "text": "...you wouldn't.",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 83.28,
+   "end": 84.38,
+   "heard": "You wouldn't"
+  },
+  {
+   "sec": 10,
+   "header": "Soft Interlude: everything stops, gentle piano, both voices soft",
+   "text": "Maybe blue was never really mine",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 88.96,
+   "end": 91.2,
+   "heard": "Maybe blue was never really mine"
+  },
+  {
+   "sec": 10,
+   "header": "Soft Interlude: everything stops, gentle piano, both voices soft",
+   "text": "Maybe pink was just my way to say hello",
+   "voice": "Raspy voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 91.2,
+   "end": 94.44,
+   "heard": "Maybe pink was just my way to say hello"
+  },
+  {
+   "sec": 10,
+   "header": "Soft Interlude: everything stops, gentle piano, both voices soft",
+   "text": "We're the same file, just from different times",
+   "voice": "Sweet voice",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 94.44,
+   "end": 97.12,
+   "heard": "We're the same file, just from different times"
+  },
+  {
+   "sec": 10,
+   "header": "Soft Interlude: everything stops, gentle piano, both voices soft",
+   "text": "Two branches of the same old tree, you know",
+   "voice": "Both voices, harmonizing",
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 97.12,
+   "end": 100.46,
+   "heard": "Two branches of the same old tree, you know"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Accept both changes! (YES!)",
+   "voice": null,
+   "unmatched": [
+    "yes"
+   ],
+   "ratio": 0.75,
+   "anchored": true,
+   "start": 101.75999999999999,
+   "end": 103.4,
+   "heard": "Accept both changes,"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Accept both changes! (YES!)",
+   "voice": null,
+   "unmatched": [
+    "yes"
+   ],
+   "ratio": 0.75,
+   "anchored": true,
+   "start": 103.84,
+   "end": 105.06,
+   "heard": "accept both changes"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Blue and pink together, it's a gradient now",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 105.06,
+   "end": 107.73,
+   "heard": "Blue and pink together, it's a gradient now"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Two girls, one line, and we figured it out",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 107.82,
+   "end": 111.24,
+   "heard": "Two girls, one line, and we figured it out"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Accept both changes! (YES!)",
+   "voice": null,
+   "unmatched": [
+    "yes"
+   ],
+   "ratio": 0.75,
+   "anchored": true,
+   "start": 112.44,
+   "end": 114.06,
+   "heard": "Accept both changes,"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Commit and push it! (PUSH IT!)",
+   "voice": null,
+   "unmatched": [
+    "commit"
+   ],
+   "ratio": 0.8333333333333334,
+   "anchored": true,
+   "start": 114.8,
+   "end": 116.03999999999999,
+   "heard": "and push it, push it"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Equals, equals, equals, now we're whole",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 116.04,
+   "end": 118.44,
+   "heard": "Equals, equals, equals, now we're whole"
+  },
+  {
+   "sec": 12,
+   "header": "Final Chorus: key change up, both voices together in harmony",
+   "text": "Merge conflict resolved inside my soul",
+   "voice": null,
+   "unmatched": [],
+   "ratio": 1.0,
+   "anchored": true,
+   "start": 118.44,
+   "end": 121.88,
+   "heard": "Merged conflict resolved inside my soul"
+  },
+  {
+   "sec": 13,
+   "header": "Music stops abruptly, flat robotic voice",
+   "text": "Build failed.",
+   "voice": null,
+   "unmatched": [
+    "build"
+   ],
+   "ratio": 0.5,
+   "anchored": true,
+   "start": 123.66,
+   "end": 124.39999999999999,
+   "heard": "Failed,"
+  },
+  {
+   "sec": 13,
+   "header": "Music stops abruptly, flat robotic voice",
+   "text": "Syntax error on line forty-two.",
+   "voice": null,
+   "unmatched": [
+    "line",
+    "fortytwo"
+   ],
+   "ratio": 0.6,
+   "anchored": true,
+   "start": 124.68,
+   "end": 126.69999999999999,
+   "heard": "syntax error on"
+  },
+  {
+   "sec": 14,
+   "header": "Both voices scream",
+   "text": "AAAAAAAH!",
+   "voice": null,
+   "unmatched": [
+    "aaaaaaah"
+   ],
+   "ratio": 0.0,
+   "anchored": false,
+   "start": null,
+   "end": null,
+   "heard": ""
+  }
+ ],
+ "odd_bars": [
+  {
+   "bar": 4,
+   "t": 6.16,
+   "beats": 3
+  },
+  {
+   "bar": 98,
+   "t": 131.1,
+   "beats": 3
+  },
+  {
+   "bar": 103,
+   "t": 137.43,
+   "beats": 5
+  },
+  {
+   "bar": 113,
+   "t": 151.1,
+   "beats": 5
+  }
+ ],
+ "w20": [
+  180.23,
+  180.23,
+  180.23,
+  180.23,
+  180.13,
+  180.13,
+  180.13,
+  180.02,
+  179.96,
+  179.96,
+  179.96,
+  180.02,
+  180.02,
+  180.02,
+  180.02,
+  180.07,
+  180.07,
+  180.07,
+  180.07,
+  180.02,
+  180.02,
+  180.02,
+  180.02,
+  180.02,
+  180.02,
+  180.02,
+  180.02
+ ]
+}

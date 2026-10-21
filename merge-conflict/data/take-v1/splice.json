@@ -1,0 +1,169 @@
+{
+ "chorus1": {
+  "start_downbeat": 43.128,
+  "start_bar": 32,
+  "end_downbeat": 64.45,
+  "end_bar": 48,
+  "bars": 16,
+  "seconds": 21.322,
+  "first_word": {
+   "w": "Accept",
+   "s": 43.08,
+   "offset_from_downbeat_s": -0.048
+  },
+  "last_word": {
+   "w": "control",
+   "s": 63.04,
+   "e": 63.8
+  },
+  "voice_below_minus45_after_last_word_at": 64.5,
+  "voice_last_frame_above_minus35_dB": 64.39,
+  "voice_dips_below_minus35_between_last_word_and_cut": [
+   63.29,
+   63.34
+  ],
+  "voice_min_dB_from_1s_before_to_0p1_after_chorus_start": -30.5
+ },
+ "verse3": {
+  "start_downbeat": 64.45,
+  "first_word": {
+   "w": "You",
+   "s": 64.6,
+   "offset_from_downbeat_s": 0.15
+  }
+ },
+ "cut_chorus1_end_to_verse3": {
+  "downbeat": 64.45,
+  "bar": 48,
+  "1_bar": {
+   "before": {
+    "start": 63.12,
+    "end": 64.45,
+    "mix": -23.3,
+    "drums": -28.2,
+    "bass": -83.1,
+    "other": -66.5,
+    "vocals": -25.2
+   },
+   "after": {
+    "start": 64.45,
+    "end": 65.78,
+    "mix": -20.5,
+    "drums": -22.8,
+    "bass": -36.2,
+    "other": -35.7,
+    "vocals": -28.9
+   },
+   "mix_db_diff": 2.8,
+   "mel_cosine": -0.051,
+   "chroma_cosine": 0.946
+  },
+  "2_bar": {
+   "before": {
+    "start": 61.78,
+    "end": 64.45,
+    "mix": -22.8,
+    "drums": -28.9,
+    "bass": -38.8,
+    "other": -40.6,
+    "vocals": -25.0
+   },
+   "after": {
+    "start": 64.45,
+    "end": 67.12,
+    "mix": -21.0,
+    "drums": -24.2,
+    "bass": -35.1,
+    "other": -37.4,
+    "vocals": -26.6
+   },
+   "mix_db_diff": 1.8,
+   "mel_cosine": 0.228,
+   "chroma_cosine": 0.987
+  },
+  "seam_100ms_dB_before_minus_after": {
+   "mix": 3.9,
+   "drums": 3.4,
+   "bass": 2.2,
+   "other": 0.4,
+   "vocals": 15.1
+  }
+ },
+ "cut_into_chorus1_start": {
+  "downbeat": 43.128,
+  "bar": 32,
+  "1_bar": {
+   "before": {
+    "start": 41.8,
+    "end": 43.13,
+    "mix": -20.1,
+    "drums": -28.2,
+    "bass": -31.2,
+    "other": -34.5,
+    "vocals": -22.4
+   },
+   "after": {
+    "start": 43.13,
+    "end": 44.46,
+    "mix": -21.0,
+    "drums": -33.9,
+    "bass": -39.1,
+    "other": -39.8,
+    "vocals": -21.9
+   },
+   "mix_db_diff": -1.0,
+   "mel_cosine": 0.851,
+   "chroma_cosine": 0.989
+  },
+  "2_bar": {
+   "before": {
+    "start": 40.46,
+    "end": 43.13,
+    "mix": -21.0,
+    "drums": -28.9,
+    "bass": -34.2,
+    "other": -37.4,
+    "vocals": -22.9
+   },
+   "after": {
+    "start": 43.13,
+    "end": 45.79,
+    "mix": -20.8,
+    "drums": -30.3,
+    "bass": -36.5,
+    "other": -37.0,
+    "vocals": -22.3
+   },
+   "mix_db_diff": 0.2,
+   "mel_cosine": 0.889,
+   "chroma_cosine": 0.996
+  },
+  "seam_100ms_dB_before_minus_after": {
+   "mix": 0.1,
+   "drums": -0.7,
+   "bass": 0.4,
+   "other": 1.9,
+   "vocals": -0.1
+  }
+ },
+ "baseline_adjacent_bars": {
+  "1": {
+   "median_mel_cosine": 0.787,
+   "p10_mel_cosine": 0.239,
+   "median_chroma_cosine": 0.967,
+   "p10_chroma_cosine": 0.919,
+   "median_abs_mix_db_diff": 0.5,
+   "p90_abs_mix_db_diff": 2.2,
+   "n": 106
+  },
+  "2": {
+   "median_mel_cosine": 0.814,
+   "p10_mel_cosine": 0.361,
+   "median_chroma_cosine": 0.98,
+   "p10_chroma_cosine": 0.956,
+   "median_abs_mix_db_diff": 0.6,
+   "p90_abs_mix_db_diff": 2.1,
+   "n": 104
+  }
+ }
+}

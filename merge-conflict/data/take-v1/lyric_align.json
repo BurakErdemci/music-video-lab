@@ -1,0 +1,443 @@
+[
+ {
+  "section": "Intro - chiptune error sound, music stops, flat robotic voice",
+  "text": "Automatic merge failed.",
+  "ratio": 0.67,
+  "start": 0.32,
+  "end": 1.2,
+  "heard": "automatic merge",
+  "voice": null
+ },
+ {
+  "section": "Intro - chiptune error sound, music stops, flat robotic voice",
+  "text": "Fix conflicts and then commit the result.",
+  "ratio": 1.0,
+  "start": 1.9,
+  "end": 4.6,
+  "heard": "Fix conflicts and then commit the results",
+  "voice": null
+ },
+ {
+  "section": "Verse 1 - sweet idol voice, bouncy",
+  "text": "I'm HEAD, I'm main, I'm stable and clean",
+  "ratio": 1.0,
+  "start": 17.1,
+  "end": 19.7,
+  "heard": "I'm head, I'm main, I'm stable and clean",
+  "voice": null
+ },
+ {
+  "section": "Verse 1 - sweet idol voice, bouncy",
+  "text": "Line forty-two, the button was blue, the calmest you've seen",
+  "ratio": 1.0,
+  "start": 19.7,
+  "end": 22.42,
+  "heard": "Line forty the button was blue, the calmest you've seen",
+  "voice": null
+ },
+ {
+  "section": "Verse 1 - sweet idol voice, bouncy",
+  "text": "Reviewed and approved by the whole design team",
+  "ratio": 1.0,
+  "start": 23.0,
+  "end": 25.14,
+  "heard": "Reviewed and approved by the whole design team",
+  "voice": null
+ },
+ {
+  "section": "Verse 1 - sweet idol voice, bouncy",
+  "text": "Then someone pushed at midnight... who are you?",
+  "ratio": 1.0,
+  "start": 25.14,
+  "end": 27.84,
+  "heard": "Then someone pushed at midnight, who are you?",
+  "voice": null
+ },
+ {
+  "section": "Verse 2 - raspy rock voice, aggressive",
+  "text": "I'm feature branch, I'm fresh from the night",
+  "ratio": 1.0,
+  "start": 27.84,
+  "end": 30.38,
+  "heard": "I'm feature branch, I'm fresh from the night",
+  "voice": null
+ },
+ {
+  "section": "Verse 2 - raspy rock voice, aggressive",
+  "text": "The button is PINK now and baby, the pink is right",
+  "ratio": 1.0,
+  "start": 30.38,
+  "end": 33.04,
+  "heard": "The button is pink now and baby the pink is right",
+  "voice": null
+ },
+ {
+  "section": "Verse 2 - raspy rock voice, aggressive",
+  "text": "I rewrote your CSS and I'm ready to fight",
+  "ratio": 1.0,
+  "start": 33.04,
+  "end": 35.7,
+  "heard": "I rewrote your CSS and I'm ready to fight",
+  "voice": null
+ },
+ {
+  "section": "Verse 2 - raspy rock voice, aggressive",
+  "text": "Three hundred commits and I never asked once!",
+  "ratio": 0.75,
+  "start": 36.22,
+  "end": 38.56,
+  "heard": "commits and I never asked once",
+  "voice": null
+ },
+ {
+  "section": "Pre-Chorus - both voices alternating, building",
+  "text": "Blue!",
+  "ratio": 1.0,
+  "start": 38.56,
+  "end": 39.12,
+  "heard": "Blue,",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Pre-Chorus - both voices alternating, building",
+  "text": "Pink!",
+  "ratio": 1.0,
+  "start": 39.5,
+  "end": 39.8,
+  "heard": "pink,",
+  "voice": "Raspy voice"
+ },
+ {
+  "section": "Pre-Chorus - both voices alternating, building",
+  "text": "Blue!",
+  "ratio": 1.0,
+  "start": 40.1,
+  "end": 40.46,
+  "heard": "blue,",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Pre-Chorus - both voices alternating, building",
+  "text": "PINK!",
+  "ratio": 1.0,
+  "start": 40.78,
+  "end": 41.08,
+  "heard": "pink",
+  "voice": "Raspy voice"
+ },
+ {
+  "section": "Pre-Chorus - both voices alternating, building",
+  "text": "Somebody resolve this!",
+  "ratio": 1.0,
+  "start": 41.08,
+  "end": 43.08,
+  "heard": "Somebody resolve this",
+  "voice": "Both voices"
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Accept current change! (NO!)",
+  "ratio": 1.0,
+  "start": 43.08,
+  "end": 44.92,
+  "heard": "Accept current change, no",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Accept incoming change! (NO!)",
+  "ratio": 1.0,
+  "start": 44.92,
+  "end": 46.88,
+  "heard": "Accept incoming change, no",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Two girls, one line, the build is on fire",
+  "ratio": 1.0,
+  "start": 46.88,
+  "end": 49.36,
+  "heard": "Two girls, one line, the build is on fire",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Merge conflict, merge conflict, heart going haywire",
+  "ratio": 1.0,
+  "start": 49.36,
+  "end": 53.17,
+  "heard": "Merge conflicts, merge conflicts Heart going haywire",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Accept current change! (NEVER!)",
+  "ratio": 1.0,
+  "start": 53.4,
+  "end": 55.68,
+  "heard": "Accept current change, never",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Accept incoming change! (NEVER!)",
+  "ratio": 1.0,
+  "start": 55.68,
+  "end": 57.5,
+  "heard": "Accept incoming change, never",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Equals, equals, equals in the middle of my soul",
+  "ratio": 0.89,
+  "start": 57.5,
+  "end": 59.88,
+  "heard": "Equals, equals in the middle of my soul",
+  "voice": null
+ },
+ {
+  "section": "Chorus - heavy, both voices, choir",
+  "text": "Merge conflict, merge conflict, I can't take control",
+  "ratio": 1.0,
+  "start": 59.88,
+  "end": 63.8,
+  "heard": "Merge conflicts, merge conflict I can't take control",
+  "voice": null
+ },
+ {
+  "section": "Verse 3 - rapid trading, getting faster",
+  "text": "You use tabs!",
+  "ratio": 1.0,
+  "start": 64.6,
+  "end": 65.86,
+  "heard": "You use tabs,",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Verse 3 - rapid trading, getting faster",
+  "text": "You use spaces!",
+  "ratio": 1.0,
+  "start": 66.2,
+  "end": 67.36,
+  "heard": "you use spaces",
+  "voice": "Raspy voice"
+ },
+ {
+  "section": "Verse 3 - rapid trading, getting faster",
+  "text": "You named a variable \"data2\"!",
+  "ratio": 1.0,
+  "start": 67.36,
+  "end": 69.22,
+  "heard": "You named a variable data",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Verse 3 - rapid trading, getting faster",
+  "text": "You wrote a comment that just says \"don't touch\"!",
+  "ratio": 1.0,
+  "start": 69.64,
+  "end": 72.6,
+  "heard": "You wrote a comment that just says don't touch",
+  "voice": "Raspy voice"
+ },
+ {
+  "section": "Verse 3 - rapid trading, getting faster",
+  "text": "I wrote that comment!",
+  "ratio": 1.0,
+  "start": 72.6,
+  "end": 74.02,
+  "heard": "I wrote that comment,",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Verse 3 - rapid trading, getting faster",
+  "text": "I KNOW! I TOUCHED IT!",
+  "ratio": 1.0,
+  "start": 74.14,
+  "end": 75.5,
+  "heard": "I know, I touched it",
+  "voice": "Raspy voice"
+ },
+ {
+  "section": "Both voices scream",
+  "text": "AAAAAH!",
+  "ratio": 0.0,
+  "start": null,
+  "end": null,
+  "heard": null,
+  "voice": null
+ },
+ {
+  "section": "Breakdown - slowest and heaviest, raspy voice screaming",
+  "text": "GIT!",
+  "ratio": 1.0,
+  "start": 81.04,
+  "end": 81.51,
+  "heard": "Get,",
+  "voice": null
+ },
+ {
+  "section": "Breakdown - slowest and heaviest, raspy voice screaming",
+  "text": "PUSH!",
+  "ratio": 1.0,
+  "start": 82.08,
+  "end": 82.62,
+  "heard": "push,",
+  "voice": null
+ },
+ {
+  "section": "Breakdown - slowest and heaviest, raspy voice screaming",
+  "text": "FORCE!",
+  "ratio": 1.0,
+  "start": 82.8,
+  "end": 83.28,
+  "heard": "force",
+  "voice": null
+ },
+ {
+  "section": "Sweet voice, horrified, almost whispered",
+  "text": "...you wouldn't.",
+  "ratio": 1.0,
+  "start": 83.28,
+  "end": 84.38,
+  "heard": "You wouldn't",
+  "voice": null
+ },
+ {
+  "section": "Soft Interlude - everything stops, gentle piano, both voices soft",
+  "text": "Maybe blue was never really mine",
+  "ratio": 1.0,
+  "start": 88.96,
+  "end": 91.2,
+  "heard": "Maybe blue was never really mine",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Soft Interlude - everything stops, gentle piano, both voices soft",
+  "text": "Maybe pink was just my way to say hello",
+  "ratio": 1.0,
+  "start": 91.2,
+  "end": 94.44,
+  "heard": "Maybe pink was just my way to say hello",
+  "voice": "Raspy voice"
+ },
+ {
+  "section": "Soft Interlude - everything stops, gentle piano, both voices soft",
+  "text": "We're the same file, just from different times",
+  "ratio": 1.0,
+  "start": 94.44,
+  "end": 97.12,
+  "heard": "We're the same file, just from different times",
+  "voice": "Sweet voice"
+ },
+ {
+  "section": "Soft Interlude - everything stops, gentle piano, both voices soft",
+  "text": "Two branches of the same old tree, you know",
+  "ratio": 1.0,
+  "start": 97.12,
+  "end": 100.46,
+  "heard": "Two branches of the same old tree, you know",
+  "voice": "Both voices, harmonizing"
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Accept both changes! (YES!)",
+  "ratio": 0.75,
+  "start": 101.76,
+  "end": 103.4,
+  "heard": "Accept both changes,",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Accept both changes! (YES!)",
+  "ratio": 0.75,
+  "start": 103.84,
+  "end": 105.06,
+  "heard": "accept both changes",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Blue and pink together, it's a gradient now",
+  "ratio": 1.0,
+  "start": 105.06,
+  "end": 107.73,
+  "heard": "Blue and pink together, it's a gradient now",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Two girls, one line, and we figured it out",
+  "ratio": 1.0,
+  "start": 107.82,
+  "end": 111.24,
+  "heard": "Two girls, one line, and we figured it out",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Accept both changes! (YES!)",
+  "ratio": 0.75,
+  "start": 112.44,
+  "end": 114.06,
+  "heard": "Accept both changes,",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Commit and push it! (PUSH IT!)",
+  "ratio": 0.83,
+  "start": 114.8,
+  "end": 116.04,
+  "heard": "and push it, push it",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Equals, equals, equals, now we're whole",
+  "ratio": 1.0,
+  "start": 116.04,
+  "end": 118.44,
+  "heard": "Equals, equals, equals, now we're whole",
+  "voice": null
+ },
+ {
+  "section": "Final Chorus - key change up, both voices together in harmony",
+  "text": "Merge conflict resolved inside my soul",
+  "ratio": 1.0,
+  "start": 118.44,
+  "end": 121.88,
+  "heard": "Merged conflict resolved inside my soul",
+  "voice": null
+ },
+ {
+  "section": "Music stops abruptly, flat robotic voice",
+  "text": "Build failed.",
+  "ratio": 0.5,
+  "start": 123.66,
+  "end": 124.4,
+  "heard": "Failed,",
+  "voice": null
+ },
+ {
+  "section": "Music stops abruptly, flat robotic voice",
+  "text": "Syntax error on line forty-two.",
+  "ratio": 0.6,
+  "start": 124.68,
+  "end": 126.7,
+  "heard": "syntax error on",
+  "voice": null
+ },
+ {
+  "section": "Both voices scream",
+  "text": "AAAAAAAH!",
+  "ratio": 0.0,
+  "start": null,
+  "end": null,
+  "heard": null,
+  "voice": null
+ }
+]
