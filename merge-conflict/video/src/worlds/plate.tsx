@@ -50,7 +50,8 @@ const Layer = ({ tex, base, dist, near, gain, margin }: { tex: unknown; base: Ca
     const fwd = new Vector3(...base.target).sub(p).normalize();
     const right = new Vector3().crossVectors(fwd, new Vector3(0, 1, 0)).normalize();
     const up = new Vector3().crossVectors(right, fwd);
-    // cover the frame's width with a margin for the camera's travel; the 3:2 plate overflows top and bottom
+    // cover the frame's width with a margin for the camera's travel and the framing guard's widening (round 7c:
+    // 1.45, so the 2x plates show at 1.21x their pixels at the 2K output); the 3:2 plate overflows top and bottom
     const ww = 2 * dist * Math.tan((base.fov * Math.PI) / 360) * (W / H) * margin;
     const q = new Quaternion().setFromRotationMatrix(new Matrix4().makeBasis(right, up, fwd.clone().negate()));
     return { pos: p.add(fwd.multiplyScalar(dist)).toArray() as [number, number, number], quat: q, w: ww, h: ww / PLATE_ASPECT };
@@ -66,7 +67,7 @@ const Layer = ({ tex, base, dist, near, gain, margin }: { tex: unknown; base: Ca
 
 /** The plate `id` (W01..W11, public/plates/) behind the world, anchored on the shot's opening camera `base`.
  *  `panel`: a full-frame moment painting (QK1-QK5) on the far plane only, no floor layer. */
-export const PlateLayer = ({ id, base, dist = 46, gain = 0.92, margin = 1.3, panel = false }: { id: string; base: CameraPose; dist?: number; gain?: number; margin?: number; panel?: boolean }) => {
+export const PlateLayer = ({ id, base, dist = 46, gain = 0.92, margin = 1.45, panel = false }: { id: string; base: CameraPose; dist?: number; gain?: number; margin?: number; panel?: boolean }) => {
   const tex = useLoader(TextureLoader, staticFile(`plates/${id}.webp`));
   tex.colorSpace = NoColorSpace;
   return (
