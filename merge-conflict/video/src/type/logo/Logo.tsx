@@ -15,7 +15,8 @@ import { capOf, type Face, familyOf, layout, widthOf } from '../fonts.tsx';
 export type LogoDesign = 'A' | 'B' | 'C';
 /** beat: position inside the current beat (0..1, the shove); beatIndex: the beat number, which re-seeds the
  *  split edge's diff-line jitter on every beat. */
-export interface LogoProps { design: LogoDesign; resolved: boolean; cx: number; cy: number; width: number; beat?: number; beatIndex?: number; id: string }
+/** apart: px the two halves are shoved apart (B: the disco side left, the metal side right; 0 = locked). */
+export interface LogoProps { design: LogoDesign; resolved: boolean; cx: number; cy: number; width: number; beat?: number; beatIndex?: number; apart?: number; id: string }
 
 const BLUE = '#2f7bff';
 const CYAN = '#7fe3ff';
@@ -118,7 +119,7 @@ const LogoA = ({ resolved, cx, cy, width, beat = 0, id }: LogoProps) => {
 };
 
 // ---- B: split word -----------------------------------------------------------------------------------------
-const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, id }: LogoProps) => {
+const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, apart = 0, id }: LogoProps) => {
   const disco: Face = 'bungee';
   const metal: Face = 'pirata';
   const lines = ['MERGE', 'CONFLICT'];
@@ -154,8 +155,8 @@ const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, id }: LogoProps) => {
         <clipPath id={`${id}-disco`}><path d={discoSide} /></clipPath>
         <clipPath id={`${id}-metal`}><path d={metalSide} /></clipPath>
       </defs>
-      <g clipPath={`url(#${id}-disco)`}>{set(disco).map((w) => <Word key={w.text} text={w.text} x={w.x} y={w.y} size={w.s} face={disco} fill={`url(#${id}-chrome)`} glow={BLUE} />)}</g>
-      <g clipPath={`url(#${id}-metal)`}>{set(metal).map((w) => <Word key={w.text} text={w.text} x={w.x} y={w.y} size={w.s} face={metal} fill={`url(#${id}-flame)`} glow={RED} sw={0.035} />)}</g>
+      <g transform={`translate(${-apart} ${-apart * 0.35})`}><g clipPath={`url(#${id}-disco)`}>{set(disco).map((w) => <Word key={w.text} text={w.text} x={w.x} y={w.y} size={w.s} face={disco} fill={`url(#${id}-chrome)`} glow={BLUE} />)}</g></g>
+      <g transform={`translate(${apart} ${apart * 0.35})`}><g clipPath={`url(#${id}-metal)`}>{set(metal).map((w) => <Word key={w.text} text={w.text} x={w.x} y={w.y} size={w.s} face={metal} fill={`url(#${id}-flame)`} glow={RED} sw={0.035} />)}</g></g>
       {/* the cut edge as a diff line: red - marks on the disco side, green + marks on the metal side */}
       <path d={cut} fill="none" stroke="#ffffff" strokeWidth={5} />
       {pts.filter((_, k) => k % 2).map(([x, y], k) => (
