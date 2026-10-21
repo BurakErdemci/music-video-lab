@@ -23,7 +23,7 @@ export const lineTokens = (i: number): Token[] => {
   return toks.map((text, k) => ({ text, start: (sung[k] as { s: number }).s, end: (sung[k] as { e: number }).e }));
 };
 
-export interface LineDesign { line: number; key: number; keyColor: Hex; x: number; y: number; keyText?: string }
+export interface LineDesign { line: number; key: number; keyColor: Hex; x: number; y: number }
 
 /** Proof (0-20 s) designs: the line's key word big, in the colour the story gives it. */
 export const DESIGNS: readonly LineDesign[] = [
@@ -53,7 +53,7 @@ const Line = ({ d, t }: { d: LineDesign; t: number }) => {
           const s = lerp(1.6, 1, inP) * (1 + 0.025 * Math.sin(t * 5));
           return (
             <span key={k} style={{ visibility: hide, display: 'inline-block', fontFamily: DISPLAY, fontSize: 150, lineHeight: 1.0, color: d.keyColor, transform: `scale(${s})`, transformOrigin: 'left bottom', WebkitTextStroke: '5px #0b0614', paintOrder: 'stroke', textShadow: `0 0 26px ${d.keyColor}` }}>
-              {(d.keyText ?? tk.text).toUpperCase()}
+              {tk.text.toUpperCase()}
             </span>
           );
         }

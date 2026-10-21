@@ -8,8 +8,8 @@ export interface CounterSpec { from: number; to: number; t0: number; t1: number;
 
 export const counterValue = (s: CounterSpec, t: number): number => Math.round(lerp(s.from, s.to, inOutQuad((t - s.t0) / (s.t1 - s.t0))));
 
-export const Counter = ({ spec, t, until = Infinity }: { spec: CounterSpec; t: number; until?: number }) => {
-  if (t < spec.t0 || t >= until) return null;
+export const Counter = ({ spec, t }: { spec: CounterSpec; t: number }) => {
+  if (t < spec.t0) return null;
   const v = String(counterValue(spec, t)).padStart(spec.digits ?? 3, '0') + (spec.suffix ?? '');
   const w = v.length * MONO_ADV * spec.size;
   const cursor = t > spec.t1 && Math.floor(t * 3) % 2 === 0;

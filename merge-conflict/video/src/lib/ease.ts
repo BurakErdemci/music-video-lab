@@ -12,9 +12,6 @@ export const inOutQuad = (x: number): number => {
 };
 /** 0 before a, 1 after a + dur, linear between. */
 export const ramp = (t: number, a: number, dur: number): number => clamp01((t - a) / dur);
-/** 0 -> 1 -> 0 window: rises over `rise` s from a, holds, falls over `fall` s before b. */
-export const window01 = (t: number, a: number, b: number, rise: number, fall: number): number =>
-  Math.min(ramp(t, a, rise), 1 - ramp(t, b - fall, fall));
 
 export type Hex = `#${string}`;
 /** Raw (gamma-encoded) 0..1 components of a #rrggbb colour: the whole stage works in raw values. */

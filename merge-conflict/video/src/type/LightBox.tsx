@@ -36,8 +36,6 @@ const letterLevel = (id: string, i: number, t: number, on: number, off: number):
   return 0.9 + 0.1 * Math.sin(t * 7 + i * 1.7);
 };
 
-export const lightBoxEnd = (s: LightBoxSpec): number => s.t0 + s.stagger * (s.words.reduce((n, w) => n + w.text.length, 0) - 1);
-
 export const LightBox = ({ spec, t }: { spec: LightBoxSpec; t: number }) => {
   const face = spec.face ?? 'display';
   const text = spec.words.map((w) => w.text).join(' ');
