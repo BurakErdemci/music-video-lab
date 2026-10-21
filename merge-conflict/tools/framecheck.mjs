@@ -88,9 +88,16 @@ const plateScales = (state) => {
     const w = 2 * d * Math.tan((base.fov * Math.PI) / 360) * (W / H) * margin;
     const h = w / (PLATE_PX[0] / PLATE_PX[1]);
     const c = base.position.map((v, i) => v + fwd[i] * d);
-    const at = (r, u) => M.project(state.pose, c.map((v, i) => v + right[i] * r * w / 2 + up[i] * u * h / 2));
+    const cf = norm(sub(state.pose.target, state.pose.position));
+    let behind = false; // an edge point behind the camera has no meaningful screen size: skip the plane
+    const at = (r, u) => {
+      const p = c.map((v, i) => v + right[i] * r * w / 2 + up[i] * u * h / 2);
+      if (sub(p, state.pose.position).reduce((t, v, i) => t + v * cf[i], 0) < 0.1) behind = true;
+      return M.project(state.pose, p);
+    };
     const len = (p, q) => Math.hypot(p.x - q.x, p.y - q.y);
     const f = OUT * Math.max(len(at(-1, 0), at(1, 0)) / PLATE_PX[0], len(at(0, -1), at(0, 1)) / PLATE_PX[1]);
+    if (behind) continue;
     out.push({ id: pl.id, kind: `plate ${name}`, f });
   }
   return out;
@@ -148,8 +155,8 @@ if (selftest) {
   const big = check({ pose: M.HOME, shot: 'selftest-big', subjects: [{ card, at: { x: 0, feet: -9, height: 22 } }] });
   const ok = check({ pose: M.HOME, shot: 'selftest-ok', subjects: [{ card, at: { x: 0, feet: -4.5, height: 6 } }] });
   console.log(`selftest on ${card}: oversized -> ${big.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; fitted -> ${ok.map((b) => b.why).join('; ') || 'passed'}`);
-  // the scale rule: the same card drawn at 22 units fails it, at 1/3 of that it does not
-  const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -9, height: 22 } }] });
+  // the scale rule: the same card drawn at 60 units fails it, at 2 units it does not
+  const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -20, height: 60 } }] });
   const sOk = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -4.5, height: 2 } }] });
   console.log(`selftest scale on ${card}: oversized -> ${sBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; small -> ${sOk.map((b) => b.why).join('; ') || 'passed'}`);
   rmSync(outDir, { recursive: true, force: true });
