@@ -22,6 +22,7 @@ import { FormDefs } from '../../type/forms/common.tsx';
 import { familyOf } from '../../type/fonts.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
+import { GlowBox } from '../../worlds/kit/index.ts';
 import { PlateLayer } from '../../worlds/plate.tsx';
 import { SUBWAY_CAMERA, SubwayWorld, TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
 import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
@@ -39,7 +40,7 @@ const HERO: Record<RestScene, Hero> = {
   rails: RAILS_CAMERA, subway: SUBWAY_CAMERA, squash: SQUASH_CAMERA, blame: BLAME_CAMERA, pipeline: PIPELINE_CAMERA, callgrid: CALLGRID_CAMERA,
   whitespace: WHITESPACE_CAMERA, nametag: NAMETAG_CAMERA, lasercase: LASERCASE_CAMERA, scream: FACE_CAMERA, cathedral: CATHEDRAL_CAMERA,
   forge: FORGE_CAMERA, warning: TERMINAL_CAMERA, pushface: FACE_CAMERA, whisper: WHISPER_CAMERA, tunnel: CHEVRON_TUNNEL_CAMERA, arena: ARENA_CAMERA, duel: FACE_CAMERA,
-  faceO: FACE_CAMERA, faceB: FACE_CAMERA,
+  faceO: FACE_CAMERA, faceB: FACE_CAMERA, panel: FACE_CAMERA,
 };
 /** Painted plates (trial): night for the rebase, Burak's approved worlds for the rest; the code worlds alone where no plate fits. */
 const PLATES: Partial<Record<RestScene, string>> = { rails: 'W12', subway: 'W10', squash: 'W08', blame: 'W01', pipeline: 'W05', lasercase: 'W01', cathedral: 'W04', forge: 'W11', arena: 'W09' };
@@ -48,7 +49,7 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
   rails: ['#6a3cd8', '#e0508a'], subway: ['#2765ff', '#7d38ff'], squash: ['#d23d2a', '#3a5eee'], blame: ['#2765ff', '#19a0e0'], pipeline: ['#e9320b', '#c84a10'],
   callgrid: ['#8a3cd8', '#e0508a'], whitespace: ['#2765ff', '#e9320b'], nametag: ['#d8602a', '#7d38ff'], lasercase: ['#e92645', '#2765ff'], scream: ['#ff2217', '#2d63fb'],
   cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], warning: ['#ff2217', '#c84a10'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
-  tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], faceB: ['#2d63fb', '#19c8ff'],
+  tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], faceB: ['#2d63fb', '#19c8ff'], panel: ['#7a3cff', '#ff3d9a'],
 };
 const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
   const i = RSHOTS.indexOf(s);
@@ -65,6 +66,13 @@ const VERSE_PUNCHES = [
   ...EVENTS.filter((e) => e.kind === 'accent').map((e) => e.t),
 ].sort((a, b) => a - b);
 const MOVES: readonly Move[] = ['push', 'orbit', 'whip', 'dollyzoom'];
+/** The breakdown shots where orange stands on the giant ENTER key. */
+const KEY_SHOTS: readonly string[] = ['push-hall', 'push-git', 'push-orbit'];
+/** 1 on a metal kick, falling to 0 over 0.25 s. */
+const kickW = (t: number): number => {
+  const h = [...HITS].reverse().find((x) => t >= x);
+  return h === undefined ? 0 : Math.max(0, 1 - (t - h) / 0.25);
+};
 
 /** A shot's camera move about the girl it frames (round 7b: a camera move on every line). k: 0..1 across the shot,
  *  u: seconds into it. */
@@ -162,7 +170,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
     { t: tk(43, 3), origin: [0, 0, -1] },
     { t: SCREAM.start, origin: [0, 1, 0] },
     { t: tk(45, 0), origin: [0, 0, 0] },
-    { t: tk(46, 0), origin: [3, 0, 0] },
+    { t: tk(46, 0), origin: [3, -3, 0] },
+    { t: tk(46, 0) + 0.05, origin: [3, -3, 0.5] },
     { t: tk(47, 0), origin: [0, 1, 0] },
     ...SPARKS.map((x, i) => ({ t: x, origin: [i % 2 ? 3 : -3, -1, 0] })),
   ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).sort((a, b) => a.t - b.t).slice(-4);
@@ -203,6 +212,9 @@ export const RestShot = ({ frame }: { frame: number }) => {
         return <InsertWorld t={t} color={RED} hit={shot.t} />;
       case 'faceB':
         return <InsertWorld t={t} color={CYAN} hit={shot.t} />;
+      case 'panel':
+        // a moment painting: pushed in, shaken on the kicks by the shot camera, parallax against the particles
+        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} margin={1.25} />;
       case 'whisper':
         return <WhisperWorld t={t} />;
       case 'arena':
@@ -224,6 +236,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
         {world}
         {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.7} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
+        {/* GIT!: she stands on a giant glowing ENTER key that pulses with every kick */}
+        {KEY_SHOTS.includes(shot.id) && orangeP?.at && <GlowBox position={[orangeP.at.x, FLOOR_Y + 0.22, (orangeP.at.z ?? 0) + 0.4]} size={[3.8, 0.44, 3.0]} color="#ff3014" edge={1} fill={0.45 + 0.4 * kickW(t)} />}
         {blueFig}
         {figure('O', orangeP)}
         {turn.active && <Dissolve plan={BLUE_TURN} t={t} grade={BLUE_METAL} />}
@@ -236,6 +250,14 @@ export const RestShot = ({ frame }: { frame: number }) => {
         </g>
         <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
         {scene === 'warning' && <WarningScreen t={t} t0={shot.t} />}
+        {/* PUSH!: the smash sends a shockwave ring out across the floor from her fists */}
+        {t >= tk(46, 0) && t < tk(46, 0) + 0.55 && orangeP?.at && (() => {
+          const c = project(pose, [orangeP.at.x, FLOOR_Y, orangeP.at.z ?? 0]);
+          return [0, 0.1].map((d) => {
+            const u = clamp01((t - tk(46, 0) - d) / 0.45);
+            return <ellipse key={d} cx={c.x} cy={c.y} rx={60 + 1500 * outQuad(u)} ry={(60 + 1500 * outQuad(u)) * 0.28} fill="none" stroke="#ffd0a0" strokeWidth={26 * (1 - u)} opacity={1 - u} />;
+          });
+        })()}
         {/* out of the whisper's near-black the solo opens up over 0.6 s instead of jumping bright (a flash pair) */}
         {t >= SOLO.start && t < SOLO.start + 0.6 && <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={0.8 * (1 - (t - SOLO.start) / 0.6)} />}
         {TRANSITIONS.map((s) => {

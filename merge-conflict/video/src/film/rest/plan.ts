@@ -11,12 +11,13 @@ import type { TypeEntry } from '../chorus/typeplan.ts';
 export type RestScene =
   | 'rails' | 'subway' | 'squash' | 'blame' | 'pipeline' | 'callgrid'
   | 'whitespace' | 'nametag' | 'lasercase' | 'scream' | 'cathedral' | 'forge' | 'warning' | 'pushface' | 'whisper' | 'tunnel' | 'arena' | 'duel'
-  | 'faceO' | 'faceB';
+  | 'faceO' | 'faceB' | 'panel';
 export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
 /** How the camera travels across a shot (round 7b, "No cliff after the chorus": a camera move on every line). */
 export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom';
 /** `fade`: the cut is carried by a fade up from black instead of a cover (out of the whisper's near-black). */
-export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; fade?: boolean; move?: Move }
+/** `panel`: for scene 'panel', the moment painting shown full frame (public/panels/<panel>.png). */
+export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; fade?: boolean; move?: Move; panel?: string }
 export interface RPose { t: number; card: string | null; at?: Placement }
 
 const tk = (line: number, k: number) => at(`tok-${line}-${k}`);
