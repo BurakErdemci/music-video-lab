@@ -101,10 +101,20 @@ export const punched = (path: CameraPath, hits: readonly number[], amt = 0.06): 
  *  type at zp > 0 sits in front of the girls (z = 0) and the set (z = -10), so a camera move parallaxes the
  *  three layers. `map` sends a HOME-screen point through the same transform. */
 export const typePlane = (pose: CameraPose, base: CameraPose = HOME, zp = 1): { transform: string; map: (x: number, y: number) => [number, number] } => {
-  const c0 = unproject(base, W / 2, H / 2, zp);
-  const c1 = unproject(base, W / 2 + 100, H / 2, zp);
-  const pc = project(pose, [c0[0], c0[1], zp]);
-  const p1 = project(pose, [c1[0], c1[1], zp]);
-  const s = (p1.x - pc.x) / 100;
-  return { transform: `translate(${pc.x.toFixed(2)} ${pc.y.toFixed(2)}) scale(${s.toFixed(5)}) translate(${-W / 2} ${-H / 2})`, map: (x, y) => [pc.x + (x - W / 2) * s, pc.y + (y - H / 2) * s] };
+  // an affine map from three points of the plane: exact for a camera that only travels, and a close fit for the
+  // low-angle shots, where the camera also rotates (round 5: scale-only drifted the type against the set)
+  const at = (x: number, y: number) => {
+    const w = unproject(base, x, y, zp);
+    return project(pose, [w[0], w[1], zp]);
+  };
+  const pc = at(W / 2, H / 2);
+  const px = at(W / 2 + 200, H / 2);
+  const py = at(W / 2, H / 2 + 200);
+  const a = (px.x - pc.x) / 200;
+  const b = (px.y - pc.y) / 200;
+  const c = (py.x - pc.x) / 200;
+  const d = (py.y - pc.y) / 200;
+  const e = pc.x - a * (W / 2) - c * (H / 2);
+  const f = pc.y - b * (W / 2) - d * (H / 2);
+  return { transform: `matrix(${a.toFixed(5)} ${b.toFixed(5)} ${c.toFixed(5)} ${d.toFixed(5)} ${e.toFixed(2)} ${f.toFixed(2)})`, map: (x, y) => [a * x + c * y + e, b * x + d * y + f] };
 };
