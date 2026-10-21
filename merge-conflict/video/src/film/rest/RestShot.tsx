@@ -53,10 +53,12 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
   cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
   tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], faceB: ['#2d63fb', '#19c8ff'], panel: ['#7a3cff', '#ff3d9a'],
 };
+// a painting cut into the metal part takes a fire cover in the metal palette, not the disco panels' violet
+const METAL_PANEL: [Hex, Hex] = ['#e9320b', '#ff2a14'];
 const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
   const i = RSHOTS.indexOf(s);
   const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
-  return { id: `r-tr-${s.id}`, kind: cover ? clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), s.t >= SCREAM.start, i) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
+  return { id: `r-tr-${s.id}`, kind: cover ? clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), s.t >= SCREAM.start, i) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: s.scene === 'panel' && s.t >= SCREAM.start ? METAL_PANEL : COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
 });
 
 const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;
