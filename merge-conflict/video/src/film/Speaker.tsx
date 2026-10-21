@@ -1,7 +1,8 @@
 // intro_robot 0-4.37 s: the speaker (INTRO_SPEAKER, the blue girl) reads git's error out loud, deadpan.
 // The words come from her: a red terminal (CODE, line 0) hangs off a speech tail from her mouth; on "Fix"
 // her "failed." morphs into a huge FIX, and a >>>>>>> wipe opens the FLAP board of line 1. Framing: a front
-// full figure, then her face close-up on the next downbeat but one (never longer than 2 bars).
+// knee-up (she fills the frame from the first frame, the terminal beside her), then her face close-up on the
+// next downbeat but one (never longer than 2 bars).
 import { AbsoluteFill } from 'remotion';
 import { HOME } from '../camera/camera.ts';
 import { Card, type Placement } from '../cards/Card.tsx';
@@ -18,7 +19,8 @@ import { FormDefs } from '../type/forms/common.tsx';
 import { Flap } from '../type/forms/Letters.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { LetterMorph, MarkerWipe, type WordAt } from '../type/transitions/transitions.tsx';
-import { CODE_OPT, FIX, FRAMINGS, GIRL, INTRO_SPEAKER, LINE0, LINE1, MORPH_FIX, WIPE_FLAP } from './proof.ts';
+import { kneeUp } from '../girls/staging.tsx';
+import { CODE_OPT, FIX, FRAMINGS, GIRL, INTRO_SPEAKER, LINE0, LINE1, MORPH_FIX, SPEAKER_AT, WIPE_FLAP } from './proof.ts';
 
 /** A dark, near-empty club: the error is the only colour. */
 const DARK: Grade = { hue: '#3a0a12', rival: '#ff3b3b', amount: 0.25, rim: 0.9, stage: 0.35 };
@@ -29,7 +31,7 @@ const speakers = (): ('O' | 'B')[] => (INTRO_SPEAKER === 'both' ? ['O', 'B'] : [
 const placeOf = (who: 'O' | 'B', close: boolean): Placement => {
   const both = INTRO_SPEAKER === 'both';
   if (close) return { x: both ? (who === 'O' ? -3.6 : 3.6) : -3.0, feet: -7.0, height: 11.5, flip: both && who === 'O' };
-  return { x: both ? (who === 'O' ? -4.2 : 4.2) : -3.4, height: 6.8 };
+  return both ? kneeUp(who === 'O' ? -4.6 : 4.6, 9.4) : SPEAKER_AT;
 };
 
 export const Speaker = ({ frame }: { frame: number }) => {
