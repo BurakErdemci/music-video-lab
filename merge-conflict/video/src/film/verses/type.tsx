@@ -35,7 +35,7 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
         out.push(<Flap key={e.id} spec={spec(e, { x: 760, y: 120, w: 1080, h: 520 })} t={t} cols={14} />);
         break;
       case 'v-approved':
-        out.push(<Stamp key={e.id} spec={spec(e, { x: 760, y: 90, w: 1080, h: 600 })} t={t} />);
+        out.push(<Stamp key={e.id} spec={spec(e, { x: 1080, y: 60, w: 780, h: 400 })} t={t} />);
         break;
       case 'v-midnight': {
         const c = anchors.clock ?? { cx: 1180, cy: 420, r: 300 };

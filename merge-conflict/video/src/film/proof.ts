@@ -80,7 +80,8 @@ export const VERSE_FULL: Placement = { x: -4.4, height: 4.6 };
 export const WHIP_OUT = whipPlan({ id: 'whip-out', t0: at('whip-verse') - 12 / 60, dir: -1, frames: 12 });
 /** Her entrance burst: particles fly OUT from her chest after the hit (field burst origin, world units). */
 export const BLUE_BURST = { t: at('blue-enter') + 1 / 60, origin: [VERSE_B.x + 0.6, (VERSE_B.feet ?? 0) + 0.68 * VERSE_B.height, 0.5] as [number, number, number] };
-export const STACK2: FormSpec = { id: 'verse-2', line: 2, key: 1, singer: 'B', t0: VERSE.start, t1: at('morph-line') + 0.02, box: { x: 760, y: 110, w: 1090, h: 560 } };
+// round 7: smaller and in the upper right, so the subway map stays visible behind it
+export const STACK2: FormSpec = { id: 'verse-2', line: 2, key: 1, singer: 'B', t0: VERSE.start, t1: at('morph-line') + 0.02, box: { x: 1120, y: 70, w: 740, h: 380 } };
 const keyAt = stackLayout(STACK2, lineTokens(2)[1]?.start ?? VERSE.start).find((w) => w.tok === 1);
 if (!keyAt) throw new Error('proof: the STACK has no key word');
 export const KICK = kickPlan({
