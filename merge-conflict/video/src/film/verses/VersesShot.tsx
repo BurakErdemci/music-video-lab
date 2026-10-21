@@ -70,8 +70,8 @@ const shotAt = (t: number): { shot: VShot; k: number } => {
   return { shot, k: clamp01((t - shot.t) / (end - shot.t)) };
 };
 
-/** The painted plates behind the verse worlds (trial, 21 Oct 2026); graffiti and rails stay code-built. */
-const PLATES: Partial<Record<VerseScene, string>> = { subway: 'W10', runway: 'W01', press: 'W08', clock: 'W06', alley: 'W03', stadium: 'W07', transform: 'W11', arena: 'W09' };
+/** The painted plates behind the verse worlds (trial, 21 Oct 2026). */
+const PLATES: Partial<Record<VerseScene, string>> = { subway: 'W10', runway: 'W01', press: 'W08', clock: 'W06', rails: 'W12', graffiti: 'W03', alley: 'W01', stadium: 'W07', transform: 'W11', arena: 'W09' };
 
 const BLUE_GRADE: Grade = { ...GRADES.reviewed, amount: 0.42 };
 const ORANGE_DISCO: Grade = { hue: '#ff7a1a', rival: '#2f7bff', amount: 0.4, rim: 1.3, stage: 1 };
@@ -146,9 +146,9 @@ export const VersesShot = ({ frame }: { frame: number }) => {
       case 'clock':
         return <ClockWorld t={t} plate="shot" strike={tk(5, 4)} />;
       case 'rails':
-        return <RailsWorld t={t} split={tk(6, 1)} />;
+        return <RailsWorld t={t} plate="shot" split={tk(6, 1)} />;
       case 'graffiti':
-        return <GraffitiWorld t={t} spray={tk(7, 0)} />;
+        return <GraffitiWorld t={t} plate="shot" spray={tk(7, 0)} />;
       case 'alley':
         return <AlleyWorld t={t} plate="shot" />;
       case 'stadium':
