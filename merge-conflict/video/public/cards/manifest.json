@@ -239,6 +239,102 @@
     ],
     "source": "BD8-shimmy.png"
   },
+  "BM1": {
+    "file": "cards/BM1.png",
+    "w": 978,
+    "h": 1535,
+    "bbox": [
+      46,
+      1,
+      1024,
+      1536
+    ],
+    "source": "BM1-horns.png"
+  },
+  "BM2": {
+    "file": "cards/BM2.png",
+    "w": 1012,
+    "h": 1517,
+    "bbox": [
+      12,
+      19,
+      1024,
+      1536
+    ],
+    "source": "BM2-headbang.png"
+  },
+  "BM3": {
+    "file": "cards/BM3.png",
+    "w": 983,
+    "h": 1533,
+    "bbox": [
+      41,
+      3,
+      1024,
+      1536
+    ],
+    "source": "BM3-power-stance.png"
+  },
+  "BM4": {
+    "file": "cards/BM4.png",
+    "w": 1012,
+    "h": 1525,
+    "bbox": [
+      12,
+      11,
+      1024,
+      1536
+    ],
+    "source": "BM4-scream-crouch.png"
+  },
+  "BM5": {
+    "file": "cards/BM5.png",
+    "w": 1007,
+    "h": 1522,
+    "bbox": [
+      17,
+      14,
+      1024,
+      1536
+    ],
+    "source": "BM5-windmill.png"
+  },
+  "BM6": {
+    "file": "cards/BM6.png",
+    "w": 1009,
+    "h": 1534,
+    "bbox": [
+      15,
+      2,
+      1024,
+      1536
+    ],
+    "source": "BM6-stomp.png"
+  },
+  "BM7": {
+    "file": "cards/BM7.png",
+    "w": 1008,
+    "h": 1536,
+    "bbox": [
+      16,
+      0,
+      1024,
+      1536
+    ],
+    "source": "BM7-kick.png"
+  },
+  "BM8": {
+    "file": "cards/BM8.png",
+    "w": 1012,
+    "h": 1508,
+    "bbox": [
+      12,
+      28,
+      1024,
+      1536
+    ],
+    "source": "BM8-sky-scream.png"
+  },
   "O01": {
     "file": "cards/O01.png",
     "w": 1019,
@@ -478,5 +574,101 @@
       1536
     ],
     "source": "OD8-shimmy.png"
+  },
+  "OM1": {
+    "file": "cards/OM1.png",
+    "w": 942,
+    "h": 1523,
+    "bbox": [
+      82,
+      13,
+      1024,
+      1536
+    ],
+    "source": "OM1-horns.png"
+  },
+  "OM2": {
+    "file": "cards/OM2.png",
+    "w": 997,
+    "h": 1518,
+    "bbox": [
+      27,
+      18,
+      1024,
+      1536
+    ],
+    "source": "OM2-headbang.png"
+  },
+  "OM3": {
+    "file": "cards/OM3.png",
+    "w": 973,
+    "h": 1534,
+    "bbox": [
+      51,
+      2,
+      1024,
+      1536
+    ],
+    "source": "OM3-power-stance.png"
+  },
+  "OM4": {
+    "file": "cards/OM4.png",
+    "w": 1005,
+    "h": 1528,
+    "bbox": [
+      19,
+      8,
+      1024,
+      1536
+    ],
+    "source": "OM4-scream-crouch.png"
+  },
+  "OM5": {
+    "file": "cards/OM5.png",
+    "w": 968,
+    "h": 1526,
+    "bbox": [
+      56,
+      10,
+      1024,
+      1536
+    ],
+    "source": "OM5-windmill.png"
+  },
+  "OM6": {
+    "file": "cards/OM6.png",
+    "w": 970,
+    "h": 1536,
+    "bbox": [
+      54,
+      0,
+      1024,
+      1536
+    ],
+    "source": "OM6-stomp.png"
+  },
+  "OM7": {
+    "file": "cards/OM7.png",
+    "w": 1016,
+    "h": 1533,
+    "bbox": [
+      8,
+      3,
+      1024,
+      1536
+    ],
+    "source": "OM7-kick.png"
+  },
+  "OM8": {
+    "file": "cards/OM8.png",
+    "w": 1000,
+    "h": 1532,
+    "bbox": [
+      24,
+      4,
+      1024,
+      1536
+    ],
+    "source": "OM8-sky-scream.png"
   }
 }
