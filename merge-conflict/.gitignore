@@ -10,3 +10,4 @@ video/public/audio/
 .render.lock/
 .render.lock
 .remotion/
+.cache/
