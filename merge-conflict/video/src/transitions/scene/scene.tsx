@@ -390,7 +390,40 @@ export const SceneTransition = ({ spec, t }: { spec: TransitionSpec; t: number }
     reach: Math.hypot(Math.max(ox, W - ox), Math.max(oy, H - oy)),
     t,
   };
-  return <g>{KINDS[spec.kind](ctx)}</g>;
+  return (
+    <g>
+      {KINDS[spec.kind](ctx)}
+      {spec.kind !== 'shock' && <CoverLife ctx={ctx} />}
+    </g>
+  );
+};
+
+/** Life inside a cover: around the cut every cover kind is near full frame, and a flat single-colour frame reads
+ *  as a dropout (round 6 review, 0:25 / 0:30 / 0:41 / 1:03). Moving light bands and drifting sparks in the accent
+ *  colour ride on top while the cover is at its peak, so no frame of a cover is ever one flat colour. */
+const CoverLife = ({ ctx }: { ctx: Ctx }) => {
+  const { spec, t } = ctx;
+  const peak = Math.min(ctx.a, 1 - ctx.b * 0.8);
+  if (peak <= 0.02) return null;
+  const [, accent] = spec.colors;
+  const u = (t - spec.at) * 2.2;
+  const r = seeded(`cover-life:${spec.id}`);
+  return (
+    <g opacity={0.55 * peak}>
+      {[0, 1, 2, 3].map((i) => {
+        const x = ((i * 0.3 + u) % 1.3) * (W + 800) - 600;
+        return <rect key={i} x={x} y={-200} width={140 + i * 40} height={H + 400} fill={accent} opacity={0.22 + 0.08 * i} transform={`rotate(-18 ${x} ${H / 2})`} />;
+      })}
+      {Array.from({ length: 36 }, (_, i) => {
+        const sx = r() * W;
+        const sy = r() * H;
+        const v = r.range(260, 620);
+        const x = (sx + (t - spec.at) * v) % W;
+        const y = (sy - (t - spec.at) * v * 0.4 + H) % H;
+        return <circle key={`s${i}`} cx={x} cy={y} r={r.range(3, 9)} fill={LIGHT} opacity={0.5} />;
+      })}
+    </g>
+  );
 };
 
 /** Mirrors `children` into `wedges` rotating wedges about (cx, cy); odd wedges are reflected so the seams match. */

@@ -1,17 +1,15 @@
 // Letter-placed forms: FLAP, RING and WAVE. Each letter is positioned from the measured advances.
-// FLAP: a split-flap departure board; every cell spins through seeded characters and lands on its letter at
+// FLAP: a split-flap departure board; every cell folds its own letter in, dim, and lands on it at
 //   the word's measured start (the last flaps fold on frames, so the landing is on time).
 // RING: the line runs on a 220-degree arc over a centre (the mirror ball or a girl), every letter upright;
 //   the key word larger. Short lines fit; longer ones keep a readable minimum size and scroll with the singing.
 // WAVE: the line sits on a baseline that waves; every beat kicks the amplitude; same minimum size and scroll.
 import type { ReactNode } from 'react';
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
-import { seeded } from '../../lib/seeded.ts';
 import { beatPos } from '../../timing.ts';
 import { capOf, type Face, familyOf, layout } from '../fonts.tsx';
 import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, solidAt, tokensOf, visible } from './common.tsx';
 
-const FLAP_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>=+#';
 const MONO = familyOf('jetbrains');
 
 export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?: number }) => {
@@ -32,7 +30,6 @@ export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?:
   const ch = Math.min(cw * 1.45, spec.box.h / rows.length);
   const size = ch * 0.72;
   const top = spec.box.y + (spec.box.h - ch * rows.length) / 2;
-  const step = Math.floor(t * 30);
   return (
     <g fontFamily={MONO} fontWeight={800}>
       {rows.map((row, ri) =>
@@ -43,12 +40,16 @@ export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?:
           const tok = cell && cell.tok >= 0 ? toks[cell.tok] : undefined;
           let shown = '';
           let fold = 0;
+          let dim = 1;
           if (tok) {
-            const lead = 0.28 + (ci % 5) * 0.02;
+            // the flip shows the cell's own letter folding in, dim until it lands: a random alphabet made the word
+            // unreadable while the board animated (round 6 review)
+            const lead = 0.16 + (ci % 5) * 0.015;
             if (t >= tok.start) shown = cell?.ch ?? '';
             else if (t >= tok.start - lead) {
-              shown = seeded(`flap:${spec.id}:${ri}:${ci}:${step}`).pick([...FLAP_CHARS]);
+              shown = cell?.ch ?? '';
               fold = (t * 30) % 1;
+              dim = 0.45;
             }
           }
           const isKey = cell?.tok === k;
@@ -57,7 +58,7 @@ export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?:
             <g key={`${ri}-${ci}`}>
               <rect x={x + 3} y={y + 3} width={cw - 6} height={ch - 6} rx={6} fill="#14101c" stroke="#2c2438" strokeWidth={2} />
               {shown && (
-                <text x={x + cw / 2} y={y + ch / 2 + size * 0.36} fontSize={size} textAnchor="middle" fill={color} transform={fold ? `translate(0 ${y + ch / 2}) scale(1 ${1 - 0.8 * fold}) translate(0 ${-(y + ch / 2)})` : undefined}>
+                <text x={x + cw / 2} y={y + ch / 2 + size * 0.36} fontSize={size} textAnchor="middle" fill={color} opacity={dim} transform={fold ? `translate(0 ${y + ch / 2}) scale(1 ${1 - 0.8 * fold}) translate(0 ${-(y + ch / 2)})` : undefined}>
                   {shown}
                 </text>
               )}
