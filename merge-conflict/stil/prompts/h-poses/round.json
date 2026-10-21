@@ -1,0 +1,242 @@
+[
+ {
+  "id": "B01-arms-crossed",
+  "prompt": "stil/prompts/h-poses/B01-arms-crossed.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B01-arms-crossed.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B02-hair-whip",
+  "prompt": "stil/prompts/h-poses/B02-hair-whip.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B02-hair-whip.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B03-disco-step",
+  "prompt": "stil/prompts/h-poses/B03-disco-step.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B03-disco-step.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B04-disco-point",
+  "prompt": "stil/prompts/h-poses/B04-disco-point.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B04-disco-point.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B05-shout-close",
+  "prompt": "stil/prompts/h-poses/B05-shout-close.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B05-shout-close.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B06-eye-roll-close",
+  "prompt": "stil/prompts/h-poses/B06-eye-roll-close.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B06-eye-roll-close.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B07-stomp",
+  "prompt": "stil/prompts/h-poses/B07-stomp.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B07-stomp.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B08-stumble-back",
+  "prompt": "stil/prompts/h-poses/B08-stumble-back.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B08-stumble-back.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B09-furious-close",
+  "prompt": "stil/prompts/h-poses/B09-furious-close.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B09-furious-close.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B10-reach-light",
+  "prompt": "stil/prompts/h-poses/B10-reach-light.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B10-reach-light.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B11-sitting",
+  "prompt": "stil/prompts/h-poses/B11-sitting.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B11-sitting.png",
+  "key": "#808080"
+ },
+ {
+  "id": "B12-joy-spin",
+  "prompt": "stil/prompts/h-poses/B12-joy-spin.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/h-poses/out/B12-joy-spin.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O01-spot-dive",
+  "prompt": "stil/prompts/h-poses/O01-spot-dive.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O01-spot-dive.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O02-shove",
+  "prompt": "stil/prompts/h-poses/O02-shove.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O02-shove.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O03-hands-hips",
+  "prompt": "stil/prompts/h-poses/O03-hands-hips.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O03-hands-hips.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O04-point-camera",
+  "prompt": "stil/prompts/h-poses/O04-point-camera.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O04-point-camera.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O05-shout-close",
+  "prompt": "stil/prompts/h-poses/O05-shout-close.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O05-shout-close.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O06-disco-point",
+  "prompt": "stil/prompts/h-poses/O06-disco-point.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O06-disco-point.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O07-stomp",
+  "prompt": "stil/prompts/h-poses/O07-stomp.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O07-stomp.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O08-spin",
+  "prompt": "stil/prompts/h-poses/O08-spin.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O08-spin.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O09-power-slide",
+  "prompt": "stil/prompts/h-poses/O09-power-slide.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O09-power-slide.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O10-wink-close",
+  "prompt": "stil/prompts/h-poses/O10-wink-close.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O10-wink-close.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O11-sitting",
+  "prompt": "stil/prompts/h-poses/O11-sitting.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O11-sitting.png",
+  "key": "#808080"
+ },
+ {
+  "id": "O12-joy-spin",
+  "prompt": "stil/prompts/h-poses/O12-joy-spin.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/h-poses/out/O12-joy-spin.png",
+  "key": "#808080"
+ }
+]
