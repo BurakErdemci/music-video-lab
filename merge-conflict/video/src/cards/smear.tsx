@@ -1,6 +1,7 @@
-// Beat-locked pose change with an animation smear (fix round 1): over 8-12 frames at 60 fps around the
-// downbeat, the old pose stretches and slides along the motion, the new pose arrives from the other side,
-// they cross-fade in the middle third, ghost copies trail behind, and speed lines streak across the figure.
+// Beat-locked pose change with an animation smear (fix rounds 1-2): over 8-12 frames at 60 fps around the
+// downbeat, one directional whip: the old pose stretches and slides along the motion, the new pose carries
+// on in the same direction into place, they swap in a narrow window at the peak of the smear, ghost copies
+// trail behind the leading pose, and speed lines streak across the figure.
 // Never a 1-frame pop. The particle dissolve stays for scene changes only.
 import type { CameraPose } from '../camera/camera.ts';
 import { project } from '../camera/camera.ts';
@@ -40,8 +41,9 @@ export const poseTrack = (first: string, smears: readonly SmearPlan[], t: number
     const u = (t - a) / (b - a);
     const env = Math.sin(Math.PI * u);
     const slide = 0.28 * height;
-    const fromOp = 1 - smooth(0.35, 0.65, u);
-    const toOp = smooth(0.35, 0.65, u);
+    // one directional whip: both poses travel the same way and swap in a narrow window at peak smear
+    const fromOp = 1 - smooth(0.44, 0.56, u);
+    const toOp = smooth(0.44, 0.56, u);
     const stretch: [number, number] = [1 + 0.45 * env, 1 - 0.1 * env];
     const draws: CardDraw[] = [
       { card: s.from, opacity: fromOp, dx: s.dir * slide * u, stretch },
