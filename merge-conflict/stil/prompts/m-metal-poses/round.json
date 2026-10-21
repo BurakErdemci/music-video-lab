@@ -1,0 +1,162 @@
+[
+ {
+  "id": "BM1-horns",
+  "prompt": "stil/prompts/m-metal-poses/BM1-horns.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM1-horns.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM2-headbang",
+  "prompt": "stil/prompts/m-metal-poses/BM2-headbang.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM2-headbang.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM3-power-stance",
+  "prompt": "stil/prompts/m-metal-poses/BM3-power-stance.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM3-power-stance.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM4-scream-crouch",
+  "prompt": "stil/prompts/m-metal-poses/BM4-scream-crouch.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM4-scream-crouch.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM5-windmill",
+  "prompt": "stil/prompts/m-metal-poses/BM5-windmill.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM5-windmill.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM6-stomp",
+  "prompt": "stil/prompts/m-metal-poses/BM6-stomp.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM6-stomp.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM7-kick",
+  "prompt": "stil/prompts/m-metal-poses/BM7-kick.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM7-kick.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BM8-sky-scream",
+  "prompt": "stil/prompts/m-metal-poses/BM8-sky-scream.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/BM8-sky-scream.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM1-horns",
+  "prompt": "stil/prompts/m-metal-poses/OM1-horns.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM1-horns.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM2-headbang",
+  "prompt": "stil/prompts/m-metal-poses/OM2-headbang.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM2-headbang.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM3-power-stance",
+  "prompt": "stil/prompts/m-metal-poses/OM3-power-stance.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM3-power-stance.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM4-scream-crouch",
+  "prompt": "stil/prompts/m-metal-poses/OM4-scream-crouch.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM4-scream-crouch.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM5-windmill",
+  "prompt": "stil/prompts/m-metal-poses/OM5-windmill.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM5-windmill.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM6-stomp",
+  "prompt": "stil/prompts/m-metal-poses/OM6-stomp.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM6-stomp.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM7-kick",
+  "prompt": "stil/prompts/m-metal-poses/OM7-kick.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM7-kick.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OM8-sky-scream",
+  "prompt": "stil/prompts/m-metal-poses/OM8-sky-scream.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/m-metal-poses/out/OM8-sky-scream.png",
+  "key": "#808080"
+ }
+]
