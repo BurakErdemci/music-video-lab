@@ -35,11 +35,12 @@ const PLATES: Partial<Record<Scene, string>> = { arena: 'W09', burst: 'W09', spi
 const BLUE_GRADE: Grade = { ...GRADES.reviewed, amount: 0.42 };
 const ORANGE_GRADE: Grade = metalGrade(GRADES.mainline, 1);
 
-/** Transition colours by the world being entered (saturated, mid-dark: the flash budget holds). */
+/** Transition colours by the world being entered: saturated, at about the plates' mean luminance (~100 of 255),
+ *  so a cover does not dip the frame dark and back (round 6: dark covers over the bright plates failed the flash check). */
 const COLORS: Record<Scene, [Hex, Hex]> = {
-  arena: ['#16307a', '#7a1424'], insert: ['#5a0c08', '#ff3014'], split: ['#123a7a', '#7a1010'], runway: ['#0c3a5a', '#3a1060'],
-  fire: ['#7a1a06', '#c84a10'], logo: ['#2a1660', '#7a1440'], heart: ['#0a4a3a', '#5a0a26'], walls: ['#1a2a6a', '#6a1a2a'],
-  line: ['#3a0a4a', '#ff4fd8'], spin: ['#16307a', '#7a1424'], burst: ['#2a1660', '#7a1440'],
+  arena: ['#2d63fb', '#e92645'], insert: ['#ff2217', '#ff3014'], split: ['#226de5', '#ff2222'], runway: ['#1979bc', '#9a2aff'],
+  fire: ['#e9320b', '#c84a10'], logo: ['#733cff', '#dc2473'], heart: ['#138c6d', '#f31b66'], walls: ['#3a5eee', '#cd3251'],
+  line: ['#ae1ede', '#ff4fd8'], spin: ['#2d63fb', '#e92645'], burst: ['#733cff', '#dc2473'],
 };
 const TRANSITIONS: TransitionSpec[] = P.SHOTS.map((s, i) => {
   const prev = P.SHOTS[i - 1];

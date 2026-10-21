@@ -77,10 +77,12 @@ const BLUE_GRADE: Grade = { ...GRADES.reviewed, amount: 0.42 };
 const ORANGE_DISCO: Grade = { hue: '#ff7a1a', rival: '#2f7bff', amount: 0.4, rim: 1.3, stage: 1 };
 const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
 
+/** Transition colours by the world being entered: saturated, at about the plates' mean luminance (~100 of 255),
+ *  so a cover does not dip the frame dark and back (round 6: dark covers over the bright plates failed the flash check). */
 const COLORS: Record<VerseScene, [Hex, Hex]> = {
-  subway: ['#102a6a', '#3a1a7a'], runway: ['#0c3a6a', '#2a1a6a'], press: ['#1a2a6a', '#3a2a7a'], clock: ['#140c3a', '#3a1a5a'],
-  rails: ['#5a1a06', '#4a0c3a'], graffiti: ['#6a1a06', '#5a0c4a'], alley: ['#3a0c4a', '#6a1a10'], stadium: ['#5a2a06', '#3a0c4a'],
-  strobe: ['#123a7a', '#7a1a10'], transform: ['#5a0c08', '#ff3014'], arena: ['#16307a', '#7a1424'],
+  subway: ['#2765ff', '#7d38ff'], runway: ['#1875d5', '#6941ff'], press: ['#3a5eee', '#684bda'], clock: ['#3c24ae', '#873dd2'],
+  rails: ['#d23d0e', '#cf22a2'], graffiti: ['#df370d', '#d41caf'], alley: ['#ae24de', '#d93521'], stadium: ['#ac500b', '#ae24de'],
+  strobe: ['#226de5', '#e4311e'], transform: ['#ff2217', '#ff3014'], arena: ['#2d63fb', '#e92645'],
 };
 const TRANSITIONS: TransitionSpec[] = VSHOTS.map((s, i) => {
   const cover = i === 0 || (VSHOTS[i - 1] as VShot).scene !== s.scene;
