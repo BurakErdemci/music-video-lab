@@ -9,7 +9,7 @@ import { HOME, HOME_Z, type CameraPose, shifted } from '../camera/camera.ts';
 import type { CardProps, Placement } from '../cards/Card.tsx';
 import { type CardDraw, poseTrack, type SmearPlan, smearPlan, smearSpan } from '../cards/smear.tsx';
 import { type Hex, clamp01, lerp, outQuad } from '../lib/ease.ts';
-import { beatPos, beats, downbeat, type TimingLine, lyricLine } from '../timing.ts';
+import { beatPos, downbeat, type TimingLine, lyricLine } from '../timing.ts';
 import type { Singer } from '../type/forms/common.tsx';
 
 // ---- singer --------------------------------------------------------------------------------------------
@@ -103,18 +103,15 @@ export const poseBarPlan = (id: string, cards: readonly string[], first: number,
     smearPlan({ id: `${id}-${b}`, t: downbeat(first + b), from: cards[b % cards.length] as string, to: cards[(b + 1) % cards.length] as string, dir: b % 2 ? -1 : 1, frames: 10 }),
   ),
 });
-const beatLenAt = (t: number) => {
-  const i = Math.max(0, Math.min(beats.length - 2, Math.floor(beatPos(t))));
-  return (beats[i + 1] as number) - (beats[i] as number);
-};
 /** The live pose (with its smear) plus up to 3 ghost copies of the previous poses, fading over one beat. */
 export const poseBarDraws = (p: PoseBarPlan, t: number, height: number): (CardDraw & { ghost?: number })[] => {
   const live = poseTrack(p.cards[0] as string, p.smears, t, height);
   const past = p.smears.filter((s) => t >= smearSpan(s)[1]).slice(-3).reverse();
   const ghosts = past
     .map((s, k) => {
-      const age = t - smearSpan(s)[1];
-      const op = 0.6 * (1 - clamp01(age / beatLenAt(s.t))) * (1 - k * 0.25);
+      // the ghost fades over one measured beat: its age counted in beats from where it was left behind
+      const age = beatPos(t) - beatPos(smearSpan(s)[1]);
+      const op = 0.6 * (1 - clamp01(age)) * (1 - k * 0.25);
       return { card: s.from, opacity: op, dx: -s.dir * (0.5 + 0.35 * k) * (height / 6.6), stretch: [1, 1] as [number, number], ghost: k };
     })
     .filter((g) => g.opacity > 0.01);
