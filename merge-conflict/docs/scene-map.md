@@ -215,3 +215,16 @@ Burak: "the raspy voice is full metal everywhere except her first verse, screami
 - **Signature moment:** "Merge conflict, merge conflict" (49.14, 59.60, 91.68, 102.08 s) uses one type move every time; at 176.80 s ("Merge conflict resolved inside my soul") the same move returns resolved, the two colours joined.
 
 - **Logo (Burak, 2026-10-21):** design **B**, the split word (blue-chrome disco half against orange-flame metal half, cut on a diagonal with diff marks). Code: `video/src/type/logo/Logo.tsx`; resolved state for 176.80 s.
+
+## Motion: the camera moves, the girls hold (Burak, 2026-10-21)
+
+Burak: "this swaying looks really absurd". Measured reference: the new Nothing Went Foom clip, "Scroll Up!" by Bright Mirror (YouTube s1R93ErmdlU; Gemini 3.8 Flash on 0:14-0:34 and 2:00-2:30, plus 4 s contact sheets):
+- Characters hold still key poses: zero body motion, or faint breathing of at most about 2 %. Nobody rocks, bobs or squashes on the beat.
+- A pose holds about 3.5-5 s; a pose changes by a hard cut, a particle scatter-and-regather or a camera reveal.
+- About 85 % of the felt motion is the camera plus particles and type moving through depth.
+
+Rules:
+- **No loop dance.** A held card breathes at most 0.5 % of its height.
+- **The camera carries the motion:** dolly, push, parallax, travel, plus beat punches in the metal parts.
+- **Poses change by a cut on a beat, a particle dissolve or a reveal.** Holds are 2-3 bars in the pop parts, 1-2 in the metal ones.
+- **The rig only plays single eased accents** (a kick, a point, a head turn), then holds.
