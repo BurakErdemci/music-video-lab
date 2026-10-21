@@ -5,7 +5,7 @@
 import { type CameraPose, project, type Vec3 } from '../camera/camera.ts';
 import type { Placement } from '../cards/Card.tsx';
 import { OUTLINES } from '../cards/outlines.ts';
-import { cardRig, deformPoints, type Stand, toWorld } from '../rig/cardRig.ts';
+import { deformPoints, restPoint, type Stand, toWorld } from '../rig/cardRig.ts';
 import type { P } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
 
@@ -37,7 +37,7 @@ export const silhouetteD = (card: string, at: Placement, pose: CameraPose, t: nu
 };
 
 /** Rest keypoint of a card in card units (hips, head, ...). */
-export const keypoint = (card: string, name: 'hips' | 'head' | 'chest' | 'neck'): P => cardRig(card).joints[name];
+export const keypoint = (card: string, name: 'hips' | 'head' | 'chest' | 'neck'): P => restPoint(card, name);
 
 const sub = (a: Vec3, b: Vec3): Vec3 => [a[0] - b[0], a[1] - b[1], a[2] - b[2]];
 const norm = (a: Vec3): Vec3 => {

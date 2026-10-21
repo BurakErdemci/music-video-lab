@@ -10,8 +10,8 @@ import { BufferAttribute, DoubleSide, LinearFilter, LinearMipmapLinearFilter, No
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
 import { type Hex, rgb } from '../lib/ease.ts';
 import { GRADE_GLSL, type Grade, rivalOf } from '../grade/grade.ts';
-import { cardDance, cardRig } from '../rig/cardRig.ts';
-import { GRID_COLS, GRID_ROWS, MAX_BONES, rigFrame, rows, weightsAt } from '../rig/rig.ts';
+import { cardRig, frameOf } from '../rig/cardRig.ts';
+import { GRID_COLS, GRID_ROWS, MAX_BONES, rows, weightsAt } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
 import { ORDER, useUniforms } from '../stage/Stage.tsx';
 
@@ -148,7 +148,7 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
   const geo = useRigGeometry(id);
   const e = cardEntry(id);
   const r = cardRig(id);
-  const f = rigFrame(r.joints, t, cardDance(id, dance));
+  const f = frameOf(id, t, dance);
   const r0: number[] = [];
   const r1: number[] = [];
   for (const xf of f.xf) {
