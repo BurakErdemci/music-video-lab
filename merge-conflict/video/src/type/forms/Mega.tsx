@@ -181,8 +181,8 @@ export const GlitchText = ({ spec, t }: { spec: WordsSpec; t: number }) => {
   );
   const body = (
     <g>
-      {line('#ff2a5a', -10 - 30 * amount, 'r', 0.8)}
-      {line('#19e0ff', 10 + 30 * amount, 'c', 0.8)}
+      {line('#ff2a5a', -6 - 10 * amount, 'r', 0.75)}
+      {line('#19e0ff', 6 + 10 * amount, 'c', 0.75)}
       {line(spec.color ?? '#ffffff', 0, 'face')}
     </g>
   );
@@ -192,10 +192,12 @@ export const GlitchText = ({ spec, t }: { spec: WordsSpec; t: number }) => {
   const n = 7;
   return (
     <g>
+      <rect x={Math.min(...words.map((w) => w.x)) - 30} y={top - 10} width={Math.max(...words.map((w) => w.x + w.w)) - Math.min(...words.map((w) => w.x)) + 60} height={bot - top + 20} fill="#05030a" fillOpacity={0.7} />
       {Array.from({ length: n }, (_, b) => {
         const y0 = top + ((bot - top) * b) / n;
         const h = (bot - top) / n;
-        const dx = r() < 0.25 + 0.6 * amount ? r.range(-1, 1) * (30 + 220 * amount) : 0;
+        // the slip stays small enough to read (round 7c: 250 px slices made "I can't take control" illegible)
+        const dx = r() < 0.2 + 0.4 * amount ? r.range(-1, 1) * (12 + 60 * amount) : 0;
         return (
           <g key={b}>
             <clipPath id={`${spec.id}-band-${b}`}><rect x={0} y={y0} width={1920} height={h + 1} /></clipPath>
@@ -219,6 +221,10 @@ export const RunwayLine = ({ spec, t, pose }: { spec: RunwaySpec; t: number; pos
   const adv = MONO_ADV * spec.size;
   const at = (u: number, v: number): Vec3 => [spec.origin[0] + spec.dir[0] * u + spec.up[0] * v, spec.origin[1] + spec.dir[1] * u + spec.up[1] * v, spec.origin[2] + spec.dir[2] * u + spec.up[2] * v];
   const glyphs: ReactNode[] = [];
+  // a dark backing on the floor under the typed part (round 7c: cyan glyphs on the blue runway read at ~1.5:1)
+  const len = Math.max(1, n) * adv + adv * 0.6;
+  const quad = [at(-adv * 0.4, -spec.size * 0.35), at(len, -spec.size * 0.35), at(len, spec.size * 1.45), at(-adv * 0.4, spec.size * 1.45)].map((q) => project(pose, q));
+  if (quad.every((q) => q.s >= 1 && Math.abs(q.x) < 6000 && Math.abs(q.y) < 6000)) glyphs.push(<polygon key="backing" points={quad.map((q) => `${q.x},${q.y}`).join(' ')} fill="#05030a" fillOpacity={0.72} />);
   for (let i = 0; i < n; i++) {
     const ch = full[i] ?? ' ';
     if (ch === ' ') continue;

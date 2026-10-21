@@ -26,7 +26,8 @@ export const logoApart = (t: number, merge: readonly [number, number, number, nu
   return 0;
 };
 
-const box = { x: 700, y: 90, w: 1140, h: 640 };
+// inside a 4 % margin, clear of the girls' heads in the slam shots (round 7c, Gemini)
+const box = { x: 760, y: 80, w: 1030, h: 560 };
 /** NO! sits off the screaming face (her bust is right of centre for orange, left for blue); NEVER! spans both. */
 const shoutPlace = (e: TypeEntry) =>
   e.text === 'NEVER!' ? { cx: 960, cy: 820, w: 1800, rot: e.style === 'steel' ? -4 : 4 } : e.style === 'steel' ? { cx: 640, cy: 720, w: 1120, rot: -7 } : { cx: 1300, cy: 720, w: 1120, rot: 6 };
