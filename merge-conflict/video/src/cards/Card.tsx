@@ -259,13 +259,13 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uFade: 0,
   });
   // The mesh is in card units; the group places its feet and scales it (smears squash about the feet).
-  // the reflection (round 7c, Burak): the same skinned card mirrored below her soles at full length, 32 % opaque,
+  // the reflection (round 7c, Burak): the same skinned card mirrored below her soles at full length, 40 % opaque,
   // blurred, tinted to the floor and fading out over 30 % of her height, so she stands on the glossy floor
   const refl = useUniforms({
     map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uRipAmp: RIPPLE_MAX * rippleAmp(t), uRipPhase: ripplePhase(t), uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
-    uAmount: Math.min(1, grade.amount + 0.3), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
-    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.32 : 0, uFade: 0.3,
-    uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
+    uAmount: Math.min(1, grade.amount + 0.15), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
+    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 0.45, uOpacity: grounded ? opacity * 0.4 : 0, uFade: 0.3,
+    uLit: lit, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
   });
   const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.78 : 0 });
   // the floor glow: the set's light pooling around her feet (round 7c, Gemini: the girls looked pasted on)
