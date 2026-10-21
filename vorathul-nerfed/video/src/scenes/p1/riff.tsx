@@ -78,14 +78,13 @@ const S07 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const staff = project(pose, [5.2, 1.7, -9.5]);
         const tc = project(pose, c);
         const tc2 = project(pose, [c[0] + 0.5, c[1] - 0.6, c[2]]);
         return (
           <Overlay>
-            <Bolt f={f2} t0={b1 - 6} t1={b1} a={[staff.x, staff.y]} b={[tc.x, tc.y]} size={staff.s * 0.18} seed={11} />
-            <Bolt f={f2} t0={b2 - 6} t1={b2} a={[staff.x, staff.y]} b={[tc2.x, tc2.y]} size={staff.s * 0.18} seed={12} />
+            <Bolt f={frame} t0={b1 - 6} t1={b1} a={[staff.x, staff.y]} b={[tc.x, tc.y]} size={staff.s * 0.18} seed={11} />
+            <Bolt f={frame} t0={b2 - 6} t1={b2} a={[staff.x, staff.y]} b={[tc2.x, tc2.y]} size={staff.s * 0.18} seed={12} />
           </Overlay>
         );
       }}
@@ -119,14 +118,13 @@ const S08 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const p = project(pose, ping);
-        const t = f2 - at('s08-ping');
+        const t = frame - at('s08-ping');
         return (
           <>
             <Shards frame={t} duration={14} seed={808} origin={[p.x, p.y]} count={14} size={14} speed={22} direction={-0.4} spread={2.2} fills={[GOLD, GOLD, IVORY]} />
             <Overlay>
-              <Bolt f={f2} t0={at('s08-ping')} t1={at('s08-ping') + 10} a={[p.x, p.y]} b={[p.x + 900, p.y - 500]} size={p.s * 0.12} seed={13} />
+              <Bolt f={frame} t0={at('s08-ping')} t1={at('s08-ping') + 10} a={[p.x, p.y]} b={[p.x + 900, p.y - 500]} size={p.s * 0.12} seed={13} />
             </Overlay>
           </>
         );
@@ -177,7 +175,7 @@ const S09 = ({ frame }: { frame: number }) => {
     { kind: 'knight', pose: 'ready', p: [-6.2, bob(frame, 3), -10.5] },
     { kind: 'mage', pose: 'ready', p: [5.8, 0, -9.5], flip: true },
     { kind: 'archer', pose: frame >= volleyAt - 8 && frame < volleyAt + 8 ? 'attack' : 'ready', p: [8.2, 0, -10.6], flip: true },
-    { kind: 'rogue', pose: 'tiptoe', p: [-8.6 + 4.6 * prog(two(frame), at('s09-fan'), 44), 0.05 * (two(frame) % 4), -12.4] },
+    { kind: 'rogue', pose: 'tiptoe', p: [-8.6 + 4.6 * prog(frame, at('s09-fan'), 44), 0.05 * (two(frame) % 4), -12.4] },
   ];
   const impacts: Impact[] = [{ at: at('s09-fan'), size: 'big', sil: true, point: c, splash: 'violet', scale: 1.4 }];
   return (
@@ -190,7 +188,7 @@ const S09 = ({ frame }: { frame: number }) => {
           <Party heroes={heroes} flat={sil ? INK : null} />
         </>
       )}
-      overlay={({ pose }) => <Overlay>{volley(pose, st, fk, two(frame), [7.7, 1.1, -10.6], volleyAt, at('s10-shatter'))}</Overlay>}
+      overlay={({ pose }) => <Overlay>{volley(pose, st, fk, frame, [7.7, 1.1, -10.6], volleyAt, at('s10-shatter'))}</Overlay>}
     />
   );
 };
@@ -227,7 +225,7 @@ const S10 = ({ frame }: { frame: number }) => {
     flight('knight', frame, S10_P1, 16, kAt, [-14.5, 9.5, -7], 2.5, { kind: 'knight', pose: 'ready', p: [-4.6, 0, -10.2] }, null, false, 1),
     flight('mage', frame, S10_P2, 16, mAt, [14.5, 9, -6], 2.5, { kind: 'mage', pose: frame > S10_P1 + 4 ? 'charge' : 'ready', p: [4.8, 0, -9.4], flip: true }, null, true, -1),
     { kind: 'archer', pose: frame >= S10_P2 ? 'fly' : 'ready', p: frame >= S10_P2 ? [8.6, 0.6, -11] : [8.6, 0, -11], rot: frame >= S10_P2 ? 25 : 0, centre: frame >= S10_P2, flip: true },
-    { kind: 'rogue', pose: 'tiptoe', p: [-4 + 1.6 * prog(two(frame), at('s10-shatter'), 58), 0.05 * (two(frame) % 4), -12.4 + 1.8 * prog(frame, at('s10-shatter'), 58)] },
+    { kind: 'rogue', pose: 'tiptoe', p: [-4 + 1.6 * prog(frame, at('s10-shatter'), 58), 0.05 * (two(frame) % 4), -12.4 + 1.8 * prog(frame, at('s10-shatter'), 58)] },
   ];
   const impacts: Impact[] = [
     { at: at('s10-shatter'), size: 'medium', point: shatter, splash: null },
@@ -245,12 +243,11 @@ const S10 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const p = project(pose, shatter);
         return (
           <>
-            <Shards frame={f2 - at('s10-shatter')} duration={18} seed={1010} origin={[p.x, p.y]} count={26} size={16} speed={26} direction={-0.9} spread={2.6} fills={[GOLD, GOLD, IVORY]} />
-            {[S10_P1, S10_P2].map((t, i) => (f2 >= t && f2 < t + 8 ? <SpeedLines key={i} mode="parallel" frame={f2 - t} duration={8} seed={1020 + i} angle={i ? 0.35 : Math.PI - 0.35} count={34} thickness={30} /> : null))}
+            <Shards frame={frame - at('s10-shatter')} duration={18} seed={1010} origin={[p.x, p.y]} count={26} size={16} speed={26} direction={-0.9} spread={2.6} fills={[GOLD, GOLD, IVORY]} />
+            {[S10_P1, S10_P2].map((t, i) => (frame >= t && frame < t + 8 ? <SpeedLines key={i} mode="parallel" frame={frame - t} duration={8} seed={1020 + i} angle={i ? 0.35 : Math.PI - 0.35} count={34} thickness={30} /> : null))}
           </>
         );
       }}
@@ -302,17 +299,16 @@ const S11 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const hp = project(pose, [HEAP[0], 0.1, HEAP[2]]);
         const head = project(pose, [HEAP[0], 1.9, HEAP[2]]);
         const bounce = project(pose, [6.6, 0.05, -9.6]);
         return (
           <>
-            {f2 >= S11_SW && f2 < S11_SW + 10 ? <SpeedLines mode="parallel" frame={f2 - S11_SW} duration={10} seed={1111} angle={0} count={46} thickness={40} /> : null}
+            {frame >= S11_SW && frame < S11_SW + 10 ? <SpeedLines mode="parallel" frame={frame - S11_SW} duration={10} seed={1111} angle={0} count={46} thickness={40} /> : null}
             <Overlay>
-              <Puffs c={[bounce.x, bounce.y]} s={bounce.s * 0.8} age={f2 - tumble} count={5} seed={1112} life={22} />
-              <Puffs c={[hp.x, hp.y]} s={hp.s * 1.6} age={f2 - S11_HEAP} count={8} seed={1113} life={34} />
-              {f2 >= S11_HEAP + 2 && f2 < up ? <KoStars c={[head.x, head.y]} s={head.s * 0.9} f={f2} /> : null}
+              <Puffs c={[bounce.x, bounce.y]} s={bounce.s * 0.8} age={frame - tumble} count={5} seed={1112} life={22} />
+              <Puffs c={[hp.x, hp.y]} s={hp.s * 1.6} age={frame - S11_HEAP} count={8} seed={1113} life={34} />
+              {frame >= S11_HEAP + 2 && frame < up ? <KoStars c={[head.x, head.y]} s={head.s * 0.9} f={frame} /> : null}
             </Overlay>
           </>
         );
@@ -351,7 +347,7 @@ const S12 = ({ frame }: { frame: number }) => {
     knight,
     { kind: 'mage', pose: mPose, p: [5.8, 0, -9.2], flip: true },
     { kind: 'archer', pose: 'ready', p: [8.5, bob(frame, 4), -11.4], flip: true },
-    { kind: 'rogue', pose: frame > S12_SPL ? 'tiptoe' : 'ready', p: [-3.6 + (frame > S12_SPL ? 0.9 * prog(two(frame), S12_SPL, 20) : 0), 0, -11.6] },
+    { kind: 'rogue', pose: frame > S12_SPL ? 'tiptoe' : 'ready', p: [-3.6 + (frame > S12_SPL ? 0.9 * prog(frame, S12_SPL, 20) : 0), 0, -11.6] },
   ];
   const impacts: Impact[] = [
     { at: S12_BASH, size: 'medium', point: shin, splash: 'black' },
@@ -369,17 +365,16 @@ const S12 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const staff = project(pose, [5.2, 1.75, -9.2]);
         const ct = project(pose, contact);
-        const beamOn = f2 >= S12_BEAM - 7 && f2 < S12_SPL + 2;
+        const beamOn = frame >= S12_BEAM - 7 && frame < S12_SPL + 2;
         return (
           <>
             <Overlay>
-              {beamOn ? <Beam a={[staff.x, staff.y]} b={[ct.x, ct.y]} width={staff.s * (f2 >= S12_BEAM ? 0.42 : 0.3)} p={outCubic(prog(f2, S12_BEAM - 7, 7))} seed={1201} jitter={Math.floor(f2 / 2) % 3} /> : null}
+              {beamOn ? <Beam a={[staff.x, staff.y]} b={[ct.x, ct.y]} width={staff.s * (frame >= S12_BEAM ? 0.42 : 0.3)} p={outCubic(prog(frame, S12_BEAM - 7, 7))} seed={1201} jitter={Math.floor(frame / 2) % 3} /> : null}
             </Overlay>
-            <Shards frame={f2 - S12_SPL} duration={20} seed={1202} origin={[ct.x, ct.y]} count={30} size={20} speed={30} direction={0.4} spread={2.4} fills={[GOLD, GOLD, IVORY]} />
-            {f2 >= S12_BEAM && f2 < S12_SPL ? <Shards frame={(f2 - S12_BEAM) % 8} duration={8} seed={1203 + Math.floor((f2 - S12_BEAM) / 8)} origin={[ct.x, ct.y]} count={10} size={12} speed={20} direction={0.2} spread={1.8} fills={[GOLD, IVORY]} /> : null}
+            <Shards frame={frame - S12_SPL} duration={20} seed={1202} origin={[ct.x, ct.y]} count={30} size={20} speed={30} direction={0.4} spread={2.4} fills={[GOLD, GOLD, IVORY]} />
+            {frame >= S12_BEAM && frame < S12_SPL ? <Shards frame={(frame - S12_BEAM) % 8} duration={8} seed={1203 + Math.floor((frame - S12_BEAM) / 8)} origin={[ct.x, ct.y]} count={10} size={12} speed={20} direction={0.2} spread={1.8} fills={[GOLD, IVORY]} /> : null}
           </>
         );
       }}

@@ -10,7 +10,7 @@ import type { CameraPose } from '../../camera/api.ts';
 import { useCardTexture, type Vec3 } from '../../stage/Card.tsx';
 import { Glint } from './fx.tsx';
 import { seeded } from '../../vfx/effects.ts';
-import { GOLD, INK, inkFilterDef, IVORY, project, r2, SKY, SvgCard, svgDoc, two, VIOLET } from './kit.tsx';
+import { GOLD, INK, inkFilterDef, IVORY, project, r2, SKY, SvgCard, svgDoc, VIOLET } from './kit.tsx';
 
 /** Width the card takes once its final image is drawn (AssetCard keeps the image's aspect from the height). */
 const wOf = (id: string, h: number, fallbackAspect = 1.5): number => {
@@ -105,7 +105,7 @@ export const LoftWake = ({ frame, pose, start, span = 20 }: { frame: number; pos
       {xs.map((x, i) => {
         const p = project(pose, [x, LOFT.feetY + 1.2, LOFT.wallZ + 0.1]);
         const at = start + Math.round((Math.abs(x) / 93) * span);
-        return <Glint key={i} frame={two(frame)} at={at} x={p.x} y={p.y} size={p.s * 1.6} hold={false} color={VIOLET} />;
+        return <Glint key={i} frame={frame} at={at} x={p.x} y={p.y} size={p.s * 1.6} hold={false} color={VIOLET} />;
       })}
     </svg>
   );

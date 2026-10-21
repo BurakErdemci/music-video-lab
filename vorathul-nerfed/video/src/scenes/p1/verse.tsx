@@ -8,7 +8,7 @@ import { gradeCues, Meteor, seeded, shake, Shards } from '../../vfx/effects.ts';
 import { at } from './events.ts';
 import { Caption, Glint, Hud, Panel, slamIn, type Impact } from './fx.tsx';
 import { Hero, type HeroKind } from './heroes.tsx';
-import { GOLD, INK, inkFilterDef, IVORY, lerp, outCubic, Pic, poly, prog, project, r2, svgDoc, two, VIOLET, VIOLET_LIGHT } from './kit.tsx';
+import { GOLD, INK, inkFilterDef, IVORY, lerp, outCubic, Pic, poly, prog, project, r2, svgDoc, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 import { bob, HUD_EVENTS, PaintingShot } from './paint.tsx';
 import { Bolt, Overlay, Puffs, ShieldShatter, Tears } from './props.tsx';
 import { chest, FAN, Party, type HeroTrack } from './riff.tsx';
@@ -87,8 +87,7 @@ const S20 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
-        const t = prog(f2, S20_PILE, 18);
+        const t = prog(frame, S20_PILE, 18);
         const rng = seeded('p1-pileglint');
         return (
           <Overlay>
@@ -144,13 +143,12 @@ const upTo = (pts: readonly [number, number][], n: number): [number, number][] =
 };
 
 const S21 = ({ frame }: { frame: number }) => {
-  const f2 = two(frame);
   // trunk length: the hairline from S19 (3 segments), then grows on each hit
-  const len = 3 + 4.5 * outCubic(prog(f2, S21_CRACK, 6)) + 4.5 * outCubic(prog(f2, S21_WIDE, 6));
+  const len = 3 + 4.5 * outCubic(prog(frame, S21_CRACK, 6)) + 4.5 * outCubic(prog(frame, S21_WIDE, 6));
   const trunk = upTo(S21_TRUNK, len);
   const tip = trunk[trunk.length - 1] as [number, number];
   const wide = frame >= S21_WIDE;
-  const glow = (wide ? 1 : 0.55) * (0.85 + 0.15 * Math.sin(f2 * 0.7));
+  const glow = (wide ? 1 : 0.55) * (0.85 + 0.15 * Math.sin(frame * 0.7));
   const sh = [S21_CRACK, S21_WIDE].reduce((acc, h) => {
     const q = shake(frame, h, 16, h, 14);
     return { x: acc.x + q.x, y: acc.y + q.y };
@@ -204,7 +202,7 @@ const S21 = ({ frame }: { frame: number }) => {
           </Overlay>
           {/* chips flying off the crack tip on each hit */}
           {[S21_CRACK, S21_WIDE].map((h, i) => (
-            <Shards key={i} frame={f2 - h} duration={16} seed={2110 + i} origin={tip} count={16} size={18} speed={24} direction={-Math.PI / 2 + (i ? 0.5 : -0.5)} spread={1.8} gravity={2} fills={['#2A2622', '#1C1A18', VIOLET]} />
+            <Shards key={i} frame={frame - h} duration={16} seed={2110 + i} origin={tip} count={16} size={18} speed={24} direction={-Math.PI / 2 + (i ? 0.5 : -0.5)} spread={1.8} gravity={2} fills={['#2A2622', '#1C1A18', VIOLET]} />
           ))}
         </AbsoluteFill>
       )}
@@ -361,13 +359,12 @@ const S24 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const g = project(pose, ground);
         const k = project(pose, knight.p);
         const eyes = [1, 2, 3, 4, 5, 6, 7].map((i) => project(pose, rigWorld(st, fk, `eye_${i}`, [0, 0])));
         const staff = project(pose, [mage.p[0] - 0.5, 1.7, mage.p[2]]);
         const tc = project(pose, c);
-        const ringAge = f2 - S24_SLAM;
+        const ringAge = frame - S24_SLAM;
         const ring = ringAge >= 0 && ringAge < 24 ? Array.from({ length: 48 }, (_, i) => {
           const a = (i / 48) * Math.PI * 2;
           const r = 0.5 + 16 * outCubic(ringAge / 24);
@@ -378,12 +375,12 @@ const S24 = ({ frame }: { frame: number }) => {
           <>
             <Overlay>
               {ring ? <path d={`M${ring.join('L')}Z`} fill="none" stroke={VIOLET} strokeWidth={lerp(30, 4, ringAge / 24)} opacity={1 - ringAge / 24} /> : null}
-              <ShieldShatter c={[k.x, k.y]} s={k.s * 0.55} age={f2 - S24_SHIELD} />
+              <ShieldShatter c={[k.x, k.y]} s={k.s * 0.55} age={frame - S24_SHIELD} />
               {eyes.map((e, i) => <Glint key={i} frame={frame} at={S24_EYES + (i % 3)} x={e.x} y={e.y} size={e.s * 0.09} hold={false} />)}
-              <Bolt f={f2} t0={S24_BOLT - 6} t1={S24_BOLT} a={[staff.x, staff.y]} b={[tc.x, tc.y]} size={staff.s * 0.22} seed={2401} />
-              <Puffs c={[g.x, g.y]} s={g.s * 2.2} age={f2 - S24_SLAM} count={9} seed={2402} life={34} />
+              <Bolt f={frame} t0={S24_BOLT - 6} t1={S24_BOLT} a={[staff.x, staff.y]} b={[tc.x, tc.y]} size={staff.s * 0.22} seed={2401} />
+              <Puffs c={[g.x, g.y]} s={g.s * 2.2} age={frame - S24_SLAM} count={9} seed={2402} life={34} />
             </Overlay>
-            <Shards frame={f2 - S24_DEBRIS} duration={30} seed={2403} origin={[g.x, g.y]} count={36} size={g.s * 0.45} speed={g.s * 0.5} direction={-Math.PI / 2} spread={Math.PI * 1.3} gravity={2} fills={[GOLD, GOLD, IVORY]} />
+            <Shards frame={frame - S24_DEBRIS} duration={30} seed={2403} origin={[g.x, g.y]} count={36} size={g.s * 0.45} speed={g.s * 0.5} direction={-Math.PI / 2} spread={Math.PI * 1.3} gravity={2} fills={[GOLD, GOLD, IVORY]} />
           </>
         );
       }}
@@ -441,7 +438,6 @@ const S25 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const land = project(pose, METEORS[0]!.to);
         return (
           <>
@@ -450,12 +446,12 @@ const S25 = ({ frame }: { frame: number }) => {
               const b = project(pose, m.to);
               return <Meteor key={i} frame={frame - m.t0} duration={m.dur} seed={2500 + i} from={[a.x, a.y]} to={[b.x, b.y]} size={b.s * 0.75 * m.size} />;
             })}
-            <Shards frame={f2 - S25_WEPT} duration={26} seed={2510} origin={[land.x, land.y]} count={30} size={land.s * 0.5} speed={land.s * 0.55} direction={-Math.PI / 2} spread={Math.PI * 1.2} gravity={2} fills={[GOLD, IVORY, GOLD]} />
+            <Shards frame={frame - S25_WEPT} duration={26} seed={2510} origin={[land.x, land.y]} count={30} size={land.s * 0.5} speed={land.s * 0.55} direction={-Math.PI / 2} spread={Math.PI * 1.2} gravity={2} fills={[GOLD, IVORY, GOLD]} />
             <Overlay>
-              <Puffs c={[land.x, land.y]} s={land.s * 2} age={f2 - S25_WEPT} count={8} seed={2511} life={30} />
+              <Puffs c={[land.x, land.y]} s={land.s * 2} age={frame - S25_WEPT} count={8} seed={2511} life={30} />
               {heroes.map((h, i) => {
                 const q = project(pose, [h.p[0], h.p[1] + 1.05, h.p[2]]);
-                return <Tears key={i} c={[q.x, q.y]} s={q.s * 1.1} t={f2 - S25_WEPT - i} />;
+                return <Tears key={i} c={[q.x, q.y]} s={q.s * 1.1} t={frame - S25_WEPT - i} />;
               })}
             </Overlay>
           </>

@@ -91,5 +91,5 @@ export const arc = (frame: number, start: number, n: number, a: Vec3, b: Vec3, h
 };
 /** Spin of a flying hero: 360 degrees per 12 frames (storyboard 1 §0.2). */
 export const spin = (frame: number, start: number, dir = 1): number => (frame < start ? 0 : (-dir * 360 * (frame - start)) / 12);
-/** Small hop of a hero on twos (life on a standing figure). */
-export const bob = (frame: number, seed: number, amp = 0.05): number => amp * Math.abs(Math.sin(((frame - (frame % 2)) / 30) * Math.PI * 2 * 1.5 + seed));
+/** Small hop of a hero (life on a standing figure). */
+export const bob = (frame: number, seed: number, amp = 0.05): number => amp * Math.abs(Math.sin((frame / 30) * Math.PI * 2 * 1.5 + seed));

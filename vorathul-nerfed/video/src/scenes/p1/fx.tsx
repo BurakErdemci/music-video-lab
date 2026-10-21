@@ -65,9 +65,8 @@ const pointPx = (i: Impact, frame: number, pose: CameraPose): [number, number] =
 
 const SIZES: Record<Size, number> = { big: 230, medium: 150, small: 80 };
 
-/** Overlays of the recipe: speed lines (N-2..N-1), splash (N+2..N+12), burst (4 frames from N+2). On twos. */
+/** Overlays of the recipe: speed lines (N-2..N-1), splash (N+2..N+12), burst (4 frames from N+2). Motion on every frame. */
 export const ImpactLayer = ({ frame, impacts, pose }: { frame: number; impacts: readonly Impact[]; pose: CameraPose }) => {
-  const f2 = two(frame);
   const out: ReactNode[] = [];
   impacts.forEach((i, k) => {
     const seed = seedOf(i);
@@ -84,10 +83,10 @@ export const ImpactLayer = ({ frame, impacts, pose }: { frame: number; impacts: 
       );
     }
     if (i.splash !== null && frame >= i.at + 2) {
-      out.push(<InkSplash key={`s${k}`} frame={f2 - (i.at + 2)} duration={11} grow={3} fade={6} seed={seed} x={x} y={y} size={sz * 0.85} variant={i.splash ?? 'black'} />);
+      out.push(<InkSplash key={`s${k}`} frame={frame - (i.at + 2)} duration={11} grow={3} fade={6} seed={seed} x={x} y={y} size={sz * 0.85} variant={i.splash ?? 'black'} />);
     }
     if ((i.burst ?? i.size !== 'small') && frame >= i.at + 2 && frame < i.at + 6) {
-      out.push(<ImpactBurst key={`b${k}`} frame={f2 - (i.at + 2)} duration={6} seed={seed} x={x} y={y} size={sz} flash={0} />);
+      out.push(<ImpactBurst key={`b${k}`} frame={frame - (i.at + 2)} duration={6} seed={seed} x={x} y={y} size={sz} flash={0} />);
     }
   });
   return <>{out}</>;
@@ -109,7 +108,7 @@ const starPath = (r: number, k = 4, inner = 0.18): string => {
 
 /** A hard-edged violet sparkle that pops on `at` and settles; `hold` keeps a small core afterwards. */
 export const Glint = ({ frame, at, x, y, size, hold = true, color = VIOLET }: { frame: number; at: number; x: number; y: number; size: number; hold?: boolean; color?: string }) => {
-  const t = two(frame) - at;
+  const t = frame - at;
   if (t < 0) return null;
   const pop = t < 8 ? outBack(t / 4) * (1 - 0.6 * clamp01((t - 3) / 5)) : 0.4;
   if (!hold && t >= 8) return null;
@@ -235,7 +234,7 @@ export const hudAt = (frame: number, ev: { in: number; chip1: number; regen1: nu
     ghost = frame < ev.fall3 + 14 ? (100 / 3) * (1 - outCubic(prog(frame, ev.fall3 + 2, 12))) : 0;
   }
   const pips: [number, number, number] = [frame >= ev.pip1 ? 1 : 0, frame >= ev.pip2 ? 1 : 0, frame >= ev.pip3 ? 1 : 0];
-  const pulse = frame >= ev.pip3 ? 0.5 + 0.5 * Math.sin(((two(frame) - ev.pip3) / ev.pulse) * Math.PI * 2) : 0;
+  const pulse = frame >= ev.pip3 ? 0.5 + 0.5 * Math.sin(((frame - ev.pip3) / ev.pulse) * Math.PI * 2) : 0;
   return { hp, ghost, shine, pips, pulse, slam, crack };
 };
 

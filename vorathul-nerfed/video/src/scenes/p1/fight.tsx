@@ -8,7 +8,7 @@ import { Shards, SpeedLines } from '../../vfx/effects.ts';
 import { at } from './events.ts';
 import { bbox, Glint, Panel, PanelArt, slamIn, type Impact } from './fx.tsx';
 import { HeroImg, type HeroKind, type HeroPose } from './heroes.tsx';
-import { count, GOLD, INK, IVORY, lerp, outCubic, prog, project, two, VIOLET, VIOLET_LIGHT } from './kit.tsx';
+import { count, GOLD, INK, IVORY, lerp, outCubic, prog, project, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 import { bob, PaintingShot } from './paint.tsx';
 import { GoldBlast, Inked, KoStars, Overlay, Puffs, Sigil, Slash, Sweat } from './props.tsx';
 import { chest, FAN, flight, Party, type HeroTrack } from './riff.tsx';
@@ -28,13 +28,12 @@ const ActionInset = ({ frame, from, until, hitAt, hit, pts, art, focus, zoom = 1
   art: string; focus?: [number, number]; zoom?: number;
 }) => {
   if (frame < from || frame >= until) return null;
-  const f2 = two(frame);
   const out = prog(frame, until - 4, 4);
   return (
     <AbsoluteFill style={{ opacity: 1 - out }}>
       <Panel pts={pts} slam={slamIn(frame, from)} border={14}>
         <PanelArt id={art} box={bbox(pts)} focus={focus} zoom={zoom} push={0.08 * prog(frame, from, until - from)} />
-        <ImpactBurst frame={f2 - hitAt} duration={8} seed={hitAt + 7} x={hit[0]} y={hit[1]} size={150} flash={0} />
+        <ImpactBurst frame={frame - hitAt} duration={8} seed={hitAt + 7} x={hit[0]} y={hit[1]} size={150} flash={0} />
       </Panel>
     </AbsoluteFill>
   );
@@ -93,9 +92,8 @@ const S13 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(fa);
         const p = project(pose, stab);
-        const bend = outCubic(prog(f2, S13_STAB, 8));
+        const bend = outCubic(prog(fa, S13_STAB, 8));
         const head = project(pose, [rogue.p[0], rogue.p[1] + 0.7, rogue.p[2]]);
         return (
           <Overlay>
@@ -105,7 +103,7 @@ const S13 = ({ frame }: { frame: number }) => {
                 <path d={`M${p.x + p.s * 0.55} ${p.y + p.s * 0.1}Q${p.x + p.s * (0.1 + 0.2 * bend)} ${p.y - p.s * 0.05 * bend} ${p.x + p.s * (0.05 + 0.25 * bend)} ${p.y + p.s * (0.02 + 0.45 * bend)}`} fill="none" stroke={GOLD} strokeWidth={p.s * 0.09} strokeLinecap="round" />
               </Inked>
             ) : null}
-            {f2 >= S13_STAB + 8 && f2 < S13_GRAB ? <Sweat c={[head.x, head.y]} s={head.s * 0.7} t={(f2 - S13_STAB - 8) % 20} /> : null}
+            {fa >= S13_STAB + 8 && fa < S13_GRAB ? <Sweat c={[head.x, head.y]} s={head.s * 0.7} t={(fa - S13_STAB - 8) % 20} /> : null}
           </Overlay>
         );
       }}
@@ -165,13 +163,12 @@ const S14 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const g = project(pose, GALLERY_HIT);
         return (
           <>
             <Overlay>
-              <Puffs c={[g.x, g.y]} s={g.s * 2.2} age={f2 - S14_DUCK} count={7} seed={1402} life={30} />
-              {f2 >= S14_DUCK + 4 && f2 < S14_DUCK + 26 ? <KoStars c={[g.x, g.y - g.s * 1.2]} s={g.s * 1.4} f={f2} /> : null}
+              <Puffs c={[g.x, g.y]} s={g.s * 2.2} age={frame - S14_DUCK} count={7} seed={1402} life={30} />
+              {frame >= S14_DUCK + 4 && frame < S14_DUCK + 26 ? <KoStars c={[g.x, g.y - g.s * 1.2]} s={g.s * 1.4} f={frame} /> : null}
             </Overlay>
             {/* the double attack, too small from the gallery: a comic inset of knight and archer hitting him together */}
             <ActionInset
@@ -248,8 +245,7 @@ const S15 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
-        const age = f2 - S15_SLAM;
+        const age = frame - S15_SLAM;
         // shockwave: an ivory ring on the floor plane, projected
         const ring = age >= 0 && age < 22 ? Array.from({ length: 48 }, (_, i) => {
           const a = (i / 48) * Math.PI * 2;
@@ -264,7 +260,7 @@ const S15 = ({ frame }: { frame: number }) => {
           <>
             <Overlay>
               {ring ? <path d={`M${ring.join('L')}Z`} fill="none" stroke={IVORY} strokeWidth={lerp(26, 4, age / 22)} opacity={1 - age / 22} /> : null}
-              <Sigil c={[sig.x, sig.y]} rx={Math.abs(sigE.x - sig.x)} ry={Math.abs(sigE.x - sig.x) * 0.16} p={prog(f2, S15_SIG, 18)} f={f2} seed={1501} />
+              <Sigil c={[sig.x, sig.y]} rx={Math.abs(sigE.x - sig.x)} ry={Math.abs(sigE.x - sig.x) * 0.16} p={prog(frame, S15_SIG, 18)} f={frame} seed={1501} />
             </Overlay>
             <Shards frame={age} duration={30} seed={1502} origin={[g.x, g.y]} count={34} size={g.s * 0.5} speed={g.s * 0.55} direction={-Math.PI / 2} spread={Math.PI * 1.2} gravity={2.2} fills={[GOLD, GOLD, IVORY]} />
           </>
@@ -324,26 +320,25 @@ const S16 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const p = project(pose, c);
-        const smokeAge = f2 - S16_EXP;
-        const clearing = f2 >= S16_CLEAR ? prog(f2, S16_CLEAR, 18) : 0;
-        const gust = f2 >= S16_GUST ? prog(f2, S16_GUST, 16) : 0;
+        const smokeAge = frame - S16_EXP;
+        const clearing = frame >= S16_CLEAR ? prog(frame, S16_CLEAR, 18) : 0;
+        const gust = frame >= S16_GUST ? prog(frame, S16_GUST, 16) : 0;
         return (
           <>
             <Overlay>
               <GoldBlast c={[p.x, p.y]} s={p.s * 4.5} age={smokeAge} seed={1601} />
-              {smokeAge >= 4 && f2 < S16_GUST + 16 ? (
+              {smokeAge >= 4 && frame < S16_GUST + 16 ? (
                 <g transform={`translate(${p.x} ${p.y}) scale(${1 + gust * 2.4} ${1 - gust * 0.4}) translate(${-p.x} ${-p.y})`} opacity={(1 - clearing * 0.55) * (1 - gust)}>
                   <Puffs c={[p.x, p.y + p.s * 2]} s={p.s * 5} age={Math.min(smokeAge, 20)} count={10} seed={1602} life={40} spread={1.6} />
                 </g>
               ) : null}
-              {heroesHeads(heroes, pose).map(([x, y, s], i) => <Sweat key={i} c={[x, y]} s={s} t={f2 - S16_SWEAT - i * 2} />)}
+              {heroesHeads(heroes, pose).map(([x, y, s], i) => <Sweat key={i} c={[x, y]} s={s} t={frame - S16_SWEAT - i * 2} />)}
             </Overlay>
-            {f2 >= S16_GUST && f2 < S16_GUST + 12 ? (
+            {frame >= S16_GUST && frame < S16_GUST + 12 ? (
               <>
-                <SpeedLines mode="parallel" frame={f2 - S16_GUST} duration={12} seed={1603} angle={0} count={30} thickness={34} speed={60} />
-                <SpeedLines mode="parallel" frame={f2 - S16_GUST} duration={12} seed={1604} angle={Math.PI} count={30} thickness={34} speed={60} />
+                <SpeedLines mode="parallel" frame={frame - S16_GUST} duration={12} seed={1603} angle={0} count={30} thickness={34} speed={60} />
+                <SpeedLines mode="parallel" frame={frame - S16_GUST} duration={12} seed={1604} angle={Math.PI} count={30} thickness={34} speed={60} />
               </>
             ) : null}
           </>
@@ -386,7 +381,6 @@ const S17 = ({ frame }: { frame: number }) => {
   const st = rigFor(S17_TL, frame);
   const fk = rigFk(st);
   const c = chest(st, fk);
-  const f2 = two(frame);
   const n = count(frame, S17_PANELS);
   const launched = frame >= S17_COMBO;
   const heroes: HeroTrack[] = S17_KINDS.map((kind, i) => ({ kind, pose: launched ? 'attack' : 'charge', p: [(S17_START[i] as Vec3)[0], 0, (S17_START[i] as Vec3)[2]], flip: i === 1 || i === 2 }));
@@ -426,8 +420,8 @@ const S17 = ({ frame }: { frame: number }) => {
             })}
             {/* insert: the eye slit narrows. The helm plate is drawn here (as in S21), framed as a comic panel; it holds
                 to the cut so the panel never uncovers the frame two frames before it. */}
-            {f2 >= S17_EYE ? (() => {
-              const k = outCubic(prog(f2, S17_EYE + 2, 10));
+            {frame >= S17_EYE ? (() => {
+              const k = outCubic(prog(frame, S17_EYE + 2, 10));
               const lid = 268 + 22 * k;
               const lo = 330 - 16 * k;
               return (
@@ -518,17 +512,16 @@ const S18 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         const p = project(pose, c);
         const b = project(pose, blade);
         const s = project(pose, slit);
         return (
           <>
             <Overlay>
-              <GoldBlast c={[p.x, p.y]} s={p.s * 3.2} age={f2 - S18_HIT} seed={1801} />
+              <GoldBlast c={[p.x, p.y]} s={p.s * 3.2} age={frame - S18_HIT} seed={1801} />
               <Glint frame={frame} at={at('s18-glare')} x={s.x} y={s.y} size={s.s * 0.6} hold={false} />
             </Overlay>
-            {S18_PINGS.map((t, i) => <Shards key={i} frame={f2 - t} duration={8} seed={1810 + i} origin={[b.x, b.y]} count={8} size={9} speed={16} direction={-0.5} spread={2.4} fills={[GOLD, IVORY]} />)}
+            {S18_PINGS.map((t, i) => <Shards key={i} frame={frame - t} duration={8} seed={1810 + i} origin={[b.x, b.y]} count={8} size={9} speed={16} direction={-0.5} spread={2.4} fills={[GOLD, IVORY]} />)}
           </>
         );
       }}
@@ -594,16 +587,15 @@ const S19 = ({ frame }: { frame: number }) => {
         </>
       )}
       overlay={({ pose }) => {
-        const f2 = two(frame);
         return (
           <>
-            {f2 >= S19_SWAT && f2 < S19_SWAT + 10 ? <SpeedLines mode="parallel" frame={f2 - S19_SWAT} duration={10} seed={1901} angle={-0.25} count={40} thickness={40} /> : null}
+            {frame >= S19_SWAT && frame < S19_SWAT + 10 ? <SpeedLines mode="parallel" frame={frame - S19_SWAT} duration={10} seed={1901} angle={-0.25} count={40} thickness={40} /> : null}
             <Overlay>
               {S19_SPOTS.map(([, , b], i) => {
                 const q = project(pose, [b[0], 0, b[2]]);
-                return <Puffs key={i} c={[q.x, q.y]} s={q.s * 1.1} age={f2 - S19_LAND} count={5} seed={1900 + i} life={24} />;
+                return <Puffs key={i} c={[q.x, q.y]} s={q.s * 1.1} age={frame - S19_LAND} count={5} seed={1900 + i} life={24} />;
               })}
-              {f2 >= S19_AIR && f2 < S19_LAND ? heroesHeads(heroes, pose).map(([x, y, s], i) => <Sweat key={i} c={[x, y]} s={s} t={f2 - S19_AIR} />) : null}
+              {frame >= S19_AIR && frame < S19_LAND ? heroesHeads(heroes, pose).map(([x, y, s], i) => <Sweat key={i} c={[x, y]} s={s} t={frame - S19_AIR} />) : null}
             </Overlay>
             {/* the last charge in close-up: all four run in together and the combined strike lands */}
             <ActionInset

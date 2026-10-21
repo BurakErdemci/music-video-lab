@@ -6,7 +6,7 @@ import { InkFilter, inkFilterId, Overlay, seeded, shake, SpeedLines } from '../.
 import { at } from './events.ts';
 import { bbox, Glint, PanelArt } from './fx.tsx';
 import { HeroImg, type HeroKind } from './heroes.tsx';
-import { clamp01, count, GOLD, INK, inOut, IVORY, lerp, outCubic, prog, project, ShotFrame, two, VIOLET, VIOLET_LIGHT } from './kit.tsx';
+import { clamp01, count, GOLD, INK, inOut, IVORY, lerp, outCubic, prog, project, ShotFrame, VIOLET, VIOLET_LIGHT } from './kit.tsx';
 import { PaintingShot } from './paint.tsx';
 import { rigFk, rigFor, rigWorld, Vorathul, type PipeEvent, type Timeline } from './vorathul.tsx';
 import { World } from './world.tsx';
@@ -19,9 +19,8 @@ const DARK = { slitOpacity: [{ at: 0, v: 0, dur: 0 }], gems: [{ at: 0, v: 0, dur
 const FOLDED = { wingS_R: [{ at: 0, v: 0, dur: 0 }], wingS_L: [{ at: 0, v: 0, dur: 0 }] };
 const PIPES_DARK: PipeEvent[] = [{ at: 0, wing: 'both', pipe: 'all', op: 'dark' }];
 
-/** Gold dust motes drifting in the light, glinting on twos. */
+/** Gold dust motes drifting in the light, glinting. */
 const Dust = ({ frame, n = 46, seed = 'dust', color = GOLD }: { frame: number; n?: number; seed?: string; color?: string }) => {
-  const f2 = two(frame);
   const rng = seeded(`p1-${seed}`);
   return (
     <Overlay>
@@ -30,9 +29,9 @@ const Dust = ({ frame, n = 46, seed = 'dust', color = GOLD }: { frame: number; n
         const y0 = rng.range(0, 1080);
         const sp = rng.range(0.15, 0.6);
         const ph = rng.range(0, 6.28);
-        const tw = Math.max(0, Math.sin(f2 * 0.21 + ph));
+        const tw = Math.max(0, Math.sin(frame * 0.21 + ph));
         const r = rng.range(1.5, 4.5) * (0.4 + tw);
-        return <circle key={i} cx={x0 + Math.sin(f2 * 0.02 + ph) * 30} cy={(y0 - f2 * sp + 1080) % 1080} r={r} fill={color} opacity={0.35 + 0.65 * tw} />;
+        return <circle key={i} cx={x0 + Math.sin(frame * 0.02 + ph) * 30} cy={(y0 - frame * sp + 1080) % 1080} r={r} fill={color} opacity={0.35 + 0.65 * tw} />;
       })}
     </Overlay>
   );
@@ -77,14 +76,13 @@ const RevealStroke = ({ d, width, p, seed }: { d: string; width: number; p: numb
 };
 
 const S01 = ({ frame }: { frame: number }) => {
-  const f2 = two(frame);
   const strokeAt = ['s01-stroke-1', 's01-stroke-2', 's01-stroke-3', 's01-stroke-4', 's01-stroke-5'].map(at);
   const k = lerp(1, 1.03, frame / 104);
   return (
     <ShotFrame frame={frame} background={INK}>
       <AbsoluteFill style={{ transform: `scale(${k})` }}>
         <Overlay>
-          {S01_STROKES.map((s, i) => s.d.map((d, j) => <RevealStroke key={`${i}-${j}`} d={d} width={s.width} p={outCubic(prog(f2, (strokeAt[i] as number) + j * 2, 14))} seed={300 + i * 10 + j} />))}
+          {S01_STROKES.map((s, i) => s.d.map((d, j) => <RevealStroke key={`${i}-${j}`} d={d} width={s.width} p={outCubic(prog(frame, (strokeAt[i] as number) + j * 2, 14))} seed={300 + i * 10 + j} />))}
         </Overlay>
         <Dust frame={frame} n={30} seed="s01" />
       </AbsoluteFill>
@@ -107,11 +105,10 @@ const S02_CAM = handheld(tween(S02_FROM, S02_TO, { start: at('s02-cut'), frames:
 
 /** Ivory rings that contract into him on the keys: the light falling into the hole. */
 const Implosion = ({ frame, keys, cx, cy, s }: { frame: number; keys: number[]; cx: number; cy: number; s: number }) => {
-  const f2 = two(frame);
   return (
     <Overlay>
       {keys.map((k) => {
-        const t = (f2 - k) / 16;
+        const t = (frame - k) / 16;
         if (t < 0 || t >= 1) return null;
         const r = lerp(14, 1.2, outCubic(t)) * s;
         return <ellipse key={k} cx={cx} cy={cy} rx={r * 1.25} ry={r} fill="none" stroke={IVORY} strokeWidth={lerp(3, 10, t)} opacity={0.75 * (1 - t * t)} />;
@@ -161,7 +158,7 @@ const pulse = (t: number) => (t < 0 ? 0 : t < 5 ? t / 5 : t < 16 ? 1 - (t - 5) /
 
 const S03 = ({ frame }: { frame: number }) => {
   const st = rigFor(S02_TL, frame);
-  const bow = (_i: number, x: number) => S03_BOWS.reduce((a, k) => a + pulse(two(frame) - k - (x + 20) * 0.35), 0);
+  const bow = (_i: number, x: number) => S03_BOWS.reduce((a, k) => a + pulse(frame - k - (x + 20) * 0.35), 0);
   const tb = frame - at('s03-banners');
   const sway = tb < 0 ? 0 : 5 * Math.exp(-tb / 18) * Math.sin(tb * 0.32);
   return (
@@ -222,8 +219,8 @@ const S04 = ({ frame }: { frame: number }) => {
         const studs = [0.057, -0.058].map((x) => P('chest_studs', [x, 0.184]));
         const tip = P('sword', [0, -0.54]);
         const guard = P('sword', [0, -0.076]);
-        const rp = clamp01((two(frame) - S04_RUNE) / 16);
-        const flare = clamp01((two(frame) - cut) / 10);
+        const rp = clamp01((frame - S04_RUNE) / 16);
+        const flare = clamp01((frame - cut) / 10);
         return (
           <>
             <Overlay>
@@ -305,7 +302,6 @@ const S06_HITS = ['s06-knight', 's06-mage', 's06-archer', 's06-rogue'].map(at);
 const S06_KINDS: HeroKind[] = ['knight', 'mage', 'archer', 'rogue'];
 
 const S06 = ({ frame }: { frame: number }) => {
-  const f2 = two(frame);
   const n = count(frame, S06_HITS);
   const sh = S06_HITS.reduce((a, h, i) => {
     const s = shake(frame, h, 9, 600 + i, 10);
