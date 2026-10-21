@@ -41,8 +41,9 @@ const faceC = (flip = false): Placement => ({ x: 0, feet: -5.8, height: 12, z: 0
 const bar = (i: number) => db(SOLO.start + i * 1.333);
 const half = (i: number) => bt(SOLO.start + i * 1.333 + 0.62);
 /** The scream, GIT! PUSH! FORCE!, the whisper and the solo (round 7b): faces cut in every two beats in the scream,
- *  the breakdown heavy but moving (orbits and cut-ins between the three words), the solo a new framing every half
- *  bar (duel, split faces, low angles, face cut-ins), never two bars on one full-body stage shot. */
+ *  the breakdown heavy but moving (orbits and cut-ins between the three words), the solo a new framing every bar and
+ *  most half bars (duel, split faces, low angles, face cut-ins), never two bars on one full-body stage shot; three
+ *  half bars hold so the solo stays under the chorus's motion. */
 const METAL: MShot[] = [
   { id: 'scream', t: SCREAM.start, scene: 'scream', cam: 'hero', into: 'shatter', move: 'push', B: ['BMX2', faceAt(-4.2)], O: ['OMX3', faceAt(4.2, true)] },
   { id: 'scream-o', t: bt(SCREAM.start + 0.64), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: null, O: ['OMX3', faceC(true)] },
@@ -66,11 +67,9 @@ const METAL: MShot[] = [
   { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', fade: true, move: 'push', B: null, O: ['OS1', full(3, 5.0)] },
   { id: 'solo-tongue', t: half(0), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', O: ['OMX4', faceC(true)] },
   { id: 'solo-cathedral', t: bar(1), scene: 'cathedral', cam: 'low', into: 'tunnel', move: 'orbit', B: ['BS1', full(-1.5, 5.2)], O: null },
-  { id: 'solo-rage', t: half(1), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'push', B: ['BMX4', faceC()] },
   { id: 'solo-tunnel', t: bar(2), scene: 'tunnel', cam: 'hero', into: 'streaks', move: 'whip', B: ['BS2', full(-1.6, 4.6)], O: ['OS2', full(1.6, 4.6)] },
   { id: 'solo-split', t: half(2), scene: 'duel', cam: 'hero', into: 'shatter', move: 'orbit', B: ['BMX1', faceAt(-4.4)], O: ['OMX1', faceAt(4.4, true)] },
   { id: 'solo-arena', t: bar(3), scene: 'arena', cam: 'wide', into: 'mirror', move: 'whip', B: ['BQ2', full(-3.3, 5.0)], O: ['OS3', full(3.3, 5.0)] },
-  { id: 'solo-slash', t: half(3), scene: 'arena', cam: 'low', into: 'shock', move: 'dollyzoom', B: ['BQ2', full(-2.4, 5.6)], O: null },
   { id: 'solo-split-2', t: bar(4), scene: 'duel', cam: 'close', into: 'shatter', move: 'push', B: ['BMX3', faceAt(-4.4)], O: ['OMX5', faceAt(4.4, true)] },
   { id: 'solo-horns', t: half(4), scene: 'forge', cam: 'low', into: 'streaks', move: 'orbit', B: null, O: ['OC3', full(2.4, 5.4)] },
   // back to back (QK3)
@@ -79,7 +78,6 @@ const METAL: MShot[] = [
   { id: 'solo-tunnel-2', t: bar(6), scene: 'tunnel', cam: 'close', into: 'tunnel', move: 'push', B: null, O: ['OS2', full(0, 5.0)] },
   { id: 'solo-snarl', t: half(6), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'orbit', O: ['OMX2', faceC(true)] },
   { id: 'solo-arena-2', t: bar(7), scene: 'arena', cam: 'hero', into: 'mirror', move: 'orbit', B: ['BS3', full(-3.0, 5.0)], O: ['OS1', full(3.0, 5.0)] },
-  { id: 'solo-arena-3', t: half(7), scene: 'arena', cam: 'close', into: 'shock', move: 'whip', B: ['BS2', full(-2.6, 5.4)] },
   { id: 'solo-forge-2', t: bar(8), scene: 'forge', cam: 'wide', into: 'streaks', move: 'dollyzoom', B: ['BS1', full(-2.4, 5.0)], O: ['OS3', full(3, 5.2)] },
   { id: 'solo-split-3', t: half(8), scene: 'duel', cam: 'hero', into: 'shatter', move: 'push', B: ['BMX2', faceAt(-4.4)], O: ['OMX3', faceAt(4.4, true)] },
   { id: 'solo-end', t: bar(9), scene: 'cathedral', cam: 'wide', into: 'tunnel', move: 'orbit', B: ['BS3', full(-2.2, 5.0)], O: ['OS2', full(2.2, 5.2)] },

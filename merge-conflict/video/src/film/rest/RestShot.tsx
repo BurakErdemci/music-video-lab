@@ -130,7 +130,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const orangeP = poseAt(RORANGE, t);
   const focus = focusOf(blueP && (scene === 'subway' || scene === 'blame' || scene === 'whitespace' || scene === 'nametag' || scene === 'whisper') ? blueP : (orangeP ?? blueP));
   const idx = RSHOTS.indexOf(shot);
-  const move: Move | undefined = scene === 'whisper' ? undefined : (shot.move ?? MOVES[idx % MOVES.length]);
+  const chosen = shot.move ?? MOVES[idx % MOVES.length];
+  const move: Move | undefined = scene === 'whisper' ? undefined : t >= SOLO.start && chosen !== 'push' ? 'push' : chosen;
   const dir = idx % 2 ? 1 : -1;
   const raw = variant(HERO[scene], shot.cam, k, focus);
   const base = move ? moved(raw, move, k, t - shot.t, focus, dir) : raw;
@@ -144,9 +145,9 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const h = [...hits].reverse().find((x) => t >= x) ?? 0;
   // the solo sits just under the chorus: its kicks are lighter than the scream's and the breakdown's
   const solo = t >= SOLO.start;
-  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : solo ? 0.05 : metal ? 0.08 : 0.06;
+  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : solo ? 0.035 : metal ? 0.09 : 0.06;
   const punchedPose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
-  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : solo ? 0.12 : 0.2) : punchedPose;
+  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : solo ? 0.07 : 0.26) : punchedPose;
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);
