@@ -16,7 +16,7 @@ export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
 /** How the camera travels across a shot (round 7b, "No cliff after the chorus": a camera move on every line). */
 export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom';
 /** `fade`: the cut is carried by a fade up from black instead of a cover (out of the whisper's near-black). */
-/** `panel`: for scene 'panel', the moment painting shown full frame (public/plates/<panel>.png). */
+/** `panel`: for scene 'panel', the moment painting shown full frame (public/plates/<panel>.webp). */
 export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; fade?: boolean; move?: Move; panel?: string }
 export interface RPose { t: number; card: string | null; at?: Placement }
 
