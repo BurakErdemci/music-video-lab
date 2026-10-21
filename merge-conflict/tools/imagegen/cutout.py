@@ -53,7 +53,7 @@ def measure_bg(rgb, key):
     return med if np.abs(med - hex_rgb(key)).max() < 40 else hex_rgb(key)
 
 
-def key_alpha(im, key):
+def key_alpha(im, key, grey_max=GREY_REGION_MAX):
     """Return (rgb uint8, alpha float 0..1, measured bg) with the key background removed."""
     rgb = np.asarray(im.convert("RGB"))
     bg = measure_bg(rgb, key)
@@ -79,7 +79,7 @@ def key_alpha(im, key):
     if gn:
         touch = np.unique(gl[ndi.binary_dilation(bgmask, iterations=GREY_REACH) & greyish])
         sizes = ndi.sum(greyish, gl, index=np.arange(gn + 1))
-        peel = [i for i in touch if i > 0 and sizes[i] <= GREY_REGION_MAX]
+        peel = [i for i in touch if i > 0 and sizes[i] <= grey_max]
         bgmask = bgmask | np.isin(gl, peel)
     fg = ~bgmask
     # drop 1 px speckle; with an even structure and border_value=1 the opening turns the bottom-right
@@ -148,6 +148,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="", help="comma-separated ids, e.g. O01,B05")
     ap.add_argument("--round", default=ROUND, help="round folder under stil/prompts, e.g. j-dance")
+    # a grey skin shadow under the jaw (BX2) was peeled as key; a lower limit keeps it
+    ap.add_argument("--grey-region-max", type=int, default=GREY_REGION_MAX,
+                    help="largest desaturated region peeled when it touches the background")
     args = ap.parse_args()
     only = {s for s in args.only.split(",") if s}
     CARDS.mkdir(parents=True, exist_ok=True)
@@ -163,7 +166,7 @@ def main():
             report.append({"id": cid, "status": "MISSING-SOURCE"})
             continue
         im = Image.open(src)
-        rgb, alpha, bg = key_alpha(im, e["key"])
+        rgb, alpha, bg = key_alpha(im, e["key"], args.grey_region_max)
         card, box = autocrop(to_rgba(rgb, alpha))
         dst = CARDS / f"{cid}.png"
         card.save(dst)
