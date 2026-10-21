@@ -71,6 +71,21 @@ export const sectionAt = (t: number): string => {
   return (s ?? at(sections, sections.length - 1, 'section')).name;
 };
 
+/** Continuous beat position at t seconds (beat index plus fraction). */
+export const beatPos = (t: number): number => {
+  const b = beats;
+  if (t <= (b[0] as number)) return (t - (b[0] as number)) / ((b[1] as number) - (b[0] as number));
+  let lo = 0;
+  let hi = b.length - 1;
+  if (t >= (b[hi] as number)) return hi + (t - (b[hi] as number)) / ((b[hi] as number) - (b[hi - 1] as number));
+  while (hi - lo > 1) {
+    const m = (lo + hi) >> 1;
+    if ((b[m] as number) <= t) lo = m;
+    else hi = m;
+  }
+  return lo + (t - (b[lo] as number)) / ((b[hi] as number) - (b[lo] as number));
+};
+
 /** Index of the beat closest to t seconds. */
 export const nearestBeat = (t: number): number => {
   let best = 0;
