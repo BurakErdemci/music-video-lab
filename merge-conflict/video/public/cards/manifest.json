@@ -143,6 +143,102 @@
     ],
     "source": "B12-joy-spin.png"
   },
+  "BD1": {
+    "file": "cards/BD1.png",
+    "w": 918,
+    "h": 1521,
+    "bbox": [
+      106,
+      15,
+      1024,
+      1536
+    ],
+    "source": "BD1-hip-bump.png"
+  },
+  "BD2": {
+    "file": "cards/BD2.png",
+    "w": 974,
+    "h": 1533,
+    "bbox": [
+      50,
+      3,
+      1024,
+      1536
+    ],
+    "source": "BD2-arm-roll.png"
+  },
+  "BD3": {
+    "file": "cards/BD3.png",
+    "w": 1000,
+    "h": 1523,
+    "bbox": [
+      24,
+      13,
+      1024,
+      1536
+    ],
+    "source": "BD3-strut.png"
+  },
+  "BD4": {
+    "file": "cards/BD4.png",
+    "w": 971,
+    "h": 1523,
+    "bbox": [
+      53,
+      13,
+      1024,
+      1536
+    ],
+    "source": "BD4-y-arms.png"
+  },
+  "BD5": {
+    "file": "cards/BD5.png",
+    "w": 1001,
+    "h": 1517,
+    "bbox": [
+      23,
+      19,
+      1024,
+      1536
+    ],
+    "source": "BD5-crouch-snap.png"
+  },
+  "BD6": {
+    "file": "cards/BD6.png",
+    "w": 1012,
+    "h": 1520,
+    "bbox": [
+      12,
+      16,
+      1024,
+      1536
+    ],
+    "source": "BD6-kick.png"
+  },
+  "BD7": {
+    "file": "cards/BD7.png",
+    "w": 969,
+    "h": 1525,
+    "bbox": [
+      55,
+      11,
+      1024,
+      1536
+    ],
+    "source": "BD7-point-cross.png"
+  },
+  "BD8": {
+    "file": "cards/BD8.png",
+    "w": 931,
+    "h": 1530,
+    "bbox": [
+      93,
+      6,
+      1024,
+      1536
+    ],
+    "source": "BD8-shimmy.png"
+  },
   "O01": {
     "file": "cards/O01.png",
     "w": 1019,
@@ -286,5 +382,101 @@
       1536
     ],
     "source": "O12-joy-spin.png"
+  },
+  "OD1": {
+    "file": "cards/OD1.png",
+    "w": 924,
+    "h": 1531,
+    "bbox": [
+      100,
+      5,
+      1024,
+      1536
+    ],
+    "source": "OD1-hip-bump.png"
+  },
+  "OD2": {
+    "file": "cards/OD2.png",
+    "w": 968,
+    "h": 1527,
+    "bbox": [
+      56,
+      9,
+      1024,
+      1536
+    ],
+    "source": "OD2-arm-roll.png"
+  },
+  "OD3": {
+    "file": "cards/OD3.png",
+    "w": 968,
+    "h": 1522,
+    "bbox": [
+      56,
+      14,
+      1024,
+      1536
+    ],
+    "source": "OD3-strut.png"
+  },
+  "OD4": {
+    "file": "cards/OD4.png",
+    "w": 977,
+    "h": 1522,
+    "bbox": [
+      47,
+      14,
+      1024,
+      1536
+    ],
+    "source": "OD4-y-arms.png"
+  },
+  "OD5": {
+    "file": "cards/OD5.png",
+    "w": 941,
+    "h": 1429,
+    "bbox": [
+      83,
+      107,
+      1024,
+      1536
+    ],
+    "source": "OD5-crouch-snap.png"
+  },
+  "OD6": {
+    "file": "cards/OD6.png",
+    "w": 999,
+    "h": 1470,
+    "bbox": [
+      25,
+      66,
+      1024,
+      1536
+    ],
+    "source": "OD6-kick.png"
+  },
+  "OD7": {
+    "file": "cards/OD7.png",
+    "w": 963,
+    "h": 1525,
+    "bbox": [
+      61,
+      11,
+      1024,
+      1536
+    ],
+    "source": "OD7-point-cross.png"
+  },
+  "OD8": {
+    "file": "cards/OD8.png",
+    "w": 951,
+    "h": 1534,
+    "bbox": [
+      73,
+      2,
+      1024,
+      1536
+    ],
+    "source": "OD8-shimmy.png"
   }
 }
