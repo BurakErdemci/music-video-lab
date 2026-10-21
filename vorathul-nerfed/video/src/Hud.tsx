@@ -17,7 +17,8 @@ const clock = (frame: number): string => {
 
 /** DOM overlay outside the canvas: time, section and beat / hit flashes. */
 export const Hud = () => {
-  const frame = useCurrentFrame();
+  // whole frames: the beat/hit sets and the clock are in integer 30 fps frames
+  const frame = Math.floor(useCurrentFrame());
   if (!HUD_ENABLED) return null;
   const beat = litWithin(BEAT_FRAMES, frame);
   const hit = litWithin(HIT_FRAMES, frame);
