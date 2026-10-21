@@ -11,7 +11,12 @@ import { keypoint, screenOf } from '../girls/silhouette.ts';
 import { framingAt } from '../girls/framing.ts';
 import { GRADES, type Grade } from '../grade/grade.ts';
 import { Field } from '../particles/field.tsx';
-import { SetPlate } from '../stage/SetPlate.tsx';
+import { TerminalWorld } from '../worlds/v1.tsx';
+import { lineTokens } from '../lyrics/LyricLayer.tsx';
+import { barPos } from '../timing.ts';
+
+/** The terminal's error bars surge on "failed". */
+const FAIL_T = lineTokens(0)[2]?.start ?? 1.34;
 import { Stage } from '../stage/Stage.tsx';
 import { sec } from '../timing.ts';
 import { Code, codeWordAt } from '../type/forms/Code.tsx';
@@ -56,10 +61,10 @@ export const Speaker = ({ frame }: { frame: number }) => {
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={cam.pose}>
-        <SetPlate t={t} grade={DARK} wallOnly={close} />
+        <TerminalWorld t={t} fail={FAIL_T} />
         <Field t={t} grade={DARK} layer="back" density={0.35} alpha={0.7} hueMix={0.6} />
         {who.map((g) => (
-          <Card key={`${g}-${close}`} id={cardOf(g, close)} t={t} grade={{ ...GRADES.reviewed, rival: '#ff3b3b' }} {...placeOf(g, close)} rimDir={[1, 0.2]} />
+          <Card key={`${g}-${close}`} id={cardOf(g, close)} t={t} grade={{ ...GRADES.reviewed, rival: '#ff3b3b' }} {...placeOf(g, close)} rimDir={[1, 0.2]} light={{ key: '#5fb8ff', keyAmt: 0.35, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.8, amt: 0.35, color: '#ff6a5a', slope: 0.3 }, rim: 1.3 }} />
         ))}
         <Field t={t} grade={DARK} layer="front" density={0.25} alpha={0.6} hueMix={0.6} />
       </Stage>
