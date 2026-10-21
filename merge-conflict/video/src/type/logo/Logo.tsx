@@ -13,7 +13,9 @@ import { seeded } from '../../lib/seeded.ts';
 import { capOf, type Face, familyOf, layout, widthOf } from '../fonts.tsx';
 
 export type LogoDesign = 'A' | 'B' | 'C';
-export interface LogoProps { design: LogoDesign; resolved: boolean; cx: number; cy: number; width: number; beat?: number; id: string }
+/** beat: position inside the current beat (0..1, the shove); beatIndex: the beat number, which re-seeds the
+ *  split edge's diff-line jitter on every beat. */
+export interface LogoProps { design: LogoDesign; resolved: boolean; cx: number; cy: number; width: number; beat?: number; beatIndex?: number; id: string }
 
 const BLUE = '#2f7bff';
 const CYAN = '#7fe3ff';
@@ -116,7 +118,7 @@ const LogoA = ({ resolved, cx, cy, width, beat = 0, id }: LogoProps) => {
 };
 
 // ---- B: split word -----------------------------------------------------------------------------------------
-const LogoB = ({ resolved, cx, cy, width, beat = 0, id }: LogoProps) => {
+const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, id }: LogoProps) => {
   const disco: Face = 'bungee';
   const metal: Face = 'pirata';
   const lines = ['MERGE', 'CONFLICT'];
@@ -128,7 +130,7 @@ const LogoB = ({ resolved, cx, cy, width, beat = 0, id }: LogoProps) => {
     return lines.map((l, i) => ({ text: l, x: cx - widthOf(l, s, face) / 2, y: y0 + i * (capH + gap), s, face }));
   };
   const half = width * 0.55;
-  const r = seeded(`logoB:${Math.floor(beat * 8)}`);
+  const r = seeded(`logoB:${beatIndex}`);
   // the cut: a diagonal from top-right to bottom-left, jittering like a diff line
   const pts: [number, number][] = Array.from({ length: 13 }, (_, k) => {
     const u = k / 12;
