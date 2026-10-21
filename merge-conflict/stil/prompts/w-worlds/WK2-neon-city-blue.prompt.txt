@@ -1,0 +1,13 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./WK2-neon-city-blue.png
+
+Subject: a finished KEY SCENE STYLE FRAME of the music video: A night city street made of giant glowing light-box signs and hanging mirror balls, wet reflective asphalt. The BLUE girl in her disco outfit walks toward the camera down the middle of the street, LIT BY THE SCENE: cyan and magenta neon spill on her sequins, a warm rim light from behind, reflections of her in the wet street.
+
+The FIRST attached image is the approved art style key frame of the music video (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, graphic shapes, rich cinematic light). Paint in exactly this style. Attached image 2 is the official model sheet of the BLUE girl in her DISCO outfit: match her face, hair and outfit EXACTLY.
+
+Composition: cinematic, dramatic depth, the figures fully inside the frame, room in the upper third for big kinetic type. Landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, digits, symbols, signs with writing, logos or watermarks anywhere: every screen, sign, scoreboard and clock face is blank or abstract light.
+- NO halftone, NO grain, NO film noise, NO texture overlay.
+- Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

@@ -1,0 +1,50 @@
+[
+ {
+  "id": "OT2-ignite",
+  "prompt": "stil/prompts/o-transform/OT2-ignite.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/o-keys/out/OT1-crouch.png"
+  ],
+  "out": "stil/prompts/o-transform/out/OT2-ignite.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OT3-half",
+  "prompt": "stil/prompts/o-transform/OT3-half.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/o-keys/out/OT1-crouch.png"
+  ],
+  "out": "stil/prompts/o-transform/out/OT3-half.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OT4-erupt",
+  "prompt": "stil/prompts/o-transform/OT4-erupt.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/o-keys/out/OT1-crouch.png"
+  ],
+  "out": "stil/prompts/o-transform/out/OT4-erupt.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OT5-landing",
+  "prompt": "stil/prompts/o-transform/OT5-landing.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/o-keys/out/OT1-crouch.png"
+  ],
+  "out": "stil/prompts/o-transform/out/OT5-landing.png",
+  "key": "#808080"
+ }
+]

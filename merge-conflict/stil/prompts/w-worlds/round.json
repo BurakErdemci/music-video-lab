@@ -1,0 +1,126 @@
+[
+ {
+  "id": "W01-neon-lightbox-city",
+  "prompt": "stil/prompts/w-worlds/W01-neon-lightbox-city.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W01-neon-lightbox-city.png"
+ },
+ {
+  "id": "W02-disco-club-floor",
+  "prompt": "stil/prompts/w-worlds/W02-disco-club-floor.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W02-disco-club-floor.png"
+ },
+ {
+  "id": "W03-orange-night-alley",
+  "prompt": "stil/prompts/w-worlds/W03-orange-night-alley.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W03-orange-night-alley.png"
+ },
+ {
+  "id": "W04-metal-cathedral",
+  "prompt": "stil/prompts/w-worlds/W04-metal-cathedral.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W04-metal-cathedral.png"
+ },
+ {
+  "id": "W05-burning-server-hall",
+  "prompt": "stil/prompts/w-worlds/W05-burning-server-hall.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W05-burning-server-hall.png"
+ },
+ {
+  "id": "W06-clock-tower-midnight",
+  "prompt": "stil/prompts/w-worlds/W06-clock-tower-midnight.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W06-clock-tower-midnight.png"
+ },
+ {
+  "id": "W07-stadium-scoreboard",
+  "prompt": "stil/prompts/w-worlds/W07-stadium-scoreboard.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W07-stadium-scoreboard.png"
+ },
+ {
+  "id": "W08-stamp-press-factory",
+  "prompt": "stil/prompts/w-worlds/W08-stamp-press-factory.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W08-stamp-press-factory.png"
+ },
+ {
+  "id": "W09-battle-arena",
+  "prompt": "stil/prompts/w-worlds/W09-battle-arena.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W09-battle-arena.png"
+ },
+ {
+  "id": "W10-subway-map-void",
+  "prompt": "stil/prompts/w-worlds/W10-subway-map-void.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W10-subway-map-void.png"
+ },
+ {
+  "id": "W11-amp-wall-fire",
+  "prompt": "stil/prompts/w-worlds/W11-amp-wall-fire.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W11-amp-wall-fire.png"
+ },
+ {
+  "id": "W12-rooftop-after-hours",
+  "prompt": "stil/prompts/w-worlds/W12-rooftop-after-hours.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/W12-rooftop-after-hours.png"
+ },
+ {
+  "id": "WK1-arena-duel",
+  "prompt": "stil/prompts/w-worlds/WK1-arena-duel.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/WK1-arena-duel.png"
+ },
+ {
+  "id": "WK2-neon-city-blue",
+  "prompt": "stil/prompts/w-worlds/WK2-neon-city-blue.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/WK2-neon-city-blue.png"
+ },
+ {
+  "id": "WK3-server-fire-orange",
+  "prompt": "stil/prompts/w-worlds/WK3-server-fire-orange.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png"
+  ],
+  "out": "stil/prompts/w-worlds/out/WK3-server-fire-orange.png"
+ }
+]

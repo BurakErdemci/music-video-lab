@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./W08-stamp-press-factory.png
+
+Subject: DISCO-INDUSTRIAL. A chrome factory hall full of giant stamping presses and conveyor belts, everything mirror-polished and lit by neon, blue and silver with pink sparks.
+
+The attached image is the approved art style key frame of the music video (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, graphic shapes, rich cinematic light). Paint in exactly this style.
+
+Composition: an EMPTY environment plate for a music video, NO people, NO characters, NO figures, NO silhouettes. Strong depth with a clear foreground, middle ground and background, a clear open floor area in the lower middle where a character will be composited later, and room in the upper third for big kinetic type. Landscape 1536x1024.
+
+- ABSOLUTELY NO text, letters, numbers, digits, symbols, signs with writing, logos or watermarks anywhere: every screen, sign, scoreboard and clock face is blank or abstract light.
+- NO halftone, NO grain, NO film noise, NO texture overlay.
+
+After copying, print the output path and pixel size.
