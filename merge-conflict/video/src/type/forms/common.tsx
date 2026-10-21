@@ -3,7 +3,8 @@
 // has a key word, the biggest and most saturated; colour comes from the singer and changes hue on the beats.
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { lineTokens, type Token } from '../../lyrics/LyricLayer.tsx';
-import { metalFor } from '../../metal/metal.ts';
+import { familyFor } from '../../girls/costume.ts';
+import { metalAt } from '../../metal/metal.ts';
 import { beatIndexAt } from '../../timing.ts';
 import type { Face } from '../fonts.tsx';
 
@@ -32,8 +33,14 @@ export const KEY: Record<Singer, Hex> = { O: '#ff5a00', B: '#00b4ff', both: '#ff
 /** The metal family (black, red and steel) the palette slides into as the metal amount rises. */
 export const METAL: readonly Hex[] = ['#e01b1b', '#c8ced6', '#ff4a1a', '#9a1010', '#eef1f4'];
 export const METAL_KEY: Hex = '#ff1e1e';
-/** The metal amount a form's colours and faces follow: its singer's (metal/metal.ts). */
-export const metalOf = (singer: Singer, t: number): number => metalFor(t, singer);
+/** How far a form's colours and faces sit in the metal family (scene-map.md "The costume belongs to the girl"):
+ *  a solo line follows its singer's costume (metal 1, disco or plain 0, mix by the set), a duet line follows
+ *  the set's metal amount. */
+export const metalOf = (singer: Singer, t: number): number => {
+  const set = metalAt(t);
+  if (singer === 'both') return set;
+  return familyFor(singer, t, set) === 'metal' ? 1 : 0;
+};
 /** Rounded neon faces give way to blackletter and jagged faces once the metal amount passes this. */
 export const METAL_FACE_AT = 0.55;
 const FACE_SWAP: Partial<Record<Face, Face>> = { display: 'metalmania', bebas: 'pirata', righteous: 'fraktur', bungee: 'metalmania', shrikhand: 'fraktur', monoton: 'metalmania' };

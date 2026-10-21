@@ -2,21 +2,17 @@
 // measured per-bar heaviness (`bars[].heavy`, 0-100), smoothed across bar boundaries, with Burak's ear
 // overriding the measurement where listed. It drives the palette (candy -> black, red and steel), the
 // particles (confetti -> confetti + embers + sparks) and the type (rounded neon -> blackletter / jagged).
-// The girls' metal-form state uses a hysteresis on the bar heaviness: enter at 65, leave below 55, and stay at
-// least 2 bars in a state. Pure, closed form, erasable TypeScript (node tests it in tools/gridcheck.mjs).
+// It does NOT swap the girls' costumes: the costume belongs to the girl (girls/costume.ts, Burak 2026-10-21).
+// Pure, closed form, erasable TypeScript (node tests it in tools/gridcheck.mjs).
 import { barLengthAt, bars, f, sections, type TimingBar } from '../timing.ts';
 
 export type SingerKey = 'B' | 'O' | 'both';
 
-/** Ear overrides: where Burak's ear overrides the heaviness proxy. Each forces the metal amount and the
- *  metal-form state for the whole section; after the section the amount slides back to the measured curve
- *  over one (local) bar, and the girls swap back on the next section's downbeat. */
+/** Ear overrides: where Burak's ear overrides the heaviness proxy. Each forces the metal amount for the whole
+ *  section; after the section the amount slides back to the measured curve over one (local) bar. */
 export const EAR_OVERRIDES: readonly { section: string; metal: number; why: string }[] = [
   { section: 'intro_groove', metal: 1, why: 'Burak 2026-10-21: the intro up to the first lyric is hard metal (the proxy scored it 61, mid)' },
 ];
-export const ENTER = 65;
-export const LEAVE = 55;
-export const MIN_BARS = 2;
 /** One "step" of the per-singer bias: the blue (sweet) lines sit a step toward pop, the orange toward metal. */
 export const SINGER_STEP = 0.15;
 
@@ -74,40 +70,3 @@ export const metalFor = (t: number, singer: SingerKey): number => {
   if (o) return o.metal; // the ear override holds for both girls
   return clamp01(metalAt(t) + (singer === 'O' ? SINGER_STEP : singer === 'B' ? -SINGER_STEP : 0));
 };
-
-// ---- metal-form state (per bar, hysteresis, computed once at load) -----------------------------------------
-const forced = (b: TimingBar): boolean | null => {
-  const o = overrideAt((b.start + b.end) / 2);
-  return o ? o.metal >= 0.5 : null;
-};
-const STATE: boolean[] = (() => {
-  const out: boolean[] = [];
-  let on = false;
-  let held = MIN_BARS;
-  for (const b of bars) {
-    const f = forced(b);
-    let want: boolean = on;
-    if (f !== null) want = f;
-    else if (!on && b.heavy >= ENTER) want = true;
-    else if (on && b.heavy < LEAVE) want = false;
-    // a forced state switches at once (the ear rules); a measured one waits out the minimum hold
-    const prevForced = out.length ? forced(bars[out.length - 1] as TimingBar) !== null : false;
-    if (want !== on && (f !== null || prevForced || held >= MIN_BARS)) {
-      on = want;
-      held = 0;
-    }
-    held++;
-    out.push(on);
-  }
-  return out;
-})();
-const barIndexAt = (t: number): number => {
-  let i = 0;
-  while (i < bars.length - 1 && f((bars[i + 1] as TimingBar).start) <= f(t)) i++;
-  return i;
-};
-/** Are the girls in their metal forms in the bar holding t. */
-export const metalFormAt = (t: number): boolean => STATE[barIndexAt(t)] as boolean;
-/** The metal-form switches: [time, on] at each bar where the state changes. */
-export const metalSwitches = (): { t: number; on: boolean }[] =>
-  STATE.flatMap((s, i) => (i && s !== STATE[i - 1] ? [{ t: (bars[i] as TimingBar).start, on: s }] : i === 0 && s ? [{ t: (bars[0] as TimingBar).start, on: s }] : []));

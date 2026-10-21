@@ -97,19 +97,21 @@ if (take === 'take-v4') {
   const groove = T.sections.find((x) => x.name === 'intro_groove');
   const verse = T.sections.find((x) => x.name === 'verse1_sweet');
   let all1 = true;
-  for (let tt = groove.start + 0.01; tt < groove.end - 0.02; tt += 0.25) if (M.metalAt(tt) !== 1 || !M.metalFormAt(tt)) all1 = false;
-  check('ear override: intro_groove is metal 1 with the metal forms on, whatever its measured 61', all1);
+  for (let tt = groove.start + 0.01; tt < groove.end - 0.02; tt += 0.25) if (M.metalAt(tt) !== 1) all1 = false;
+  check('ear override: intro_groove sets the metal amount to 1, whatever its measured 61', all1);
   const after = M.metalAt(verse.start + 1.5 * grid.gridLenAt(T.downbeats, verse.start));
   check('after the groove the amount slides back to the measured curve within ~1 bar', after < 0.6, after.toFixed(2));
-  check('the metal forms are off from the verse-1 downbeat', !M.metalFormAt(verse.start + 0.01));
   let smooth = 0;
   for (let tt = 20; tt < T.duration - 1; tt += 1 / 60) smooth = Math.max(smooth, Math.abs(M.metalAt(tt + 1 / 60) - M.metalAt(tt)));
   check('outside the overrides the amount never jumps more than 0.02 per frame', smooth <= 0.02, smooth.toFixed(4));
-  const sw = M.metalSwitches();
-  const holds = sw.slice(1).map((s, i) => grid.gridPos(T.downbeats, s.t) - grid.gridPos(T.downbeats, sw[i].t));
-  check('every metal-form state holds at least 2 bars', holds.every((h) => h >= 2 - 1e-3), `min ${Math.min(...holds).toFixed(4)} bars, ${sw.length} switches`);
-  const entered = sw.filter((s) => s.on).every((s) => { const b = T.bars.find((x) => Math.abs(x.start - s.t) < 1e-6); return (b && b.heavy >= 65) || Math.abs(s.t - groove.start) < 1 / 60; });
-  check('the forms switch on only at heavy >= 65 (or by the ear override)', entered);
+  // the costume belongs to the girl (girls/costume.ts), not to the bar heaviness
+  const C = await import(pathToFileURL(path.join(ROOT, 'video/src/girls/costume.ts')).href);
+  const orangeWord = T.words.filter((w) => w.w.toLowerCase().replace(/[^a-z]/g, '') === 'orange')[3];
+  check('blue is disco for the whole 0-20 s proof', [0.5, 4.5, 10, 16.4, 19.9].every((x) => C.costumeAt('B', x).form === 'disco'));
+  check('orange is not shown in the intro, a metal glimpse in the groove, disco in verse 1', C.costumeAt('O', 2).hidden === true && C.costumeAt('O', 10).form === 'metal' && C.costumeAt('O', 10).glimpse === true && C.costumeAt('O', 20).form === 'disco');
+  check('orange turns metal on the measured "ORANGE!" shout', C.costumeAt('O', orangeWord.s).form === 'metal' && C.costumeAt('O', orangeWord.s - 0.02).form === 'disco', `${orangeWord.w} @ ${orangeWord.s} s`);
+  check('the costume does not follow the heaviness: orange stays disco through a heavy bar before 40.58 s', (() => { const hb = T.bars.find((x) => x.start > 16.33 && x.end < orangeWord.s && x.heavy >= 65); return !hb || C.costumeAt('O', hb.start + 0.1).form === 'disco'; })());
+  check('type family: a blue solo line in verse 1 is pop, the groove (set metal 1) is metal for a duet', C.familyFor('B', 18, M.metalAt(18)) === 'pop' && C.familyFor('both', 10, M.metalAt(10)) === 'metal');
   check('the per-singer bias: blue a step toward pop, orange toward metal', M.metalFor(60, 'B') < M.metalAt(60) && M.metalFor(60, 'O') > M.metalAt(60));
 }
 
