@@ -9,7 +9,7 @@ import { HOME, HOME_Z, type CameraPose, shifted } from '../camera/camera.ts';
 import type { CardProps, Placement } from '../cards/Card.tsx';
 import { type CardDraw, poseTrack, type SmearPlan, smearPlan, smearSpan } from '../cards/smear.tsx';
 import { type Hex, clamp01, lerp, outQuad } from '../lib/ease.ts';
-import { beatPos, beats, downbeat, downbeats, type TimingLine, lyricLine } from '../timing.ts';
+import { beatPos, beats, downbeat, type TimingLine, lyricLine } from '../timing.ts';
 import type { Singer } from '../type/forms/common.tsx';
 
 // ---- singer --------------------------------------------------------------------------------------------
@@ -46,25 +46,8 @@ export const focusAt = (plan: readonly FocusKey[], t: number): number => {
 export const focusLook = (mine: number) => ({ scale: lerp(0.62, 1.18, mine), soft: clamp01(1 - mine * 1.25), lit: lerp(0.65, 1.1, mine) });
 
 // ---- framing presets ----------------------------------------------------------------------------------
-export type FramingKind = 'stage' | 'face' | 'tiny' | 'low' | 'clones' | 'split';
-export interface FramingCue { t: number; kind: FramingKind }
-/** Bar length (seconds) at t, from the measured downbeats. */
-export const barAt = (t: number): number => {
-  let i = 0;
-  while (i < downbeats.length - 2 && (downbeats[i + 1] as number) <= t) i++;
-  return downbeat(i + 1) - downbeat(i);
-};
-/** A framing plan; throws when any framing holds longer than 2 bars before `end`. */
-export const framingPlan = (cues: readonly FramingCue[], end: number): FramingCue[] => {
-  cues.forEach((c, i) => {
-    const until = cues[i + 1]?.t ?? end;
-    const limit = 2 * barAt(c.t) + 1 / 60;
-    if (until - c.t > limit) throw new Error(`framing "${c.kind}" at ${c.t.toFixed(2)} s holds ${(until - c.t).toFixed(2)} s, longer than 2 bars (${limit.toFixed(2)} s)`);
-    if (i && c.kind === (cues[i - 1] as FramingCue).kind) throw new Error(`framing "${c.kind}" at ${c.t.toFixed(2)} s repeats the previous framing`);
-  });
-  return [...cues];
-};
-export const framingAt = (plan: readonly FramingCue[], t: number): FramingKind => [...plan].reverse().find((c) => t >= c.t)?.kind ?? 'stage';
+export { barAt, type FramingCue, type FramingKind, framingAt, framingPlan } from './framing.ts';
+import type { FramingKind } from './framing.ts';
 
 export interface Girl { full: string; close: string; color: Hex }
 type Draw = Omit<CardProps, 'grade'> & { key: string };
