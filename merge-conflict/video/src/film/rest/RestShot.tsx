@@ -256,13 +256,13 @@ export const RestShot = ({ frame }: { frame: number }) => {
         {/* the moves (whip, orbit, dolly zoom) swing past the opening frame, so the plate overflows more */}
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={1.75} />}
         {world}
-        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.7} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
+        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.7} hueMix={0.5} metal={t >= SCREAM.start ? 1 : 0} dust={t < SCREAM.start} bursts={bursts} />}
         {/* GIT!: she stands on a giant glowing ENTER key that pulses with every kick */}
-        {KEY_SHOTS.includes(shot.id) && orangeP?.at && <GlowBox position={[orangeP.at.x, FLOOR_Y + 0.22, (orangeP.at.z ?? 0) + 0.4]} size={[3.8, 0.44, 3.0]} color="#ff3014" edge={1} fill={0.45 + 0.4 * kickW(t)} />}
+        {KEY_SHOTS.includes(shot.id) && orangeP?.at && <GlowBox position={[orangeP.at.x, FLOOR_Y + 0.22, orangeP.at.z ?? 0]} size={[3.8, 0.44, 3.0]} color="#ff3014" edge={1} fill={0.45 + 0.4 * kickW(t)} />}
         {blueFig}
         {figure('O', orangeP)}
         {turn.active && <Dissolve plan={BLUE_TURN} t={t} grade={BLUE_METAL} />}
-        {!quiet && <Field t={t} grade={BLUE_DISCO} layer="front" density={0.5} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
+        {!quiet && <Field t={t} grade={BLUE_DISCO} layer="front" density={0.5} hueMix={0.5} metal={t >= SCREAM.start ? 1 : 0} dust={t < SCREAM.start} bursts={bursts} />}
       </Stage>
       <Svg>
         <FormDefs />
