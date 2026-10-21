@@ -160,8 +160,37 @@ pivot_src = {}  # slot -> pivot in source coordinates (its own sheet frame, afte
 MSZ = M_IMG.size
 
 
-def m_part(slot, part, axis_to=None):
-    cut = from_sheet(M_IMG, poly_mask(MSZ, S.POLY[part]), S.PIVOT[part], axis_to)
+def strip_legs(img):
+    """The master paints both legs in front of the cape lining; cut into cape_lower they doubled the rig's own leg cards
+    (four legs whenever a leg rotated or the cape swung). Paint the legs out with lining and open the hem below the knees."""
+    arr = np.asarray(img).astype(float)
+    legs = Image.new("L", img.size, 0)
+    d = ImageDraw.Draw(legs)
+    d.polygon(S.POLY["leg"], fill=255)
+    d.polygon([(2 * S.ROOT_X - x, y) for x, y in S.POLY["leg"]], fill=255)
+    hard = np.asarray(legs.filter(ImageFilter.MaxFilter(13))) > 0
+    soft = np.asarray(Image.fromarray((hard * 255).astype(np.uint8)).filter(ImageFilter.GaussianBlur(2))).astype(float)[..., None] / 255
+    # lining tone and grain from the strip between the shins (below the tabard, above the hem)
+    ref = arr[1050:1250, 460:565]
+    ref = ref[ref[..., 3] > 250][:, :3]
+    mean, std = ref.mean(0), ref.std(0)
+    rng = np.random.default_rng(7)
+    h, w = arr.shape[:2]
+    grain = np.asarray(Image.fromarray(rng.normal(128, 40, (h, w)).clip(0, 255).astype(np.uint8)).resize((w // 3, h // 24)).resize((w, h), Image.BICUBIC)).astype(float)
+    grain = (grain - grain.mean()) / grain.std()
+    lining = np.clip(mean + grain[..., None] * std, 0, 255)
+    rgb = arr[..., :3] * (1 - soft) + lining * soft
+    # ragged hem: the legs' place opens below a tattered line at the lining's own hem height
+    kx = np.arange(0, w + 14, 14)
+    ky = np.where(np.arange(len(kx)) % 2, 1300 + 110 * rng.random(len(kx)), 1270 + 20 * rng.random(len(kx)))  # odd = tip
+    hem = np.interp(np.arange(w), kx, ky)
+    below = np.arange(h)[:, None] > hem[None, :]
+    alpha = np.where(hard & below, 0, arr[..., 3])
+    return Image.fromarray(np.dstack([rgb, alpha]).astype(np.uint8))
+
+
+def m_part(slot, part, axis_to=None, src=None):
+    cut = from_sheet(src or M_IMG, poly_mask(MSZ, S.POLY[part]), S.PIVOT[part], axis_to)
     slots[slot] = cut
     pivot_src[slot] = S.PIVOT[part]
     return cut
@@ -176,7 +205,7 @@ m_part("upper_arm", "upper_arm", axis_to=(237, 590))
 m_part("forearm", "forearm", axis_to=(205, 722))
 m_part("hand_open", "hand_open", axis_to=(200, 830))
 m_part("cape_upper", "cape_upper")
-m_part("cape_lower", "cape_lower")
+m_part("cape_lower", "cape_lower", src=strip_legs(M_IMG))
 head = m_part("helm_closed", "head")
 crown = m_part("crown_full", "crown")
 
