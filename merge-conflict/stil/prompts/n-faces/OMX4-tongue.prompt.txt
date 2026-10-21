@@ -1,0 +1,16 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./OMX4-tongue.png
+
+Subject: the ORANGE girl of the attached METAL-FORM model sheet. The THIRD attached image is the BASE FRAME of a frame-by-frame expression animation. Reproduce the third image EXACTLY: the same framing, scale and position in the canvas, the same head angle and shoulders, the same hair shape, outfit, accessories, lighting and background. Change ONLY the face to: a wild grin with the tongue stuck out, eyes wide, rock-star style. Only the eyes, brows and mouth change; the head may tilt by a few degrees at most. It must cut against the base frame as the next drawing of the same shot.
+
+She wears EXACTLY the metal outfit of the model sheet: the sleeveless black leather battle vest with silver spikes and orange flame patterns over the black ripped crop top, studded fingerless gloves and spiked wrist cuffs, the heavy studded belt with chains, tight black leather trousers whose flame pattern covers the whole flared lower leg, huge black spiked platform combat boots, the dark scratch-like black-and-orange face paint across the eyes, silver STAR-shaped earrings, the huge wild feathery flame-like orange mane, mostly loose, with only a few thin braids with small chains (no thick braids, no metal cuff beads).
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is the official METAL-FORM model sheet of this character: match her face, hair, outfit, accessories and proportions EXACTLY, every fixed feature listed on the sheet. The THIRD attached image is the base frame to match.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No scenery, no particles, no glow. Medium close-up: head, shoulders and upper chest, the head in the upper half, facing the viewer in a slight three-quarter turn. ALL of her hair, the whole mane or the whole ponytail, stays INSIDE the left, right and top edges with a clear grey margin of at least 60 px; zoom out as far as needed for that. Only the chest runs off the bottom edge. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

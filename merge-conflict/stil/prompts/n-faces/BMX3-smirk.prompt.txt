@@ -1,0 +1,16 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./BMX3-smirk.png
+
+Subject: the BLUE girl of the attached METAL-FORM model sheet. The THIRD attached image is the BASE FRAME of a frame-by-frame expression animation. Reproduce the third image EXACTLY: the same framing, scale and position in the canvas, the same head angle and shoulders, the same hair shape, outfit, accessories, lighting and background. Change ONLY the face to: a cold thin smirk at one corner of the mouth. Only the eyes, brows and mouth change; the head may tilt by a few degrees at most. It must cut against the base frame as the next drawing of the same shot.
+
+She wears EXACTLY the metal outfit of the model sheet: the fitted black leather long coat with steel plate shoulders, chain-mail panels, high studded collar and ice-blue glowing seams, black gloves with steel knuckle plates, the chain belt with blade charms, tight black leather trousers flaring into steel-blue, huge black platform boots with steel toe caps and spikes, the thin ice-blue face paint lines, the very long blue ponytail bound with steel rings and the spiked steel crown-clip.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is the official METAL-FORM model sheet of this character: match her face, hair, outfit, accessories and proportions EXACTLY, every fixed feature listed on the sheet. The THIRD attached image is the base frame to match.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No scenery, no particles, no glow. Medium close-up: head, shoulders and upper chest, the head in the upper half, facing the viewer in a slight three-quarter turn. ALL of her hair, the whole mane or the whole ponytail, stays INSIDE the left, right and top edges with a clear grey margin of at least 60 px; zoom out as far as needed for that. Only the chest runs off the bottom edge. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks.
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.
