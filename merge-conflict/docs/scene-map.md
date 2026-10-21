@@ -293,3 +293,43 @@ Ours (keep our two families: pop/blue against metal/orange; the logo B is the re
 | "Build failed. Syntax error on line forty-two." | the red build log pointing at line 42 |
 
 Title objects for logo B (recurring like LGTM's boxes): disco floor tiles and a light-box sign (pop), amp stacks and a stage banner (metal).
+
+## Elite pass (Burak, 2026-10-21, after the 64 s proof)
+
+Burak: "the background is always the same, so it is very static and plain; the git interfaces are weak; the effects and transitions feel like a few PNG pictures with some text and animation singing. We need crazier, more elite scenes, transitions and effects."
+
+Measured gap (vault notes Nothing_Went_Foom, Arcane_Enemy, Arcane_Ma_Meilleure_Ennemie):
+- NWF has 70 scene changes in 300 s (median scene 3.3 s). Most are a particle dissolve that rebuilds the next scene. Each verse has its own art language; the chorus returns to one set. 94 % of frames move.
+- Arcane lights the characters with the scene: two-colour split light, rim light, confetti acting as light sources, light swelling rather than sliding.
+- Our 64 s proof has 4-5 sets, git objects as small signs in front of one plate, and unlit cut-out girls.
+
+Rules from here:
+1. **Scene cadence:** a new scene (set + framing + light) every 2-4 bars, median about 3 s. The 64 s proof needs about 18-22 distinct scenes, not 5.
+2. **The git object IS the world, not a sign in front of it.** It is built in disco or metal material and you can stand in it, fly along it or crash through it. Examples:
+   - `git branch` is a neon subway map the camera rides;
+   - line 42 is a giant glowing code line she stands on like a runway;
+   - APPROVED is a wall of stamping presses;
+   - "pushed at midnight" is a clock tower striking 00:00;
+   - `git log --graph` is branch tubes as 3D rails;
+   - 300 commits is a stadium scoreboard;
+   - the Accept buttons are a giant dance-arcade platform;
+   - "the build is on fire" is a burning server hall;
+   - "equals" is the walls of the stage closing in.
+3. **Transitions are events, never plain cuts:**
+   - the whole scene dissolves into particles and rebuilds the next one;
+   - a tunnel dive through a glyph;
+   - glass shatter on the metal hits;
+   - a mirror-ball reflection sweep (disco);
+   - light-speed streaks;
+   - a paint or ink smear (Arcane);
+   - a diff wipe where lines delete and insert;
+   - a kaleidoscope mirror in the chorus.
+   Continuity is carried by a persistent layer (the particle field, the type, the light), as in NWF.
+4. **Effects in the one canvas:** bloom, volumetric beams, lasers, smoke volumes, sparks and embers, mirror-ball dots sweeping over everything including the girls, and confetti coloured by the light. Still NO full-frame filter (halftone, grain, broken TV): a standing rule.
+5. **The girls are lit by the scene:** two-colour split light, a rim on the side away from the key, spill from beams and signs, light sweeps crossing them. Foreground occluders and depth of field. Expression animation from the n-faces sequences, and the mouth opens on sung words. A girl crossing between scenes dissolves into particles.
+6. **Art language per section, chorus returns to one arena:**
+   - V1: a neon light-box city (disco);
+   - V2: orange's night world (spray paint and neon);
+   - pre-chorus: a strobe split;
+   - chorus: the battle arena, the recurring set.
+7. **Style frames before code for the new worlds** (video-yapim lesson): painted world plates and key scene frames from Codex, approved by Burak, then built.
