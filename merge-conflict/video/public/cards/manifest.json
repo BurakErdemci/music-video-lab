@@ -1246,5 +1246,173 @@
       1498
     ],
     "source": "OX5-shout.png"
+  },
+  "PB1": {
+    "file": "cards/PB1.png",
+    "w": 911,
+    "h": 1508,
+    "bbox": [
+      58,
+      11,
+      969,
+      1519
+    ],
+    "source": "PB1-accept-both.png"
+  },
+  "PB2": {
+    "file": "cards/PB2.png",
+    "w": 904,
+    "h": 1465,
+    "bbox": [
+      64,
+      32,
+      968,
+      1497
+    ],
+    "source": "PB2-push-it.png"
+  },
+  "PB3": {
+    "file": "cards/PB3.png",
+    "w": 757,
+    "h": 1506,
+    "bbox": [
+      107,
+      1,
+      864,
+      1507
+    ],
+    "source": "PB3-reach.png"
+  },
+  "PB4": {
+    "file": "cards/PB4.png",
+    "w": 890,
+    "h": 1459,
+    "bbox": [
+      31,
+      3,
+      921,
+      1462
+    ],
+    "source": "PB4-celebrate.png"
+  },
+  "PBX1": {
+    "file": "cards/PBX1.png",
+    "w": 1024,
+    "h": 1536,
+    "bbox": [
+      0,
+      0,
+      1024,
+      1536
+    ],
+    "source": "PBX1-base.png"
+  },
+  "PBX2": {
+    "file": "cards/PBX2.png",
+    "w": 1024,
+    "h": 1536,
+    "bbox": [
+      0,
+      0,
+      1024,
+      1536
+    ],
+    "source": "PBX2-sing.png"
+  },
+  "PBX3": {
+    "file": "cards/PBX3.png",
+    "w": 1024,
+    "h": 1536,
+    "bbox": [
+      0,
+      0,
+      1024,
+      1536
+    ],
+    "source": "PBX3-laugh.png"
+  },
+  "PO1": {
+    "file": "cards/PO1.png",
+    "w": 930,
+    "h": 1501,
+    "bbox": [
+      50,
+      7,
+      980,
+      1508
+    ],
+    "source": "PO1-accept-both.png"
+  },
+  "PO2": {
+    "file": "cards/PO2.png",
+    "w": 932,
+    "h": 1505,
+    "bbox": [
+      59,
+      10,
+      991,
+      1515
+    ],
+    "source": "PO2-push-it.png"
+  },
+  "PO3": {
+    "file": "cards/PO3.png",
+    "w": 901,
+    "h": 1495,
+    "bbox": [
+      64,
+      7,
+      965,
+      1502
+    ],
+    "source": "PO3-reach.png"
+  },
+  "PO4": {
+    "file": "cards/PO4.png",
+    "w": 798,
+    "h": 1479,
+    "bbox": [
+      73,
+      8,
+      871,
+      1487
+    ],
+    "source": "PO4-celebrate.png"
+  },
+  "POX1": {
+    "file": "cards/POX1.png",
+    "w": 1024,
+    "h": 1534,
+    "bbox": [
+      0,
+      2,
+      1024,
+      1536
+    ],
+    "source": "POX1-base.png"
+  },
+  "POX2": {
+    "file": "cards/POX2.png",
+    "w": 1024,
+    "h": 1535,
+    "bbox": [
+      0,
+      1,
+      1024,
+      1536
+    ],
+    "source": "POX2-sing.png"
+  },
+  "POX3": {
+    "file": "cards/POX3.png",
+    "w": 1024,
+    "h": 1534,
+    "bbox": [
+      0,
+      2,
+      1024,
+      1536
+    ],
+    "source": "POX3-laugh.png"
   }
 }
