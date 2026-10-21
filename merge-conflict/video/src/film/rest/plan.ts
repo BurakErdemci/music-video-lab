@@ -11,7 +11,7 @@ import { faceSized } from '../framing.ts';
 
 export type RestScene =
   | 'rails' | 'subway' | 'squash' | 'blame' | 'pipeline' | 'callgrid'
-  | 'whitespace' | 'nametag' | 'lasercase' | 'scream' | 'cathedral' | 'forge' | 'warning' | 'pushface' | 'whisper' | 'tunnel' | 'arena' | 'duel'
+  | 'whitespace' | 'nametag' | 'lasercase' | 'scream' | 'cathedral' | 'forge' | 'pushface' | 'whisper' | 'tunnel' | 'arena' | 'duel'
   | 'faceO' | 'faceB' | 'panel';
 export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
 /** How the camera travels across a shot (round 7b, "No cliff after the chorus": a camera move on every line). */
@@ -54,16 +54,27 @@ const METAL: MShot[] = [
   // forehead to forehead (QK2)
   { id: 'scream-b', t: db(SCREAM.start + 1.3), scene: 'panel', panel: 'QK2', cam: 'hero', into: 'shatter', move: 'push', B: null, O: null },
   { id: 'scream-split', t: bt(SCREAM.start + 1.98), scene: 'scream', cam: 'close', into: 'shock', move: 'orbit', B: faceAt('BMX4', -4.2), O: faceAt('OMX2', 4.2, true) },
-  { id: 'push-hall', t: PUSH.start, scene: 'cathedral', cam: 'hero', into: 'tunnel', move: 'whip', B: null, O: ['OM4', full(0, 5.2)] },
-  { id: 'push-git', t: tk(45, 0), scene: 'cathedral', cam: 'low', into: 'shock', move: 'dollyzoom', O: ['OF1', full(0, 5.4)] },
-  { id: 'push-snarl', t: db(tk(45, 0) + 0.4), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'push', O: faceC('OMX2', true) },
-  { id: 'push-orbit', t: bt(tk(45, 0) + 1.1), scene: 'cathedral', cam: 'wide', into: 'shock', move: 'orbit', O: ['OF1', full(0, 5.4)] },
-  { id: 'push-warning', t: db(tk(45, 0) + 1.6), scene: 'warning', cam: 'hero', into: 'diff', move: 'push', O: null },
-  { id: 'push-forge', t: bt(tk(45, 0) + 2.6), scene: 'forge', cam: 'low', into: 'streaks', move: 'orbit', O: ['OF2', { x: 2.4, feet: -1.6, height: 5.2, z: 0 }] },
-  { id: 'push-sneer', t: db(tk(45, 0) + 3.2), scene: 'faceO', cam: 'hero', into: 'shock', move: 'dollyzoom', O: faceC('OMX5', true) },
-  { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'low', into: 'shatter', move: 'whip', B: ['BF1', full(-4.0, 5.0)], O: ['OF3', full(2.4, 5.0)] },
-  { id: 'push-impact', t: bt(tk(46, 0) + 0.28), scene: 'panel', panel: 'QK1', cam: 'hero', into: 'shock', move: 'push', B: null, O: null },
-  { id: 'push-force', t: tk(47, 0), scene: 'pushface', cam: 'hero', into: 'shock', move: 'push', O: ['OF4', full(0.4, 6.0)] },
+  // GIT! PUSH! FORCE! (round 7c storyboard, scene-map.md): orange powers up and the wave throws blue back. Every
+  // subject card fills >= 60 % of the frame height, the type stands beside her, the command is a corner HUD.
+  // 1. the set-up: a low two-shot, orange gathering power on the left, blue (metal) bracing on the right
+  { id: 'push-setup', t: PUSH.start, scene: 'forge', cam: 'hero', into: 'tunnel', move: 'whip', B: ['BS2', { x: 3.4, height: 5.6, flip: true, z: -1.2 }], O: ['OF1', full(-2.4, 6.2)] },
+  // 2. GIT!: the punch and shake on her roar, GIT! slammed beside her
+  { id: 'push-git', t: tk(45, 0), scene: 'forge', cam: 'low', into: 'shock', move: 'dollyzoom', B: null, O: ['OF1', full(2.0, 6.6)] },
+  // 3. the build: the charge grows (the HUD types the command), blue sees it coming, orange leaps, the camera
+  //    tilts up after her; a sneer on the anticipation, blue braces
+  { id: 'push-charge', t: db(tk(45, 0) + 0.6), scene: 'cathedral', cam: 'hero', into: 'fire', move: 'orbit', O: ['OF1', full(0, 6.4)] },
+  { id: 'push-sees', t: bt(tk(45, 0) + 1.33), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'push', B: faceC('BMX1'), O: null },
+  { id: 'push-leap', t: db(tk(45, 0) + 1.95), scene: 'forge', cam: 'low', into: 'fire', move: 'push', B: null, O: ['OF2', { x: 1.0, feet: -1.8, height: 6.2, z: 0 }] },
+  { id: 'push-leap-2', t: bt(tk(45, 0) + 2.65), scene: 'forge', cam: 'reverse', into: 'shock', move: 'orbit', O: ['OF2', { x: -0.8, feet: -1.2, height: 6.0, z: 0, flip: true }] },
+  { id: 'push-sneer', t: bt(tk(45, 0) + 3.0), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', O: faceC('OMX5', true) },
+  { id: 'push-brace', t: bt(tk(45, 0) + 3.33), scene: 'faceB', cam: 'hero', into: 'shock', move: 'push', B: faceC('BMX4'), O: null },
+  // 4. PUSH!: she smashes down (an impact frame, the floor ring), then the painting, uncovered and shaken
+  { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: null, O: ['OF3', full(1.4, 6.6)] },
+  { id: 'push-impact', t: tk(46, 0) + 0.2, scene: 'panel', panel: 'QK1', cam: 'hero', into: 'shock', move: 'push', B: null, O: null },
+  // 5. the wave hits: blue is thrown back across the frame with speed streaks and debris
+  { id: 'push-blown', t: bt(tk(46, 0) + 0.3), scene: 'forge', cam: 'hero', into: 'tear', B: ['BF1', { x: 0, height: 6.2, z: 0 }], O: null },
+  // 6. FORCE!: finger to the sky from a low angle, FORCE! beside her
+  { id: 'push-force', t: tk(47, 0), scene: 'pushface', cam: 'low', into: 'shock', move: 'orbit', B: null, O: ['OF4', full(2.2, 6.6)] },
   // the whisper: the quietest frame of the clip, still
   { id: 'whisper', t: WHISPER.start, scene: 'whisper', cam: 'hero', into: 'dissolve', B: ['BQ3', full(-1, 5.0)], O: null },
   { id: 'whisper-wouldnt', t: tk(48, 1), scene: 'whisper', cam: 'close', into: 'shock', B: ['BMX5', { x: -1.0, feet: -5.4, height: 11, z: 0 }] },

@@ -20,21 +20,20 @@ import { FLOOR_Y } from '../../stage/floor.ts';
 import { barPos, sec, sectionNamed } from '../../timing.ts';
 import { clipKind, SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
-import { familyOf } from '../../type/fonts.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
 import { GlowBox } from '../../worlds/kit/index.ts';
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
 import { PlateLayer } from '../../worlds/plate.tsx';
-import { SUBWAY_CAMERA, SubwayWorld, TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
+import { SUBWAY_CAMERA, SubwayWorld } from '../../worlds/v1.tsx';
 import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
 import { BLAME_CAMERA, BLAME_GUTTERS, BlameWorld, CALLGRID_CAMERA, CallGridWorld, COUNTDOWN_FRAME, PIPELINE_CAMERA, PipelineWorld, SQUASH_CAMERA, SquashWorld } from '../../worlds/v3.tsx';
 import { CASE_LINE, GUILTY_TAG, LASERCASE_CAMERA, LaserCaseWorld, NAMETAG_CAMERA, NameTagWorld, WHISPER_CAMERA, WhisperWorld, WHITESPACE_CAMERA, WhitespaceWorld } from '../../worlds/v4.tsx';
 import { Arena, CYAN, InsertWorld, RED, SplitWorld } from '../chorus/worlds.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BLUE_METAL_AT, type Move, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
-import { type Box, RestType } from './type.tsx';
+import { type Box, GitHud, RestType } from './type.tsx';
 
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
 const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
@@ -42,7 +41,7 @@ const ARENA_CAMERA: Hero = { from: cam([-6, 1.4, 14], [0, -1, -1], 44), to: cam(
 const HERO: Record<RestScene, Hero> = {
   rails: RAILS_CAMERA, subway: SUBWAY_CAMERA, squash: SQUASH_CAMERA, blame: BLAME_CAMERA, pipeline: PIPELINE_CAMERA, callgrid: CALLGRID_CAMERA,
   whitespace: WHITESPACE_CAMERA, nametag: NAMETAG_CAMERA, lasercase: LASERCASE_CAMERA, scream: FACE_CAMERA, cathedral: CATHEDRAL_CAMERA,
-  forge: FORGE_CAMERA, warning: TERMINAL_CAMERA, pushface: FACE_CAMERA, whisper: WHISPER_CAMERA, tunnel: CHEVRON_TUNNEL_CAMERA, arena: ARENA_CAMERA, duel: FACE_CAMERA,
+  forge: FORGE_CAMERA, pushface: FACE_CAMERA, whisper: WHISPER_CAMERA, tunnel: CHEVRON_TUNNEL_CAMERA, arena: ARENA_CAMERA, duel: FACE_CAMERA,
   faceO: FACE_CAMERA, faceB: FACE_CAMERA, panel: FACE_CAMERA,
 };
 /** Painted plates (trial): night for the rebase, Burak's approved worlds for the rest; the code worlds alone where no plate fits. */
@@ -51,7 +50,7 @@ const PLATES: Partial<Record<RestScene, string>> = { rails: 'W12', subway: 'W10'
 const COLORS: Record<RestScene, [Hex, Hex]> = {
   rails: ['#6a3cd8', '#e0508a'], subway: ['#2765ff', '#7d38ff'], squash: ['#d23d2a', '#3a5eee'], blame: ['#2765ff', '#19a0e0'], pipeline: ['#e9320b', '#c84a10'],
   callgrid: ['#8a3cd8', '#e0508a'], whitespace: ['#2765ff', '#e9320b'], nametag: ['#d8602a', '#7d38ff'], lasercase: ['#e92645', '#2765ff'], scream: ['#ff2217', '#2d63fb'],
-  cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], warning: ['#ff2217', '#c84a10'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
+  cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
   tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], faceB: ['#2d63fb', '#19c8ff'], panel: ['#7a3cff', '#ff3d9a'],
 };
 const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
@@ -119,8 +118,15 @@ const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
 // (round 7c: both placements come from the plan, where the faces are sized by their face boxes)
 const BLUE_TURN = dissolvePlan({ id: 'r-blue-metal', t0: SCREAM.start - 20 / 60, scatterFrames: 20, gatherFrames: 12, from: { card: 'BX3', at: poseAt(RBLUE, SCREAM.start - 0.01)?.at as Placement }, to: { card: 'BMX2', at: poseAt(RBLUE, SCREAM.start)?.at as Placement } });
 
+// GIT! PUSH! FORCE! (round 7c storyboard): the HUD types the command through the build, and the wave throws blue
+// back across the frame (from right of centre to left of it in 0.3 s, then she lands and holds)
+const shotT = (id: string): number => (RSHOTS.find((s) => s.id === id) as RShot).t;
+const PUSH_HUD = { t0: tk(45, 0) + 0.25, t1: tk(46, 0) - 0.6, until: shotT('push-impact') };
+const blownK = (t: number): number => (t < shotT('push-blown') || t >= shotT('push-force') ? 0 : clamp01((t - shotT('push-blown')) / 0.3));
+const blownDx = (t: number): number => (blownK(t) === 0 ? 0 : 2.6 - 5.0 * outQuad(blownK(t)));
+
 const lightOf = (who: 'B' | 'O', t: number, scene: RestScene): CardLight => {
-  const metalScene = scene === 'cathedral' || scene === 'forge' || scene === 'tunnel' || scene === 'warning' || scene === 'pushface';
+  const metalScene = scene === 'cathedral' || scene === 'forge' || scene === 'tunnel' || scene === 'pushface';
   const key: Hex = metalScene ? '#ff5a1a' : who === 'B' ? CYAN : '#ff3a14';
   if (scene === 'whisper') return { key: '#9fb8ff', keyAmt: 0.25, rim: 0.7 };
   return { key, keyAmt: 0.4, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.9, amt: 0.45, color: metalScene ? '#ffd0a0' : '#d8e8ff', slope: 0.3 }, dots: scene === 'arena' ? 0.5 : 0.1, ball: [0, 5.3, -6], rim: 1.4 };
@@ -165,7 +171,7 @@ const rawRestStateAt = (t: number): ShotState => {
   const b = turn.active ? (turn.toOpacity >= 0.5 ? { card: 'BMX2', at: BLUE_TURN.to?.at } : { card: 'BX3', at: BLUE_TURN.from?.at }) : blueP;
   // the close variant frames from the chest: a deliberate cut at the knees or below
   const crop = shot.cam === 'close' ? ('knee' as const) : undefined;
-  if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop });
+  if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop, dx: blownDx(t) });
   if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O'), crop });
   const plateId = scene === 'panel' ? shot.panel : PLATES[scene];
   return { pose, shot: shot.id, subjects, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75 } : undefined };
@@ -201,6 +207,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
     countdown: scene === 'callgrid' ? rect(COUNTDOWN_FRAME) : undefined,
     tag: scene === 'nametag' ? rect(GUILTY_TAG) : undefined,
     caseLine: scene === 'lasercase' ? rect(CASE_LINE) : undefined,
+    gitUntil: shotT('push-charge'),
+    pushUntil: shotT('push-impact'),
   };
   const fails = [tk(27, 1), tk(27, 2), tk(27, 3), tk(28, 1), tk(28, 2), tk(28, 3)];
   const bursts: Burst[] = ([
@@ -211,6 +219,9 @@ export const RestShot = ({ frame }: { frame: number }) => {
     { t: tk(46, 0), origin: [3, -3, 0] },
     { t: tk(46, 0) + 0.05, origin: [3, -3, 0.5] },
     { t: tk(47, 0), origin: [0, 1, 0] },
+    // the debris the wave throws up with blue
+    { t: shotT('push-blown'), origin: [2.4, -1.5, 0.5] },
+    { t: shotT('push-blown') + 0.12, origin: [0, -2, 0.5] },
     ...SPARKS.map((x, i) => ({ t: x, origin: [i % 2 ? 3 : -3, -1, 0] })),
   ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).sort((a, b) => a.t - b.t).slice(-4);
   const world = (() => {
@@ -242,8 +253,6 @@ export const RestShot = ({ frame }: { frame: number }) => {
         return <ForgeWorld t={t} plate="shot" hits={HITS} />;
       case 'tunnel':
         return <ChevronTunnelWorld t={t} hits={HITS} />;
-      case 'warning':
-        return <TerminalWorld t={t} fail={shot.t} />;
       case 'pushface':
         return <InsertWorld t={t} color={RED} hit={tk(47, 0)} />;
       case 'faceO':
@@ -264,7 +273,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
     if (!pp?.at) return null;
     const clip = scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined;
     const grounded = (pp.at.feet ?? FLOOR_Y) === FLOOR_Y;
-    return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={who === 'B' ? blueGrade : ORANGE_METAL} {...pp.at} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clip} light={lightOf(who, t, scene)} ground={grounded ? undefined : false} />;
+    return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={who === 'B' ? blueGrade : ORANGE_METAL} {...pp.at} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clip} light={lightOf(who, t, scene)} ground={grounded ? undefined : false} dx={who === 'B' ? blownDx(t) : 0} />;
   };
   const turn = dissolveState(BLUE_TURN, t);
   const blueFig = turn.active ? <>{figure('B', { t: 0, card: 'BX3', at: BLUE_TURN.from?.at }, turn.fromOpacity)}{figure('B', { t: 0, card: 'BMX2', at: BLUE_TURN.to?.at }, turn.toOpacity)}</> : figure('B', blueP);
@@ -288,7 +297,13 @@ export const RestShot = ({ frame }: { frame: number }) => {
           <RestType entries={REST_TYPE.filter((e) => e.form !== 'Shout')} t={t} anchors={anchors} />
         </g>
         <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
-        {scene === 'warning' && <WarningScreen t={t} t0={shot.t} />}
+        <GitHud t={t} t0={PUSH_HUD.t0} t1={PUSH_HUD.t1} until={PUSH_HUD.until} />
+        {/* the wave throws blue back: speed streaks trail her across the frame */}
+        {blownK(t) > 0 && blownK(t) < 1 && blueP?.at && (() => {
+          const c = project(pose, [blueP.at.x + blownDx(t), (blueP.at.feet ?? FLOOR_Y) + blueP.at.height * 0.5, 0]);
+          const a = 1 - blownK(t);
+          return [-0.3, -0.15, 0, 0.12, 0.26, 0.38].map((v, i) => <line key={i} x1={c.x + 120} y1={c.y + v * 900} x2={c.x + 520 + 260 * a + (i % 2) * 140} y2={c.y + v * 900} stroke="#ffe2c8" strokeWidth={10 - i} strokeLinecap="round" opacity={0.75 * a} />);
+        })()}
         {/* PUSH!: the smash sends a shockwave ring out across the floor from her fists */}
         {t >= tk(46, 0) && t < tk(46, 0) + 0.55 && orangeP?.at && (() => {
           const c = project(pose, [orangeP.at.x, FLOOR_Y, orangeP.at.z ?? 0]);
@@ -305,24 +320,6 @@ export const RestShot = ({ frame }: { frame: number }) => {
         })}
       </Svg>
     </AbsoluteFill>
-  );
-};
-
-/** The warning screen of the breakdown: `git push --force` typed key by key, then the remote's refusal and the
- *  forced update, red on the terminal room's wall. */
-const WARNING = ['$ git push --force origin main', 'warning: you are about to rewrite remote history', '! [remote rejected] main -> main (protected branch)', '+ 4f2c1e9...b07a1d3 main -> main (forced update)'];
-const WarningScreen = ({ t, t0 }: { t: number; t0: number }) => {
-  const u = t - t0;
-  return (
-    <g fontFamily={familyOf('jetbrains')} fontWeight={800}>
-      <rect x={260} y={210} width={1400} height={420} rx={18} fill="#0a0406" fillOpacity={0.82} stroke="#ff3b3b" strokeWidth={4} />
-      {WARNING.map((line, i) => {
-        const start = i * 0.42;
-        const n = Math.max(0, Math.min(line.length, Math.floor((u - start) * (i === 0 ? 22 : 60))));
-        if (n === 0) return null;
-        return <text key={i} x={300} y={300 + i * 92} fontSize={i === 0 ? 46 : 36} fill={i === 0 ? '#ffffff' : i === 2 ? '#ff3b3b' : '#ffb07a'}>{line.slice(0, n)}</text>;
-      })}
-    </g>
   );
 };
 

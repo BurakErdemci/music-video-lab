@@ -14,10 +14,30 @@ import { Stack } from '../../type/forms/Stack.tsx';
 import { DissolveText } from '../../type/DissolveText.tsx';
 import { LightBox } from '../../type/LightBox.tsx';
 import { Slam } from '../../type/Slam.tsx';
+import { MONO } from '../../type/fonts.tsx';
+import { beatPos } from '../../timing.ts';
 import type { TypeEntry } from '../chorus/typeplan.ts';
 
 export interface Box { x: number; y: number; w: number; h: number }
-export interface RestAnchors { gutter?: Box; countdown?: Box; tag?: Box; caseLine?: Box }
+export interface RestAnchors { gutter?: Box; countdown?: Box; tag?: Box; caseLine?: Box; /** GIT! and PUSH! end with their shots. */ gitUntil?: number; pushUntil?: number }
+
+/** The breakdown's command as a small corner HUD (round 7c storyboard: never full screen), typed through the build. */
+export const GitHud = ({ t, t0, t1, until }: { t: number; t0: number; t1: number; until: number }) => {
+  if (t < t0 || t >= until) return null;
+  const text = '$ git push --force';
+  const n = Math.min(text.length, Math.floor(((t - t0) / (t1 - t0)) * text.length));
+  // the cursor blinks on the beat (half a beat on, half off)
+  const cursor = beatPos(t) % 1 < 0.5;
+  return (
+    <g>
+      <rect x={56} y={928} width={560} height={92} rx={10} fill="#07040c" fillOpacity={0.82} stroke="#ff4a1a" strokeOpacity={0.7} strokeWidth={2} />
+      <text x={84} y={988} fontFamily={MONO} fontSize={40} fill="#ffd6c2">
+        {text.slice(0, n)}
+        <tspan fill="#ff4a1a">{cursor ? '█' : ' '}</tspan>
+      </text>
+    </g>
+  );
+};
 
 const spec = (e: TypeEntry, box: Box): FormSpec => ({ id: `r-${e.id}`, line: e.line, key: e.key, singer: e.singer, t0: e.t0, t1: e.t1, box, range: e.range });
 const words = (e: TypeEntry) => lineTokens(e.line).slice(e.range[0], e.range[1]);
@@ -84,15 +104,16 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
       case 'r-scream':
         out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 820, w: 1820, rot: -3 }} t={t} />);
         break;
+      // GIT! PUSH! FORCE! (round 7c storyboard): each word stands beside orange (she is on the right third), never
+      // over her face or her action, and leaves with her shot; the painting after PUSH! stays uncovered
       case 'r-git':
-        // GIT! hits and goes: the long gap before PUSH! belongs to the warning screen
-        out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: Math.min(e.t1 - 0.02, e.t0 + 1.8), x: 960, y: 380, size: 380, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
+        out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: Math.min(e.t1, anchors.gitUntil ?? e.t1) - 0.02, x: 520, y: 400, size: 300, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
         break;
       case 'r-push':
-        out.push(<Extrude key={e.id} spec={spec(e, { x: 160, y: 200, w: 1600, h: 560 })} t={t} opt={{ size: 420, face: 'metalmania', depth: 0.35 }} />);
+        if (t < (anchors.pushUntil ?? e.t1)) out.push(<Extrude key={e.id} spec={spec(e, { x: 70, y: 180, w: 780, h: 420 })} t={t} opt={{ size: 300, face: 'metalmania', depth: 0.35 }} />);
         break;
       case 'r-force':
-        out.push(<Shout key={e.id} spec={{ id: 'r-force-s', text: 'FORCE!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 760, w: 1750, rot: 4 }} t={t} />);
+        out.push(<Shout key={e.id} spec={{ id: 'r-force-s', text: 'FORCE!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 540, cy: 330, w: 860, rot: -4 }} t={t} />);
         break;
       case 'r-wouldnt':
         // the quietest frame: small, low, and it dissolves as she finishes
