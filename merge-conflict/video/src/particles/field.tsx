@@ -22,9 +22,9 @@ export type FieldLayer = keyof typeof LAYERS;
 
 const VERT = /* glsl */ `
 uniform float uTime; uniform float uDensity; uniform float uPx; uniform float uSpanX; uniform vec2 uZ;
-uniform vec4 uBurstT; uniform vec3 uBurstO[4];
+uniform vec4 uBurstT; uniform vec3 uBurstO[4]; uniform float uMetal;
 attribute vec4 aSeed; attribute vec4 aRnd; attribute vec3 aCol; attribute float aKind;
-varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind;
+varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind; varying float vEmber;
 const float TOP = 7.5; const float BOT = -4.2;
 void main() {
   float t = uTime;
@@ -34,8 +34,10 @@ void main() {
   float spin = mix(1.5, 4.5, aRnd.x) * (aRnd.y < 0.5 ? -1.0 : 1.0);
   vAngle = aSeed.w * 6.2832 + t * spin;
   vFlip = 0.15 + 0.85 * abs(cos(t * mix(2.0, 6.0, aRnd.z) + aSeed.x * 40.0));
+  // With the metal amount, a share of the confetti turns into embers that RISE (and flicker), the rest stays
+  vEmber = step(aRnd.y, uMetal * 0.75);
   if (aKind < 0.5) {
-    float fall = mix(0.35, 0.95, aSeed.w);
+    float fall = mix(0.35, 0.95, aSeed.w) * mix(1.0, -1.6, vEmber);
     float y = BOT + mod(aSeed.y * (TOP - BOT) - fall * t, TOP - BOT);
     p = vec3((aSeed.x - 0.5) * uSpanX + 0.35 * sin(t * (0.5 + aSeed.w) + aSeed.x * 30.0), y, mix(uZ.x, uZ.y, aSeed.z));
     alpha = step(aRnd.z, uDensity);
@@ -70,8 +72,8 @@ void main() {
 }`;
 
 const FRAG = /* glsl */ `
-uniform vec3 uHue; uniform float uHueMix; uniform float uAlpha;
-varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind;
+uniform vec3 uHue; uniform float uHueMix; uniform float uAlpha; uniform float uMetal;
+varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind; varying float vEmber;
 void main() {
   vec2 c = gl_PointCoord - 0.5;
   vec3 col; float a;
@@ -80,6 +82,12 @@ void main() {
     float star = max(0.0, 1.0 - (q.x * 9.0 + q.y * 1.1)) + max(0.0, 1.0 - (q.y * 9.0 + q.x * 1.1));
     a = clamp(star + exp(-length(c) * 14.0), 0.0, 1.0);
     col = mix(vec3(1.0), uHue + 0.35, 0.35);
+    col = mix(col, vec3(1.0, 0.82, 0.55), uMetal * 0.6); // sparks run white-hot
+  } else if (vEmber > 0.5 && vKind < 0.5) {
+    // an ember: a soft hot dot, orange-red, flickering
+    float r = length(c);
+    a = (1.0 - smoothstep(0.08, 0.5, r));
+    col = mix(vec3(1.0, 0.35, 0.05), vec3(1.0, 0.85, 0.4), exp(-r * 8.0)) * (0.7 + 0.3 * vFlip);
   } else {
     float s = sin(vAngle), co = cos(vAngle);
     vec2 r = vec2(co * c.x - s * c.y, s * c.x + co * c.y);
@@ -127,9 +135,11 @@ export interface FieldProps {
   hueMix?: number;
   alpha?: number;
   bursts?: readonly Burst[];
+  /** metal amount 0..1: embers rise among the confetti, sparks run hot */
+  metal?: number;
 }
 
-export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, bursts = [] }: FieldProps) => {
+export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, bursts = [], metal = 0 }: FieldProps) => {
   if (bursts.length > MAX_BURSTS) throw new Error(`field: ${bursts.length} bursts (max ${MAX_BURSTS})`);
   const geo = useMemo(() => build(layer), [layer]);
   const L = LAYERS[layer];
@@ -146,6 +156,7 @@ export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, 
     uHue: rgb(grade.hue),
     uHueMix: hueMix,
     uAlpha: alpha,
+    uMetal: metal,
   });
   return (
     <points geometry={geo} frustumCulled={false} renderOrder={layer === 'back' ? ORDER.fieldBack : ORDER.fieldFront}>

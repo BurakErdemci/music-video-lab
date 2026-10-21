@@ -8,12 +8,12 @@ import { seeded } from '../../lib/seeded.ts';
 import { beats, beatIndexAt } from '../../timing.ts';
 import { capOf, type Face, familyOf, widthOf } from '../fonts.tsx';
 import { CHECK } from '../Stamp.tsx';
-import { clean, type FormSpec, INK, keyFill, keyIndex, solidAt, tokensOf, visible } from './common.tsx';
+import { clean, faceFor, type FormSpec, INK, keyFill, keyIndex, solidAt, tokensOf, visible } from './common.tsx';
 
-const PF: Face = 'bungee';
 
 export const Stamp = ({ spec, t }: { spec: FormSpec; t: number }) => {
   if (!visible(spec, t)) return null;
+  const PF: Face = faceFor('bungee', spec.singer, t);
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
   const size = Math.min(spec.box.h / 7, spec.box.w / 9);
@@ -87,7 +87,7 @@ export const Extrude = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: Extr
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
-  const face = opt.face ?? 'display';
+  const face = faceFor(opt.face ?? 'display', spec.singer, t);
   const sung = toks.map((tk, i) => ({ tk, i })).filter((w) => t >= w.tk.start);
   const cur = sung.some((w) => w.i === k) ? k : (sung.at(-1)?.i ?? -1);
   const tk = toks[cur];
@@ -111,7 +111,7 @@ export const Extrude = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: Extr
   return (
     <g opacity={outQuad(since / 0.12)}>
       {Array.from({ length: N }, (_, j) => N - j).map((j) => layer(j, mixHex(color, '#000000', 0.45 + 0.35 * (j / N))))}
-      {layer(0, cur === k ? keyFill(spec.singer) : mixHex(color, '#ffffff', 0.15), INK)}
+      {layer(0, cur === k ? keyFill(spec.singer, t) : mixHex(color, '#ffffff', 0.15), INK)}
     </g>
   );
 };

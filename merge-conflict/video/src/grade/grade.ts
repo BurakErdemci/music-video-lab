@@ -2,7 +2,7 @@
 // light. Cards tint toward `hue` and take a `rival` rim from their alpha gradient; plates and the code-built
 // set take the tint without the rim. All colours are raw (gamma-encoded) values: the stage renders flat
 // and linear, so a value written by a shader is the framebuffer value.
-import { type Hex, rgb } from '../lib/ease.ts';
+import { type Hex, mixHex, rgb } from '../lib/ease.ts';
 
 export interface Grade {
   /** The shot's hue: background, particles and the card tint pull toward it. */
@@ -51,3 +51,14 @@ vec3 gradeTint(vec3 c, vec3 hue, float amount) {
   return mix(c, tinted, amount);
 }
 `;
+
+/** The metal grade (scene-map.md pop-metal blend): black stage, red light, steel as the cutting rim. */
+export const METAL_GRADE: Grade = { hue: '#c81414', rival: '#d8dee6', amount: 0.42, rim: 1.4, stage: 0.85 };
+/** Slide a shot's grade toward the metal grade by the metal amount m (0..1). */
+export const metalGrade = (g: Grade, m: number): Grade => ({
+  hue: mixHex(g.hue, METAL_GRADE.hue, m),
+  rival: mixHex(g.rival, METAL_GRADE.rival, m),
+  amount: g.amount + (METAL_GRADE.amount - g.amount) * m,
+  rim: g.rim + (METAL_GRADE.rim - g.rim) * m,
+  stage: g.stage + (METAL_GRADE.stage - g.stage) * m,
+});

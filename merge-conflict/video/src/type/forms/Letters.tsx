@@ -9,7 +9,7 @@ import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { seeded } from '../../lib/seeded.ts';
 import { beatPos } from '../../timing.ts';
 import { capOf, type Face, familyOf, layout } from '../fonts.tsx';
-import { appear, clean, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, solidAt, tokensOf, visible } from './common.tsx';
+import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, solidAt, tokensOf, visible } from './common.tsx';
 
 const FLAP_CHARS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789<>=+#';
 const MONO = familyOf('jetbrains');
@@ -52,7 +52,7 @@ export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?:
             }
           }
           const isKey = cell?.tok === k;
-          const color: string = isKey ? keyFill(spec.singer) : tok ? hueAt(spec.singer, t, cell?.tok ?? 0) : '#ffffff';
+          const color: string = isKey ? keyFill(spec.singer, t) : tok ? hueAt(spec.singer, t, cell?.tok ?? 0) : '#ffffff';
           return (
             <g key={`${ri}-${ci}`}>
               <rect x={x + 3} y={y + 3} width={cw - 6} height={ch - 6} rx={6} fill="#14101c" stroke="#2c2438" strokeWidth={2} />
@@ -84,7 +84,7 @@ export const Ring = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: RingOpt
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
-  const face = opt.face ?? 'bungee';
+  const face = faceFor(opt.face ?? 'bungee', spec.singer, t);
   const arcLen = ARC * opt.r;
   const words = toks.map((tk, i) => `${clean(tk.text).toUpperCase()} `);
   const natural = words.reduce((a, w, i) => a + layout(w, i === k ? 1.6 : 1, face).width, 0);
@@ -115,7 +115,7 @@ export const Ring = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: RingOpt
         const y = opt.cy + Math.sin(a) * opt.r;
         const isKey = l.tok === k;
         return (
-          <text key={i} x={0} y={0} textAnchor="middle" fontSize={l.size} fill={isKey ? keyFill(spec.singer) : hueAt(spec.singer, t, l.tok)} stroke={INK} strokeWidth={l.size * 0.05} paintOrder="stroke" opacity={p * edge} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI + 90}) scale(${landScale(t, tok, 1.6)})`}>
+          <text key={i} x={0} y={0} textAnchor="middle" fontSize={l.size} fill={isKey ? keyFill(spec.singer, t) : hueAt(spec.singer, t, l.tok)} stroke={INK} strokeWidth={l.size * 0.05} paintOrder="stroke" opacity={p * edge} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI + 90}) scale(${landScale(t, tok, 1.6)})`}>
             {l.ch}
           </text>
         );
@@ -130,7 +130,7 @@ export const Wave = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: WaveOpt
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
-  const face = opt.face ?? 'righteous';
+  const face = faceFor(opt.face ?? 'righteous', spec.singer, t);
   const unit = toks.map((tk, i) => layout(`${clean(tk.text).toUpperCase()} `, i === k ? 1.8 : 1, face).width).reduce((a, b) => a + b, 0);
   // fit the box, but never below the readable minimum: a longer line scrolls with the singing
   const size = Math.max(opt.minSize ?? 84, Math.min(opt.size, spec.box.w / unit));
@@ -155,7 +155,7 @@ export const Wave = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: WaveOpt
       if (!p) return;
       const drop = (1 - outQuad(p)) * -60;
       out.push(
-        <text key={`${wi}-${n}`} x={lx} y={y + drop} fontSize={w.size} fontFamily={familyOf(face)} fill={w.tok === k ? keyFill(spec.singer) : hueAt(spec.singer, t, w.tok + n)} stroke={INK} strokeWidth={w.size * 0.05} paintOrder="stroke" opacity={p}>
+        <text key={`${wi}-${n}`} x={lx} y={y + drop} fontSize={w.size} fontFamily={familyOf(face)} fill={w.tok === k ? keyFill(spec.singer, t) : hueAt(spec.singer, t, w.tok + n)} stroke={INK} strokeWidth={w.size * 0.05} paintOrder="stroke" opacity={p}>
           {c}
         </text>,
       );

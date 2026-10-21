@@ -5,7 +5,7 @@
 // tracking (up to 0.25 em). Only a row still short after both is centred. Words land on their measured
 // starts with a no-bounce slam; unsung words keep their slot.
 import { capOf, type Face, familyOf, layout, widthOf } from '../fonts.tsx';
-import { appear, clean, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, tokensOf, visible } from './common.tsx';
+import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, tokensOf, visible } from './common.tsx';
 
 const FACES: Face[] = ['bebas', 'display', 'righteous', 'bungee'];
 const GAP = 14;
@@ -15,30 +15,30 @@ const MAX_STRETCH = 1.6;
 const MAX_TRACK = 0.25;
 
 interface Row { toks: number[]; face: Face; text: string }
-const rowsFor = (s: FormSpec, perRow: number): Row[] => {
+const rowsFor = (s: FormSpec, perRow: number, t: number): Row[] => {
   const toks = tokensOf(s);
   const k = keyIndex(s);
   const rows: Row[] = [];
   for (let i = 0; i < toks.length; ) {
     const end = i === k ? i + 1 : Math.min(i + perRow, k > i ? k : toks.length);
     const ids = Array.from({ length: end - i }, (_, n) => i + n);
-    const face = i === k ? 'display' : (FACES[rows.length % FACES.length] as Face);
+    const face = faceFor(i === k ? 'display' : (FACES[rows.length % FACES.length] as Face), s.singer, t);
     rows.push({ toks: ids, face, text: ids.map((n) => clean(toks[n]?.text ?? '').toUpperCase()).join(' ') });
     i = end;
   }
   return rows;
 };
 
-export const stackLayout = (s: FormSpec): PlacedWord[] => {
+export const stackLayout = (s: FormSpec, t = 0): PlacedWord[] => {
   const k = keyIndex(s);
   const others = (rows: Row[]) => Math.max(1, rows.filter((r) => r.toks[0] !== k).length);
   let current: Row[] = [];
   const capFor = (r: Row) => (s.box.h * (r.toks[0] === k ? KEY_SHARE : (1 - KEY_SHARE) / others(current))) / capOf(r.face);
   const heightOf = (rows: Row[], f: number) => rows.reduce((a, r) => a + Math.min(s.box.w / widthOf(r.text, 1, r.face), capFor(r)) * f * capOf(r.face), 0) + GAP * (rows.length - 1);
   // fewest words per row whose block fits the box height; failing that, the densest grouping scaled down
-  let rows = rowsFor(s, 4);
+  let rows = rowsFor(s, 4, t);
   for (let per = 1; per <= 4; per++) {
-    current = rowsFor(s, per);
+    current = rowsFor(s, per, t);
     if (heightOf(current, 1) <= s.box.h) {
       rows = current;
       break;
@@ -78,7 +78,7 @@ export const Stack = ({ spec, t, hide = [] }: { spec: FormSpec; t: number; hide?
   const k = keyIndex(spec);
   return (
     <g>
-      {stackLayout(spec).map((w) => {
+      {stackLayout(spec, t).map((w) => {
         const tok = toks[w.tok];
         if (!tok || hide.includes(w.tok)) return null;
         const a = appear(t, tok);
@@ -89,7 +89,7 @@ export const Stack = ({ spec, t, hide = [] }: { spec: FormSpec; t: number; hide?
         const isKey = w.tok === k;
         return (
           <g key={w.tok} transform={`translate(${cx} ${cy}) scale(${s}) translate(${-cx} ${-cy}) translate(${w.x} 0) scale(${w.sx} 1) translate(${-w.x} 0)`} opacity={a}>
-            <text x={w.x} y={w.y} fontFamily={familyOf(w.face)} fontSize={w.size} letterSpacing={w.track * w.size} fill={isKey ? keyFill(spec.singer) : hueAt(spec.singer, t, w.tok)} stroke={INK} strokeWidth={w.size * (isKey ? 0.05 : 0.035)} strokeLinejoin="round" paintOrder="stroke">
+            <text x={w.x} y={w.y} fontFamily={familyOf(w.face)} fontSize={w.size} letterSpacing={w.track * w.size} fill={isKey ? keyFill(spec.singer, t) : hueAt(spec.singer, t, w.tok)} stroke={INK} strokeWidth={w.size * (isKey ? 0.05 : 0.035)} strokeLinejoin="round" paintOrder="stroke">
               {w.text}
             </text>
           </g>

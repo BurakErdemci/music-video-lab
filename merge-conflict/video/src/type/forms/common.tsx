@@ -3,7 +3,9 @@
 // has a key word, the biggest and most saturated; colour comes from the singer and changes hue on the beats.
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { lineTokens, type Token } from '../../lyrics/LyricLayer.tsx';
+import { metalFor } from '../../metal/metal.ts';
 import { beatIndexAt } from '../../timing.ts';
+import type { Face } from '../fonts.tsx';
 
 export type Singer = 'O' | 'B' | 'both';
 export interface Box { x: number; y: number; w: number; h: number }
@@ -27,22 +29,37 @@ export const PALETTE: Record<'O' | 'B', readonly Hex[]> = {
   B: ['#2f7bff', '#19c8ff', '#7a6cff', '#8fd8ff', '#3fa0ff'],
 };
 export const KEY: Record<Singer, Hex> = { O: '#ff5a00', B: '#00b4ff', both: '#ff3d9a' };
+/** The metal family (black, red and steel) the palette slides into as the metal amount rises. */
+export const METAL: readonly Hex[] = ['#e01b1b', '#c8ced6', '#ff4a1a', '#9a1010', '#eef1f4'];
+export const METAL_KEY: Hex = '#ff1e1e';
+/** The metal amount a form's colours and faces follow: its singer's (metal/metal.ts). */
+export const metalOf = (singer: Singer, t: number): number => metalFor(t, singer);
+/** Rounded neon faces give way to blackletter and jagged faces once the metal amount passes this. */
+export const METAL_FACE_AT = 0.55;
+const FACE_SWAP: Partial<Record<Face, Face>> = { display: 'metalmania', bebas: 'pirata', righteous: 'fraktur', bungee: 'metalmania', shrikhand: 'fraktur', monoton: 'metalmania' };
+export const faceFor = (face: Face, singer: Singer, t: number): Face => (metalOf(singer, t) >= METAL_FACE_AT ? (FACE_SWAP[face] ?? face) : face);
 /** The gradient used for lines sung together (defined once by <FormDefs/>). */
 export const BOTH_FILL = 'url(#mc-both)';
 
 /** Hue of word i at t: steps through the singer's family on every beat. */
 export const hueAt = (singer: Singer, t: number, i: number): string => {
-  if (singer === 'both') return BOTH_FILL;
-  const p = PALETTE[singer];
-  return p[(((beatIndexAt(t) + i) % p.length) + p.length) % p.length] as string;
+  const m = metalOf(singer, t);
+  const k = (((beatIndexAt(t) + i) % 5) + 5) % 5;
+  if (singer === 'both') return m >= 0.5 ? mixHex(mixHex(PALETTE.O[k] as Hex, PALETTE.B[k] as Hex, 0.5), METAL[k] as Hex, m) : BOTH_FILL;
+  return mixHex(PALETTE[singer][k] as Hex, METAL[k] as Hex, m);
 };
 /** A solid colour for strokes and glows (the gradient's middle for 'both'). */
 export const solidAt = (singer: Singer, t: number, i: number): Hex => {
-  if (singer !== 'both') return hueAt(singer, t, i) as Hex;
   const k = (((beatIndexAt(t) + i) % 5) + 5) % 5;
-  return mixHex(PALETTE.O[k] as Hex, PALETTE.B[k] as Hex, 0.5);
+  const pop = singer === 'both' ? mixHex(PALETTE.O[k] as Hex, PALETTE.B[k] as Hex, 0.5) : (PALETTE[singer][k] as Hex);
+  return mixHex(pop, METAL[k] as Hex, metalOf(singer, t));
 };
-export const keyFill = (singer: Singer): string => (singer === 'both' ? BOTH_FILL : KEY[singer]);
+/** The key word's fill: the singer's key colour, sliding to the metal key colour (the gradient for a duet at low metal). */
+export const keyFill = (singer: Singer, t?: number): string => {
+  const m = t === undefined ? 0 : metalOf(singer, t);
+  if (singer === 'both' && m < 0.5) return BOTH_FILL;
+  return mixHex(KEY[singer], METAL_KEY, m);
+};
 
 export const FormDefs = () => (
   <defs>
