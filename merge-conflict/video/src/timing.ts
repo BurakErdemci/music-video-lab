@@ -21,6 +21,8 @@ export interface Timing {
   lyric_alignment: TimingLine[];
   accept_hooks: TimingHook[];
   hard_stops: TimingStop[];
+  /** Short measured drops in level, [start, end] seconds (e.g. the stop at the end of the intro, 10.72-11.02). */
+  micro_gaps: [number, number][];
 }
 
 export const TIMING = raw as unknown as Timing;
@@ -47,6 +49,7 @@ export const words: readonly TimingWord[] = TIMING.words;
 export const lines: readonly TimingLine[] = TIMING.lyric_alignment;
 export const acceptHooks: readonly TimingHook[] = TIMING.accept_hooks;
 export const hardStops: readonly TimingStop[] = TIMING.hard_stops;
+export const microGaps: readonly [number, number][] = TIMING.micro_gaps;
 
 export const beat = (i: number): number => at(beats, i, 'beat');
 export const downbeat = (i: number): number => at(downbeats, i, 'downbeat');
