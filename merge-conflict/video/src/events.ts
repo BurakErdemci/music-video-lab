@@ -28,9 +28,10 @@ const timeOf = (anchor: EventAnchor, ref: number | string): number => {
 const ev = (id: string, kind: string, anchor: EventAnchor, ref: number | string): FilmEvent => ({ id, anchor, ref, t: timeOf(anchor, ref), kind });
 const tokens = (line: number, n: number, kind: string): FilmEvent[] => Array.from({ length: n }, (_, k) => ev(`tok-${line}-${k}`, kind, 'token', `${line}:${k}`));
 
-/** Beats of chorus 1 (42.90-64.15 s) with an even index: the chorus pulse. */
+/** Beats of chorus 1 (42.90-64.15 s): the chorus pulse. */
 const CHORUS = sectionNamed('chorus1');
-const CHORUS_PULSES = beatsIn(CHORUS.start, CHORUS.end).filter((b) => b % 2 === 0);
+// round 6: the camera punches on EVERY chorus beat (scene-map.md "The chorus is the peak")
+const CHORUS_PULSES = beatsIn(CHORUS.start, CHORUS.end);
 /** intro_groove (4.37-16.33 s, hard metal by Burak's ear): a metal hit on every second beat, 13..47. */
 const GROOVE_HITS = Array.from({ length: 18 }, (_, k) => 13 + 2 * k);
 
@@ -108,7 +109,7 @@ export const EVENTS: FilmEvent[] = [
   ev('framing-c8', 'framing', 'downbeat', 41),
   ev('framing-c9', 'framing', 'downbeat', 42),
   ev('framing-c13', 'framing', 'downbeat', 47),
-  // a visible pulse (camera punch on the metal half, the flames, the buttons' glow) on every second chorus beat
+  // a visible pulse on every chorus beat: the camera punch, the floor and LED wall pulse
   ...CHORUS_PULSES.map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b)),
 ];
 
