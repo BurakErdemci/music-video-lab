@@ -15,6 +15,7 @@ import { typePlane } from '../camera/camera.ts';
 import { Card } from '../cards/Card.tsx';
 import { at } from '../events.ts';
 import { framingAt } from '../girls/framing.ts';
+import type { ShotState, Subject } from './framing.ts';
 import { silhouetteD } from '../girls/silhouette.ts';
 import { waistUp } from '../girls/staging.tsx';
 import { GRADES, type Grade, metalGrade } from '../grade/grade.ts';
@@ -120,22 +121,35 @@ export const GrooveLogo = ({ t }: { t: number }) => {
   );
 };
 
+/** The groove's silhouettes at t: one per framing, five clones in the clone framing; the knee and waist framings
+ *  crop on purpose. */
+const grooveSubjects = (t: number): Subject[] => {
+  const kind = framingAt(FRAMINGS, t);
+  const C = GROOVE_CARDS;
+  const sil = { silhouette: true } as const;
+  if (kind === 'stage') return [{ card: t >= GROOVE_CROUCH_AT ? C.crouch : C.stage, at: GROOVE_O, ...sil }];
+  if (kind === 'clones') return [-2, -1, 0, 1, 2].map((k) => ({ card: C.clones, at: { x: k * 3.1, height: 4.6 - Math.abs(k) * 0.45, z: -Math.abs(k) * 0.6, flip: k % 2 !== 0 }, ...sil }));
+  if (kind === 'low') return [{ card: C.low, at: { x: 2.6, height: 4.4 }, ...sil }];
+  if (kind === 'knee') return [{ card: C.knee, at: GROOVE_BIG, crop: 'knee', ...sil }];
+  if (kind === 'tiny') return [{ card: C.tiny, at: { x: 0, height: 2.6 }, ...sil }];
+  return [{ card: C.waist, at: waistUp(4.4, 13), crop: 'knee', ...sil }];
+};
+export const grooveStateAt = (t: number): ShotState => ({ pose: cameraAt(t).pose, shot: `groove-${framingAt(FRAMINGS, t)}`, subjects: grooveSubjects(t) });
+
 export const Groove = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const grade = metalGrade(GRADES.mainline, 1);
   const sil = silGrade(grade);
   const kind = framingAt(FRAMINGS, t);
   const C = GROOVE_CARDS;
-  let cards;
-  if (kind === 'stage') cards = <Card id={t >= GROOVE_CROUCH_AT ? C.crouch : C.stage} t={t} grade={sil} {...GROOVE_O} rimDir={[-1, 0.3]} {...SILHOUETTE} />;
-  else if (kind === 'clones')
-    cards = [-2, -1, 0, 1, 2].map((k) => (
-      <Card key={k} id={C.clones} t={t + k * 0.13} grade={sil} x={k * 3.1} height={4.6 - Math.abs(k) * 0.45} z={-Math.abs(k) * 0.6} flip={k % 2 !== 0} rimDir={[k < 0 ? 1 : -1, 0.3]} {...SILHOUETTE} />
-    ));
-  else if (kind === 'low') cards = <Card id={C.low} t={t} grade={sil} x={2.6} height={4.4} {...SILHOUETTE} />;
-  else if (kind === 'knee') cards = <Card id={C.knee} t={t} grade={silGrade(grade, 2.6)} {...GROOVE_BIG} rimDir={[-1, 0.2]} {...SILHOUETTE} />;
-  else if (kind === 'tiny') cards = <Card id={C.tiny} t={t} grade={sil} x={0} height={2.6} {...SILHOUETTE} />;
-  else cards = <Card id={C.waist} t={t} grade={silGrade(grade, 2.4)} {...waistUp(4.4, 13)} rimDir={[-1, 0.2]} {...SILHOUETTE} />;
+  const subjects = grooveSubjects(t);
+  const cards = subjects.map((s, k) => {
+    const g = kind === 'knee' ? silGrade(grade, 2.6) : kind === 'waist' ? silGrade(grade, 2.4) : sil;
+    const clone = kind === 'clones' ? k - 2 : 0;
+    // the rim directions as authored per framing (low and tiny keep the card's default)
+    const rimDir: [number, number] | undefined = kind === 'knee' || kind === 'waist' ? [-1, 0.2] : kind === 'stage' || kind === 'clones' ? [clone < 0 ? 1 : -1, 0.3] : undefined;
+    return <Card key={k} id={s.card} t={t + clone * 0.13} grade={g} {...s.at} rimDir={rimDir} {...SILHOUETTE} />;
+  });
   // the camera moves continuously in every framing, with a fov punch every second beat (proof.ts cameraAt)
   const cam = cameraAt(t);
   const pose = cam.pose;

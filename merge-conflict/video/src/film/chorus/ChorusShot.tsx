@@ -17,6 +17,7 @@ import { SceneTransition, type TransitionSpec, transitionWindow } from '../../tr
 import { FormDefs } from '../../type/forms/common.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { PlateLayer } from '../../worlds/plate.tsx';
+import type { ShotState, Subject } from '../framing.ts';
 import { ARENA, CHORUS1, CHORUS2, type ChorusLines, chorusPlan, type Pose, poseOfShot, type Scene, type Shot, shotAt } from './plan.ts';
 import { ChorusType, logoApart } from './type.tsx';
 import { chorusType } from './typeplan.ts';
@@ -86,6 +87,32 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     };
   };
 
+  /** Both girls at t as placed cards: hidden after the end burst, carried by the logo halves in the crash, clipped
+   *  to their half in the split frame. */
+  const girlsAt = (t: number, shot: Shot): Subject[] => {
+    if (t >= P.HITS.burst) return [];
+    const scene = shot.scene;
+    const logoEntry = scene === 'logo' ? (t < (MERGES.merge2 as readonly number[])[0]! ? 'merge1' : 'merge2') : null;
+    const apart = logoEntry ? logoApart(t, MERGES[logoEntry] as readonly [number, number, number, number]) / 120 : 0;
+    const out: Subject[] = [];
+    for (const [who, list] of [['B', P.BLUE], ['O', P.ORANGE]] as const) {
+      const p = poseOf(list, t);
+      if (!p || !p.at || !p.card) continue;
+      out.push({
+        card: p.card,
+        at: p.at,
+        dx: logoEntry ? (who === 'B' ? -apart : apart) : 0,
+        dy: logoEntry ? (who === 'B' ? apart * 0.35 : -apart * 0.35) : 0,
+        clip: scene === 'split' ? { x: 0, keep: who === 'B' ? 'left' : 'right' } : undefined,
+      });
+    }
+    return out;
+  };
+  const stateAt = (t: number): ShotState => {
+    const { pose, shot } = cameraAt(t);
+    return { pose, shot: `ch${v}-${shot.id}`, subjects: girlsAt(t, shot) };
+  };
+
   const sceneLight = (who: 'B' | 'O', t: number, scene: Scene): CardLight => {
     const bar = barPos(t);
     const sweepX = -9 + (bar % 1) * 18;
@@ -126,17 +153,8 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     const embers = live.map((h) => ({ t: h.t, origin: h.origin }));
     const scene = shot.scene;
     const sceneT0 = shot.t;
-    let blue = poseOf(P.BLUE, t);
-    let orange = poseOf(P.ORANGE, t);
     const burstOn = t >= H.burst;
-    if (burstOn) {
-      blue = null;
-      orange = null;
-    }
     // the logo crash: the halves carry the girls (MERGE half blue, CONFLICT half orange)
-    const logoEntry = scene === 'logo' ? (t < MERGES.merge2![0] ? 'merge1' : 'merge2') : null;
-    const apart = logoEntry ? logoApart(t, MERGES[logoEntry] as readonly [number, number, number, number]) / 120 : 0;
-    const clipOf = (who: 'B' | 'O') => (scene === 'split' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
     const insertHit = [...H.no, ...H.never].filter((x) => x <= t).at(-1) ?? t;
     const insertColor = H.no[0] !== undefined && insertHit === H.no[0] ? RED : CYAN;
     const world = (() => {
@@ -170,11 +188,9 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
           return <LineWorld t={t} t0={H.crush} />;
       }
     })();
-    const figure = (who: 'B' | 'O', p: Pose | null) => {
-      if (!p || !p.at) return null;
-      const dx = logoEntry ? (who === 'B' ? -apart : apart) : 0;
-      const dy = logoEntry ? (who === 'B' ? apart * 0.35 : -apart * 0.35) : 0;
-      return <Card key={`${who}-${p.card}`} id={p.card as string} t={t} grade={who === 'B' ? BLUE_GRADE : ORANGE_GRADE} {...p.at} dx={dx} dy={dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clipOf(who)} light={sceneLight(who, t, scene)} ground={scene === 'arena' || scene === 'spin' || scene === 'fire' || scene === 'walls' || scene === 'runway' ? undefined : false} />;
+    const figure = (s: Subject) => {
+      const who = s.card.startsWith('B') ? 'B' : 'O';
+      return <Card key={`${who}-${s.card}`} id={s.card} t={t} grade={who === 'B' ? BLUE_GRADE : ORANGE_GRADE} {...s.at} dx={s.dx} dy={s.dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={s.clip} light={sceneLight(who, t, scene)} ground={scene === 'arena' || scene === 'spin' || scene === 'fire' || scene === 'walls' || scene === 'runway' ? undefined : false} />;
     };
     return (
       <AbsoluteFill style={{ background: '#000' }}>
@@ -182,8 +198,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
           {PLATES[v][scene] && <PlateLayer id={PLATES[v][scene] as string} base={base} margin={scene === 'spin' ? 2.2 : 1.35} />}
           {world}
           <Field t={t} grade={scene === 'fire' ? ORANGE_GRADE : BLUE_GRADE} layer="back" density={0.9} hueMix={0.6} metal={0.5} bursts={bursts} />
-          {figure('B', blue)}
-          {figure('O', orange)}
+          {girlsAt(t, shot).map(figure)}
           {burstOn && BURST_PLANS.map((pl, i) => <Dissolve key={i} plan={pl} t={t} grade={i ? ORANGE_GRADE : BLUE_GRADE} />)}
           <Field t={t} grade={BLUE_GRADE} layer="front" density={0.8} hueMix={0.6} metal={0.5} bursts={bursts} />
         </Stage>
@@ -202,12 +217,14 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     );
   };
 
-  return { Shot, START: P.SHOTS[0]?.t ?? 0, END: L.end, PLAN: P, TYPE, TRANSITIONS };
+  return { Shot, stateAt, START: P.SHOTS[0]?.t ?? 0, END: L.end, PLAN: P, TYPE, TRANSITIONS };
 };
 
 const C1 = makeChorusShot(CHORUS1, 1);
 const C2 = makeChorusShot(CHORUS2, 2);
 export const ChorusShot = C1.Shot;
+export const chorus1StateAt = C1.stateAt;
+export const chorus2StateAt = C2.stateAt;
 export const Chorus2Shot = C2.Shot;
 export const CHORUS_START = C1.START;
 export const CHORUS2_START = C2.START;

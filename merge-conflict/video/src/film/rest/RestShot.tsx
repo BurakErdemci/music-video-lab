@@ -23,6 +23,7 @@ import { familyOf } from '../../type/fonts.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
 import { GlowBox } from '../../worlds/kit/index.ts';
+import type { ShotState, Subject } from '../framing.ts';
 import { PlateLayer } from '../../worlds/plate.tsx';
 import { SUBWAY_CAMERA, SubwayWorld, TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
 import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
@@ -122,8 +123,8 @@ const lightOf = (who: 'B' | 'O', t: number, scene: RestScene): CardLight => {
   return { key, keyAmt: 0.4, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.9, amt: 0.45, color: metalScene ? '#ffd0a0' : '#d8e8ff', slope: 0.3 }, dots: scene === 'arena' ? 0.5 : 0.1, ball: [0, 5.3, -6], rim: 1.4 };
 };
 
-export const RestShot = ({ frame }: { frame: number }) => {
-  const t = sec(frame);
+/** The camera and girls of verse 3 through the solo at t: the shot's variant and move, the punches and kicks. */
+const restCamera = (t: number) => {
   const { shot, k } = shotIn(RSHOTS, t);
   const scene = shot.scene;
   const blueP = poseAt(RBLUE, t);
@@ -148,6 +149,24 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : solo ? 0.035 : metal ? 0.09 : 0.06;
   const punchedPose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
   const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : solo ? 0.07 : 0.26) : punchedPose;
+  return { shot, k, scene, blueP, orangeP, pose, planeBase, quiet, metal, heavy, solo };
+};
+
+/** What verse 3 through the solo shows at t, for tools/framecheck.mjs (the cards the component draws). */
+export const restStateAt = (t: number): ShotState => {
+  const { shot, scene, blueP, orangeP, pose } = restCamera(t);
+  const clip = (who: 'B' | 'O') => (scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
+  const turn = dissolveState(BLUE_TURN, t);
+  const subjects: Subject[] = [];
+  const b = turn.active ? (turn.toOpacity >= 0.5 ? { card: 'BMX2', at: BLUE_TURN.to?.at } : { card: 'BX3', at: BLUE_TURN.from?.at }) : blueP;
+  if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B') });
+  if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O') });
+  return { pose, shot: shot.id, subjects };
+};
+
+export const RestShot = ({ frame }: { frame: number }) => {
+  const t = sec(frame);
+  const { shot, scene, blueP, orangeP, pose, planeBase, quiet } = restCamera(t);
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);
