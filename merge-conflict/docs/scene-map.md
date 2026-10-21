@@ -202,7 +202,7 @@ Burak: "the raspy voice is full metal everywhere except her first verse, screami
 | Time | Section | Blue | Orange |
 |---|---|---|---|
 | 0–4.37 | intro, blue speaks the git error | disco | not shown |
-| 4.37–16.33 | hard-metal groove | disco | metal **silhouette glimpses only** (outline, no costume detail), a foreshadowing |
+| 4.37–16.33 | hard-metal groove, **all-metal set** (no mirror ball, no disco floor; Burak: the disco look under hard metal "feels odd") | **not shown** | metal **silhouette glimpses only** (outline, no costume detail), a foreshadowing |
 | 16.33–40.58 | verse 1, verse 2 (orange's first verse), "Blue! Orange! Blue!" | disco | disco |
 | 40.58 | "ORANGE!" (word 40.58–41.00) | disco | **turns metal on this shout**, the clip's first transformation |
 | 40.58–117.36 | choruses 1–2, verses 3–4 | disco | metal |
