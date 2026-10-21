@@ -478,5 +478,31 @@
       1536
     ],
     "source": "OD8-shimmy.png"
+  },
+  "OMT": {
+    "file": "cards/OMT.png",
+    "w": 467,
+    "h": 994,
+    "bbox": [
+      7,
+      5,
+      474,
+      999
+    ],
+    "source": "04-karakter-turuncu-metal.png",
+    "temporary": true
+  },
+  "BMT": {
+    "file": "cards/BMT.png",
+    "w": 451,
+    "h": 979,
+    "bbox": [
+      7,
+      15,
+      458,
+      994
+    ],
+    "source": "05-karakter-mavi-metal.png",
+    "temporary": true
   }
 }
