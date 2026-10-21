@@ -10,12 +10,13 @@ import { Card, type CardLight } from '../../cards/Card.tsx';
 import { EVENTS } from '../../events.ts';
 import { GRADES, type Grade, metalGrade } from '../../grade/grade.ts';
 import { clamp01, type Hex, outQuad } from '../../lib/ease.ts';
+import { seeded } from '../../lib/seeded.ts';
 import { lineTokens } from '../../lyrics/LyricLayer.tsx';
 import { Dissolve, dissolvePlan, dissolveState } from '../../particles/dissolve.tsx';
 import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { FLOOR_Y } from '../../stage/floor.ts';
-import { barPos, downbeats, sec } from '../../timing.ts';
+import { barPos, sec } from '../../timing.ts';
 import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { familyOf } from '../../type/fonts.tsx';
@@ -28,7 +29,7 @@ import { BLAME_CAMERA, BLAME_GUTTERS, BlameWorld, CALLGRID_CAMERA, CallGridWorld
 import { CASE_LINE, GUILTY_TAG, LASERCASE_CAMERA, LaserCaseWorld, NAMETAG_CAMERA, NameTagWorld, WHISPER_CAMERA, WhisperWorld, WHITESPACE_CAMERA, WhitespaceWorld } from '../../worlds/v4.tsx';
 import { Arena, CYAN, InsertWorld, RED, SplitWorld } from '../chorus/worlds.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
-import { BLUE_METAL_AT, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
+import { BLUE_METAL_AT, type Move, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
 import { type Box, RestType } from './type.tsx';
 
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
@@ -38,6 +39,7 @@ const HERO: Record<RestScene, Hero> = {
   rails: RAILS_CAMERA, subway: SUBWAY_CAMERA, squash: SQUASH_CAMERA, blame: BLAME_CAMERA, pipeline: PIPELINE_CAMERA, callgrid: CALLGRID_CAMERA,
   whitespace: WHITESPACE_CAMERA, nametag: NAMETAG_CAMERA, lasercase: LASERCASE_CAMERA, scream: FACE_CAMERA, cathedral: CATHEDRAL_CAMERA,
   forge: FORGE_CAMERA, warning: TERMINAL_CAMERA, pushface: FACE_CAMERA, whisper: WHISPER_CAMERA, tunnel: CHEVRON_TUNNEL_CAMERA, arena: ARENA_CAMERA, duel: FACE_CAMERA,
+  faceO: FACE_CAMERA, faceB: FACE_CAMERA,
 };
 /** Painted plates (trial): night for the rebase, Burak's approved worlds for the rest; the code worlds alone where no plate fits. */
 const PLATES: Partial<Record<RestScene, string>> = { rails: 'W12', subway: 'W10', squash: 'W08', blame: 'W01', pipeline: 'W05', lasercase: 'W01', cathedral: 'W04', forge: 'W11', arena: 'W09' };
@@ -46,7 +48,7 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
   rails: ['#6a3cd8', '#e0508a'], subway: ['#2765ff', '#7d38ff'], squash: ['#d23d2a', '#3a5eee'], blame: ['#2765ff', '#19a0e0'], pipeline: ['#e9320b', '#c84a10'],
   callgrid: ['#8a3cd8', '#e0508a'], whitespace: ['#2765ff', '#e9320b'], nametag: ['#d8602a', '#7d38ff'], lasercase: ['#e92645', '#2765ff'], scream: ['#ff2217', '#2d63fb'],
   cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], warning: ['#ff2217', '#c84a10'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
-  tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'],
+  tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], faceB: ['#2d63fb', '#19c8ff'],
 };
 const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
   const i = RSHOTS.indexOf(s);
@@ -56,6 +58,47 @@ const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
 
 const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;
 const HITS = EVENTS.filter((e) => e.kind === 'hit').map((e) => e.t);
+const SPARKS = EVENTS.filter((e) => e.kind === 'spark').map((e) => e.t);
+/** Verses 3-4: the camera punches on every sung word and on every second beat (round 7b, lyric-locked hits). */
+const VERSE_PUNCHES = [
+  ...[23, 24, 25, 26, 27, 28, 29, 38, 39, 40, 41, 42, 43].flatMap((l) => lineTokens(l).map((x) => x.start)),
+  ...EVENTS.filter((e) => e.kind === 'accent').map((e) => e.t),
+].sort((a, b) => a - b);
+const MOVES: readonly Move[] = ['push', 'orbit', 'whip', 'dollyzoom'];
+
+/** A shot's camera move about the girl it frames (round 7b: a camera move on every line). k: 0..1 across the shot,
+ *  u: seconds into it. */
+const moved = (pose: CameraPose, move: Move, k: number, u: number, focus: Vec3, dir: number): CameraPose => {
+  const rel: Vec3 = [pose.position[0] - focus[0], pose.position[1] - focus[1], pose.position[2] - focus[2]];
+  if (move === 'push') {
+    const d = 1 - 0.38 * outQuad(k);
+    return { ...pose, position: [focus[0] + rel[0] * d, focus[1] + rel[1] * d, focus[2] + rel[2] * d] };
+  }
+  if (move === 'orbit') {
+    const a = dir * (-0.42 + 0.84 * k);
+    const c = Math.cos(a);
+    const sn = Math.sin(a);
+    return { ...pose, position: [focus[0] + rel[0] * c + rel[2] * sn, pose.position[1], focus[2] - rel[0] * sn + rel[2] * c], target: focus };
+  }
+  if (move === 'whip') {
+    // a whip pan into the shot: the aim swings in from one side over 11 frames, then drifts on
+    const w = 1 - outQuad(clamp01(u / (11 / 60)));
+    return { ...pose, target: [pose.target[0] + dir * 7 * w, pose.target[1], pose.target[2]], roll: (pose.roll ?? 0) + dir * 0.12 * w };
+  }
+  // dolly zoom on the accent: the camera closes in while the lens widens, so she holds size and the world stretches
+  const d = 1 - 0.45 * k;
+  const fov = Math.min(78, (2 * Math.atan(Math.tan((pose.fov * Math.PI) / 360) / d) * 180) / Math.PI);
+  return { ...pose, position: [focus[0] + rel[0] * d, focus[1] + rel[1] * d, focus[2] + rel[2] * d], fov };
+};
+/** The metal kick: a jolt stepped every 3 frames over 0.25 s (the accent step, not a smooth wobble). */
+const kick = (pose: CameraPose, t: number, amp: number): CameraPose => {
+  const h = [...HITS].reverse().find((x) => t >= x);
+  if (h === undefined || t - h > 0.25) return pose;
+  const w = 1 - (t - h) / 0.25;
+  const r = seeded(`r-kick:${Math.floor(t * 20)}`);
+  const d = amp * w;
+  return { ...pose, position: [pose.position[0] + r.range(-d, d), pose.position[1] + r.range(-d, d), pose.position[2]], roll: (pose.roll ?? 0) + r.range(-0.04, 0.04) * w };
+};
 
 const BLUE_DISCO: Grade = { ...GRADES.reviewed, amount: 0.42 };
 const BLUE_METAL: Grade = metalGrade({ ...GRADES.reviewed, amount: 0.42 }, 1);
@@ -78,15 +121,22 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const blueP = poseAt(RBLUE, t);
   const orangeP = poseAt(RORANGE, t);
   const focus = focusOf(blueP && (scene === 'subway' || scene === 'blame' || scene === 'whitespace' || scene === 'nametag' || scene === 'whisper') ? blueP : (orangeP ?? blueP));
-  const base = variant(HERO[scene], shot.cam, k, focus);
+  const idx = RSHOTS.indexOf(shot);
+  const move: Move | undefined = scene === 'whisper' ? undefined : (shot.move ?? MOVES[idx % MOVES.length]);
+  const dir = idx % 2 ? 1 : -1;
+  const raw = variant(HERO[scene], shot.cam, k, focus);
+  const base = move ? moved(raw, move, k, t - shot.t, focus, dir) : raw;
   const planeBase = variant(HERO[scene], shot.cam, 0, focus);
-  // the punch: every downbeat in the verses, every hit in the scream, breakdown and solo (hardest in the breakdown)
+  // the punch: every sung word and second beat in the verses, every kick in the scream, breakdown and solo (with a
+  // stepped shake, hardest in the breakdown); the whisper holds still
   const heavy = t >= SCREAM.start && t < WHISPER.start;
   const quiet = t >= WHISPER.start && t < SOLO.start;
-  const hits = t >= SCREAM.start ? HITS : downbeats;
+  const metal = t >= SCREAM.start && !quiet;
+  const hits = metal ? HITS : VERSE_PUNCHES;
   const h = [...hits].reverse().find((x) => t >= x) ?? 0;
-  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : heavy || t >= SOLO.start ? 0.07 : 0.05;
-  const pose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
+  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : metal ? 0.08 : 0.06;
+  const punchedPose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
+  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : 0.2) : punchedPose;
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);
@@ -112,8 +162,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
     { t: tk(45, 0), origin: [0, 0, 0] },
     { t: tk(46, 0), origin: [3, 0, 0] },
     { t: tk(47, 0), origin: [0, 1, 0] },
-    ...HITS.filter((x) => x >= SOLO.start).map((x) => ({ t: x, origin: [0, 0, 0] })),
-  ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).slice(-4);
+    ...SPARKS.map((x, i) => ({ t: x, origin: [i % 2 ? 3 : -3, -1, 0] })),
+  ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).sort((a, b) => a.t - b.t).slice(-4);
   const world = (() => {
     switch (scene) {
       case 'rails':
@@ -147,6 +197,10 @@ export const RestShot = ({ frame }: { frame: number }) => {
         return <TerminalWorld t={t} fail={shot.t} />;
       case 'pushface':
         return <InsertWorld t={t} color={RED} hit={tk(47, 0)} />;
+      case 'faceO':
+        return <InsertWorld t={t} color={RED} hit={shot.t} />;
+      case 'faceB':
+        return <InsertWorld t={t} color={CYAN} hit={shot.t} />;
       case 'whisper':
         return <WhisperWorld t={t} />;
       case 'arena':
