@@ -116,6 +116,16 @@ export const PerchWord = ({ plan, t }: { plan: PerchPlan; t: number }) => {
 // ---- HOOP ---------------------------------------------------------------------------------------------
 export interface HoopPlan { id: string; tokens: readonly Token[]; key: number; card: string; at: Placement; pose: CameraPose; rx: number; ry: number; size: number; speed: number; fill: (i: number) => string; keyFill: string }
 
+/** HOOP is for short lines only: every letter must stay readable on the near half. */
+export const HOOP_MAX_LETTERS = 24;
+export const HOOP_MIN_SIZE = 96;
+export const hoopPlan = (p: HoopPlan): HoopPlan => {
+  const letters = p.tokens.reduce((n, tk) => n + clean(tk.text).length + 1, 0);
+  if (letters > HOOP_MAX_LETTERS) throw new Error(`hoop ${p.id}: ${letters} letters, a HOOP takes short lines only (max ${HOOP_MAX_LETTERS})`);
+  if (p.size < HOOP_MIN_SIZE) throw new Error(`hoop ${p.id}: size ${p.size} px is below the readable ${HOOP_MIN_SIZE} px`);
+  return p;
+};
+
 export const HoopType = ({ plan, t }: { plan: HoopPlan; t: number }) => {
   const [hx, hy] = screenOf(plan.card, plan.at, plan.pose, t, keypoint(plan.card, 'hips'));
   const cy = hy - plan.ry * 0.6;
@@ -139,9 +149,9 @@ export const HoopType = ({ plan, t }: { plan: HoopPlan; t: number }) => {
     const near = Math.sin(ang); // +1 nearest the camera (bottom of the ellipse), -1 behind her
     const x = hx + Math.cos(ang) * plan.rx;
     const y = cy + near * plan.ry;
-    const size = (l.tok === plan.key ? plan.size * 1.4 : plan.size) * (0.78 + 0.22 * near);
+    const size = (l.tok === plan.key ? plan.size * 1.4 : plan.size) * (0.85 + 0.15 * near);
     const el = (
-      <text key={i} x={0} y={0} textAnchor="middle" fontFamily={familyOf('bungee')} fontSize={size} fill={l.tok === plan.key ? plan.keyFill : plan.fill(l.tok)} stroke={INK} strokeWidth={size * 0.05} paintOrder="stroke" opacity={0.65 + 0.35 * (near + 1) / 2} transform={`translate(${x} ${y}) scale(${Math.max(0.25, Math.abs(Math.sin(ang + Math.PI / 2)) * 0.6 + 0.4)} 1)`}>
+      <text key={i} x={0} y={0} textAnchor="middle" fontFamily={familyOf('bungee')} fontSize={size} fill={l.tok === plan.key ? plan.keyFill : plan.fill(l.tok)} stroke={INK} strokeWidth={size * 0.05} paintOrder="stroke" opacity={0.65 + 0.35 * (near + 1) / 2} transform={`translate(${x} ${y}) scale(${0.7 + 0.3 * Math.abs(Math.cos(ang))} 1)`}>
         {l.ch}
       </text>
     );
