@@ -2,13 +2,17 @@
 // Render a list of frames from one bundle into video/out/stills/ and build a labelled contact sheet.
 //
 //   node tools/stills.mjs --frames 0,100,468 [--comp MC60] [--out video/out/stills]
-//                         [--cols 3] [--tile 640] [--gl angle]
+//                         [--cols 3] [--tile 640] [--gl angle] [--serve video/out/bundle]
+//
+// --serve renders from a bundle made once per round (`npx remotion bundle src/index.ts --out-dir out/bundle`);
+// without it the tool bundles into Temp and deletes that bundle when it is done (each bundle is about 300 MB and
+// 160 of them filled C: on 21 Oct 2026).
 //
 // Uses @remotion/bundler and @remotion/renderer from video/node_modules (they ship with
 // @remotion/cli at the same pinned version). The labelled sheet needs python + Pillow;
 // without them an unlabelled ffmpeg tile is written instead.
 import { spawnSync } from 'node:child_process';
-import { existsSync, mkdirSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { createRequire } from 'node:module';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -71,7 +75,8 @@ const contactSheet = (files, labels, out) => {
 const main = async () => {
   mkdirSync(outDir, { recursive: true });
   const t0 = Date.now();
-  const serveUrl = await bundle({ entryPoint: path.join(VIDEO, 'src/index.ts'), publicDir: path.join(VIDEO, 'public') });
+  const serve = opt('serve', null);
+  const serveUrl = serve ? path.resolve(ROOT, serve) : await bundle({ entryPoint: path.join(VIDEO, 'src/index.ts'), publicDir: path.join(VIDEO, 'public') });
   const chromiumOptions = gl ? { gl } : {};
   // Lanes called this tool outside tools/locked.sh and their Chromes overlapped other renders, so the
   // lock is taken here, around the browser's whole life, not left to the caller.
@@ -89,6 +94,7 @@ const main = async () => {
   await browser.close({ silent: true });
   return files;
   });
+  if (!serve) rmSync(serveUrl, { recursive: true, force: true });
   const sheet = path.join(outDir, 'contact.jpg');
   contactSheet(files, frames.map((f) => `${comp} f${f}`), sheet);
   console.log(`bundle+render ${Date.now() - t0} ms, ${frames.length} stills, contact sheet: ${path.relative(ROOT, sheet)}`);
