@@ -85,7 +85,7 @@ const METAL: MShot[] = [
   { id: 'solo-tunnel', t: bar(2), scene: 'tunnel', cam: 'hero', into: 'streaks', move: 'whip', B: ['BS2', full(-1.6, 4.6)], O: ['OS2', full(1.6, 4.6)] },
   { id: 'solo-split', t: half(2), scene: 'duel', cam: 'hero', into: 'shatter', move: 'orbit', B: faceAt('BMX1', -4.4), O: faceAt('OMX1', 4.4, true) },
   { id: 'solo-arena', t: bar(3), scene: 'arena', cam: 'wide', into: 'mirror', move: 'whip', B: ['BQ2', full(-3.3, 5.0)], O: ['OS3', full(3.3, 5.0)] },
-  { id: 'solo-split-2', t: bar(4), scene: 'duel', cam: 'close', into: 'shatter', move: 'push', B: faceAt('BMX3', -4.4), O: faceAt('OMX5', 4.4, true) },
+  { id: 'solo-split-2', t: bar(4), scene: 'duel', cam: 'hero', into: 'shatter', move: 'push', B: faceAt('BMX3', -4.4), O: faceAt('OMX5', 4.4, true) },
   { id: 'solo-horns', t: half(4), scene: 'forge', cam: 'hero', into: 'streaks', move: 'orbit', B: null, O: ['OC3', full(2.4, 5.4)] },
   // back to back (QK3)
   { id: 'solo-cathedral-2', t: bar(5), scene: 'panel', panel: 'QK3', cam: 'hero', into: 'ink', move: 'push', B: null, O: null },
@@ -96,7 +96,7 @@ const METAL: MShot[] = [
   { id: 'solo-forge-2', t: bar(8), scene: 'forge', cam: 'wide', into: 'streaks', move: 'dollyzoom', B: ['BS1', full(-2.4, 5.0)], O: ['OS3', full(3, 5.2)] },
   { id: 'solo-split-3', t: half(8), scene: 'duel', cam: 'hero', into: 'shatter', move: 'push', B: faceAt('BMX2', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'solo-end', t: bar(9), scene: 'cathedral', cam: 'wide', into: 'tunnel', move: 'orbit', B: ['BS3', full(-2.2, 5.0)], O: ['OS2', full(2.2, 5.2)] },
-  { id: 'solo-end-faces', t: half(9), scene: 'duel', cam: 'close', into: 'shatter', move: 'dollyzoom', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
+  { id: 'solo-end-faces', t: half(9), scene: 'duel', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
 ];
 // the solo's cut rate doubles (round 7c, "Living motion"): every solo shot of two beats or more gets a second
 // framing on its middle beat, the same girls from another angle (paintings excepted)
