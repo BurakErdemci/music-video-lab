@@ -287,6 +287,54 @@
     ],
     "source": "BF1-blown.png"
   },
+  "BH1": {
+    "file": "cards/BH1.png",
+    "w": 984,
+    "h": 1432,
+    "bbox": [
+      20,
+      37,
+      1004,
+      1469
+    ],
+    "source": "BH1-headbang.png"
+  },
+  "BH2": {
+    "file": "cards/BH2.png",
+    "w": 1012,
+    "h": 1222,
+    "bbox": [
+      11,
+      130,
+      1023,
+      1352
+    ],
+    "source": "BH2-stage-dive.png"
+  },
+  "BH3": {
+    "file": "cards/BH3.png",
+    "w": 937,
+    "h": 1469,
+    "bbox": [
+      38,
+      25,
+      975,
+      1494
+    ],
+    "source": "BH3-build-failed.png"
+  },
+  "BH4": {
+    "file": "cards/BH4.png",
+    "w": 999,
+    "h": 1470,
+    "bbox": [
+      9,
+      21,
+      1008,
+      1491
+    ],
+    "source": "BH4-sky-scream.png"
+  },
   "BM1": {
     "file": "cards/BM1.png",
     "w": 978,
@@ -443,6 +491,30 @@
     ],
     "source": "BMX5-horror.png"
   },
+  "BP1": {
+    "file": "cards/BP1.png",
+    "w": 754,
+    "h": 1500,
+    "bbox": [
+      117,
+      17,
+      871,
+      1517
+    ],
+    "source": "BP1-glow-hand.png"
+  },
+  "BP2": {
+    "file": "cards/BP2.png",
+    "w": 996,
+    "h": 1508,
+    "bbox": [
+      8,
+      1,
+      1004,
+      1509
+    ],
+    "source": "BP2-rise.png"
+  },
   "BQ1": {
     "file": "cards/BQ1.png",
     "w": 975,
@@ -562,6 +634,18 @@
       1424
     ],
     "source": "BS3-keytar-aim.png"
+  },
+  "BS4": {
+    "file": "cards/BS4.png",
+    "w": 947,
+    "h": 1505,
+    "bbox": [
+      55,
+      12,
+      1002,
+      1517
+    ],
+    "source": "BS4-keytar-spin.png"
   },
   "BV1": {
     "file": "cards/BV1.png",
@@ -1043,6 +1127,54 @@
     ],
     "source": "OF4-force.png"
   },
+  "OH1": {
+    "file": "cards/OH1.png",
+    "w": 1004,
+    "h": 1456,
+    "bbox": [
+      20,
+      44,
+      1024,
+      1500
+    ],
+    "source": "OH1-headbang.png"
+  },
+  "OH2": {
+    "file": "cards/OH2.png",
+    "w": 1018,
+    "h": 902,
+    "bbox": [
+      0,
+      178,
+      1018,
+      1080
+    ],
+    "source": "OH2-stage-dive.png"
+  },
+  "OH3": {
+    "file": "cards/OH3.png",
+    "w": 947,
+    "h": 1515,
+    "bbox": [
+      18,
+      6,
+      965,
+      1521
+    ],
+    "source": "OH3-jaw-drop.png"
+  },
+  "OH4": {
+    "file": "cards/OH4.png",
+    "w": 998,
+    "h": 1506,
+    "bbox": [
+      14,
+      11,
+      1012,
+      1517
+    ],
+    "source": "OH4-sky-scream.png"
+  },
   "OI1": {
     "file": "cards/OI1.png",
     "w": 866,
@@ -1223,6 +1355,30 @@
     ],
     "source": "OMX5-sneer.png"
   },
+  "OP1": {
+    "file": "cards/OP1.png",
+    "w": 639,
+    "h": 1481,
+    "bbox": [
+      238,
+      13,
+      877,
+      1494
+    ],
+    "source": "OP1-hello.png"
+  },
+  "OP2": {
+    "file": "cards/OP2.png",
+    "w": 1013,
+    "h": 1504,
+    "bbox": [
+      11,
+      0,
+      1024,
+      1504
+    ],
+    "source": "OP2-rise.png"
+  },
   "OQ1": {
     "file": "cards/OQ1.png",
     "w": 913,
@@ -1354,6 +1510,18 @@
       1518
     ],
     "source": "OS3-raise.png"
+  },
+  "OS4": {
+    "file": "cards/OS4.png",
+    "w": 933,
+    "h": 1495,
+    "bbox": [
+      55,
+      13,
+      988,
+      1508
+    ],
+    "source": "OS4-guitar-smash.png"
   },
   "OT1": {
     "file": "cards/OT1.png",
@@ -1631,6 +1799,30 @@
     ],
     "source": "PB4-celebrate.png"
   },
+  "PB5": {
+    "file": "cards/PB5.png",
+    "w": 1010,
+    "h": 1353,
+    "bbox": [
+      14,
+      19,
+      1024,
+      1372
+    ],
+    "source": "PB5-high-five.png"
+  },
+  "PB6": {
+    "file": "cards/PB6.png",
+    "w": 972,
+    "h": 1477,
+    "bbox": [
+      34,
+      26,
+      1006,
+      1503
+    ],
+    "source": "PB6-spin.png"
+  },
   "PBX1": {
     "file": "cards/PBX1.png",
     "w": 1024,
@@ -1714,6 +1906,30 @@
       1487
     ],
     "source": "PO4-celebrate.png"
+  },
+  "PO5": {
+    "file": "cards/PO5.png",
+    "w": 966,
+    "h": 1391,
+    "bbox": [
+      28,
+      63,
+      994,
+      1454
+    ],
+    "source": "PO5-high-five.png"
+  },
+  "PO6": {
+    "file": "cards/PO6.png",
+    "w": 1004,
+    "h": 1496,
+    "bbox": [
+      12,
+      21,
+      1016,
+      1517
+    ],
+    "source": "PO6-spin.png"
   },
   "POX1": {
     "file": "cards/POX1.png",
