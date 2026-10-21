@@ -108,7 +108,7 @@ Two girls fight over one line of code the way two divas fight over one spotlight
 - SFX plan, built with the beat map (risers into the choruses, the breakdown slams, the hard stop).
 - Whether the solo needs one extra hero card per girl (a signature finishing pose).
 
-## Two modes: DISCO → METAL → FUSION (Burak, 2026-10-21)
+## ~~Two modes: DISCO → METAL → FUSION~~ (DROPPED by Burak the same day: the song keeps one tone throughout, so a metal turn would look absurd)
 
 "Start as a bright, chirpy disco; in the hard metal parts the colours, the setting and the characters turn metal; chill parts disco; metal parts with a metal font, palette and theme." The turn is also the story: the rivalry starts as a disco flirt and turns serious when the metal hits. The final "gradient now" fuses both.
 
@@ -130,3 +130,34 @@ Mode map. Loudness per section is flat (−15 to −20 dB, a compressed master; 
 | Girls | approved disco outfits | metal forms: spiked leather, flames, studs; same faces and hair | disco outfits with metal pieces |
 
 Fonts: OFL faces from Google Fonts, kept as files under `video/public/fonts/` with their licences. These are not npm dependencies.
+
+## Typography-led clip (Burak, 2026-10-21, replaces the mode idea)
+
+"Text arriving in different shapes, changing colour, with elite transitions, and the girls behind it: a more typography-heavy clip." The lyric type is the lead; the girls dance behind it. They are graded, slightly soft in depth, and step forward on the choruses and the big moments. One disco look throughout.
+
+Type forms (each lyric line is designed as one of these; never the same form twice in a row):
+
+- DIFF: `- blue` in red and `+ orange` in green, unified-diff style. This is the song's own subject.
+- CODE: an editor line with syntax colours and a cursor typing on the beat.
+- RING: text running on a circle around the mirror ball or a girl.
+- WAVE: the baseline waves on the beat.
+- FLOOR: letters lighting up in the dance-floor tiles.
+- MARQUEE: light-box bulbs.
+- STACK: a justified block of words in mixed weights and sizes.
+- STAMP: plates multiplying on the beats.
+- FLAP: a split-flap departure board.
+- EXTRUDE: thick 3D letters turning in space.
+
+Colour:
+- The orange girl's lines sit in the orange family, the blue girl's in the blue family, lines sung together in the gradient.
+- Words change hue on the beats.
+- The key word of each line is the biggest and the most saturated.
+
+Transitions (the "elite" part):
+- **Letter morph:** the letters of one word fly into the next word, reusing shared letters.
+- **Conflict-marker wipes:** a mask shaped like `<<<<<<<`, `=======` or `>>>>>>>`.
+- **Through-the-counter:** the camera flies through the O of a word into the next scene.
+- **Particles:** letters shatter into particles and re-form.
+- **Whip:** a smear whip.
+
+Assets still needed: the 16 disco dance cards (j-dance) for the dancing girls behind the type, and the SET-disco-club plate. Cancelled: the metal forms (k-metal) and the metal, ash and fusion plates.
