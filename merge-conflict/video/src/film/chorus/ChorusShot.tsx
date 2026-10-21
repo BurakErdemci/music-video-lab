@@ -4,6 +4,7 @@
 // field (its bursts carry the cuts); then the type (typeplan.ts) and the transitions on top. The camera punches on
 // every beat. A cut between two worlds is carried by a cover transition; a cut inside one world by a shock.
 import { AbsoluteFill } from 'remotion';
+import { useLayer, useShotBackground } from '../../layer.ts';
 import { type CameraPose, typePlane } from '../../camera/camera.ts';
 import { Card, type CardLight } from '../../cards/Card.tsx';
 import { GRADES, type Grade, metalGrade } from '../../grade/grade.ts';
@@ -42,6 +43,9 @@ const PLATES: Record<1 | 2, Partial<Record<Scene, string>>> = {
 /** Scenes framed the same way in both choruses (the close-ups, the logo crash): their camera never varies. */
 const FIXED: readonly Scene[] = ['insert', 'split', 'logo'];
 
+/** A shock inside a world rings out from the floor at the frame's foot, not from the centre where a face sits. */
+const SHOCK_ORIGIN: [number, number] = [960, 980];
+
 const poseOf = (list: readonly Pose[], t: number): Pose | null => {
   let p: Pose | null = null;
   for (const e of list) if (t >= e.t - 1e-9) p = e;
@@ -65,7 +69,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     const prev = P.SHOTS[i - 1];
     const cover = !prev || prev.scene !== s.scene;
     const kind = cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock';
-    return { id: `ch${v}-tr-${s.id}`, kind, at: s.t, pre: cover ? 4 / 60 : 0, post: cover ? 8 / 60 : 14 / 60, colors: COLORS[s.scene], origin: s.origin };
+    return { id: `ch${v}-tr-${s.id}`, kind, at: s.t, pre: cover ? 4 / 60 : 0, post: cover ? 8 / 60 : 14 / 60, colors: COLORS[s.scene], origin: s.origin ?? (cover ? undefined : SHOCK_ORIGIN) };
   });
 
   /** The camera: the shot's move, a punch on every beat (fov narrows 7 % and eases back over 10 frames), and a
@@ -136,6 +140,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
 
   const Shot = ({ frame }: { frame: number }) => {
     const t = sec(frame);
+    const layer = useLayer();
     const { pose, shot, base } = cameraAt(t);
     const plane = typePlane(pose, base, 1);
     const H = P.HITS;
@@ -193,7 +198,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
       return <Card key={`${who}-${s.card}`} id={s.card} t={t} grade={who === 'B' ? BLUE_GRADE : ORANGE_GRADE} {...s.at} dx={s.dx} dy={s.dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={s.clip} light={sceneLight(who, t, scene)} ground={scene === 'arena' || scene === 'spin' || scene === 'fire' || scene === 'walls' || scene === 'runway' ? undefined : false} />;
     };
     return (
-      <AbsoluteFill style={{ background: '#000' }}>
+      <AbsoluteFill style={{ background: useShotBackground() }}>
         <Stage pose={pose}>
           {PLATES[v][scene] && <PlateLayer id={PLATES[v][scene] as string} base={base} margin={scene === 'spin' ? 2.2 : 1.35} />}
           {world}
@@ -208,7 +213,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
             <ChorusType entries={TYPE} t={t} pose={pose} screen={false} merges={MERGES} />
           </g>
           <ChorusType entries={TYPE} t={t} pose={pose} screen merges={MERGES} />
-          {TRANSITIONS.map((s) => {
+          {layer !== 'type' && TRANSITIONS.map((s) => {
             const [a, b] = transitionWindow(s);
             return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
           })}

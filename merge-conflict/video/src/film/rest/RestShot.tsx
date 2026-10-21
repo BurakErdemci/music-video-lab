@@ -5,6 +5,7 @@
 // every downbeat in the verses and on every hit (each second beat) in the scream, the breakdown and the solo,
 // hardest in the breakdown; the whisper holds still.
 import { AbsoluteFill } from 'remotion';
+import { useLayer, useShotBackground } from '../../layer.ts';
 import { type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
 import { Card, type CardLight } from '../../cards/Card.tsx';
 import { EVENTS } from '../../events.ts';
@@ -55,7 +56,7 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
 const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
   const i = RSHOTS.indexOf(s);
   const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
-  return { id: `r-tr-${s.id}`, kind: cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene] };
+  return { id: `r-tr-${s.id}`, kind: cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
 });
 
 const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;
@@ -166,6 +167,7 @@ export const restStateAt = (t: number): ShotState => {
 
 export const RestShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
+  const layer = useLayer();
   const { shot, scene, blueP, orangeP, pose, planeBase, quiet } = restCamera(t);
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
@@ -251,7 +253,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const turn = dissolveState(BLUE_TURN, t);
   const blueFig = turn.active ? <>{figure('B', { t: 0, card: 'BX3', at: BLUE_TURN.from?.at }, turn.fromOpacity)}{figure('B', { t: 0, card: 'BMX2', at: BLUE_TURN.to?.at }, turn.toOpacity)}</> : figure('B', blueP);
   return (
-    <AbsoluteFill style={{ background: '#000' }}>
+    <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
         {/* the moves (whip, orbit, dolly zoom) swing past the opening frame, so the plate overflows more */}
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={1.75} />}
@@ -281,7 +283,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
         })()}
         {/* out of the whisper's near-black the solo opens up over 0.6 s instead of jumping bright (a flash pair) */}
         {t >= SOLO.start && t < SOLO.start + 0.6 && <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={0.8 * (1 - (t - SOLO.start) / 0.6)} />}
-        {TRANSITIONS.map((s) => {
+        {layer !== 'type' && TRANSITIONS.map((s) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
         })}

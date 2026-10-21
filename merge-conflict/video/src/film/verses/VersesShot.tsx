@@ -4,6 +4,7 @@
 // scene; orange gathers out of particles as the intruder on "you?" and turns metal through a particle dissolve on
 // "ORANGE!" through the OT1-OT5 sequence; a cover transition when the world changes, a shock inside one.
 import { AbsoluteFill } from 'remotion';
+import { useLayer, useShotBackground } from '../../layer.ts';
 import { type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
 import { Card, type CardLight, type Placement } from '../../cards/Card.tsx';
 import { hoopPlan, throwPlan, throwRecoil } from '../../girls/interact.tsx';
@@ -56,7 +57,7 @@ const COLORS: Record<VerseScene, [Hex, Hex]> = {
 };
 const TRANSITIONS: TransitionSpec[] = VSHOTS.map((s, i) => {
   const cover = i === 0 || (VSHOTS[i - 1] as VShot).scene !== s.scene;
-  return { id: `v-tr-${s.id}`, kind: cover ? (s.into ?? 'streaks') : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene] };
+  return { id: `v-tr-${s.id}`, kind: cover ? (s.into ?? 'streaks') : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
 });
 
 // orange gathers out of particles as the intruder (done on "you?")
@@ -103,6 +104,7 @@ export const versesStateAt = (t: number): ShotState => {
 
 export const VersesShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
+  const layer = useLayer();
   const { shot, k, scene, blueP, orangeP, pose, planeBase } = verseCamera(t);
   const plane = typePlane(pose, planeBase, 1);
   const p = pulseAt(t);
@@ -166,7 +168,7 @@ export const VersesShot = ({ frame }: { frame: number }) => {
   let orangeFig = figure('O', orangeP);
   if (orangeP?.card === 'OI1' && intr.active) orangeFig = figure('O', orangeP, intr.toOpacity);
   return (
-    <AbsoluteFill style={{ background: '#000' }}>
+    <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
         {world}
@@ -188,7 +190,7 @@ export const VersesShot = ({ frame }: { frame: number }) => {
           })}
         </g>
         <VerseType entries={VERSE_TYPE.filter((e) => e.id === 'v-feature' || e.id === 'v-css')} t={t} pose={pose} anchors={anchors} hoop={hoop} throwP={scene === 'alley' ? throwP : undefined} />
-        {TRANSITIONS.map((s) => {
+        {layer !== 'type' && TRANSITIONS.map((s) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
         })}
