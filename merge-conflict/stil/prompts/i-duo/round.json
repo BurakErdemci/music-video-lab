@@ -1,0 +1,62 @@
+[
+ {
+  "id": "D01-eye-split",
+  "prompt": "stil/prompts/i-duo/D01-eye-split.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/i-duo/out/D01-eye-split.png"
+ },
+ {
+  "id": "D02-spotlight-shove",
+  "prompt": "stil/prompts/i-duo/D02-spotlight-shove.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/i-duo/out/D02-spotlight-shove.png"
+ },
+ {
+  "id": "D03-one-cone",
+  "prompt": "stil/prompts/i-duo/D03-one-cone.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/i-duo/out/D03-one-cone.png"
+ },
+ {
+  "id": "D04-both-scream",
+  "prompt": "stil/prompts/i-duo/D04-both-scream.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/i-duo/out/D04-both-scream.png"
+ },
+ {
+  "id": "D05-after-hours",
+  "prompt": "stil/prompts/i-duo/D05-after-hours.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/i-duo/out/D05-after-hours.png"
+ },
+ {
+  "id": "D06-gradient-spin",
+  "prompt": "stil/prompts/i-duo/D06-gradient-spin.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/onayli/03-karakter-mavi.png"
+  ],
+  "out": "stil/prompts/i-duo/out/D06-gradient-spin.png"
+ }
+]

@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./D05-after-hours.png
+
+SHOT: The empty disco club after closing, dark navy, a single warm work light. The two girls sit back to back on the edge of the stage, legs dangling, not looking at each other, a little sad and tired; slow confetti drifts down through the warm light.
+
+The FIRST attached image is the approved key frame: match its art style exactly (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces), its neon colour grading (one dominant saturated hue, the rival colour as the cutting light), its hand-drawn neon chalk scribbles tracing the silhouettes and its crisp floating confetti and mirror-ball sparkles. The SECOND attached image is the official model sheet of the ORANGE girl and the THIRD of the BLUE girl: match their faces, hair, outfits, accessories and proportions EXACTLY.
+
+Rules:
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks.
+- NO halftone dot screens, NO print grain, NO film noise, NO scanlines, NO VHS or broken-TV effects over the image.
+- Fully clothed, not sexualised. Landscape 1536x1024.
+
+After copying, print the output path and pixel size.
