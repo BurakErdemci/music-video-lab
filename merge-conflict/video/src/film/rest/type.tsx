@@ -12,11 +12,15 @@ import { Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
 import { DissolveText } from '../../type/DissolveText.tsx';
+import { faceBoxes, Knockout, planeFaceBoxes, planeMarginPath } from '../../type/Knockout.tsx';
 import { LightBox } from '../../type/LightBox.tsx';
+import { Scrim } from '../../type/Scrim.tsx';
 import { Slam } from '../../type/Slam.tsx';
-import { MONO } from '../../type/fonts.tsx';
+import { layout, MONO } from '../../type/fonts.tsx';
 import { beatPos } from '../../timing.ts';
 import type { TypeEntry } from '../chorus/typeplan.ts';
+import { type RShot, RSHOTS } from './plan.ts';
+import { restStateAt } from './RestShot.tsx';
 
 export interface Box { x: number; y: number; w: number; h: number }
 export interface RestAnchors { gutter?: Box; countdown?: Box; tag?: Box; caseLine?: Box; /** GIT! and PUSH! end with their shots. */ gitUntil?: number; pushUntil?: number }
@@ -30,8 +34,8 @@ export const GitHud = ({ t, t0, t1, until }: { t: number; t0: number; t1: number
   const cursor = beatPos(t) % 1 < 0.5;
   return (
     <g>
-      <rect x={56} y={928} width={560} height={92} rx={10} fill="#07040c" fillOpacity={0.82} stroke="#ff4a1a" strokeOpacity={0.7} strokeWidth={2} />
-      <text x={84} y={988} fontFamily={MONO} fontSize={40} fill="#ffd6c2">
+      <Scrim x={100} y={928} w={520} h={82} pad={0} opacity={0.82} edge="#ffb08a" />
+      <text x={124} y={982} fontFamily={MONO} fontSize={40} fill="#ffd6c2">
         {text.slice(0, n)}
         <tspan fill="#ff4a1a">{cursor ? '█' : ' '}</tspan>
       </text>
@@ -43,40 +47,58 @@ const spec = (e: TypeEntry, box: Box): FormSpec => ({ id: `r-${e.id}`, line: e.l
 const words = (e: TypeEntry) => lineTokens(e.line).slice(e.range[0], e.range[1]);
 const upper = (e: TypeEntry) => words(e).map((w) => w.text.toUpperCase()).join(' ');
 
+/** The moment painting is on (scene 'panel'): its painted faces are not cards, so no checker sees them (the type keeps off them by eye). */
+const panelAt = (t: number): boolean => {
+  const i = RSHOTS.reduce((a, s, k) => (t >= s.t ? k : a), -1);
+  return i >= 0 && (RSHOTS[i] as RShot).scene === 'panel';
+};
+
 export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[]; t: number; anchors: RestAnchors }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
     if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' ? 0.6 : 0)) continue;
     switch (e.id) {
-      case 'r-rebased':
-        out.push(<LightBox key={e.id} spec={{ id: e.id, words: words(e).map((w, i) => ({ text: w.text.replace(/[!,]$/, '').toUpperCase(), color: i === 1 ? '#ff2a14' : '#ffb07a' })), t0: e.t0 + 0.05, stagger: 0.035, t1: e.t1, x: 960, y: 170, size: 96, box: true }} t={t} />);
+      case 'r-rebased': {
+        // the line must fit the margin box of the painting it ends on (the plane shows it at 1.1x there): sized to 860 px
+        const ws = words(e).map((w) => w.text.replace(/[!,]$/, '').toUpperCase());
+        const size = Math.min(96, 860 / (layout(ws.join(' '), 1, 'display', 0.06).width + 0.7));
+        out.push(<LightBox key={e.id} spec={{ id: e.id, words: words(e).map((w, i) => ({ text: w.text.replace(/[!,]$/, '').toUpperCase(), color: i === 1 ? '#ff2a14' : '#ffb07a' })), t0: e.t0 + 0.05, stagger: 0.035, t1: e.t1, x: 960, y: 170, size, box: true, backing: true }} t={t} />);
         break;
+      }
       case 'r-mine':
         out.push(<Wave key={e.id} spec={spec(e, { x: 120, y: 120, w: 1680, h: 300 })} t={t} opt={{ size: 130, face: 'shrikhand', amp: 40 }} />);
         break;
       case 'r-squash':
-        out.push(<Stack key={e.id} spec={spec(e, { x: 120, y: 60, w: 760, h: 420 })} t={t} />);
+        out.push(<Stack key={e.id} spec={spec(e, { x: 340, y: 140, w: 720, h: 420 })} t={t} />);
         break;
       case 'r-blame': {
-        // blame's gutter is the world's: the line itself is typed beside the canyon's name tags
-        const g = anchors.gutter ?? { x: 160, y: 160, w: 1200, h: 520 };
-        out.push(<Code key={e.id} spec={spec(e, g)} t={t} opt={{ gutter: 'blue', size: Math.min(64, g.h / 6), keyScale: 1.6, chrome: 'git blame button.css' }} />);
+        // the blame shots push in so far that the plane shows 2.3x here: the panel is authored at the size that fits the
+        // margin in the tightest of them (the canyon's own gutter box overflowed it), the type sized to its width
+        const g = { x: 640, y: 330, w: 640, h: 270 };
+        const toks = words(e);
+        const chars = toks.reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.6 : 1), 'blue'.length + 2);
+        out.push(<Code key={e.id} spec={spec(e, g)} t={t} opt={{ gutter: 'blue', size: Math.min(64, g.h / 6, (g.w - 90) / (0.6 * chars)), keyScale: 1.6, chrome: 'git blame button.css', backing: true }} />);
         break;
       }
       case 'r-red':
-        out.push(<Marquee key={e.id} spec={spec(e, { x: 80, y: 80, w: 1760, h: 300 })} t={t} />);
+        out.push(
+          <g key={e.id}>
+            <Scrim x={140} y={110} w={1640} h={250} pad={20} />
+            <Marquee spec={spec(e, { x: 140, y: 110, w: 1640, h: 250 })} t={t} />
+          </g>,
+        );
         break;
       case 'r-gone':
-        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: upper(e).replace(/!$/, ''), t0: e.t0, t1: e.t1 - 0.35, x: 960, y: 260, size: 150, color: '#7fe3ff', face: 'bungee' }} t={t} />);
+        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: upper(e).replace(/!$/, ''), t0: e.t0, t1: e.t1 - 0.35, x: 960, y: 260, size: Math.min(150, 760 / layout(upper(e).replace(/!$/, ''), 1, 'bungee').width), color: '#7fe3ff', face: 'bungee', halo: true }} t={t} />);
         break;
       case 'r-five': {
         const c = anchors.countdown ?? { x: 660, y: 70, w: 600, h: 260 };
         const tok = lineTokens(e.line);
-        out.push(<Counter key={e.id} spec={{ from: 0, to: 5, t0: tok[0]?.start ?? e.t0, t1: tok[4]?.start ?? e.t1, x: c.x + c.w / 2, y: c.y + c.h * 0.82, size: c.h * 0.85, color: '#ff3d9a', digits: 1 }} t={t} />);
+        out.push(<Counter key={e.id} spec={{ from: 0, to: 5, t0: tok[0]?.start ?? e.t0, t1: tok[4]?.start ?? e.t1, x: c.x + c.w / 2, y: c.y + c.h * 0.82, size: c.h * 0.85, color: '#ff3d9a', digits: 1, backing: true }} t={t} />);
         break;
       }
       case 'r-nobody':
-        out.push(<Flap key={e.id} spec={spec(e, { x: 360, y: 760, w: 1200, h: 220 })} t={t} cols={16} />);
+        out.push(<Flap key={e.id} spec={spec(e, { x: 360, y: 760, w: 1200, h: 220 })} t={t} cols={16} backing />);
         break;
       case 'r-tabs':
         out.push(<Slam key={e.id} spec={{ text: 'TABS!', t0: lineTokens(e.line)[2]?.start ?? e.t0, t1: e.t1 - 0.02, x: 1340, y: 620, size: 300, color: '#19c8ff', face: 'bungee', rot: -5 }} t={t} />);
@@ -91,18 +113,21 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         break;
       }
       case 'r-touch': {
-        const c = anchors.caseLine ?? { x: 560, y: 420, w: 800, h: 140 };
-        out.push(<Code key={e.id} spec={spec(e, { x: c.x - 360, y: c.y - 220, w: c.w + 720, h: c.h + 260 })} t={t} opt={{ gutter: '//', size: Math.min(62, (c.h + 260) / 5.2), keyScale: 1.5, chrome: 'comment.js' }} />);
+        // the case's own line box overflowed the margin when the plane magnified: the panel is authored at the size that
+        // fits the tightest of the comment shots, the type sized to its width
+        const b = { x: 700, y: 330, w: 690, h: 370 };
+        const chars = words(e).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.5 : 1), '//'.length + 2);
+        out.push(<Code key={e.id} spec={spec(e, b)} t={t} opt={{ gutter: '//', size: Math.min(62, (b.w - 90) / (0.6 * chars)), keyScale: 1.5, chrome: 'comment.js', backing: true }} />);
         break;
       }
       case 'r-wrote':
-        out.push(<Stamp key={e.id} spec={spec(e, { x: 100, y: 80, w: 900, h: 420 })} t={t} />);
+        out.push(<Stamp key={e.id} spec={spec(e, { x: 210, y: 300, w: 1000, h: 420 })} t={t} />);
         break;
       case 'r-touched':
-        out.push(<Diff key={e.id} spec={spec(e, { x: 340, y: 120, w: 1240, h: 520 })} t={t} opt={{ minus: "// don't touch", size: 78, keyScale: 1.8, title: 'comment.js' }} />);
+        out.push(<Diff key={e.id} spec={spec(e, { x: 390, y: 250, w: 1110, h: 450 })} t={t} opt={{ minus: "// don't touch", size: Math.min(78, (1110 - 90) / (0.6 * (2 + words(e).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.8 : 1), 0)))), keyScale: 1.8, title: 'comment.js', backing: true }} />);
         break;
       case 'r-scream':
-        out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 820, w: 1820, rot: -3 }} t={t} />);
+        out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', ...(panelAt(t) ? { cx: 960, cy: 886, w: 985 } : { cx: 960, cy: 715, w: 1480 }), rot: -3 }} t={t} />);
         break;
       // GIT! PUSH! FORCE! (round 7c storyboard): each word stands beside orange (she is on the right third), never
       // over her face or her action, and leaves with her shot; the painting after PUSH! stays uncovered
@@ -123,5 +148,8 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         break;
     }
   }
-  return <g>{out}</g>;
+  // the Shouts are drawn in screen space, the rest on the type plane (RestShot.tsx)
+  const onScreen = entries.some((e) => e.form === 'Shout');
+  const st = restStateAt(t);
+  return <Knockout id={onScreen ? 'r-face-knockout-s' : 'r-face-knockout'} faces={(onScreen ? faceBoxes : planeFaceBoxes)(st)} clip={onScreen ? undefined : planeMarginPath(st)}>{out}</Knockout>;
 };
