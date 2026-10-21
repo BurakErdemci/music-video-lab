@@ -5,7 +5,8 @@ import { lerp, outQuad } from '../lib/ease.ts';
 import { f } from '../timing.ts';
 
 export type Vec3 = [number, number, number];
-export interface CameraPose { position: Vec3; target: Vec3; fov: number }
+/** `roll`: radians about the view axis (a barrel roll), positive turns the image clockwise; default 0. */
+export interface CameraPose { position: Vec3; target: Vec3; fov: number; roll?: number }
 export type CameraPath = (t: number) => CameraPose;
 
 export const W = 1920;
@@ -26,6 +27,7 @@ export const blendPose = (a: CameraPose, b: CameraPose, k: number): CameraPose =
   position: lerp3(a.position, b.position, k),
   target: lerp3(a.target, b.target, k),
   fov: lerp(a.fov, b.fov, k),
+  roll: lerp(a.roll ?? 0, b.roll ?? 0, k),
 });
 
 /** Shift a pose by (dx, dy, dz) on both position and target: a truck/pedestal/dolly. */
@@ -33,6 +35,7 @@ export const shifted = (p: CameraPose, d: Vec3): CameraPose => ({
   position: [p.position[0] + d[0], p.position[1] + d[1], p.position[2] + d[2]],
   target: [p.target[0] + d[0], p.target[1] + d[1], p.target[2] + d[2]],
   fov: p.fov,
+  roll: p.roll,
 });
 
 /** A camera path from a start pose and an ordered move list. Throws on a move outside 28-48 frames or overlapping moves. */
@@ -61,12 +64,20 @@ const norm = (a: Vec3): Vec3 => {
 };
 const cross = (a: Vec3, b: Vec3): Vec3 => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
 
+/** The camera basis (forward, right, up) with the roll applied, as the Stage's camera.rotateZ(roll) gives. */
+const basis = (pose: CameraPose): [Vec3, Vec3, Vec3] => {
+  const fwd = norm(sub(pose.target, pose.position));
+  const r0 = norm(cross(fwd, [0, 1, 0]));
+  const u0 = cross(r0, fwd);
+  const c = Math.cos(pose.roll ?? 0);
+  const s = Math.sin(pose.roll ?? 0);
+  return [fwd, [r0[0] * c + u0[0] * s, r0[1] * c + u0[1] * s, r0[2] * c + u0[2] * s], [u0[0] * c - r0[0] * s, u0[1] * c - r0[1] * s, u0[2] * c - r0[2] * s]];
+};
+
 export interface Projected { x: number; y: number; /** px per world unit at that depth */ s: number }
 /** World point to screen pixels, matching the Stage's perspective camera (for the 2D graphic layer). */
 export const project = (pose: CameraPose, p: Vec3): Projected => {
-  const fwd = norm(sub(pose.target, pose.position));
-  const right = norm(cross(fwd, [0, 1, 0]));
-  const up = cross(right, fwd);
+  const [fwd, right, up] = basis(pose);
   const v = sub(p, pose.position);
   const z = Math.max(0.01, dot(v, fwd));
   const k = H / 2 / (z * Math.tan((pose.fov * Math.PI) / 360));
@@ -75,9 +86,7 @@ export const project = (pose: CameraPose, p: Vec3): Projected => {
 
 /** Screen pixel to the world point on the plane z = zp, through the same camera project() uses. */
 export const unproject = (pose: CameraPose, px: number, py: number, zp = 0): [number, number] => {
-  const fwd = norm(sub(pose.target, pose.position));
-  const right = norm(cross(fwd, [0, 1, 0]));
-  const up = cross(right, fwd);
+  const [fwd, right, up] = basis(pose);
   const k = Math.tan((pose.fov * Math.PI) / 360);
   const nx = ((px - W / 2) / (H / 2)) * k;
   const ny = ((H / 2 - py) / (H / 2)) * k;

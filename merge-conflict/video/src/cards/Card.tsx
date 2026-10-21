@@ -35,7 +35,7 @@ export const cardCentre = (p: Placement): [number, number, number] => [p.x, (p.f
 const VERT = /* glsl */ `
 uniform vec3 uR0[${MAX_BONES}]; uniform vec3 uR1[${MAX_BONES}]; uniform float uSquash;
 attribute vec4 aW0; attribute vec4 aW1; attribute vec4 aW2;
-varying vec2 vUv; varying float vWorldX;
+varying vec2 vUv; varying float vWorldX; varying vec3 vWorld;
 vec2 bone(int i, vec2 p) { vec3 a = uR0[i]; vec3 b = uR1[i]; return vec2(a.x * p.x + a.y * p.y + a.z, b.x * p.x + b.y * p.y + b.z); }
 void main() {
   vUv = uv;
@@ -47,7 +47,8 @@ void main() {
   for (int i = 0; i < ${MAX_BONES}; i++) q += bone(i, p) * w[i];
   // the beat dip: a vertical squash about the soles (card bottom), no horizontal change
   q.y = -0.5 + (q.y + 0.5) * (1.0 - uSquash);
-  vWorldX = (modelMatrix * vec4(q, 0.0, 1.0)).x;
+  vWorld = (modelMatrix * vec4(q, 0.0, 1.0)).xyz;
+  vWorldX = vWorld.x;
   gl_Position = projectionMatrix * modelViewMatrix * vec4(q, 0.0, 1.0);
 }`;
 
@@ -72,7 +73,20 @@ const FRAG = /* glsl */ `
 uniform sampler2D map; uniform vec3 uHue; uniform vec3 uRival; uniform float uAmount; uniform float uRim;
 uniform vec2 uTexel; uniform vec2 uRimDir; uniform float uSplit; uniform float uOpacity; uniform float uLit; uniform vec3 uFlat; uniform float uFlatMix;
 uniform vec2 uClip; uniform float uSoft; uniform float uGround;
-varying vec2 vUv; varying float vWorldX;
+uniform vec3 uKey; uniform float uKeyAmt; uniform vec4 uSweep; uniform vec3 uSweepCol; uniform float uDots; uniform vec3 uBall; uniform float uTime;
+varying vec2 vUv; varying float vWorldX; varying vec3 vWorld;
+// Mirror-ball reflections: dots fixed on a sphere around the ball, rotating with time; a fragment is lit when
+// the direction from the ball to it passes near one of them (a closed form of t, no state).
+float ballDots(vec3 p) {
+  vec3 d = normalize(p - uBall);
+  float a = atan(d.z, d.x) + uTime * 0.9;
+  float e = asin(clamp(d.y, -1.0, 1.0));
+  vec2 g = vec2(a * 9.0, e * 9.0);
+  vec2 cell = floor(g);
+  vec2 f = fract(g) - 0.5;
+  float h = fract(sin(dot(cell, vec2(12.9898, 78.233))) * 43758.5453);
+  return h > 0.55 ? smoothstep(0.22, 0.08, length(f)) : 0.0;
+}
 ${GRADE_GLSL}
 void main() {
   // Depth softness: a mip-level bias is a deterministic low-pass of the painting (the girls sit behind the type).
@@ -105,6 +119,13 @@ void main() {
   float side = smoothstep(-0.15, 0.45, (vUv.x - 0.5) * sign(uRimDir.x + 1e-4));
   col = mix(col, col * (uRival * 1.7 + 0.15), side * uSplit);
   // Flat silhouettes (in the dark, in white-outs) keep their rim: flatten first, then add the rim light.
+  // Scene light (the Arcane recipe): the key colour washes the side facing it, a light band sweeps across her,
+  // mirror-ball dots run over her; all zero by default so older shots render unchanged.
+  float keySide = 1.0 - side;
+  col = mix(col, col * (uKey * 1.6 + 0.2), keySide * uKeyAmt);
+  float band = exp(-pow((vWorld.x - uSweep.x - (vWorld.y * uSweep.w)) / max(uSweep.y, 0.01), 2.0));
+  col += uSweepCol * band * uSweep.z * (0.35 + 0.65 * c.a);
+  col += vec3(1.0, 0.95, 0.9) * ballDots(vWorld) * uDots;
   col = mix(col, uFlat, uFlatMix);
   col += uRival * edge * facing * uRim;
   gl_FragColor = vec4(min(col, vec3(1.0)), c.a * uOpacity);
@@ -114,6 +135,16 @@ const SHADOW_VERT = /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Pos
 /** A soft contact shadow: an elliptical falloff, darkest under the feet. */
 const SHADOW_FRAG = /* glsl */ `uniform float uOpacity; varying vec2 vUv;
 void main() { float r = length((vUv - 0.5) * 2.0); float a = (1.0 - smoothstep(0.0, 1.0, r)) * uOpacity; gl_FragColor = vec4(0.0, 0.0, 0.0, a); }`;
+
+const lightUniforms = (l: CardLight | undefined, t: number) => ({
+  uKey: rgb(l?.key ?? '#ffffff'),
+  uKeyAmt: l?.key ? (l.keyAmt ?? 0.35) : 0,
+  uSweep: l?.sweep ? [l.sweep.x, l.sweep.width, l.sweep.amt, l.sweep.slope ?? 0] : [0, 1, 0, 0],
+  uSweepCol: rgb(l?.sweep?.color ?? '#ffffff'),
+  uDots: l?.dots ?? 0,
+  uBall: l?.ball ?? [0, 5.3, -7],
+  uTime: t,
+});
 
 export const useCardTexture = (id: string) => {
   const tex = useLoader(TextureLoader, staticFile(cardEntry(id).file));
@@ -153,9 +184,22 @@ export interface CardProps extends Placement {
   ground?: boolean;
   /** Split-screen clip: keep the side of world x = `x` given by `keep`. */
   clip?: { x: number; keep: 'left' | 'right' };
+  /** Scene light: a key colour on the side away from the rim, a sweeping light band, mirror-ball dots. */
+  light?: CardLight;
 }
 
-export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 0, stretch = [1, 1], clip, soft = 0, ground }: CardProps) => {
+export interface CardLight {
+  key?: Hex;
+  keyAmt?: number;
+  /** A vertical light band at world x (slanted by `slope` per unit of height), `width` world units. */
+  sweep?: { x: number; width: number; amt: number; color: Hex; slope?: number };
+  dots?: number;
+  ball?: [number, number, number];
+  /** Rim strength multiplier on top of the grade's (rim light from the side away from the key). */
+  rim?: number;
+}
+
+export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 0, stretch = [1, 1], clip, soft = 0, ground, light }: CardProps) => {
   const tex = useCardTexture(id);
   const geo = useRigGeometry(id);
   const e = cardEntry(id);
@@ -182,8 +226,9 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uHue: rgb(grade.hue),
     uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: grade.amount,
-    uRim: grade.rim,
+    uRim: grade.rim * (light?.rim ?? 1),
     uSplit: grade.rim > 0 ? 0.32 : 0,
+    ...lightUniforms(light, t),
     uTexel: [1 / e.w, 1 / e.h],
     uRimDir: [(sx * dir[0]) / dl, dir[1] / dl],
     uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0],
@@ -200,7 +245,7 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: Math.min(1, grade.amount + 0.3), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
     uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.16 : 0,
-    uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0,
+    uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
   });
   const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.6 : 0 });
   const w = height * cardAspect(id);

@@ -15,6 +15,7 @@ const CameraRig = ({ pose }: { pose: CameraPose }) => {
     camera.far = 200;
     camera.position.set(...pose.position);
     camera.lookAt(...pose.target);
+    camera.rotateZ(pose.roll ?? 0);
     camera.updateProjectionMatrix();
     camera.updateMatrixWorld();
   });
