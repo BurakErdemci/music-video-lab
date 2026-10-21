@@ -253,7 +253,7 @@ Burak: "take the good things that fit our theme, but overall it is a different t
 
 Measured from LGTM (Degenerative Pixels, youtube 3TNpOD6bov8; 5 s contact sheets):
 - Every sung line lives INSIDE a software object that means it: a Slack message, an org chart ("right-sized"), a roadmap Gantt, a PR with a racing "+90,112" counter, a status page, an incident channel, a postmortem form ("Root cause: unclear."), an ID badge, code with "// DON'T TOUCH THIS", a stamped ticket ("WE DID!"), a 3:00 alarm.
-- One bold grotesk plus one monospace UI face. Lines are revealed word by word as they are sung; the key word turns the accent colour (green, red for the crisis).
+- ~~One bold grotesk plus one monospace UI face.~~ NOT FOR US (Burak, 2026-10-21: after round 5 "the type looks like any text, zero impressiveness"; it was the type of the first proofs he loved). Lines are revealed word by word as they are sung; the key word turns the accent colour.
 - Editing as type: a typed line with a cursor, a strike-through correction, red handwritten notes ("(IT ISN'T)"), rubber stamps ("APPROVED", "BLAMELESS").
 - The title recurs as PHYSICAL OBJECTS: LGTM as boxes, ship containers, server-rack lights, keycaps. Counters grow every chorus (90 thousand → a million lines).
 - Big left-aligned text, generous empty space, the object beside it; dark scenes broken by light-mode scenes.
@@ -353,3 +353,13 @@ Burak: "the chorus, the part of the clip that must be the most memorable, came o
 - **"in the middle of my soul"** The walls crush to a single line of light.
 - **"Merge conflict... I can't take control"** Logo B's second variation spins out of control: a barrel roll, then everything bursts into particles at the chorus end.
 - **Throughout:** lasers sweep on every downbeat, mirror-ball dots run over everything, confetti and embers burst on every NO!/NEVER!, and the girls' faces act through the expression sequences.
+
+## Type is the star again (Burak, 2026-10-21)
+
+Burak: "the type came out dull; the first version had effects and different type forms; the last one feels like any text, zero impressiveness." Measured in round 5: 15 sung lines drawn with the plain `Lyric` component of type/objects/git.tsx, while the designed forms were barely used (Slam 6, Flap 2, Stack 1, LightBox 1, Counter 1, Code 1; Diff, Hoop, Letters, Plates, Dots 0). Cause: the LGTM "one grotesk + one monospace" line, now struck.
+
+Rules:
+- Every sung line is drawn with a DESIGNED form from the type library (Code, Flap, Diff, Hoop, Stack, Plates, Letters, Dots, Slam, Stamp, LightBox, DissolveText, CodeLine, Counter, or a new one), with its effects (per-letter motion, chrome, neon glow, flame fill, extrusion, glitch slices, morphs between words). The plain `Lyric` component is not used for sung lines.
+- At least 6 distinct forms in every 30 s, and never the same form twice in a row.
+- The faces come from the two families at full range: pop (Bungee and the other display faces) and metal (Metal Mania, Pirata One, UnifrakturMaguntia, Anton).
+- Git objects are the WORLD the type lives in. They never replace the type form. The type plays with the object (it lands on the sign, it is stamped by the press, it rides the rail).
