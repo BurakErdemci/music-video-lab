@@ -211,7 +211,7 @@ export interface Dance {
 }
 export const DANCE: Dance = { energy: 1, arms: 1 };
 /** Cards whose arms are locked to the body (crossed, hands on hips, hand at the chin) swing them less. */
-const ARMS: Record<string, number> = { B01: 0.15, O03: 0.1, B04: 0.6, O04: 0.5, O06: 0.6, O07: 0.6, B11: 0.3, O11: 0.3, O10: 0.2 };
+const ARMS: Record<string, number> = { BD2: 0.2, OD2: 0.2, B01: 0.15, O03: 0.1, B04: 0.6, O04: 0.5, O06: 0.6, O07: 0.6, B11: 0.3, O11: 0.3, O10: 0.2 };
 export const danceOf = (id: string, energy = 1): Dance => ({ energy, arms: ARMS[id] ?? 1 });
 
 const TAU = Math.PI * 2;

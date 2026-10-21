@@ -110,7 +110,7 @@ console.log(rows.join('\n'));
 const limbBad = limbWorst.pct > LIMB_PCT;
 const areaBad = folds > 0 || areaMin.r < AREA_MIN || areaMax.r > AREA_MAX;
 if (selftest) console.log('SELFTEST: a deliberate pinch of the lower body (x halved toward the hips); this run MUST fail.');
-console.log(`rigcheck frames ${from}-${to}, 24 cards:`);
+console.log(`rigcheck frames ${from}-${to}, ${rows.length} cards:`);
 console.log(`  limb length: max change ${limbWorst.pct.toFixed(2)} % (${limbWorst.id} ${limbWorst.limb} @ f${limbWorst.frame}), limit ${LIMB_PCT} % -> ${limbBad ? 'FAIL' : 'PASS'}`);
 console.log(`  quad area: ${quadsChecked} painted quads per frame, ratio min ${areaMin.r.toFixed(3)} (${areaMin.id} @ f${areaMin.frame}), max ${areaMax.r.toFixed(3)} (${areaMax.id} @ f${areaMax.frame}), folds ${folds}; limits [${AREA_MIN}, ${AREA_MAX}], 0 folds -> ${areaBad ? 'FAIL' : 'PASS'}`);
 process.exit((limbBad ? 1 : 0) | (areaBad ? 2 : 0));
