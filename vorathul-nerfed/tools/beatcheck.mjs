@@ -2,7 +2,12 @@
 // Scalar (README): every beat-locked event drifts 0 frames from its measured anchor, and no section
 // breaks the dead-air rule from docs/scene-map.md.
 //
-//   node tools/beatcheck.mjs [--verbose]
+//   node tools/beatcheck.mjs [--verbose] [--fps 60]
+//
+// --fps N checks the film as rendered by a composition at N fps on the 30 fps scene clock (Nerfed60): an event
+// authored on scene frame e.frame shows on output frame e.frame * N / 30, i.e. at the same wall-clock time as in
+// Nerfed. Drift is then measured in output frames against round(t * N); the scene clock's 30 fps rounding can
+// put an event up to (N / 30 - 1) output frames off the nearest N fps frame, and that much is allowed.
 //
 // Loads video/src/events.ts directly (node strips the types) and recomputes every expected frame
 // from data/timing.json, read independently of video/src/timing.ts:
@@ -18,6 +23,11 @@ import { fileURLToPath, pathToFileURL } from 'node:url';
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const verbose = process.argv.includes('--verbose');
 const FPS = 30;
+const fpsArg = process.argv.indexOf('--fps');
+const OUT_FPS = fpsArg === -1 ? FPS : Number(process.argv[fpsArg + 1]);
+if (!(OUT_FPS >= FPS) || OUT_FPS % FPS) throw new Error(`--fps must be a multiple of ${FPS}, got ${process.argv[fpsArg + 1]}`);
+const SCALE = OUT_FPS / FPS;
+const TOL = SCALE - 1;
 
 const rawBytes = readFileSync(path.join(ROOT, 'data/timing.json'));
 const T = JSON.parse(rawBytes.toString('utf8'));
@@ -62,14 +72,15 @@ for (const e of EVENTS) {
     errors.push(`${e.id}: anchor ${e.anchor} ref ${e.ref} not found in timing.json`);
     continue;
   }
-  const expected = Math.round(t * FPS);
-  const drift = Math.abs(e.frame - expected);
+  const expected = Math.round(t * OUT_FPS);
+  const shown = e.frame * SCALE;
+  const drift = Math.abs(shown - expected);
   maxDrift = Math.max(maxDrift, drift);
   if (!Number.isInteger(e.frame)) errors.push(`${e.id}: frame ${e.frame} is not an integer`);
-  if (drift) errors.push(`${e.id}: frame ${e.frame} expected ${expected} (drift ${drift})`);
-  if (verbose) console.log(`${drift ? 'DRIFT' : 'ok   '} ${e.id.padEnd(20)} ${e.anchor.padEnd(5)} ${String(e.ref).padEnd(18)} f${String(e.frame).padStart(5)} (${t.toFixed(3)} s)`);
+  if (drift > TOL) errors.push(`${e.id}: frame ${shown} expected ${expected} (drift ${drift})`);
+  if (verbose) console.log(`${drift > TOL ? 'DRIFT' : 'ok   '} ${e.id.padEnd(20)} ${e.anchor.padEnd(5)} ${String(e.ref).padEnd(18)} f${String(shown).padStart(5)} (${t.toFixed(3)} s)`);
 }
-console.log(`beatcheck drift: ${EVENTS.length} events, max drift = ${maxDrift} frames, timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
+console.log(`beatcheck drift @ ${OUT_FPS} fps: ${EVENTS.length} events, max drift = ${maxDrift} frames (allowed ${TOL}), timing copy ${sha(rawBytes) === sha(copyBytes) ? 'identical' : 'DIFFERS'}`);
 
 // Dead air, in beats between consecutive events within each section (docs/scene-map.md "Rules for every lane").
 const beatPos = (t) => {
