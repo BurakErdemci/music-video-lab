@@ -158,7 +158,7 @@ const restCamera = (t: number) => {
 
 /** What verse 3 through the solo shows at t, for tools/framecheck.mjs (the cards the component draws). */
 const rawRestStateAt = (t: number): ShotState => {
-  const { shot, scene, blueP, orangeP, pose } = restCamera(t);
+  const { shot, scene, blueP, orangeP, pose, planeBase } = restCamera(t);
   const clip = (who: 'B' | 'O') => (scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
   const turn = dissolveState(BLUE_TURN, t);
   const subjects: Subject[] = [];
@@ -167,7 +167,8 @@ const rawRestStateAt = (t: number): ShotState => {
   const crop = shot.cam === 'close' ? ('knee' as const) : undefined;
   if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop });
   if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O'), crop });
-  return { pose, shot: shot.id, subjects };
+  const plateId = scene === 'panel' ? shot.panel : PLATES[scene];
+  return { pose, shot: shot.id, subjects, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75 } : undefined };
 };
 
 const live = liveCamera(rawRestStateAt, (t) => {

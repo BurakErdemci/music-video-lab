@@ -37,6 +37,7 @@ const COLORS: Record<Scene, [Hex, Hex]> = {
 };
 
 /** The painted plates behind the chorus worlds (trial, 21 Oct 2026); chorus 2 keeps the battle arena and varies the rest. */
+const plateMargin = (scene: Scene): number => (scene === 'spin' ? 2.2 : 1.35);
 const PLATES: Record<1 | 2, Partial<Record<Scene, string>>> = {
   1: { arena: 'W09', burst: 'W09', spin: 'W02', fire: 'W05', runway: 'W01' },
   2: { arena: 'W09', burst: 'W09', spin: 'W04', fire: 'W11', runway: 'W10' },
@@ -114,8 +115,9 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     return out;
   };
   const rawStateAt = (t: number): ShotState => {
-    const { pose, shot } = cameraAt(t);
-    return { pose, shot: `ch${v}-${shot.id}`, subjects: girlsAt(t, shot) };
+    const { pose, shot, base } = cameraAt(t);
+    const plate = PLATES[v][shot.scene];
+    return { pose, shot: `ch${v}-${shot.id}`, subjects: girlsAt(t, shot), plate: plate ? { id: plate, base, dist: 46, margin: plateMargin(shot.scene) } : undefined };
   };
   const liveCam = liveCamera(rawStateAt, (t) => {
     const { shot, next } = shotAt(P.SHOTS, t);
@@ -207,7 +209,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     return (
       <AbsoluteFill style={{ background: useShotBackground() }}>
         <Stage pose={pose}>
-          {PLATES[v][scene] && <PlateLayer id={PLATES[v][scene] as string} base={base} margin={scene === 'spin' ? 2.2 : 1.35} />}
+          {PLATES[v][scene] && <PlateLayer id={PLATES[v][scene] as string} base={base} margin={plateMargin(scene)} />}
           {world}
           <Field t={t} grade={scene === 'fire' ? ORANGE_GRADE : BLUE_GRADE} layer="back" density={0.9} hueMix={0.6} metal={0.5} bursts={bursts} />
           {girlsAt(t, shot).map(figure)}

@@ -29,6 +29,9 @@ export interface ShotState {
   extras?: Subject[];
   /** How far the live camera had to widen (1 = not at all) and whether it could fit every subject. */
   fit?: { z: number; ok: boolean };
+  /** The painted plate behind the shot (worlds/plate.tsx): its id, the pose its far plane faces, the plane's
+   *  distance and its width over the frame's, for the pixel-scale rule (round 7c, "Resolution"). */
+  plate?: { id: string; base: CameraPose; dist: number; margin: number };
 }
 
 // ---- the card geometry framecheck and the live camera share --------------------------------------------------

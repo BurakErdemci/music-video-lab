@@ -90,7 +90,7 @@ const clipOf = (scene: VerseScene, who: 'B' | 'O') => (scene === 'strobe' ? { x:
 
 /** What the verses show at t, for tools/framecheck.mjs: the same pose and cards the component draws. */
 const rawVersesStateAt = (t: number): ShotState => {
-  const { shot, scene, blueP, orangeP, pose } = verseCamera(t);
+  const { shot, scene, blueP, orangeP, pose, planeBase } = verseCamera(t);
   const throwP = throwOf(pose);
   const subjects: Subject[] = [];
   const add = (who: 'B' | 'O', pp: VPose | null) => {
@@ -100,7 +100,8 @@ const rawVersesStateAt = (t: number): ShotState => {
   };
   add('B', blueP);
   add('O', orangeP);
-  return { pose, shot: shot.id, subjects };
+  const plateId = PLATES[scene];
+  return { pose, shot: shot.id, subjects, plate: plateId ? { id: plateId, base: planeBase, dist: 46, margin: 1.45 } : undefined };
 };
 
 const live = liveCamera(rawVersesStateAt, (t) => {

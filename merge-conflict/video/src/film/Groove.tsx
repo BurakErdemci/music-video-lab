@@ -136,7 +136,14 @@ const grooveSubjects = (t: number): Subject[] => {
   if (kind === 'tiny') return [{ card: C.tiny, at: { x: 0, height: 2.6 }, ...sil }];
   return [{ card: C.waist, at: waistUp(4.4, 13), crop: 'knee', ...sil }];
 };
-const live = liveCamera((t) => ({ pose: cameraAt(t).pose, shot: `groove-${framingAt(FRAMINGS, t)}`, subjects: grooveSubjects(t) }), framingSpan);
+const groovePlate = (t: number): string | undefined => {
+  const kind = framingAt(FRAMINGS, t);
+  return kind === 'clones' || kind === 'low' ? undefined : kind === 'knee' || kind === 'waist' ? 'W11' : 'W04';
+};
+const live = liveCamera((t) => {
+  const plate = groovePlate(t);
+  return { pose: cameraAt(t).pose, shot: `groove-${framingAt(FRAMINGS, t)}`, subjects: grooveSubjects(t), plate: plate ? { id: plate, base: cameraAt(t).base, dist: 46, margin: 1.45 } : undefined };
+}, framingSpan);
 export const grooveStateAt = live.stateAt;
 
 export const Groove = ({ frame }: { frame: number }) => {
