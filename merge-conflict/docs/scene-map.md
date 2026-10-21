@@ -424,3 +424,20 @@ Binding, measured per frame by a new `tools/framecheck.mjs` (exit 1 on any failu
 - A full-body action card shows its whole action box, except a framing that deliberately cuts at the knees or below.
 - A face close-up may fill the frame, but the face box may not exceed 70 % of the frame height.
 - The 0-64 s part (approved) is measured too; only frames that fail are changed there.
+
+## Polish from Gemini's review of proof140-r7b (verified frame by frame, Burak 2026-10-21)
+
+Gemini's points that held up when the frames were checked, now binding:
+- **Type stays readable and inside the frame.** Every type form's box stays inside the frame with a 4 % margin at
+  its settled state (fly-in letters may start outside), never covers a subject's face box, and has a backing that
+  separates it from the plate (stroke, shadow or a dark scrim) with local luminance contrast >= 3:1, measured on the
+  render. Found: "ACCEPT CURRENT" cut at the right edge and the target rings over the blue girl's head (43.5 s and
+  chorus 2), "two girls, one line" blue on a blue floor (47.5 s), "I CAN'T TAKE CONTROL" glitch unreadable (62.5 s, 105.5 s).
+- **Contact shadows.** Every standing card gets a contact shadow on the floor it stands on, plus the plate's light
+  colour as a floor glow. The translucent podium boxes sit clearly under the feet or go.
+- **Confetti is earned.** Confetti only in the choruses, the "Merge conflict" hits and the big panel moments; verses
+  get dust, sparks or embers at most, and the metal parts embers and sparks.
+- **Transitions match the clip.** The halftone-dot and wavy-paper covers in muted purple and brown go; disco parts use
+  neon, laser, mirror-shard and glitch transitions, metal parts fire, shatter and screen-tear ones.
+- **Card defect:** the blue face close-up at the whisper (126.2 s) shows a sharp cyan triangle on her neck; fix the card.
+Rejected: adding a wobble or mesh sway to the girls (Burak found the sway absurd; the camera carries the motion).
