@@ -43,11 +43,16 @@ export const VERSE = sectionNamed('verse1_sweet');
 
 /** The cards of each girl in the proof (costumes: girls/costume.ts). */
 export const GIRL = {
-  B: { stand: 'B01', close: 'B06', verse: 'BD3', kick: 'BD6', next: 'BD1' },
+  B: { stand: 'B01', close: 'B06', verse: 'BD3', crouch: 'BD5', kick: 'BD6', next: 'BD1' },
   O: { stand: 'O03', close: 'O10', verse: 'OD3', kick: 'OD6', next: 'OD1' },
 } as const;
 /** The groove's orange metal silhouettes, one per framing. */
-export const GROOVE_CARDS = { stage: 'OM3', clones: 'OM1', low: 'OM2', knee: 'OM5', tiny: 'OM6', waist: 'OM8' } as const;
+export const GROOVE_CARDS = { stage: 'OM3', crouch: 'OM4', clones: 'OM1', low: 'OM2', knee: 'OM5', tiny: 'OM6', waist: 'OM8' } as const;
+/** Anticipation then release ("Scroll Up!" recipe): orange crouches (OM4) on the ======= slam, springs into the
+ *  horns (OM1, the clones) on the >>>>>>> slam with a big camera punch; blue crouches (BD5) on "I'm" and kicks
+ *  (BD6) on "stable" with a low-angle swing and a punch. Hard cuts, keyed to the slams and the sung words. */
+export const GROOVE_CROUCH_AT = at('marker-sep');
+export const VERSE_CROUCH_AT = at('kick-anticipate');
 /** The big backlit silhouette (knee-up, dancing) with THEIRS behind her (round 3). */
 export const GROOVE_BIG: Placement = kneeUp(5.2, 10.6);
 
@@ -130,7 +135,7 @@ export const CAMERA: readonly { from: CameraPose; to: CameraPose; typeZ: number;
   { from: shifted(HOME, [0, 0.4, -1.8]), to: shifted(HOME, [0, 0.2, 0.6]), typeZ: 1, move: 'pull-out from the logo' },
   { from: shifted(HOME, [0, -0.6, -0.6]), to: shifted(HOME, [0, 0.6, -1.0]), typeZ: 1, move: 'vertical travel up and push' },
   { from: HOME, to: shifted(HOME, [0.6, 0.15, -1.1]), typeZ: 0.8, move: 'slow push-in toward the STACK' },
-  { from: shifted(HOME, [0.3, 0.4, 0]), to: shifted(HOME, [1.1, 0.4, -0.4]), typeZ: 0.8, move: 'lateral dolly past the kick' },
+  { from: { position: [0.4, -1.7, HOME_Z - 1.2], target: [-0.6, 0.4, 0], fov: 44 }, to: { position: [1.2, -1.3, HOME_Z - 1.8], target: [-0.4, 0.6, 0], fov: 44 }, typeZ: 0.8, move: 'swing to a low angle on the kick, then a rising dolly' },
 ];
 /** The camera at t: the shot's pose, its base pose (the type layer is authored in its screen space) and depth. */
 export const cameraAt = (t: number): { pose: CameraPose; base: CameraPose; typeZ: number } => {
@@ -141,7 +146,8 @@ export const cameraAt = (t: number): { pose: CameraPose; base: CameraPose; typeZ
   const t0 = (FRAMINGS[i] as { t: number }).t;
   const t1 = (FRAMINGS[i + 1] as { t: number } | undefined)?.t ?? PROOF_END;
   let path: CameraPath = drift(c.from, c.to, t0, t1);
-  if (t >= GROOVE.start && t < VERSE.start) path = punched(path, GROOVE_HITS, 0.05);
+  if (t >= GROOVE.start && t < VERSE.start) path = punched(punched(path, GROOVE_HITS, 0.05), [at('marker-feature')], 0.14);
+  if (t >= VERSE.start) path = punched(path, [at('kick-head')], 0.12);
   return { pose: path(t), base: c.from, typeZ: c.typeZ };
 };
 if (CAMERA.length !== FRAMINGS.length) throw new Error(`proof: ${CAMERA.length} camera moves for ${FRAMINGS.length} framings`);

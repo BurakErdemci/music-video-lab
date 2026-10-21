@@ -31,7 +31,7 @@ import { MergeConflictLogo } from '../type/logo/Logo.tsx';
 import { Slam } from '../type/Slam.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { ThroughCounter, TypeWhip } from '../type/transitions/transitions.tsx';
-import { cameraAt, COUNTER_DIVE, FRAMINGS, GROOVE_BIG, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, LOGO_DESIGN, OURS, WHIP_GROOVE, WHIP_OUT } from './proof.ts';
+import { cameraAt, COUNTER_DIVE, FRAMINGS, GROOVE_CROUCH_AT, GROOVE_BIG, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, LOGO_DESIGN, OURS, WHIP_GROOVE, WHIP_OUT } from './proof.ts';
 
 const RED: Hex = '#e01b1b';
 const STEEL: Hex = '#c8ced6';
@@ -126,7 +126,7 @@ export const Groove = ({ frame }: { frame: number }) => {
   const kind = framingAt(FRAMINGS, t);
   const C = GROOVE_CARDS;
   let cards;
-  if (kind === 'stage') cards = <Card id={C.stage} t={t} grade={sil} {...GROOVE_O} rimDir={[-1, 0.3]} {...SILHOUETTE} />;
+  if (kind === 'stage') cards = <Card id={t >= GROOVE_CROUCH_AT ? C.crouch : C.stage} t={t} grade={sil} {...GROOVE_O} rimDir={[-1, 0.3]} {...SILHOUETTE} />;
   else if (kind === 'clones')
     cards = [-2, -1, 0, 1, 2].map((k) => (
       <Card key={k} id={C.clones} t={t + k * 0.13} grade={sil} x={k * 3.1} height={4.6 - Math.abs(k) * 0.45} z={-Math.abs(k) * 0.6} flip={k % 2 !== 0} rimDir={[k < 0 ? 1 : -1, 0.3]} {...SILHOUETTE} />

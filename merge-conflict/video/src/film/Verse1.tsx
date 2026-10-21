@@ -1,9 +1,10 @@
 // verse1_sweet from 16.33 s (to the proof end): one hard switch to disco on the downbeat (the disco set with its
 // mirror ball and floor, the pop palette, the pop type family) and blue cut in crisp, in a held pose, ON the
 // downbeat; her confetti bursts outward from her a frame after the hit. Round 4: no rig loop, the camera moves:
-//  16.33  BD3 knee-up, held 2 bars, a slow push toward the STACK "I'm HEAD, I'm main, I'm stable and clean"
-//  18.98  a hard cut on the downbeat to BD6, the kick, as a small full figure on the floor; HEAD flies off;
-//         a lateral dolly; her one accent, a head turn on "clean" (rig/accents.ts); CLEAN morphs into LINE,
+//  16.33  BD3 knee-up, held, a slow push toward the STACK "I'm HEAD, I'm main, I'm stable and clean"
+//  18.48  anticipation: a hard cut to BD5, the crouch, on "I'm"
+//  18.72  release on "stable": a hard cut to BD6, the kick, as a small full figure, HEAD flies off, the camera
+//         swings to a low angle with a punch, then a rising dolly; her one accent, a head turn on "clean" (rig/accents.ts); CLEAN morphs into LINE,
 //         which opens "Line forty-two..." as a DIFF.
 import { AbsoluteFill } from 'remotion';
 import { typePlane } from '../camera/camera.ts';
@@ -22,7 +23,7 @@ import { FormDefs } from '../type/forms/common.tsx';
 import { Stack } from '../type/forms/Stack.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { LetterMorph } from '../type/transitions/transitions.tsx';
-import { BLUE_BURST, cameraAt, DIFF3, DIFF_OPT, FRAMINGS, GIRL, KICK, MORPH_LINE, STACK2, VERSE_B, VERSE_FULL } from './proof.ts';
+import { BLUE_BURST, VERSE_CROUCH_AT, cameraAt, DIFF3, DIFF_OPT, FRAMINGS, GIRL, KICK, MORPH_LINE, STACK2, VERSE_B, VERSE_FULL } from './proof.ts';
 
 export const Verse1 = ({ frame }: { frame: number }) => {
   const t = sec(frame);
@@ -30,7 +31,7 @@ export const Verse1 = ({ frame }: { frame: number }) => {
   const grade = metalGrade({ ...GRADES.reviewed, amount: 0.46 }, m);
   const kicked = framingAt(FRAMINGS, t) === 'stage';
   const at = kicked ? VERSE_FULL : VERSE_B;
-  const card = kicked ? GIRL.B.kick : GIRL.B.verse;
+  const card = kicked ? GIRL.B.kick : t >= VERSE_CROUCH_AT ? GIRL.B.crouch : GIRL.B.verse;
   const cam = cameraAt(t);
   const plane = typePlane(cam.pose, cam.base, cam.typeZ);
   const morphOn = t >= MORPH_LINE.t0 && t < MORPH_LINE.t0 + MORPH_LINE.dur;
