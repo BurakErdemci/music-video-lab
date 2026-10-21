@@ -16,7 +16,7 @@ export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
 /** How the camera travels across a shot (round 7b, "No cliff after the chorus": a camera move on every line). */
 export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom';
 /** `fade`: the cut is carried by a fade up from black instead of a cover (out of the whisper's near-black). */
-/** `panel`: for scene 'panel', the moment painting shown full frame (public/panels/<panel>.png). */
+/** `panel`: for scene 'panel', the moment painting shown full frame (public/plates/<panel>.png). */
 export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; fade?: boolean; move?: Move; panel?: string }
 export interface RPose { t: number; card: string | null; at?: Placement }
 
@@ -46,40 +46,43 @@ const half = (i: number) => bt(SOLO.start + i * 1.333 + 0.62);
 const METAL: MShot[] = [
   { id: 'scream', t: SCREAM.start, scene: 'scream', cam: 'hero', into: 'shatter', move: 'push', B: ['BMX2', faceAt(-4.2)], O: ['OMX3', faceAt(4.2, true)] },
   { id: 'scream-o', t: bt(SCREAM.start + 0.64), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: null, O: ['OMX3', faceC(true)] },
-  { id: 'scream-b', t: db(SCREAM.start + 1.3), scene: 'faceB', cam: 'hero', into: 'shock', move: 'dollyzoom', B: ['BMX2', faceC()], O: null },
+  // forehead to forehead (QK2)
+  { id: 'scream-b', t: db(SCREAM.start + 1.3), scene: 'panel', panel: 'QK2', cam: 'hero', into: 'shatter', move: 'push', B: null, O: null },
   { id: 'scream-split', t: bt(SCREAM.start + 1.98), scene: 'scream', cam: 'close', into: 'shock', move: 'orbit', B: ['BMX4', faceAt(-4.2)], O: ['OMX2', faceAt(4.2, true)] },
   { id: 'push-hall', t: PUSH.start, scene: 'cathedral', cam: 'hero', into: 'tunnel', move: 'whip', B: null, O: ['OM4', full(0, 5.2)] },
-  { id: 'push-git', t: tk(45, 0), scene: 'cathedral', cam: 'low', into: 'shock', move: 'dollyzoom', O: ['OQ1', full(0, 5.4)] },
+  { id: 'push-git', t: tk(45, 0), scene: 'cathedral', cam: 'low', into: 'shock', move: 'dollyzoom', O: ['OF1', full(0, 5.4)] },
   { id: 'push-snarl', t: db(tk(45, 0) + 0.4), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'push', O: ['OMX2', faceC(true)] },
-  { id: 'push-orbit', t: bt(tk(45, 0) + 1.1), scene: 'cathedral', cam: 'wide', into: 'shock', move: 'orbit', O: ['OQ1', full(0, 5.4)] },
+  { id: 'push-orbit', t: bt(tk(45, 0) + 1.1), scene: 'cathedral', cam: 'wide', into: 'shock', move: 'orbit', O: ['OF1', full(0, 5.4)] },
   { id: 'push-warning', t: db(tk(45, 0) + 1.6), scene: 'warning', cam: 'hero', into: 'diff', move: 'push', O: null },
-  { id: 'push-forge', t: bt(tk(45, 0) + 2.6), scene: 'forge', cam: 'low', into: 'streaks', move: 'orbit', O: ['OM8', full(3, 5.0)] },
+  { id: 'push-forge', t: bt(tk(45, 0) + 2.6), scene: 'forge', cam: 'low', into: 'streaks', move: 'orbit', O: ['OF2', { x: 2.4, feet: -1.6, height: 5.2, z: 0 }] },
   { id: 'push-sneer', t: db(tk(45, 0) + 3.2), scene: 'faceO', cam: 'hero', into: 'shock', move: 'dollyzoom', O: ['OMX5', faceC(true)] },
-  { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'low', into: 'shatter', move: 'whip', O: ['OQ2', full(3, 5.4)] },
-  { id: 'push-force', t: tk(47, 0), scene: 'pushface', cam: 'hero', into: 'shock', move: 'push', O: ['OQ3', full(0.4, 6.0)] },
+  { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'low', into: 'shatter', move: 'whip', B: ['BF1', full(-4.0, 5.0)], O: ['OF3', full(2.4, 5.0)] },
+  { id: 'push-impact', t: bt(tk(46, 0) + 0.28), scene: 'panel', panel: 'QK1', cam: 'hero', into: 'shock', move: 'push', B: null, O: null },
+  { id: 'push-force', t: tk(47, 0), scene: 'pushface', cam: 'hero', into: 'shock', move: 'push', O: ['OF4', full(0.4, 6.0)] },
   // the whisper: the quietest frame of the clip, still
   { id: 'whisper', t: WHISPER.start, scene: 'whisper', cam: 'hero', into: 'dissolve', B: ['BQ3', full(-1, 5.0)], O: null },
   { id: 'whisper-wouldnt', t: tk(48, 1), scene: 'whisper', cam: 'close', into: 'shock', B: ['BMX5', { x: -1.0, feet: -5.4, height: 11, z: 0 }] },
   // the solo: ten bars, a new framing every half bar
-  { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', fade: true, move: 'push', B: null, O: ['OQ4', full(3, 5.2)] },
+  { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', fade: true, move: 'push', B: null, O: ['OS1', full(3, 5.0)] },
   { id: 'solo-tongue', t: half(0), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', O: ['OMX4', faceC(true)] },
-  { id: 'solo-cathedral', t: bar(1), scene: 'cathedral', cam: 'low', into: 'tunnel', move: 'orbit', B: ['BQ1', full(-1.5, 5.2)], O: null },
+  { id: 'solo-cathedral', t: bar(1), scene: 'cathedral', cam: 'low', into: 'tunnel', move: 'orbit', B: ['BS1', full(-1.5, 5.2)], O: null },
   { id: 'solo-rage', t: half(1), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'push', B: ['BMX4', faceC()] },
-  { id: 'solo-tunnel', t: bar(2), scene: 'tunnel', cam: 'hero', into: 'streaks', move: 'whip', B: ['BM3', full(-1.6, 4.6)], O: ['OQ4', full(1.6, 4.6)] },
+  { id: 'solo-tunnel', t: bar(2), scene: 'tunnel', cam: 'hero', into: 'streaks', move: 'whip', B: ['BS2', full(-1.6, 4.6)], O: ['OS2', full(1.6, 4.6)] },
   { id: 'solo-split', t: half(2), scene: 'duel', cam: 'hero', into: 'shatter', move: 'orbit', B: ['BMX1', faceAt(-4.4)], O: ['OMX1', faceAt(4.4, true)] },
-  { id: 'solo-arena', t: bar(3), scene: 'arena', cam: 'wide', into: 'mirror', move: 'whip', B: ['BQ2', full(-3.3, 5.0)], O: ['OQ4', full(3.3, 5.0)] },
+  { id: 'solo-arena', t: bar(3), scene: 'arena', cam: 'wide', into: 'mirror', move: 'whip', B: ['BQ2', full(-3.3, 5.0)], O: ['OS3', full(3.3, 5.0)] },
   { id: 'solo-slash', t: half(3), scene: 'arena', cam: 'low', into: 'shock', move: 'dollyzoom', B: ['BQ2', full(-2.4, 5.6)], O: null },
   { id: 'solo-split-2', t: bar(4), scene: 'duel', cam: 'close', into: 'shatter', move: 'push', B: ['BMX3', faceAt(-4.4)], O: ['OMX5', faceAt(4.4, true)] },
   { id: 'solo-horns', t: half(4), scene: 'forge', cam: 'low', into: 'streaks', move: 'orbit', B: null, O: ['OC3', full(2.4, 5.4)] },
-  { id: 'solo-cathedral-2', t: bar(5), scene: 'cathedral', cam: 'reverse', into: 'ink', move: 'whip', B: ['BM6', full(-2.0, 5.0)], O: ['OM1', full(2.4, 5.0)] },
+  // back to back (QK3)
+  { id: 'solo-cathedral-2', t: bar(5), scene: 'panel', panel: 'QK3', cam: 'hero', into: 'ink', move: 'push', B: null, O: null },
   { id: 'solo-rage-2', t: half(5), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: ['BMX4', faceC()], O: null },
-  { id: 'solo-tunnel-2', t: bar(6), scene: 'tunnel', cam: 'close', into: 'tunnel', move: 'push', B: null, O: ['OQ4', full(0, 5.0)] },
+  { id: 'solo-tunnel-2', t: bar(6), scene: 'tunnel', cam: 'close', into: 'tunnel', move: 'push', B: null, O: ['OS2', full(0, 5.0)] },
   { id: 'solo-snarl', t: half(6), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'orbit', O: ['OMX2', faceC(true)] },
-  { id: 'solo-arena-2', t: bar(7), scene: 'arena', cam: 'hero', into: 'mirror', move: 'orbit', B: ['BQ2', full(-3.0, 5.0)], O: ['OQ4', full(3.0, 5.0)] },
-  { id: 'solo-arena-3', t: half(7), scene: 'arena', cam: 'close', into: 'shock', move: 'whip', B: ['BQ1', full(-2.6, 5.4)] },
-  { id: 'solo-forge-2', t: bar(8), scene: 'forge', cam: 'wide', into: 'streaks', move: 'dollyzoom', B: ['BQ1', full(-2.4, 5.0)], O: ['OQ4', full(3, 5.2)] },
+  { id: 'solo-arena-2', t: bar(7), scene: 'arena', cam: 'hero', into: 'mirror', move: 'orbit', B: ['BS3', full(-3.0, 5.0)], O: ['OS1', full(3.0, 5.0)] },
+  { id: 'solo-arena-3', t: half(7), scene: 'arena', cam: 'close', into: 'shock', move: 'whip', B: ['BS2', full(-2.6, 5.4)] },
+  { id: 'solo-forge-2', t: bar(8), scene: 'forge', cam: 'wide', into: 'streaks', move: 'dollyzoom', B: ['BS1', full(-2.4, 5.0)], O: ['OS3', full(3, 5.2)] },
   { id: 'solo-split-3', t: half(8), scene: 'duel', cam: 'hero', into: 'shatter', move: 'push', B: ['BMX2', faceAt(-4.4)], O: ['OMX3', faceAt(4.4, true)] },
-  { id: 'solo-end', t: bar(9), scene: 'cathedral', cam: 'wide', into: 'tunnel', move: 'orbit', B: ['BM3', full(-2.2, 5.0)], O: ['OC3', full(2.2, 5.2)] },
+  { id: 'solo-end', t: bar(9), scene: 'cathedral', cam: 'wide', into: 'tunnel', move: 'orbit', B: ['BS3', full(-2.2, 5.0)], O: ['OS2', full(2.2, 5.2)] },
   { id: 'solo-end-faces', t: half(9), scene: 'duel', cam: 'close', into: 'shatter', move: 'dollyzoom', B: ['BMX3', faceAt(-4.4)], O: ['OMX3', faceAt(4.4, true)] },
 ];
 const metalPoses = (who: 'B' | 'O'): RPose[] =>
@@ -91,7 +94,8 @@ const metalPoses = (who: 'B' | 'O'): RPose[] =>
 export const RSHOTS: RShot[] = [
   // V3: orange rebases blue's history while she sleeps; they trade lines
   { id: 'rebase', t: V3.start, scene: 'rails', cam: 'hero', into: 'dissolve' },
-  { id: 'rebase-asleep', t: tk(23, 5), scene: 'rails', cam: 'low', into: 'shock' },
+  // "while you were asleep": the rebase heist painting (QK4)
+  { id: 'rebase-asleep', t: tk(23, 5), scene: 'panel', panel: 'QK4', cam: 'hero', into: 'ink', move: 'push' },
   { id: 'memory', t: tk(24, 0), scene: 'subway', cam: 'hero', into: 'mirror' },
   { id: 'memory-sweet', t: tk(24, 5), scene: 'subway', cam: 'close', into: 'shock' },
   { id: 'squash', t: tk(25, 0), scene: 'squash', cam: 'hero', into: 'shatter' },
@@ -103,7 +107,8 @@ export const RSHOTS: RShot[] = [
   { id: 'reviewers-gone', t: tk(28, 3), scene: 'pipeline', cam: 'wide', into: 'shock' },
   { id: 'standup', t: tk(29, 0), scene: 'callgrid', cam: 'hero', into: 'ink' },
   { id: 'standup-five', t: tk(29, 4), scene: 'callgrid', cam: 'close', into: 'shock' },
-  { id: 'nobody', t: tk(29, 6), scene: 'callgrid', cam: 'wide', into: 'shock' },
+  // "nobody's on!": both sprinting down the corridor (QK5)
+  { id: 'nobody', t: tk(29, 6), scene: 'panel', panel: 'QK5', cam: 'hero', into: 'streaks', move: 'push' },
   // round 7b: a cut on the accent words, so the 4 s after each chorus keep moving
   { id: 'rebase-rebased', t: tk(23, 1), scene: 'rails', cam: 'close', into: 'shock', move: 'whip' },
   { id: 'rebase-history', t: tk(23, 3), scene: 'rails', cam: 'reverse', into: 'shock', move: 'orbit' },
@@ -141,48 +146,57 @@ for (let i = 1; i < RSHOTS.length; i++) {
 export const BLUE_METAL_AT = SCREAM.start;
 
 export const RBLUE: RPose[] = [
-  { t: V3.start, card: null },
-  { t: tk(24, 0), card: 'BD4', at: full(-3, 4.8) },
+  // asleep while orange rebases her history
+  { t: V3.start, card: 'BV1', at: full(-3.4, 3.6) },
+  { t: tk(23, 5), card: null },
+  { t: tk(24, 0), card: 'BV2', at: full(-3, 4.8) },
   { t: tk(24, 5), card: 'BX3', at: bust(-2.6) },
   { t: tk(25, 0), card: null },
-  { t: tk(26, 0), card: 'BD2', at: full(0, 4.8) },
+  { t: tk(26, 0), card: 'BV3', at: full(0, 5.0) },
   { t: tk(26, 5), card: 'BX4', at: bust(-1.2) },
   { t: tk(27, 0), card: null },
   { t: tk(28, 0), card: 'BX3', at: bust(-3.4) },
-  { t: tk(28, 3), card: 'BC2', at: full(-3.6) },
-  { t: tk(29, 0), card: 'BD7', at: full(-3.6, 4.8, false, 2) },
-  { t: tk(29, 6), card: 'BX5', at: bust(-3.8) },
+  { t: tk(28, 3), card: 'BV4', at: full(-3.6) },
+  { t: tk(29, 0), card: 'BV5', at: full(-3.6, 4.8, false, 2) },
+  { t: tk(29, 6), card: null },
+  { t: tk(29, 7), card: 'BX5', at: bust(-3.8) },
   { t: V4.start, card: 'BX4', at: bust(-3.4) },
+  { t: tk(38, 2), card: 'BV6', at: full(-3.4, 4.8) },
   { t: tk(39, 0), card: 'BX2', at: bust(-4.4) },
-  { t: tk(40, 0), card: 'BC3', at: full(-4, 4.8, false, 1) },
+  { t: tk(40, 0), card: 'BV7', at: full(-4, 4.8, false, 1) },
   { t: tk(41, 0), card: 'BX3', at: bust(-4.2) },
-  { t: tk(42, 0), card: 'BX4', at: bust(-3.6) },
+  { t: tk(42, 0), card: 'BV8', at: full(-4, 4.8, false, 1.5) },
   { t: tk(42, 3), card: 'BC2', at: full(-4, 4.8, false, 1.5) },
   { t: tk(43, 1), card: 'BX3', at: bust(-4.4) },
   // from the scream on the metal table holds her poses (BX3 becomes BMX2 through a dissolve on the downbeat)
   ...metalPoses('B'),
 ];
 export const RORANGE: RPose[] = [
-  { t: V3.start, card: 'OM5', at: full(2.5, 4.8) },
-  { t: tk(23, 5), card: 'OMX5', at: bust(2.4, 10.5, true) },
+  // she yanks the chain of blue's history
+  { t: V3.start, card: 'OV1', at: full(2.5, 4.8) },
+  { t: tk(23, 5), card: null },
   { t: tk(24, 0), card: null },
-  { t: tk(25, 0), card: 'OC1', at: full(4.2) },
-  { t: tk(25, 6), card: 'OMX2', at: bust(3.2, 10.5, true) },
+  { t: tk(25, 0), card: 'OV2a', at: full(4.2) },
+  { t: tk(25, 4), card: 'OV2b', at: full(4.2) },
+  { t: tk(25, 7), card: 'OV2c', at: full(4.2) },
   { t: tk(26, 0), card: null },
-  { t: tk(27, 0), card: 'OC2', at: full(3.5, 4.8, false, 1) },
+  { t: tk(27, 0), card: 'OV3', at: full(3.5, 4.8, false, 1) },
   { t: tk(28, 0), card: 'OMX4', at: bust(3.4, 10.5, true) },
   { t: tk(28, 3), card: 'OM6', at: full(3.6) },
-  { t: tk(29, 0), card: 'OM3', at: full(3.6, 4.8, false, 2) },
-  { t: tk(29, 6), card: 'OMX2', at: bust(3.8, 10.5, true) },
+  { t: tk(29, 0), card: 'OV4', at: full(3.6, 4.8, false, 2) },
+  { t: tk(29, 6), card: null },
+  { t: tk(29, 7), card: 'OMX2', at: bust(3.8, 10.5, true) },
   { t: V4.start, card: null },
   { t: tk(39, 0), card: 'OMX5', at: bust(3.6, 10.5, true) },
+  { t: tk(39, 2), card: 'OV5', at: full(3.4, 4.8) },
   { t: tk(40, 0), card: null },
   { t: tk(41, 0), card: 'OC2', at: full(3.8, 4.8, false, 1.5) },
+  { t: tk(41, 2), card: 'OV6', at: full(3.8, 4.8, false, 1.5) },
   { t: tk(41, 7), card: 'OMX4', at: bust(3.6, 10.5, true) },
   { t: tk(42, 0), card: 'OMX1', at: bust(4.2, 10.5, true) },
   { t: tk(42, 3), card: null },
   { t: tk(43, 1), card: 'OMX3', at: bust(3.6, 10.5, true) },
-  { t: tk(43, 3), card: 'OC1', at: full(3.8, 5.0, false, 1.5) },
+  { t: tk(43, 3), card: 'OV7', at: full(3.8, 5.0, false, 1.5) },
   ...metalPoses('O'),
 ];
 
