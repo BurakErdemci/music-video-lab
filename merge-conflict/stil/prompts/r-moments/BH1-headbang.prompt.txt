@@ -1,0 +1,18 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./BH1-headbang.png
+
+Subject: the BLUE girl of the attached METAL-FORM model sheet, full body, HEADBANGING hard, bent forward, the long ponytail whipping down in an arc, one fist pumping.
+
+Acting: this is an ACTION frame from an animated music video, NOT a standing pose. Push the pose hard: a strong line of action through the whole body, clear silhouette, exaggerated cartoon acting, the face fully committed to the emotion.
+
+She wears EXACTLY the metal outfit of the model sheet: the fitted black leather long coat with steel plate shoulders, chain-mail panels, high studded collar and ice-blue glowing seams, black gloves with steel knuckle plates, the chain belt with blade charms, tight black leather trousers flaring into steel-blue, huge black platform boots with steel toe caps and spikes, the thin ice-blue face paint lines, the very long blue ponytail bound with steel rings and the spiked steel crown-clip.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official model sheet: match her face, hair, outfit, accessories and proportions EXACTLY.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No props. No floor, no cast shadow, no scenery, no particles, no motion lines, no glow, no sparks, no flames in the air (effects are added later in compositing). The whole figure (all of her hair and anything she holds) stays inside the frame with a clear grey margin on every side. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks (paper and notes are blank).
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

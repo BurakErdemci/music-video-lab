@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./RK2-same-file.png
+
+Subject: "We're the same file, just from different times." The BLUE girl (left, disco outfit) and the ORANGE girl (right, disco outfit) face each other in perfect MIRROR SYMMETRY across a thin vertical seam of soft light, their palms almost touching on the seam. The ORANGE girl keeps her HUGE WILD, spiky, feathery, flame-like orange mane bursting outward exactly as on her sheet (NOT a ponytail, NOT smooth or straight hair); the BLUE girl keeps her very long high blue ponytail with the spiky clip; the left half of the frame bathed in cool blue light, the right half in warm orange light. Quiet, intimate, a slow push-in moment.
+
+The FIRST attached image is the approved art style key frame of the music video (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, graphic shapes, rich cinematic light). Paint in exactly this style. Attached image 2 is the official model sheet of the BLUE girl in her DISCO outfit: match her face, hair and outfit EXACTLY. Attached image 3 is the official model sheet of the ORANGE girl in her DISCO outfit: match her face, hair and outfit EXACTLY.
+
+Both girls are LIT BY THE SCENE with strong coloured light and rim light; this is a cinematic key moment of the music video, with a clear focal point and a strong composition. Landscape 1536x1024, full bleed, no border.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks (paper and notes are blank).
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.

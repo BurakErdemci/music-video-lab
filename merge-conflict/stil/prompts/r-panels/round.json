@@ -1,0 +1,122 @@
+[
+ {
+  "id": "RK1-after-hours",
+  "prompt": "stil/prompts/r-panels/RK1-after-hours.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK1-after-hours.png"
+ },
+ {
+  "id": "RK2-same-file",
+  "prompt": "stil/prompts/r-panels/RK2-same-file.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK2-same-file.png"
+ },
+ {
+  "id": "RK3-two-branches",
+  "prompt": "stil/prompts/r-panels/RK3-two-branches.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/onayli/02-karakter-turuncu.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK3-two-branches.png"
+ },
+ {
+  "id": "RK4-gradient-now",
+  "prompt": "stil/prompts/r-panels/RK4-gradient-now.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK4-gradient-now.png"
+ },
+ {
+  "id": "RK5-one-mic",
+  "prompt": "stil/prompts/r-panels/RK5-one-mic.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK5-one-mic.png"
+ },
+ {
+  "id": "RK6-push-it",
+  "prompt": "stil/prompts/r-panels/RK6-push-it.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK6-push-it.png"
+ },
+ {
+  "id": "RK7-resolved",
+  "prompt": "stil/prompts/r-panels/RK7-resolved.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK7-resolved.png"
+ },
+ {
+  "id": "RK8-ship-it",
+  "prompt": "stil/prompts/r-panels/RK8-ship-it.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK8-ship-it.png"
+ },
+ {
+  "id": "RK9-build-failed",
+  "prompt": "stil/prompts/r-panels/RK9-build-failed.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK9-build-failed.png"
+ },
+ {
+  "id": "RK10-scream-pillar",
+  "prompt": "stil/prompts/r-panels/RK10-scream-pillar.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK10-scream-pillar.png"
+ },
+ {
+  "id": "RK11-dawn-walk",
+  "prompt": "stil/prompts/r-panels/RK11-dawn-walk.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK11-dawn-walk.png"
+ },
+ {
+  "id": "RK12-final-freeze",
+  "prompt": "stil/prompts/r-panels/RK12-final-freeze.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/r-panels/out/RK12-final-freeze.png"
+ }
+]
