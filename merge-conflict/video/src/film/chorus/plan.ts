@@ -107,6 +107,15 @@ export const chorusPlan = (L: ChorusLines) => {
     // the chorus end: everything bursts into particles
     { id: 'burst', t: beat(beatIndexAt(L.end) - 2), scene: 'burst', from: cam([0, 1, 13], [0, -0.6, -1], 44), to: cam([0, 1.4, 16], [0, -0.6, -1], 48), into: 'dissolve' },
   ];
+  // round 7: the logo crashes, the line of light and "I can't" held 0.68-0.72 s (2.1 beats); one more cut on the
+  // first beat inside each, a closer angle of the same world
+  SHOTS.push(
+    { id: 'merge1-kaleido', t: after(tk(L.merge1, 1), 0.18), scene: 'logo', from: cam([0.9, 0.6, HOME_Z - 2.4], [0, 0, 0], 38, 0.12), to: cam([0.5, 0.4, HOME_Z - 2.8], [0, 0, 0], 38, 0.2), into: 'shock' },
+    { id: 'eq-middle2', t: after(tk(L.equals, 5), 0.18), scene: 'line', from: cam([-2.4, -0.8, 7.6], [0, 0, -2], 48, -0.25), to: cam([-1.8, -0.6, 6.8], [0, 0, -2], 48, -0.1), into: 'shock' },
+    { id: 'merge2-kaleido', t: after(tk(L.merge2, 0), 0.18), scene: 'logo', from: cam([0.9, 0.6, HOME_Z - 1.2], [0, 0, 0], 40, Math.PI * 0.55), to: cam([0.6, 0.4, HOME_Z - 1.6], [0, 0, 0], 40, Math.PI * 0.95), into: 'shock' },
+    { id: 'merge2-crash-k', t: after(tk(L.merge2, 1), 0.2), scene: 'logo', from: cam([-0.8, 0.5, HOME_Z - 2.4], [0, 0, 0], 38, Math.PI * 1.65), to: cam([-0.5, 0.3, HOME_Z - 2.8], [0, 0, 0], 38, Math.PI * 1.8), into: 'shock' },
+    { id: 'control-cant', t: after(tk(L.merge2, 4), 0.2), scene: 'spin', from: cam([6, 1.5, 9], [0, -1, -1], 46, 0.5), to: cam([5, 1.2, 8], [0, -1, -1], 46, 1.1), into: 'shock' },
+  );
   SHOTS.sort((a, c) => a.t - c.t);
   for (let i = 1; i < SHOTS.length; i++) {
     const a = SHOTS[i - 1] as Shot;
