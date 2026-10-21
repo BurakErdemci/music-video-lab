@@ -152,7 +152,7 @@ export const Card = ({ id, t, grade, x, feet, z, height, opacity = 1, lit = 1, r
     <group position={[cx, cy - height / 2 + a.bob + dy, cz]} scale={[a.scale, a.scale, 1]} visible={opacity > 0.001}>
       <mesh position={[0, h2 / a.scale, 0]} renderOrder={ORDER.card}>
         <planeGeometry args={[width, height, 10, 32]} />
-        <shaderMaterial uniforms={u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
+        <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
     </group>
   );

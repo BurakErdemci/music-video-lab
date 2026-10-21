@@ -106,15 +106,15 @@ export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06 }: SetProps
     <>
       <mesh position={[0, 2, WALL_Z]} renderOrder={ORDER.plate}>
         <planeGeometry args={[wallW, wallH]} />
-        <shaderMaterial uniforms={wall} vertexShader={VERT} fragmentShader={WALL_FRAG} depthTest={false} depthWrite={false} />
+        <shaderMaterial {...wall} vertexShader={VERT} fragmentShader={WALL_FRAG} depthTest={false} depthWrite={false} />
       </mesh>
       <mesh position={[0, FLOOR_Y, -6]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.floor}>
         <planeGeometry args={[60, 20]} />
-        <shaderMaterial uniforms={floor} vertexShader={VERT} fragmentShader={FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
+        <shaderMaterial {...floor} vertexShader={VERT} fragmentShader={FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
       <mesh position={[0, 5.3, -7]} renderOrder={ORDER.ball}>
         <sphereGeometry args={[1.9, 64, 32]} />
-        <shaderMaterial uniforms={ball} vertexShader={VERT} fragmentShader={BALL_FRAG} depthTest={false} depthWrite={false} />
+        <shaderMaterial {...ball} vertexShader={VERT} fragmentShader={BALL_FRAG} depthTest={false} depthWrite={false} />
       </mesh>
     </>
   );
@@ -145,7 +145,7 @@ export const PlateImage = ({ src, grade, opacity = 1, overscan = 1.12 }: { src: 
   return (
     <mesh position={[0, 0, WALL_Z]} renderOrder={ORDER.plate}>
       <planeGeometry args={[w, h]} />
-      <shaderMaterial uniforms={u} vertexShader={VERT} fragmentShader={PLATE_FRAG} transparent depthTest={false} depthWrite={false} />
+      <shaderMaterial {...u} vertexShader={VERT} fragmentShader={PLATE_FRAG} transparent depthTest={false} depthWrite={false} />
     </mesh>
   );
 };

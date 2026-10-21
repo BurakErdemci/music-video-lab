@@ -4,7 +4,7 @@
 import { useThree } from '@react-three/fiber';
 import { ThreeCanvas } from '@remotion/three';
 import { type ReactNode, useLayoutEffect, useMemo } from 'react';
-import type { IUniform, PerspectiveCamera } from 'three';
+import type { IUniform, PerspectiveCamera, ShaderMaterial } from 'three';
 import { type CameraPose, H, W } from '../camera/camera.ts';
 
 const CameraRig = ({ pose }: { pose: CameraPose }) => {
@@ -29,18 +29,31 @@ export const Stage = ({ pose, children }: { pose: CameraPose; children: ReactNod
 );
 
 /**
- * Uniforms memoised once per mounted material, with their values written during render: the values then
- * always match the frame being rendered (the sibling's SvgCard pattern). Never hold a mode across frames.
+ * Material props for a shader whose uniform values change per frame: spread them on <shaderMaterial>.
+ * R3F keeps its OWN copy of the `uniforms` object it is given at creation (measured 21 Oct 2026: the
+ * material's uniforms !== the object passed in, so values written to that object after mount never reached
+ * the GPU; single-frame stills looked right, sequential renders froze every uniform at its mount value).
+ * So the values are written into the material's own uniforms at commit, through a ref callback that is new
+ * on every render (React calls it on every commit), the sibling clip's pattern.
  */
-export const useUniforms = <T extends Record<string, unknown>>(values: T): { [K in keyof T]: IUniform<T[K]> } => {
-  const u = useMemo(() => {
+export const useUniforms = <T extends Record<string, unknown>>(values: T) => {
+  const initial = useMemo(() => {
     const o: Record<string, IUniform> = {};
     for (const k of Object.keys(values)) o[k] = { value: values[k] };
     return o;
+    // Only the mount values: every later value goes through the ref below.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
-  for (const k of Object.keys(values)) (u[k] as IUniform).value = values[k];
-  return u as { [K in keyof T]: IUniform<T[K]> };
+  const ref = (m: ShaderMaterial | null) => {
+    if (!m) return;
+    for (const k of Object.keys(values)) {
+      const u = m.uniforms[k];
+      if (!u) throw new Error(`useUniforms: material has no uniform ${k}`);
+      u.value = values[k];
+    }
+    m.uniformsNeedUpdate = true;
+  };
+  return { uniforms: initial, ref };
 };
 
 /** Render order of the stage, back to front (depth testing is off: layers are ordered explicitly). */

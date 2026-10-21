@@ -149,7 +149,7 @@ export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, 
   });
   return (
     <points geometry={geo} frustumCulled={false} renderOrder={layer === 'back' ? ORDER.fieldBack : ORDER.fieldFront}>
-      <shaderMaterial uniforms={u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} />
+      <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} />
     </points>
   );
 };

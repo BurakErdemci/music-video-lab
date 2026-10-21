@@ -154,7 +154,7 @@ export const Dissolve = ({ plan, t, grade, rival = '#ff7a1a', spread = 2.4 }: { 
   });
   return (
     <points geometry={geo} frustumCulled={false} renderOrder={ORDER.dissolve} visible={st.active && st.points > 0.001}>
-      <shaderMaterial uniforms={u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} />
+      <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} />
     </points>
   );
 };

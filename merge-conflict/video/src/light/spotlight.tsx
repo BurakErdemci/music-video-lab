@@ -92,11 +92,11 @@ export const Spotlight = ({ plan, t, tint = '#fff6ee' }: { plan: SpotPlan; t: nu
   return (
     <>
       <mesh geometry={geo} renderOrder={ORDER.cone} frustumCulled={false}>
-        <shaderMaterial uniforms={cone} vertexShader={VERT} fragmentShader={CONE_FRAG} transparent blending={AdditiveBlending} depthTest={false} depthWrite={false} side={DoubleSide} />
+        <shaderMaterial {...cone} vertexShader={VERT} fragmentShader={CONE_FRAG} transparent blending={AdditiveBlending} depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
       <mesh position={[s.x, FLOOR_Y + 0.01, 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool}>
         <planeGeometry args={[BOTTOM_W * 1.45, 2.0]} />
-        <shaderMaterial uniforms={pool} vertexShader={VERT} fragmentShader={POOL_FRAG} transparent blending={AdditiveBlending} depthTest={false} depthWrite={false} side={DoubleSide} />
+        <shaderMaterial {...pool} vertexShader={VERT} fragmentShader={POOL_FRAG} transparent blending={AdditiveBlending} depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
     </>
   );
