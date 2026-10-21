@@ -225,12 +225,15 @@ export const RunwayLine = ({ spec, t, pose }: { spec: RunwaySpec; t: number; pos
     const p0 = project(pose, at(i * adv, 0));
     const px = project(pose, at(i * adv + adv, 0));
     const py = project(pose, at(i * adv, spec.size));
-    if (p0.s < 1) continue;
     // the glyph's local affine frame: x along the line, y up the plane (SVG y points down, so the up vector flips)
     const a = (px.x - p0.x) / adv;
     const b = (px.y - p0.y) / adv;
     const c = -(py.x - p0.x) / spec.size;
     const d = -(py.y - p0.y) / spec.size;
+    // a glyph beside or behind the camera projects to an enormous scale; Chrome hung rasterising one (frame 2836,
+    // round 6), so glyphs off the frame or larger than about a third of it are skipped
+    const scale = Math.max(Math.abs(a), Math.abs(b), Math.abs(c), Math.abs(d)) * spec.size;
+    if (p0.s < 1 || scale > 420 || p0.x < -600 || p0.x > 2520 || p0.y < -600 || p0.y > 1680) continue;
     const g = spec.gutter && i < spec.gutter.length;
     const col = g ? '#8b949e' : spec.color;
     glyphs.push(
