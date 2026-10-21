@@ -91,5 +91,27 @@ raw.forEach((l, i) => {
 });
 check('without the map, the mismatched lines throw (no guessing)', strictFail > 0, `${strictFail} lines throw`);
 
+// ---- 3. metal amount (the film's take only: metal.ts reads timing.ts, which is bound to video/src/data) -------
+if (take === 'take-v4') {
+  const M = await import(pathToFileURL(path.join(ROOT, 'video/src/metal/metal.ts')).href);
+  const groove = T.sections.find((x) => x.name === 'intro_groove');
+  const verse = T.sections.find((x) => x.name === 'verse1_sweet');
+  let all1 = true;
+  for (let tt = groove.start + 0.01; tt < groove.end - 0.02; tt += 0.25) if (M.metalAt(tt) !== 1 || !M.metalFormAt(tt)) all1 = false;
+  check('ear override: intro_groove is metal 1 with the metal forms on, whatever its measured 61', all1);
+  const after = M.metalAt(verse.start + 1.5 * grid.gridLenAt(T.downbeats, verse.start));
+  check('after the groove the amount slides back to the measured curve within ~1 bar', after < 0.6, after.toFixed(2));
+  check('the metal forms are off from the verse-1 downbeat', !M.metalFormAt(verse.start + 0.01));
+  let smooth = 0;
+  for (let tt = 20; tt < T.duration - 1; tt += 1 / 60) smooth = Math.max(smooth, Math.abs(M.metalAt(tt + 1 / 60) - M.metalAt(tt)));
+  check('outside the overrides the amount never jumps more than 0.02 per frame', smooth <= 0.02, smooth.toFixed(4));
+  const sw = M.metalSwitches();
+  const holds = sw.slice(1).map((s, i) => grid.gridPos(T.downbeats, s.t) - grid.gridPos(T.downbeats, sw[i].t));
+  check('every metal-form state holds at least 2 bars', holds.every((h) => h >= 2 - 1e-3), `min ${Math.min(...holds).toFixed(4)} bars, ${sw.length} switches`);
+  const entered = sw.filter((s) => s.on).every((s) => { const b = T.bars.find((x) => Math.abs(x.start - s.t) < 1e-6); return (b && b.heavy >= 65) || Math.abs(s.t - groove.start) < 1 / 60; });
+  check('the forms switch on only at heavy >= 65 (or by the ear override)', entered);
+  check('the per-singer bias: blue a step toward pop, orange toward metal', M.metalFor(60, 'B') < M.metalAt(60) && M.metalFor(60, 'O') > M.metalAt(60));
+}
+
 console.log(`gridcheck ${take}: ${fails ? `${fails} FAILED` : 'all passed'}`);
 process.exit(fails ? 1 : 0);
