@@ -183,7 +183,7 @@ These are measurable and checked in the review: the longest hold of one framing 
 - **The blend:** "metal and pop are interleaved; metal shoots up in places, but overall they are mixed." There is no hard mode switch. A continuous METAL AMOUNT per frame is driven by the measured per-bar heaviness (`bars[].heavy`, 0–100), smoothed across bar boundaries.
   - **Low:** disco-pop. Candy palette, confetti, rounded neon type.
   - **Rising:** the palette darkens toward black, red and steel; embers and sparks mix into the confetti; blackletter and jagged faces start to take over the type.
-  - **Surges (heavy ≥ 65):** the girls swap to their metal forms (`stil/prompts/k-metal`), and swap back when the bar falls below the threshold. A hysteresis keeps them from flickering.
+  - ~~**Surges (heavy ≥ 65):** the girls swap to their metal forms (`stil/prompts/k-metal`), and swap back when the bar falls below the threshold. A hysteresis keeps them from flickering.~~ Replaced below: the costume belongs to the girl, not to the bar.
   - **Per singer:** the blue (sweet) lines sit one step toward pop, the orange (raspy) lines one step toward metal.
 - **Measured surges:**
   - 117–140 s: the scream, GIT! PUSH! FORCE!, the whisper and the guitar solo; the solo is the mid-clip dance duel.
@@ -191,3 +191,25 @@ These are measurable and checked in the review: the longest hold of one framing 
   - 196–232 s: the scream ending and outro, the all-out metal finale.
   - The piano (140–149 s) drops to 4, the calm After Hours.
   - The final chorus (160–181 s) is mid, the fusion and gradient moment.
+
+## The costume belongs to the girl (Burak, 2026-10-21)
+
+Burak: "the raspy voice is full metal everywhere except her first verse, screaming from the throat in most places", so "one girl metal, one girl disco, with places where both are metal". Pop against metal becomes the fight itself: **blue = the disco girl, orange = the metal girl.**
+
+- **The metal amount (`metalAt`) still drives the set:** palette, light, particles. It no longer swaps costumes.
+- **Costume schedule (seconds, take-v4):**
+
+| Time | Section | Blue | Orange |
+|---|---|---|---|
+| 0–4.37 | intro, blue speaks the git error | disco | not shown |
+| 4.37–16.33 | hard-metal groove | disco | metal **silhouette glimpses only** (outline, no costume detail), a foreshadowing |
+| 16.33–40.58 | verse 1, verse 2 (orange's first verse), "Blue! Orange! Blue!" | disco | disco |
+| 40.58 | "ORANGE!" (word 40.58–41.00) | disco | **turns metal on this shout**, the clip's first transformation |
+| 40.58–117.36 | choruses 1–2, verses 3–4 | disco | metal |
+| 117.36–140.04 | scream, GIT! PUSH! FORCE!, whisper, solo | **metal** | metal |
+| 140.04–160.06 | piano, build | plain (soft) | plain (soft), the truce |
+| 160.06–181.44 | final chorus "Accept both" | costumes mix | costumes mix |
+| 181.44–end | chant, "Build failed" stop, scream end, outro | metal | metal |
+
+- **Type and transitions follow the same split** (Burak: "pop transitions in the pop parts, metal transitions in the metal parts"). A solo line takes the style of its singer's costume at that moment. A `both` line takes the style of the set (`metalAt`).
+- **Signature moment:** "Merge conflict, merge conflict" (49.14, 59.60, 91.68, 102.08 s) uses one type move every time; at 176.80 s ("Merge conflict resolved inside my soul") the same move returns resolved, the two colours joined.
