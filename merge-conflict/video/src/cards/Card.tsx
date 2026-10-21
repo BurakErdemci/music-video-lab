@@ -71,11 +71,12 @@ const useRigGeometry = (id: string) =>
 const FRAG = /* glsl */ `
 uniform sampler2D map; uniform vec3 uHue; uniform vec3 uRival; uniform float uAmount; uniform float uRim;
 uniform vec2 uTexel; uniform vec2 uRimDir; uniform float uSplit; uniform float uOpacity; uniform float uLit; uniform vec3 uFlat; uniform float uFlatMix;
-uniform vec2 uClip;
+uniform vec2 uClip; uniform float uSoft;
 varying vec2 vUv; varying float vWorldX;
 ${GRADE_GLSL}
 void main() {
-  vec4 c = texture2D(map, vUv);
+  // Depth softness: a mip-level bias is a deterministic low-pass of the painting (the girls sit behind the type).
+  vec4 c = texture2D(map, vUv, uSoft * 3.0);
   if (c.a < 0.01) discard;
   // uClip = (side, x): keep only world x < clip (side 1) or x > clip (side -1), for split-screen shots
   if (uClip.x * (uClip.y - vWorldX) < 0.0) discard;
@@ -94,6 +95,8 @@ void main() {
   vec2 outward = length(grad) > 0.001 ? -normalize(grad) : vec2(0.0);
   float facing = 0.35 + 0.65 * max(dot(outward, uRimDir), 0.0);
   vec3 col = gradeTint(c.rgb, uHue, uAmount) * uLit;
+  float lum = dot(col, vec3(0.299, 0.587, 0.114));
+  col = mix(col, vec3(lum), 0.25 * uSoft) * (1.0 - 0.3 * uSoft);
   // Split light: the rival's colour washes the side of the figure it comes from (the "cutting light").
   float side = smoothstep(-0.15, 0.45, (vUv.x - 0.5) * sign(uRimDir.x + 1e-4));
   col = mix(col, col * (uRival * 1.7 + 0.15), side * uSplit);
@@ -134,11 +137,13 @@ export interface CardProps extends Placement {
   dance?: number;
   /** Smear squash and stretch about the feet: [sx, sy]. */
   stretch?: [number, number];
+  /** Depth softness 0..1: blurred, dimmed and a little desaturated behind the type; 0 = sharp. */
+  soft?: number;
   /** Split-screen clip: keep the side of world x = `x` given by `keep`. */
   clip?: { x: number; keep: 'left' | 'right' };
 }
 
-export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 1, stretch = [1, 1], clip }: CardProps) => {
+export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 1, stretch = [1, 1], clip, soft = 0 }: CardProps) => {
   const tex = useCardTexture(id);
   const geo = useRigGeometry(id);
   const e = cardEntry(id);
@@ -168,6 +173,7 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uTexel: [1 / e.w, 1 / e.h],
     uRimDir: [(sx * dir[0]) / dl, dir[1] / dl],
     uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0],
+    uSoft: soft,
     uOpacity: opacity,
     uLit: lit,
     uFlat: rgb(flat?.color ?? '#000000'),
