@@ -82,7 +82,9 @@ def key_alpha(im, key):
         peel = [i for i in touch if i > 0 and sizes[i] <= GREY_REGION_MAX]
         bgmask = bgmask | np.isin(gl, peel)
     fg = ~bgmask
-    fg = ndi.binary_opening(fg, structure=np.ones((2, 2)), border_value=1)  # drop 1 px speckle
+    # drop 1 px speckle; with an even structure and border_value=1 the opening turns the bottom-right
+    # 2x2 corner of the key into foreground (measured on all 58 cards), so it may only remove pixels
+    fg = ndi.binary_opening(fg, structure=np.ones((2, 2)), border_value=1) & fg
     # despill: edge band takes the colour of the nearest interior pixel
     interior = ndi.binary_erosion(fg, iterations=FRINGE, border_value=1)
     out = rgb.copy()
