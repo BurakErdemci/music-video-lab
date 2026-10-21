@@ -1,5 +1,7 @@
 # Her Sabah Baştan
 
+**Watch it on YouTube: [Her Sabah Baştan (Start Over Every Morning) || Opus 5.5 Music Clip](https://www.youtube.com/watch?v=j-LT1IEJDvk)**
+
 <img src="docs/media/hero.jpg" alt="The human (left, navy) and the AI (right, cream) press their palms together on a halftone moon" width="100%">
 
 *Her Sabah Baştan* ("start over every morning") is a 4:01 Turkish duet about an AI that meets its
@@ -8,7 +10,8 @@ it, and still does not remember. The film is two-colour silk-screen print in nav
 The cream figure is the AI, drawn as a blank mannequin with a cursor slit for an eye. Every sung line is
 tied to a measured word time, and every cut lands on a measured beat.
 
-Final render: 1920x1080, 60 fps, 14,446 frames, 240.77 s. Code, drawings and prompts are in this folder.
+Final render: 2560x1440, 60 fps, 14,446 frames, 240.77 s (each part rendered with `--scale=1.3333333333333333`,
+then assembled; a 1080p master exists too). Code, drawings and prompts are in this folder.
 
 ## Excerpts
 
@@ -170,7 +173,7 @@ FPS=60 bash scripts/assemble-parts.sh part1.mp4 part2.mp4 part3.mp4 part4a.mp4 p
   clone.
 - **The song is not available.** `sarki/*.wav` is ignored and no release holds it. The only release in
   the repo is a draft for the other clip.
-- **The final MP4 is not in the repo or a release.** `video/out/` is ignored.
+- **The final MP4 is on YouTube only** (linked at the top), not in the repo or a release. `video/out/` is ignored.
 - `tools/beatcheck.mjs` does not cover the whole song (see Checks), and the scene code runs on a 30 fps
   clock, so the check constants still say 30 fps.
 - Small defects the architect listed and left: a flat cream glass shard covers the AI for a few frames

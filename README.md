@@ -19,8 +19,9 @@ be that reference.
 <td width="50%" valign="top">
 <a href="her-sabah-bastan/"><img src="her-sabah-bastan/docs/media/hero.jpg" alt="Her Sabah Baştan: a human and an AI press palms on a halftone moon" width="100%"></a><br>
 <b><a href="her-sabah-bastan/">Her Sabah Baştan</a></b><br>
-Turkish duet about an AI that meets its human for the first time every morning. 4:01, 1080p at 60 fps.
-Two-colour silk-screen print, drawn poses, and a camera and transitions built in code.
+Turkish duet about an AI that meets its human for the first time every morning. 4:01, 1440p at 60 fps.
+Two-colour silk-screen print, drawn poses, and a camera and transitions built in code.<br>
+<a href="https://www.youtube.com/watch?v=j-LT1IEJDvk">Watch on YouTube</a>
 </td>
 <td width="50%" valign="top">
 <a href="vorathul-nerfed/"><img src="vorathul-nerfed/docs/media/hero.jpg" alt="Vorathul: a matte black knight with organ-pipe wings in a painted cathedral" width="100%"></a><br>
