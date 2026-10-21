@@ -11,7 +11,7 @@ Per sample:
     is within 5 % of the frame of it, the type persists (is not mid-animation) and must sit inside a 4 % margin.
   * faces: type pixels may cover at most 3 % of any projected face box.
   * local contrast: the type's fill (and, separately, its outer 2 px edge band: stroke or backing) against the composite
-    in a 6 px ring around it, worst case the ring's 85th/15th percentile; the better of the two must give >= 3:1.
+    in a 6 px ring around it, worst case the ring's 85th/15th percentile; the better of the two must give >= 3:1; failing that, the type layer's own colour spread (own_contrast) may carry it.
 Exit 1 on any failure. Prints failing samples with time and reason, and a count per check.
 """
 import json
@@ -75,6 +75,15 @@ def contrast(mask, comp):
     return float(max(vs_plate(np.median(fill), ring), vs_plate(np.median(edge), ring)))
 
 
+def own_contrast(s, mask):
+    """The type layer's own colour spread (90th / 10th percentile luminance of its opaque pixels): a panel or backing
+    drawn in the type layer (terminal window, scrim, stroke) makes the text legible against itself, even when the whole
+    form is as dark as the plate. A gradient fill can pass here too; read it with the stills."""
+    ty = np.asarray(Image.open(s["type"]).convert("RGB"), dtype=np.float32)
+    L = lum(ty[mask])
+    return float((np.percentile(L, 90) + 0.05) / (np.percentile(L, 10) + 0.05))
+
+
 def sides(box):
     """px the box crosses each side of the 4 % margin (only the positive ones)."""
     lim = {"left": MARGIN * W - box[0], "right": box[2] - (1 - MARGIN) * W,
@@ -114,6 +123,8 @@ def analyse(samples):
             if cover > FACE_COVER:
                 out.append({**base, "kind": "face", "value": round(100 * cover), "why": f"type covers {100 * cover:.0f} % of face {card}"})
         ratio = contrast(mask, comp)
+        if ratio < CONTRAST:
+            ratio = max(ratio, own_contrast(s, mask))
         if ratio < CONTRAST:
             out.append({**base, "kind": "contrast", "value": round(ratio, 2), "why": f"local contrast {ratio:.2f}:1"})
     return out
