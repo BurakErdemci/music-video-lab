@@ -21,7 +21,10 @@ export type Girl = 'B' | 'O';
 
 export const COSTUME: Record<Girl, readonly CostumeSpan[]> = {
   B: [
-    { from: 0, to: 117.36, form: 'disco', at: 'intro_robot' },
+    { from: 0, to: 4.37, form: 'disco', at: 'intro_robot' },
+    // the groove is all metal and hers is not shown (scene-map.md, 23d272a): she enters on the verse downbeat
+    { from: 4.37, to: 16.33, form: 'disco', hidden: true, at: 'intro_groove' },
+    { from: 16.33, to: 117.36, form: 'disco', at: 'verse1_sweet' },
     { from: 117.36, to: 140.04, form: 'metal', at: 'scream' },
     { from: 140.04, to: 160.06, form: 'plain', at: 'piano_interlude' },
     { from: 160.06, to: 181.44, form: 'mix', at: 'final_chorus' },
