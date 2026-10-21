@@ -135,3 +135,18 @@ AAAAAAAH!
 
 [Outro: all-out heavy metal, screaming, blast beats, then silence]
 ```
+
+## Voice contrast (Burak, 2026-10-21: "the two voices must differ a bit")
+
+- Do not use a Persona: it locks one voice and would pull both girls to it.
+- Style with only the vocal description sharpened (the rest is v1 verbatim):
+
+```
+kawaii metal duet, two very different female vocalists: Vocalist A is a sweet, bright, high-pitched soprano J-pop idol with an airy cute head voice; Vocalist B is a low, husky alto rock singer with a gritty distorted chest voice, growls and screams; rapid call and response between the two contrasting voices, chugging djent guitars, blast beats, bright synth leads, chiptune sounds, symphonic stabs, flat robotic voice interjections, sudden stops, soft piano interlude with harmonies, 185 bpm, chaotic, absurd, funny, anime battle energy
+```
+
+- Fallback, done by us after the take is chosen:
+  - separate the vocal stem;
+  - on solo lines only (singer and time from the measured lyric alignment), darken and roughen the raspy girl and brighten the sweet girl;
+  - remix.
+  - Test it on a short excerpt first and let Burak listen.
