@@ -31,6 +31,8 @@ export const prog = (frame: number, start: number, frames: number): number => cl
 export const easeOut = (t: number): number => 1 - (1 - clamp01(t)) ** 3;
 export const easeInOut = (t: number): number => (t < 0.5 ? 4 * t * t * t : 1 - (-2 * t + 2) ** 3 / 2);
 export const mix = lerp;
+/** Quad in-out with a linear floor, so a slow camera push never stands still at either end (frame-pure, fractional-safe). */
+export const SLOW_EASE = (t: number): number => 0.2 * t + 0.8 * (t < 0.5 ? 2 * t * t : 1 - (-2 * t + 2) ** 2 / 2);
 export { clamp01, fitDistance };
 
 

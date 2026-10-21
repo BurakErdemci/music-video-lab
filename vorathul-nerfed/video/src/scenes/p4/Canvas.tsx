@@ -1,15 +1,16 @@
 // S77-S80: he stands and walks to the canvas, awareness step 3 (his hand on the inside of the canvas, seen from the office
 // side), the view through the weave, and the bulge on the wall seen from the back of the room.
 import { AbsoluteFill, Img, staticFile } from 'remotion';
-import { blendPose, frameAt, hold, OFF_WIDE } from '../../camera/api.ts';
-import { Stage, type CameraPath } from '../../stage/Stage.tsx';
+import { blendPose, frameAt, OFF_WIDE } from '../../camera/api.ts';
+import { push } from '../../camera/moves.ts';
+import { Stage, type CameraPath, type CameraPose } from '../../stage/Stage.tsx';
 import { CanvasBulge, DuotoneFlash, gradeCues, Overlay } from '../../vfx/effects.ts';
-import { CUE } from './cues.ts';
+import { CUE, HATED_FRAME } from './cues.ts';
 import { Cathedral, Hero } from './inside.tsx';
 import { jointWorld } from './rigline.ts';
 import { assetSize } from '../../cast/available.ts';
 import { OfficeWall, WallItems } from './office.tsx';
-import { CANVAS_CAM, H, PALM_UV, W, easeInOut, easeOut, paintingBox, prog } from './lib.ts';
+import { CANVAS_CAM, H, PALM_UV, SLOW_EASE, W, canvasBox, easeInOut, easeOut, paintingBox, prog } from './lib.ts';
 
 const DRAIN = 'none';
 
@@ -41,7 +42,11 @@ export const S77 = ({ frame }: { frame: number }) => {
 const bulgeAmount = (frame: number): number =>
   0.5 * easeOut(prog(frame, CUE.s78palm.frame, 10)) + 0.3 * easeInOut(prog(frame, CUE.s78grow.frame - 8, 10)) + 0.2 * easeOut(prog(frame, CUE.s78hold.frame - 4, 8));
 
-const palmPx = (): [number, number] => [PALM_UV[0] * W, PALM_UV[1] * H];
+/** The palm on screen for a camera pose: the canvas box moves with the push, so the bulge marks follow it. */
+const palmPx = (pose: CameraPose): [number, number] => {
+  const b = canvasBox(pose);
+  return [b[0] + PALM_UV[0] * b[2], b[1] + PALM_UV[1] * b[3]];
+};
 
 /** Canvas weave: a fine linen grid, strongest where the paint stretches thin (a ring around the press point). */
 const Weave = ({ frame, x, y, amount }: { frame: number; x: number; y: number; amount: number }) => {
@@ -73,11 +78,13 @@ const Weave = ({ frame, x, y, amount }: { frame: number; x: number; y: number; a
 /** S78 03:11.77: office side at d0, the painting exactly fills the frame. Awareness step 3: his gauntlet meets the canvas and it bulges toward us. */
 export const S78 = ({ frame }: { frame: number }) => {
   const amount = bulgeAmount(frame);
-  const [x, y] = palmPx();
+  // The frame is never still: a slow frontal push-in over the whole shot (about 8 % closer), cropping the canvas only.
+  const path: CameraPath = push(CANVAS_CAM, { start: CUE.s78cut.frame, frames: HATED_FRAME - CUE.s78cut.frame, distance: 1.0, ease: SLOW_EASE });
+  const [x, y] = palmPx(path(frame));
   return (
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
       <AbsoluteFill style={{ filter: DRAIN }}>
-        <Stage camera={hold(CANVAS_CAM)}>
+        <Stage camera={path}>
           <Cathedral frame={frame} />
           <Hero frame={frame} />
         </Stage>

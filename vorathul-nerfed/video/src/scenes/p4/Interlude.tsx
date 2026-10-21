@@ -5,14 +5,15 @@ import { Stage, type CameraPath } from '../../stage/Stage.tsx';
 import { UiFonts } from '../../ui/kit.ts';
 import { CUE } from './cues.ts';
 import { cam, Cathedral, Hero } from './inside.tsx';
+import { SLOW_EASE } from './lib.ts';
 import { DustLayer, DustMotes, FloorGlints, SpawnRings } from './fx.tsx';
 
 const DRAIN = 'none';
 
-/** S74 02:51.33: WIDE, very slow push. The galleries are empty, the sky has drained to ivory, he sits alone on the steps. */
+/** S74 02:51.33: WIDE, slow push (never still, about 20 % closer by the cut). The galleries are empty, the sky has drained to ivory, he sits alone on the steps. */
 export const S74 = ({ frame }: { frame: number }) => {
   const start = CUE.s74cut.frame;
-  const path: CameraPath = push(cam([0, 4.6, 6], [0, 5.6, -15]), { start, frames: 168, distance: 2.4 });
+  const path: CameraPath = push(cam([0, 4.6, 6], [0, 5.6, -15]), { start, frames: CUE.s75cut.frame - start, distance: 4.2, ease: SLOW_EASE });
   return (
     <AbsoluteFill style={{ background: '#F4ECD8' }}>
       <AbsoluteFill style={{ filter: DRAIN }}>
