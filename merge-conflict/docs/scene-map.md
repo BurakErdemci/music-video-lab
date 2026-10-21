@@ -258,6 +258,12 @@ Measured from LGTM (Degenerative Pixels, youtube 3TNpOD6bov8; 5 s contact sheets
 - The title recurs as PHYSICAL OBJECTS: LGTM as boxes, ship containers, server-rack lights, keycaps. Counters grow every chorus (90 thousand → a million lines).
 - Big left-aligned text, generous empty space, the object beside it; dark scenes broken by light-mode scenes.
 
+**Binding over the table (Burak, 2026-10-21: "if we slide too far into the LGTM theme, the disco vs rock theme falls behind"):**
+- The stage is always disco or metal. A git object is a PROP inside that stage. It never replaces the stage: no flat dark app screen filling the frame.
+- Every git object is built from the material of the side it is in. Disco: a neon light box, mirror tiles, glitter, lit floor panels. Metal: forged steel, flame, blackletter, amp stacks, stone. Example: the Accept buttons are lit disco floor tiles in the pop parts and steel plaques in the metal parts.
+- Not every line is an object: one or two per section. The other lines stay kinetic type in the pop or metal families.
+- A girl always plays with the object (who presses the button is the fight).
+
 Ours (keep our two families: pop/blue against metal/orange; the logo B is the recurring title object):
 
 | Line | Git object |
