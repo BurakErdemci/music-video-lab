@@ -65,6 +65,7 @@ export const chorusPlan = (L: ChorusLines) => {
     // "the build is on fire": the whole arena ignites, a burning server hall
     { id: 'fire-build', t: tk(L.fire, 5), scene: 'fire', from: cam([0, -1.6, 14], [0, -0.6, -2], 44), to: cam([0, -1.2, 11], [0, -0.4, -2], 44), into: 'streaks' },
     { id: 'fire-fire', t: beat(beatIndexAt(tk(L.fire, 7)) + 0), scene: 'fire', from: cam([0, -0.4, 6.4], [0, -0.2, -4], 52, 0.06), to: cam([0, -0.8, 4.6], [0, -0.2, -4], 54, -0.04), into: 'shock' },
+    { id: 'fire-roar', t: tk(L.fire, 8), scene: 'fire', from: cam([-4.5, -2.4, 8], [0, 0.4, -4], 50, -0.14), to: cam([-3.6, -2.2, 7], [0, 0.6, -4], 52, -0.06), into: 'shock' },
     // "Merge conflict, merge conflict,": logo B slams and its halves are the two girls crashing together
     { id: 'merge1-a', t: tk(L.merge1, 0), scene: 'logo', from: cam([0, 0, HOME_Z + 2], [0, 0, 0]), to: cam([0, 0.2, HOME_Z], [0, 0.2, 0]), into: 'tunnel' },
     { id: 'merge1-crash', t: tk(L.merge1, 1), scene: 'logo', from: cam([0.6, -0.4, HOME_Z - 1.5], [0, 0, 0], 40, 0.05), to: cam([0.3, -0.3, HOME_Z - 2.2], [0, 0, 0], 40, -0.05), into: 'shock' },

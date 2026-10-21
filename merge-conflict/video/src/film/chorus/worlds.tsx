@@ -38,8 +38,8 @@ const Backdrop = ({ color = '#04020a' }: { color?: string }) => (
 
 const PATTERNS: LedPattern[] = ['bars', 'radial', 'checker', 'scan'];
 
-export interface ArenaProps { t: number; stomps: readonly { t: number; x: number }[]; embers: readonly EmberBurst[]; lasers?: number; led?: [Hex, Hex] }
-export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED] }: ArenaProps) => {
+export interface ArenaProps { t: number; stomps: readonly { t: number; x: number }[]; embers: readonly EmberBurst[]; lasers?: number; led?: [Hex, Hex]; plate?: boolean }
+export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED], plate = false }: ArenaProps) => {
   const p = pulseAt(t);
   const bar = barPos(t);
   // the lasers sweep once per bar, snapping to a new side on every downbeat
@@ -52,10 +52,10 @@ export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED] }: Aren
   });
   return (
     <>
-      <Backdrop />
-      <LedWall position={[0, 2.4, -11]} width={34} height={12} cols={52} rows={18} colors={led} pattern={PATTERNS[Math.floor(bar) % 4] as LedPattern} pulse={p * 0.8} t={t} />
+      {!plate && <Backdrop />}
+      {!plate && <LedWall position={[0, 2.4, -11]} width={34} height={12} cols={52} rows={18} colors={led} pattern={PATTERNS[Math.floor(bar) % 4] as LedPattern} pulse={p * 0.8} t={t} />}
       <Smoke y={F + 1.2} z={-4} width={36} height={5} color="#6a5cff" density={0.5} t={t} />
-      <TilePlatform position={[0, F, -1.5]} width={24} depth={13} cols={24} rows={13} splitX={0} left={BLUE} right={RED} t={t} pulse={p} erupt={erupt} />
+      <TilePlatform position={[0, F, -1.5]} width={24} depth={13} cols={24} rows={13} splitX={0} left={BLUE} right={RED} t={t} pulse={p} erupt={erupt} opacity={plate ? 0.55 : 1} />
       {/* the Accept buttons: a disco floor pad under blue, a dark pad in the middle, a steel pedestal by orange */}
       <GlowBox position={[ARENA.blueX, F + 0.06, 0.9]} size={[2.8, 0.12, 1.6]} color={CYAN} edge={pressed(ARENA.blueX) ? 1 : 0.6} fill={pressed(ARENA.blueX) ? 1 : 0.35} />
       <GlowBox position={[0, F + 0.06, 0.9]} size={[2.2, 0.12, 1.4]} color="#7a6cff" edge={0.3} fill={0.12} />
@@ -98,12 +98,12 @@ export const SplitWorld = ({ t, hit }: { t: number; hit: number }) => {
   );
 };
 
-export const RunwayWorld = ({ t, on, lanes = [BLUE, RED], edges = [CYAN, RED] }: { t: number; on: number; lanes?: [Hex, Hex]; edges?: [Hex, Hex] }) => {
+export const RunwayWorld = ({ t, on, lanes = [BLUE, RED], edges = [CYAN, RED], plate = false }: { t: number; on: number; lanes?: [Hex, Hex]; edges?: [Hex, Hex]; plate?: boolean }) => {
   const p = pulseAt(t);
   return (
     <>
-      <Backdrop />
-      <LedWall position={[0, 4, -40]} width={70} height={26} cols={70} rows={26} colors={['#2a1660', '#120830']} pattern="scan" pulse={0.2 * p} t={t} />
+      {!plate && <Backdrop />}
+      {!plate && <LedWall position={[0, 4, -40]} width={70} height={26} cols={70} rows={26} colors={['#2a1660', '#120830']} pattern="scan" pulse={0.2 * p} t={t} />}
       <TilePlatform position={[0, F, -14]} width={3.4} depth={36} cols={4} rows={42} splitX={0} left={lanes[0]} right={lanes[1]} t={t * 2} pulse={0.6 * p} />
       <NeonTube points={[[-1.75, F + 0.03, 4], [-1.75, F + 0.03, -32]]} color={edges[0]} radius={0.05} on={on} />
       <NeonTube points={[[1.75, F + 0.03, 4], [1.75, F + 0.03, -32]]} color={edges[1]} radius={0.05} on={on} />
@@ -113,7 +113,7 @@ export const RunwayWorld = ({ t, on, lanes = [BLUE, RED], edges = [CYAN, RED] }:
   );
 };
 
-export const FireWorld = ({ t, rise, embers }: { t: number; rise: number; embers: readonly EmberBurst[] }) => {
+export const FireWorld = ({ t, rise, embers, plate = false }: { t: number; rise: number; embers: readonly EmberBurst[]; plate?: boolean }) => {
   const p = pulseAt(t);
   const racks = useMemo(() => {
     const out: { x: number; z: number; h: number }[] = [];
@@ -122,8 +122,8 @@ export const FireWorld = ({ t, rise, embers }: { t: number; rise: number; embers
   }, []);
   return (
     <>
-      <Backdrop color="#0a0202" />
-      <LedWall position={[0, 2.4, -12]} width={34} height={12} cols={52} rows={18} colors={[RED, '#ffb020']} pattern="scan" pulse={0.5 + 0.5 * p} t={t} />
+      {!plate && <Backdrop color="#0a0202" />}
+      {!plate && <LedWall position={[0, 2.4, -12]} width={34} height={12} cols={52} rows={18} colors={[RED, '#ffb020']} pattern="scan" pulse={0.5 + 0.5 * p} t={t} />}
       <FireWall x0={-14} x1={14} z={-5} height={8} rise={rise} colors={['#ff3a10', '#ffd040']} t={t} />
       <TilePlatform position={[0, F, -1.5]} width={24} depth={13} cols={24} rows={13} splitX={0} left="#ff6a10" right={RED} t={t} pulse={p} />
       {racks.map((r, i) => (

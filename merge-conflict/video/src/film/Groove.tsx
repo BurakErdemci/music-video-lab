@@ -22,6 +22,7 @@ import { clamp01, type Hex, outQuad } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { Field } from '../particles/field.tsx';
 import { CathedralWorld, ChevronTunnelWorld, ForgeWorld } from '../worlds/groove.tsx';
+import { PlateLayer } from '../worlds/plate.tsx';
 import { Stage } from '../stage/Stage.tsx';
 import { beatIndexAt, beatLengthAt, beatPos, downbeat, sec } from '../timing.ts';
 import { FormDefs } from '../type/forms/common.tsx';
@@ -180,7 +181,7 @@ export const Groove = ({ frame }: { frame: number }) => {
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={pose}>
-        {kind === 'clones' || kind === 'low' ? <ChevronTunnelWorld t={t} hits={GROOVE_HITS} /> : kind === 'knee' || kind === 'waist' ? <ForgeWorld t={t} hits={GROOVE_HITS} /> : <CathedralWorld t={t} hits={GROOVE_HITS} />}
+        {kind === 'clones' || kind === 'low' ? <ChevronTunnelWorld t={t} hits={GROOVE_HITS} /> : kind === 'knee' || kind === 'waist' ? <><PlateLayer id="W11" base={cam.base} /><ForgeWorld t={t} hits={GROOVE_HITS} plate="shot" /></> : <><PlateLayer id="W04" base={cam.base} /><CathedralWorld t={t} hits={GROOVE_HITS} plate="shot" /></>}
         <Field t={t} grade={grade} layer="back" density={0.9} hueMix={0.5} metal={1} bursts={[{ t: downbeat(3), origin: [0, -2.6, 0.5] }]} />
         {cards}
         <Field t={t} grade={grade} layer="front" density={0.8} hueMix={0.5} metal={1} />

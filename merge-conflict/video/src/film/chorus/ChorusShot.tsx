@@ -15,6 +15,7 @@ import { barPos, sec } from '../../timing.ts';
 import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { Svg } from '../../type/Svg.tsx';
+import { PlateLayer } from '../../worlds/plate.tsx';
 import { ARENA, CHORUS1, chorusPlan, type Pose, poseOfShot, type Scene, type Shot, shotAt } from './plan.ts';
 import { ChorusType, logoApart } from './type.tsx';
 import { chorusType } from './typeplan.ts';
@@ -27,6 +28,9 @@ const MERGES: Record<string, readonly [number, number, number, number]> = {
   merge1: [at('merge1'), P.HITS.crash[0] as number, (P.SHOTS.find((s) => s.id === 'merge1-b') as Shot).t, P.HITS.crash[1] as number],
   merge2: [at('merge2'), P.HITS.crash[2] as number, (P.SHOTS.find((s) => s.id === 'merge2-b') as Shot).t, P.HITS.crash[3] as number],
 };
+
+/** The painted plates behind the chorus worlds (trial, 21 Oct 2026). */
+const PLATES: Partial<Record<Scene, string>> = { arena: 'W09', burst: 'W09', spin: 'W02', fire: 'W05', runway: 'W01' };
 
 const BLUE_GRADE: Grade = { ...GRADES.reviewed, amount: 0.42 };
 const ORANGE_GRADE: Grade = metalGrade(GRADES.mainline, 1);
@@ -125,19 +129,19 @@ export const ChorusShot = ({ frame }: { frame: number }) => {
   const world = (() => {
     switch (scene) {
       case 'arena':
-        return <Arena t={t} stomps={stomps} embers={embers} />;
+        return <Arena t={t} stomps={stomps} embers={embers} plate />;
       case 'spin':
-        return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6} led={['#ff4fd8', CYAN]} />;
+        return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6} led={['#ff4fd8', CYAN]} plate />;
       case 'burst':
-        return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6 * (1 - clamp01((t - H.burst) / 0.5))} />;
+        return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6 * (1 - clamp01((t - H.burst) / 0.5))} plate />;
       case 'insert':
         return <InsertWorld t={t} color={insertColor} hit={insertHit} />;
       case 'split':
         return <SplitWorld t={t} hit={insertHit} />;
       case 'runway':
-        return <RunwayWorld t={t} on={outQuad(clamp01((t - sceneT0) / 0.5))} />;
+        return <RunwayWorld t={t} on={outQuad(clamp01((t - sceneT0) / 0.5))} plate />;
       case 'fire':
-        return <FireWorld t={t} rise={outQuad(clamp01((t - H.fire) / 0.35))} embers={embers} />;
+        return <FireWorld t={t} rise={outQuad(clamp01((t - H.fire) / 0.35))} embers={embers} plate />;
       case 'logo': {
         const crash = H.crash.filter((c) => t >= c).at(-1);
         return <LogoWorld t={t} flash={crash === undefined ? 0 : Math.max(0, 1 - (t - crash) / 0.3)} />;
@@ -162,6 +166,7 @@ export const ChorusShot = ({ frame }: { frame: number }) => {
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={pose}>
+        {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={base} margin={scene === 'spin' ? 2.2 : 1.35} />}
         {world}
         <Field t={t} grade={scene === 'fire' ? ORANGE_GRADE : BLUE_GRADE} layer="back" density={0.9} hueMix={0.6} metal={0.5} bursts={bursts} />
         {figure('B', blue)}

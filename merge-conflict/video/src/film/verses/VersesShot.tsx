@@ -2,7 +2,7 @@
 // frame on the worlds of worlds/v1.tsx and worlds/v2.tsx (and the chorus worlds for the strobe split, the
 // transformation and the arena preview). A camera variant of each world's hero move per shot; the girls lit by the
 // scene; orange gathers out of particles as the intruder on "you?" and turns metal through a particle dissolve on
-// "ORANGE!"; a cover transition when the world changes, a shock inside one.
+// "ORANGE!" through the OT1-OT5 sequence; a cover transition when the world changes, a shock inside one.
 import { AbsoluteFill } from 'remotion';
 import { blendPose, type CameraPose, project, typePlane, type Vec3 } from '../../camera/camera.ts';
 import { Card, type CardLight, type Placement } from '../../cards/Card.tsx';
@@ -19,6 +19,7 @@ import { SceneTransition, type TransitionSpec, transitionWindow } from '../../tr
 import { FormDefs } from '../../type/forms/common.tsx';
 import { RunwayLine } from '../../type/forms/Mega.tsx';
 import { Svg } from '../../type/Svg.tsx';
+import { PlateLayer } from '../../worlds/plate.tsx';
 import { CLOCK_CAMERA, CLOCK_FACE, ClockWorld, PRESS_CAMERA, PressWorld, SUBWAY_CAMERA, SubwayWorld } from '../../worlds/v1.tsx';
 import { ALLEY_CAMERA, AlleyWorld, GRAFFITI_CAMERA, GRAFFITI_PANEL, GraffitiWorld, RAILS_CAMERA, RailsWorld, SCOREBOARD, STADIUM_CAMERA, StadiumWorld } from '../../worlds/v2.tsx';
 import { Arena, BLUE, CYAN, InsertWorld, pulseAt, RED, RunwayWorld, SplitWorld } from '../chorus/worlds.tsx';
@@ -69,6 +70,9 @@ const shotAt = (t: number): { shot: VShot; k: number } => {
   return { shot, k: clamp01((t - shot.t) / (end - shot.t)) };
 };
 
+/** The painted plates behind the verse worlds (trial, 21 Oct 2026); graffiti and rails stay code-built. */
+const PLATES: Partial<Record<VerseScene, string>> = { subway: 'W10', runway: 'W01', press: 'W08', clock: 'W06', alley: 'W03', stadium: 'W07', transform: 'W11', arena: 'W09' };
+
 const BLUE_GRADE: Grade = { ...GRADES.reviewed, amount: 0.42 };
 const ORANGE_DISCO: Grade = { hue: '#ff7a1a', rival: '#2f7bff', amount: 0.4, rim: 1.3, stage: 1 };
 const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
@@ -83,12 +87,9 @@ const TRANSITIONS: TransitionSpec[] = VSHOTS.map((s, i) => {
   return { id: `v-tr-${s.id}`, kind: cover ? (s.into ?? 'streaks') : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene] };
 });
 
-// orange gathers out of particles as the intruder (done on "you?"), and turns metal through a dissolve on "ORANGE!"
+// orange gathers out of particles as the intruder (done on "you?")
 const INTRUDER_AT: Placement = { x: 4, height: 4.8, z: 2 };
 const INTRUDER = dissolvePlan({ id: 'v-intruder', t0: tk(5, 7) + 0.1 - (24 + 16) / 60 - 0.1, scatterFrames: 24, gatherFrames: 16, to: { card: 'OI1', at: INTRUDER_AT } });
-const OX1_AT: Placement = { x: 4.4, feet: -5.2, height: 10, z: 0, flip: true };
-const OMX3_AT: Placement = { x: 1.8, feet: -5.4, height: 11, z: 0, flip: true };
-const TRANSFORM = dissolvePlan({ id: 'v-transform', t0: tk(13, 0) - 20 / 60, scatterFrames: 20, gatherFrames: 12, from: { card: 'OX1', at: OX1_AT }, to: { card: 'OMX3', at: OMX3_AT } });
 
 const lightOf = (who: 'B' | 'O', t: number, scene: VerseScene, metal: boolean): CardLight => {
   const sweepX = -9 + (barPos(t) % 1) * 18;
@@ -123,7 +124,8 @@ export const VersesShot = ({ frame }: { frame: number }) => {
     const b = P([r.centre[0] + r.width / 2, r.centre[1] - r.height / 2, r.centre[2]]);
     return { x: a.x, y: a.y, w: b.x - a.x, h: b.y - a.y };
   };
-  const anchors = { clock: { cx: cf.x, cy: cf.y, r: Math.abs(cr.x - cf.x) }, panel: scene === 'graffiti' ? rect(GRAFFITI_PANEL) : undefined, board: scene === 'stadium' ? rect(SCOREBOARD) : undefined };
+  // with the W06 plate the clock is the painted one: centred, high in the frame of the shot's opening camera
+  const anchors = { clock: PLATES.clock ? { cx: 960, cy: 250, r: 300 } : { cx: cf.x, cy: cf.y, r: Math.abs(cr.x - cf.x) }, panel: scene === 'graffiti' ? rect(GRAFFITI_PANEL) : undefined, board: scene === 'stadium' ? rect(SCOREBOARD) : undefined };
   const bursts: Burst[] = [
     { t: tk(2, 5), origin: [-4, -1, 0] as Vec3 },
     { t: tk(5, 7), origin: [4, 0, 2] as Vec3 },
@@ -134,30 +136,31 @@ export const VersesShot = ({ frame }: { frame: number }) => {
   const world = (() => {
     switch (scene) {
       case 'subway':
-        return <SubwayWorld t={t} lit={{ main: lineLit(tk(2, 3)), feature: lineLit(tk(2, 0)) * 0.6, stable: lineLit(tk(2, 5)) }} />;
+        return <SubwayWorld t={t} plate="shot" lit={{ main: lineLit(tk(2, 3)), feature: lineLit(tk(2, 0)) * 0.6, stable: lineLit(tk(2, 5)) }} />;
       case 'runway':
-        return <RunwayWorld t={t} on={lineLit(shot.t)} lanes={[BLUE, '#5a3cff']} edges={[CYAN, '#b48cff']} />;
+        return <RunwayWorld t={t} plate on={lineLit(shot.t)} lanes={[BLUE, '#5a3cff']} edges={[CYAN, '#b48cff']} />;
       case 'press':
-        return <PressWorld t={t} slams={lineTokens(4).map((x) => x.start)} />;
+        return <PressWorld t={t} plate="shot" slams={lineTokens(4).map((x) => x.start)} />;
       case 'clock':
-        return <ClockWorld t={t} strike={tk(5, 4)} />;
+        return <ClockWorld t={t} plate="shot" strike={tk(5, 4)} />;
       case 'rails':
         return <RailsWorld t={t} split={tk(6, 1)} />;
       case 'graffiti':
         return <GraffitiWorld t={t} spray={tk(7, 0)} />;
       case 'alley':
-        return <AlleyWorld t={t} />;
+        return <AlleyWorld t={t} plate="shot" />;
       case 'stadium':
-        return <StadiumWorld t={t} pulse={p} />;
+        return <StadiumWorld t={t} plate="shot" pulse={p} />;
       case 'strobe':
         return <SplitWorld t={t} hit={[tk(10, 0), tk(11, 0), tk(12, 0)].filter((x) => t >= x).at(-1) ?? t} />;
       case 'transform':
         return <InsertWorld t={t} color={RED} hit={tk(13, 0)} />;
       case 'arena':
-        return <Arena t={t} stomps={[]} embers={[]} />;
+        return <Arena t={t} stomps={[]} embers={[]} plate />;
     }
   })();
-  const metal = t >= tk(13, 0);
+  // her metal grade arrives with the half-metal card (OT3), two steps into the word
+  const metal = t >= tk(13, 0) + 12 / 60;
   const figure = (who: 'B' | 'O', pp: VPose | null, opacity = 1) => {
     if (!pp?.at) return null;
     const grade = who === 'B' ? BLUE_GRADE : metal ? ORANGE_METAL : ORANGE_DISCO;
@@ -167,19 +170,17 @@ export const VersesShot = ({ frame }: { frame: number }) => {
     return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={grade} {...pp.at} dx={dx} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff7a1a' : '#19c8ff'} clip={clip} light={lightOf(who, t, scene, metal)} ground={grounded ? undefined : false} />;
   };
   const intr = dissolveState(INTRUDER, t);
-  const trans = dissolveState(TRANSFORM, t);
   let orangeFig = figure('O', orangeP);
   if (orangeP?.card === 'OI1' && intr.active) orangeFig = figure('O', orangeP, intr.toOpacity);
-  if (trans.active) orangeFig = <>{figure('O', { t: 0, card: 'OX1', at: OX1_AT }, trans.fromOpacity)}{figure('O', { t: 0, card: 'OMX3', at: OMX3_AT }, trans.toOpacity)}</>;
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Stage pose={pose}>
+        {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
         {world}
         <Field t={t} grade={metal ? ORANGE_METAL : scene === 'subway' || scene === 'runway' || scene === 'press' || scene === 'clock' ? BLUE_GRADE : ORANGE_DISCO} layer="back" density={0.6} hueMix={0.5} bursts={bursts} />
         {figure('B', blueP)}
         {orangeFig}
         {intr.active && <Dissolve plan={INTRUDER} t={t} grade={ORANGE_DISCO} />}
-        {trans.active && <Dissolve plan={TRANSFORM} t={t} grade={ORANGE_METAL} />}
         <Field t={t} grade={BLUE_GRADE} layer="front" density={0.5} hueMix={0.5} bursts={bursts} />
       </Stage>
       <Svg>
@@ -187,6 +188,11 @@ export const VersesShot = ({ frame }: { frame: number }) => {
         {scene === 'runway' && <RunwayLine spec={{ id: 'v-runway-42', text: 'color: blue;', gutter: '42', t0: shot.t, t1: tk(4, 0), cps: 20, origin: [-1.5, FLOOR_Y + 0.02, 2.6], dir: [1, 0, 0], up: [0, 0, -1], size: 0.5, color: '#7fe3ff' }} t={t} pose={pose} />}
         <g transform={plane.transform}>
           <VerseType entries={VERSE_TYPE.filter((e) => e.id !== 'v-feature' && e.id !== 'v-css')} t={t} pose={pose} anchors={anchors} />
+          {/* the strike of 00:00 on the painted clock: two light rings opening from its face */}
+          {scene === 'clock' && t >= tk(5, 4) && t < tk(5, 4) + 0.5 && [0, 0.08].map((d) => {
+            const u = clamp01((t - tk(5, 4) - d) / 0.42);
+            return <circle key={d} cx={anchors.clock.cx} cy={anchors.clock.cy} r={anchors.clock.r * (0.9 + 0.6 * outQuad(u))} fill="none" stroke="#cfeaff" strokeWidth={18 * (1 - u)} opacity={1 - u} />;
+          })}
         </g>
         <VerseType entries={VERSE_TYPE.filter((e) => e.id === 'v-feature' || e.id === 'v-css')} t={t} pose={pose} anchors={anchors} hoop={hoop} throwP={scene === 'alley' ? throwP : undefined} />
         {TRANSITIONS.map((s) => {

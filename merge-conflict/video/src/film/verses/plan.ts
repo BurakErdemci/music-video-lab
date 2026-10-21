@@ -51,8 +51,8 @@ export const VSHOTS: VShot[] = [
   // pre-chorus: a strobe split, the ping-pong; orange's metal transformation on "ORANGE!"
   { id: 'ping-blue', t: tk(10, 0), scene: 'strobe', cam: 'hero', into: 'shatter' },
   { id: 'ping-orange', t: tk(11, 0), scene: 'strobe', cam: 'close', into: 'shock' },
-  { id: 'ping-blue2', t: tk(12, 0), scene: 'strobe', cam: 'hero', into: 'shock' },
-  { id: 'transform', t: tk(13, 0), scene: 'transform', cam: 'hero', into: 'shatter' },
+  { id: 'transform', t: tk(12, 0), scene: 'transform', cam: 'hero', into: 'shatter' },
+  { id: 'transform-erupt', t: tk(13, 0), scene: 'transform', cam: 'close', into: 'shock' },
   { id: 'resolve', t: tk(14, 0), scene: 'arena', cam: 'wide', into: 'streaks' },
   { id: 'resolve-this', t: tk(14, 2), scene: 'arena', cam: 'low', into: 'shock' },
 ];
@@ -63,6 +63,8 @@ for (let i = 1; i < VSHOTS.length; i++) {
 }
 
 const full = (x: number, height = 4.8, flip = false, z = 0): Placement => ({ x, height, flip, z });
+/** The transformation sequence's spot: identical framing on every card, her feet on one point. */
+const OT_AT: Placement = { x: 3.2, height: 5.4, z: 0 };
 const bust = (x: number, height = 10.5, flip = false): Placement => ({ x, feet: -5.4, height, flip, z: 0 });
 
 export const VBLUE: VPose[] = [
@@ -85,7 +87,7 @@ export const VBLUE: VPose[] = [
   { t: tk(9, 0), card: null },
   { t: tk(10, 0), card: 'BX4', at: bust(-4.4) },
   { t: tk(11, 0), card: 'BX3', at: bust(-4.4) },
-  { t: tk(12, 0), card: 'BX4', at: bust(-4.4) },
+  { t: tk(12, 0), card: 'BX4', at: { x: -5.6, feet: -5.4, height: 9.5, z: 0 } },
   { t: tk(13, 0), card: null },
   { t: tk(14, 0), card: 'BD7', at: full(-3.3, 5.0) },
 ];
@@ -93,18 +95,23 @@ export const VORANGE: VPose[] = [
   { t: V1.start, card: null },
   // the intruder: she gathers out of particles on "you?" and waves in
   { t: tk(5, 7), card: 'OI1', at: full(3.6, 4.8) },
-  { t: tk(6, 1), card: 'OD3', at: full(2.5, 4.8) },
+  // OD3 takes over just before "I'm": the HOOP of words is laid around her hips, and OI1 has no pose keypoints
+  { t: tk(6, 0) - 0.12, card: 'OD3', at: full(2.5, 4.8) },
   { t: tk(6, 3), card: 'OD4', at: full(2.5, 4.8) },
   { t: tk(7, 0), card: 'OD7', at: full(3.8, 4.8) },
   { t: tk(7, 3), card: 'OX1', at: { x: 2.6, feet: -5.2, height: 10, z: 0, flip: true } },
+  { t: tk(7, 6), card: 'OX2', at: { x: 2.6, feet: -5.2, height: 10, z: 0, flip: true } },
   { t: tk(7, 7), card: 'OI2', at: full(3.8, 4.8) },
   { t: tk(8, 0), card: 'OD7', at: full(2.6, 4.8) },
   { t: tk(8, 6), card: 'OD8', at: full(2.6, 4.8) },
   { t: tk(9, 0), card: 'OD8', at: full(3.5, 4.8) },
-  { t: tk(9, 5), card: 'OX1', at: { x: 3.0, feet: -5.2, height: 10, z: 0, flip: true } },
+  { t: tk(9, 5), card: 'OX3', at: { x: 3.0, feet: -5.2, height: 10, z: 0, flip: true } },
   { t: tk(10, 0), card: null },
-  { t: tk(11, 0), card: 'OX1', at: { x: 4.4, feet: -5.2, height: 10, z: 0, flip: true } },
-  { t: tk(13, 0), card: 'OMX3', at: { x: 1.8, feet: -5.4, height: 11, z: 0, flip: true } },
+  { t: tk(11, 0), card: 'OX5', at: { x: 4.4, feet: -5.2, height: 10, z: 0, flip: true } },
+  // the ORANGE! turn, one frame-by-frame sequence on one spot: OT1 crouches on the "Blue!" before (anticipation),
+  // OT2-OT5 step across the word on the 6-frame accent step (ignite, half and half, erupt, metal landing)
+  { t: tk(12, 0), card: 'OT1', at: OT_AT },
+  ...['OT2', 'OT3', 'OT4', 'OT5'].map((card, i) => ({ t: tk(13, 0) + (i * 6) / 60, card, at: OT_AT })),
   { t: tk(14, 0), card: 'OM3', at: full(3.3, 5.0) },
 ];
 

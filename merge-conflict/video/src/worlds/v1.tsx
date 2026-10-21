@@ -232,6 +232,7 @@ export const ClockWorld = ({ t, plate, strike }: { t: number; plate?: string; st
   const hour = minute / 12;
   const k = clamp01((t - strike) / 0.4);
   const flash = t >= strike && k < 1 ? (1 - k) ** 2 : 0;
+  const painted = plate === 'shot';
   const buildings = useMemo(() => {
     const r = seeded('v1:skyline');
     const out: { x: number; w: number; h: number }[] = [];
@@ -245,11 +246,13 @@ export const ClockWorld = ({ t, plate, strike }: { t: number; plate?: string; st
   return (
     <>
       <PlateBackdrop plate={plate} />
-      {buildings.map((b, i) => (
+      {/* with a painted plate (W06 has its own tower and clock) the code tower, skyline and face give way to it */}
+      {!painted && buildings.map((b, i) => (
         <LedWall key={i} position={[b.x, F + b.h / 2, -30]} width={b.w} height={b.h} cols={Math.round(b.w * 1.5)} rows={Math.round(b.h * 1.5)} colors={['#2b3cff', '#7a2bff']} pattern="checker" t={t * 0.5 + i} opacity={0.3} order={1.5} />
       ))}
+      {!painted && (
+        <>
       <Halo position={[10, 13, -26]} size={8} color="#cfe6ff" intensity={1} order={2} />
-      <TilePlatform position={[0, F, -4]} width={34} depth={24} cols={34} rows={24} splitX={0} left="#1c3aa8" right="#5a2ab0" t={t} pulse={0.1 + 0.4 * flash} opacity={0.3} order={1} />
       <GlowBox position={[0, 6.2, -10.8]} size={[11, 20, 3.6]} color="#3a52c8" edge={0.35} fill={0.07} order={4} />
       {[-5.5, 5.5].map((x) => (
         <NeonTube key={x} points={[[x, F, -9], [x, 16, -9]]} color={BLUE} radius={0.06} opacity={0.8} order={4.2} />
@@ -275,6 +278,9 @@ export const ClockWorld = ({ t, plate, strike }: { t: number; plate?: string; st
       <Hand theta={minute} len={R * 0.85} w={0.18} color="#bfe6ff" order={5.95} />
       <Halo position={[cx, cy, cz + 0.3]} size={0.9} color="#ffffff" intensity={0.9} order={6} />
       <Halo position={[cx, cy, cz + 0.3]} size={R * 2.6 * (1 + 0.3 * k)} color="#9fd8ff" intensity={1.1 * flash} opacity={flash} order={6.1} />
+        </>
+      )}
+      <TilePlatform position={[0, F, -4]} width={34} depth={24} cols={34} rows={24} splitX={0} left="#1c3aa8" right="#5a2ab0" t={t} pulse={0.1 + 0.4 * flash} opacity={0.3} order={1} />
       <BeamCone from={[-9, 12, 3]} to={[-4, F, 2]} radius={1.8} color={VIOLET} intensity={0.45} />
       <BeamCone from={[9, 12, 3]} to={[4, F, 2]} radius={1.8} color={MAGENTA} intensity={0.3} />
       <Smoke y={F + 1.2} z={-3} width={30} height={4} color="#7a6ac0" density={0.5} t={t} />
