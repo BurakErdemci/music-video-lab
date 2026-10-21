@@ -1,9 +1,9 @@
 // Letter-placed forms: FLAP, RING and WAVE. Each letter is positioned from the measured advances.
 // FLAP: a split-flap departure board; every cell spins through seeded characters and lands on its letter at
 //   the word's measured start (the last flaps fold on frames, so the landing is on time).
-// RING: the line runs on a circle around a centre (the mirror ball or a girl), turning slowly; the key word is
-//   set larger.
-// WAVE: the line sits on a baseline that waves; every beat kicks the amplitude.
+// RING: the line runs on a 220-degree arc over a centre (the mirror ball or a girl), every letter upright;
+//   the key word larger. Short lines fit; longer ones keep a readable minimum size and scroll with the singing.
+// WAVE: the line sits on a baseline that waves; every beat kicks the amplitude; same minimum size and scroll.
 import type { ReactNode } from 'react';
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { seeded } from '../../lib/seeded.ts';
@@ -70,39 +70,52 @@ export const Flap = ({ spec, t, cols = 16 }: { spec: FormSpec; t: number; cols?:
   );
 };
 
-export interface RingOptions { cx: number; cy: number; r: number; size: number; face?: Face; turn?: number }
+/** How far into a line the singing is, in px of set text: the words fully sung plus the current word's share
+ *  of its measured duration. Continuous, so a scrolling line glides instead of jumping word to word. */
+const sungPx = (toks: readonly { start: number; end: number }[], widths: readonly number[], t: number): number =>
+  toks.reduce((a, tk, i) => a + (widths[i] as number) * Math.min(1, Math.max(0, (t - tk.start) / Math.max(0.05, tk.end - tk.start))), 0);
+
+export interface RingOptions { cx: number; cy: number; r: number; size: number; face?: Face; minSize?: number }
+/** The arc the RING uses: 220 degrees over the top, so every letter stays upright (no upside-down bottom). */
+const ARC0 = -Math.PI - 0.35;
+const ARC = Math.PI + 0.7;
 
 export const Ring = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: RingOptions }) => {
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
   const face = opt.face ?? 'bungee';
+  const arcLen = ARC * opt.r;
+  const words = toks.map((tk, i) => `${clean(tk.text).toUpperCase()} `);
+  const natural = words.reduce((a, w, i) => a + layout(w, i === k ? 1.6 : 1, face).width, 0);
+  // fit the line on the arc, but never below the readable minimum: a longer line scrolls along the arc
+  const size = Math.max(opt.minSize ?? 56, Math.min(opt.size, arcLen / natural));
   const letters: { ch: string; tok: number; adv: number; size: number }[] = [];
-  toks.forEach((tk, i) => {
-    const size = i === k ? opt.size * 1.7 : opt.size;
-    const w = `${clean(tk.text).toUpperCase()} `;
-    const l = layout(w, size, face);
-    [...w].forEach((c, n) => letters.push({ ch: c, tok: i, adv: (l.ws[n] as number) + size * 0.02, size }));
+  const widths = words.map((w, i) => {
+    const sz = i === k ? size * 1.6 : size;
+    const l = layout(w, sz, face);
+    [...w].forEach((c, n) => letters.push({ ch: c, tok: i, adv: l.ws[n] as number, size: sz }));
+    return l.width;
   });
-  const total = letters.reduce((a, l) => a + l.adv, 0);
-  const circ = 2 * Math.PI * opt.r;
-  const spread = Math.min(1, circ / total);
-  let a0 = -Math.PI / 2 - (opt.turn ?? 0.35) * t;
+  const total = widths.reduce((a, b) => a + b, 0);
+  const scroll = Math.max(0, Math.min(total - arcLen, sungPx(toks, widths, t) - arcLen * 0.85));
+  let s = -scroll + Math.max(0, (arcLen - total) / 2);
   return (
     <g fontFamily={familyOf(face)}>
       {letters.map((l, i) => {
-        const span = (l.adv * spread) / opt.r;
-        const a = a0 + span / 2;
-        a0 += span;
+        const mid = s + l.adv / 2;
+        s += l.adv;
         const tok = toks[l.tok];
-        if (!tok || l.ch === ' ') return null;
+        if (!tok || l.ch === ' ' || mid < 0 || mid > arcLen) return null;
         const p = appear(t, tok);
         if (!p) return null;
+        const a = ARC0 + mid / opt.r;
+        const edge = Math.min(1, mid / 60, (arcLen - mid) / 60);
         const x = opt.cx + Math.cos(a) * opt.r;
         const y = opt.cy + Math.sin(a) * opt.r;
         const isKey = l.tok === k;
         return (
-          <text key={i} x={0} y={0} fontSize={l.size} textAnchor="middle" fill={isKey ? keyFill(spec.singer) : hueAt(spec.singer, t, l.tok)} stroke={INK} strokeWidth={l.size * 0.05} paintOrder="stroke" opacity={p} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI + 90}) scale(${landScale(t, tok, 1.6)})`}>
+          <text key={i} x={0} y={0} textAnchor="middle" fontSize={l.size} fill={isKey ? keyFill(spec.singer) : hueAt(spec.singer, t, l.tok)} stroke={INK} strokeWidth={l.size * 0.05} paintOrder="stroke" opacity={p * edge} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI + 90}) scale(${landScale(t, tok, 1.6)})`}>
             {l.ch}
           </text>
         );
@@ -111,40 +124,43 @@ export const Ring = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: RingOpt
   );
 };
 
-export interface WaveOptions { size: number; face?: Face; amp?: number }
+export interface WaveOptions { size: number; face?: Face; amp?: number; minSize?: number }
 
 export const Wave = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: WaveOptions }) => {
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
   const face = opt.face ?? 'righteous';
-  const words = toks.map((tk, i) => ({ text: clean(tk.text).toUpperCase(), tok: i, size: i === k ? opt.size * 1.8 : opt.size }));
+  const unit = toks.map((tk, i) => layout(`${clean(tk.text).toUpperCase()} `, i === k ? 1.8 : 1, face).width).reduce((a, b) => a + b, 0);
+  // fit the box, but never below the readable minimum: a longer line scrolls with the singing
+  const size = Math.max(opt.minSize ?? 84, Math.min(opt.size, spec.box.w / unit));
+  const words = toks.map((tk, i) => ({ text: clean(tk.text).toUpperCase(), tok: i, size: i === k ? size * 1.8 : size }));
   const widths = words.map((w) => layout(`${w.text} `, w.size, face).width);
   const total = widths.reduce((a, b) => a + b, 0);
-  const scale = Math.min(1, spec.box.w / total);
-  let x = spec.box.x + (spec.box.w - total * scale) / 2;
+  const scroll = Math.max(0, Math.min(total - spec.box.w, sungPx(toks, widths, t) - spec.box.w * 0.7));
+  let x = spec.box.x + Math.max(0, (spec.box.w - total) / 2) - scroll;
   const bp = beatPos(t);
   const kick = Math.exp(-4 * (bp - Math.floor(bp)));
   const amp = (opt.amp ?? 40) * (0.5 + kick);
   const base = spec.box.y + spec.box.h / 2;
   const out: ReactNode[] = [];
   words.forEach((w, wi) => {
-    const size = w.size * scale;
-    const l = layout(w.text, size, face);
+    const l = layout(w.text, w.size, face);
     const tok = toks[w.tok];
     [...w.text].forEach((c, n) => {
       const lx = x + (l.xs[n] as number);
-      const y = base + amp * Math.sin(lx / 140 - bp * Math.PI) + (w.tok === k ? size * capOf(face) * 0.35 : 0);
+      if (lx < spec.box.x - w.size || lx > spec.box.x + spec.box.w) return;
+      const y = base + amp * Math.sin(lx / 140 - bp * Math.PI) + (w.tok === k ? w.size * capOf(face) * 0.3 : 0);
       const p = tok ? appear(t, tok) : 0;
       if (!p) return;
       const drop = (1 - outQuad(p)) * -60;
       out.push(
-        <text key={`${wi}-${n}`} x={lx} y={y + drop} fontSize={size} fontFamily={familyOf(face)} fill={w.tok === k ? keyFill(spec.singer) : hueAt(spec.singer, t, w.tok + n)} stroke={INK} strokeWidth={size * 0.05} paintOrder="stroke" opacity={p}>
+        <text key={`${wi}-${n}`} x={lx} y={y + drop} fontSize={w.size} fontFamily={familyOf(face)} fill={w.tok === k ? keyFill(spec.singer) : hueAt(spec.singer, t, w.tok + n)} stroke={INK} strokeWidth={w.size * 0.05} paintOrder="stroke" opacity={p}>
           {c}
         </text>,
       );
     });
-    x += (widths[wi] as number) * scale;
+    x += widths[wi] as number;
   });
   return <g>{out}</g>;
 };
