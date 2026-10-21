@@ -3,3 +3,9 @@ audio/
 *.mp3
 stil/prompts/*/work/
 stil/prompts/*/out/
+
+node_modules/
+out/
+video/public/audio/
+.render.lock/
+.render.lock

@@ -1,0 +1,28 @@
+{
+  "name": "merge-conflict-video",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "studio": "remotion studio src/index.ts",
+    "sync-timing": "node -e \"require('fs').copyFileSync('../data/take-2026-10-20/mc-timing.json','src/data/mc-timing.json')\"",
+    "check": "tsc --noEmit",
+    "stills": "node ../tools/stills.mjs",
+    "beatcheck": "node ../tools/beatcheck.mjs",
+    "purity": "node ../tools/purity.mjs"
+  },
+  "dependencies": {
+    "@react-three/fiber": "9.8.2",
+    "@remotion/cli": "4.0.536",
+    "@remotion/three": "4.0.536",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "remotion": "4.0.536",
+    "three": "0.186.1"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/three": "0.186.0",
+    "typescript": "7.0.2"
+  }
+}
