@@ -16,7 +16,7 @@ Status: pre-production. Starts after the Vorathul NERFED delivery.
 
 ## Look (Burak, 2026-10-21)
 
-- **No dotted texture.** No halftone dots, print grain, or broken-TV texture. The last two clips used it (Her Sabah halftone, Vorathul print grain).
+- **No whole-frame texture filter.** No halftone dots, print grain, or broken-TV filter laid over the picture. The last two clips used it (Her Sabah halftone, Vorathul print grain). Soft elements inside the picture (particles, glows) are allowed.
 - **Sharpness.**
   - Clean hard contours.
   - Flat, clean colour fields.
@@ -67,7 +67,7 @@ The transition recipe (our stack), measured there and written down 2026-10-20:
 - **Shape to shape.** Sample both images to N points, with a per-point delay.
 - **The persistent lyric layer** sits outside the scene sequences.
 
-**Conflict with "sharpness".** Their particles are soft dots and letters. Here the particle units must be crisp: hard-edged colour shards, glyphs or diff characters, in the saturated palette. Never a dot texture.
+**Particles and "sharpness" (Burak, 2026-10-21).** Soft particles are fine ("bu yumuşaklık olabilir sıkıntı yok"). The ban is only on a whole-frame filter: dotted, halftone, broken-TV or print-grain. Particle units can be soft dots, letters, glyphs or colour shards in the saturated palette.
 
 ## Carried lessons (approved or rejected by Burak on earlier clips)
 
