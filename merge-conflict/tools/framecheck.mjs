@@ -48,6 +48,8 @@ await esbuild.build({
       "export { sectionAt } from './timing.ts';",
       "export { screenBox, CARD_FRAMES } from './film/framing.ts';",
       "export { KNEE_V } from './film/livecam.ts';",
+      "export { cardPoint } from './film/framing.ts';",
+      "export { plateView } from './worlds/plategeo.ts';",
     ].join('\n'),
     resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
   bundle: true, platform: 'node', format: 'esm', outfile, jsx: 'automatic', packages: 'external', logLevel: 'error',
@@ -60,47 +62,36 @@ const FLOOR_Y = -3.4;
 const screenBox = M.screenBox;
 
 // ---- pixel scale at the 2K output ---------------------------------------------------------------------------------
-const SCALE_MAX = 1.25, OUT = 4 / 3, PLATE_PX = [3072, 2048];
+const SCALE_MAX = 1.25, OUT = 4 / 3;
 const MANIFEST = JSON.parse(readFileSync(path.join(VIDEO, 'public', 'cards', 'manifest.json'), 'utf8'));
 const PANEL_DIST = 30; // RestShot passes dist 30 for a moment panel (far plane only); every other plate is 46
 
-/** Each card's on-screen size over its loaded file's pixels, at the 2K output. */
+/** Each card's magnification at the 2K output: screen px per texel of its loaded file, measured locally on a 9x9
+ *  grid of card points and kept where the point is on screen (a perspective card is larger near the camera, but
+ *  only what the frame shows can look blurred). */
 const cardScales = (state) => [...state.subjects, ...(state.extras ?? [])].map((s) => {
   const e = MANIFEST[s.card];
   const [nw, nh] = e.px ?? [e.w, e.h];
-  const b = screenBox(state.pose, s, [0, 0, 1, 1]);
-  return { id: s.card, kind: 'card', f: OUT * Math.max((b.y1 - b.y0) / nh, (b.x1 - b.x0) / nw) };
+  const d = 0.02;
+  let f = 0;
+  for (let i = 0; i <= 8; i++) for (let j = 0; j <= 8; j++) {
+    const u = 0.01 + (0.96 * i) / 8, v = 0.01 + (0.96 * j) / 8;
+    const p = M.project(state.pose, M.cardPoint(s, u, v));
+    if (p.x < 0 || p.x > W || p.y < 0 || p.y > H || p.s > 4000) continue;
+    const pu = M.project(state.pose, M.cardPoint(s, u + d, v));
+    const pv = M.project(state.pose, M.cardPoint(s, u, v + d));
+    f = Math.max(f, Math.hypot(pu.x - p.x, pu.y - p.y) / (d * nw), Math.hypot(pv.x - p.x, pv.y - p.y) / (d * nh));
+  }
+  return { id: s.card, kind: 'card', f: OUT * f };
 });
 
-/** The plate's far plane (and near plane, unless a panel) on screen over the plate's pixels, at the 2K output. */
+/** The plate's far plane (and near plane, unless a moment panel) at the 2K output, from the same placement the
+ *  renderer uses (video/src/worlds/plategeo.ts plateView; worlds/plate.tsx passes follow 0.5 far, 0.8 near). */
 const plateScales = (state) => {
   const pl = state.plate;
   if (!pl) return [];
-  const { base, dist, margin } = pl;
-  const sub = (a, b) => a.map((v, i) => v - b[i]);
-  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
-  const norm = (a) => { const l = Math.hypot(...a); return a.map((v) => v / l); };
-  const fwd = norm(sub(base.target, base.position));
-  const right = norm(cross(fwd, [0, 1, 0]));
-  const up = cross(right, fwd);
-  const out = [];
-  for (const [name, d] of dist === PANEL_DIST ? [['far', dist]] : [['far', dist], ['near', dist * 0.45]]) {
-    const w = 2 * d * Math.tan((base.fov * Math.PI) / 360) * (W / H) * margin;
-    const h = w / (PLATE_PX[0] / PLATE_PX[1]);
-    const c = base.position.map((v, i) => v + fwd[i] * d);
-    const cf = norm(sub(state.pose.target, state.pose.position));
-    let behind = false; // an edge point behind the camera has no meaningful screen size: skip the plane
-    const at = (r, u) => {
-      const p = c.map((v, i) => v + right[i] * r * w / 2 + up[i] * u * h / 2);
-      if (sub(p, state.pose.position).reduce((t, v, i) => t + v * cf[i], 0) < 0.1) behind = true;
-      return M.project(state.pose, p);
-    };
-    const len = (p, q) => Math.hypot(p.x - q.x, p.y - q.y);
-    const f = OUT * Math.max(len(at(-1, 0), at(1, 0)) / PLATE_PX[0], len(at(0, -1), at(0, 1)) / PLATE_PX[1]);
-    if (behind) continue;
-    out.push({ id: pl.id, kind: `plate ${name}`, f });
-  }
-  return out;
+  const planes = pl.dist === PANEL_DIST ? [['far', pl.dist, 0.5]] : [['far', pl.dist, 0.5], ['near', pl.dist * 0.45, 0.8]];
+  return planes.map(([name, d, follow]) => ({ id: pl.id, kind: `plate ${name}`, f: M.plateView(state.pose, pl.base, d, pl.margin, follow).scale }));
 };
 
 /** The scale failures of one frame's state, in the shape of check()'s (plus the run key and the size to rank by). */
