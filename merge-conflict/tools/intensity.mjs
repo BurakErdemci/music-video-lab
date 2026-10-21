@@ -3,7 +3,7 @@
 // visible events per beat (distinct event frames from video/src/events.ts over the beats in the section) and,
 // given a render, the mean frame-to-frame motion (mean absolute difference of consecutive frames, luma 0-255,
 // decoded at 480x270). Rules: each chorus >= 1.5x the verses on both; verses 3-4 >= 0.5x the chorus motion and
-// >= the verse 1-2 events; scream, breakdown and solo in [0.7, 1.0]x the chorus motion with >= 1.10 events per
+// >= the verse 1-2 events; scream and breakdown in [0.7, 1.0]x and the solo in [0.7, 1.15]x the chorus motion with >= 1.10 events per
 // beat; the 4 s after each chorus >= 0.5x the chorus motion; the whisper is exempt ("No cliff after the chorus").
 //   node tools/intensity.mjs [--range 0-64.15] [--video video/out/proof64.mp4] [--start 0]
 // --start is the film time of the video's first frame. Exit 1 when any rule fails.
@@ -84,7 +84,9 @@ for (const n of METAL) {
   const s = byName(n);
   if (!s) continue;
   if (s.evPerBeat < 1.1) fails.push(`${n} events/beat ${s.evPerBeat.toFixed(2)} < 1.10`);
-  if (video && choruses.length && (s.motion < 0.7 * cMo || s.motion > cMo)) fails.push(`${n} motion ${s.motion.toFixed(2)} outside [0.7, 1.0]x chorus ${cMo.toFixed(2)}`);
+  // the solo may reach 1.15x the chorus (scene-map.md "Living motion", Burak's call); the others stay under it
+  const top = n === 'guitar_solo' ? 1.15 : 1.0;
+  if (video && choruses.length && (s.motion < 0.7 * cMo || s.motion > top * cMo)) fails.push(`${n} motion ${s.motion.toFixed(2)} outside [0.7, ${top}]x chorus ${cMo.toFixed(2)}`);
 }
 // 4. no cliff: the 4 s after each chorus
 if (video && diffs) {
