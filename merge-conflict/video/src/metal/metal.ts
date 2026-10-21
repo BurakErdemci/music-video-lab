@@ -4,12 +4,13 @@
 // particles (confetti -> confetti + embers + sparks) and the type (rounded neon -> blackletter / jagged).
 // It does NOT swap the girls' costumes: the costume belongs to the girl (girls/costume.ts, Burak 2026-10-21).
 // Pure, closed form, erasable TypeScript (node tests it in tools/gridcheck.mjs).
-import { barLengthAt, bars, f, sections, type TimingBar } from '../timing.ts';
+import { bars, f, sections, type TimingBar } from '../timing.ts';
 
 export type SingerKey = 'B' | 'O' | 'both';
 
 /** Ear overrides: where Burak's ear overrides the heaviness proxy. Each forces the metal amount for the whole
- *  section; after the section the amount slides back to the measured curve over one (local) bar. */
+ *  section; on the next section's downbeat the amount switches HARD to the measured value of that bar (Burak:
+ *  "everything turns to disco on that downbeat"), with no slide and no interpolation back into the section. */
 export const EAR_OVERRIDES: readonly { section: string; metal: number; why: string }[] = [
   { section: 'intro_groove', metal: 1, why: 'Burak 2026-10-21: the intro up to the first lyric is hard metal (the proxy scored it 61, mid)' },
 ];
@@ -26,10 +27,13 @@ const overrideAt = (t: number): { metal: number; start: number; end: number } | 
   }
   return null;
 };
-const endedOverride = (t: number): { metal: number; end: number } | null => {
+/** The first bar after an override section ends, while t is before that bar's centre (where the measured
+ *  curve would otherwise interpolate back into the overridden section). */
+const afterOverride = (t: number): TimingBar | null => {
   for (const o of EAR_OVERRIDES) {
     const s = sections.find((x) => x.name === o.section) as { start: number; end: number };
-    if (f(t) >= f(s.end) && t < s.end + barLengthAt(s.end)) return { metal: o.metal, end: s.end };
+    const b = bars.find((x) => f(x.start) >= f(s.end));
+    if (b && f(t) >= f(s.end) && t < (b.start + b.end) / 2) return b;
   }
   return null;
 };
@@ -51,18 +55,13 @@ export const measuredAt = (t: number): number => {
   return (bars[n - 1] as TimingBar).heavy / 100;
 };
 
-/** The metal amount at t (0 pop, 1 metal), with the ear overrides and their one-bar slide out. */
+/** The metal amount at t (0 pop, 1 metal), with the ear overrides and their hard switch out. */
 export const metalAt = (t: number): number => {
   const o = overrideAt(t);
   if (o) return o.metal;
-  const e = endedOverride(t);
-  const m = measuredAt(t);
-  if (e) {
-    const k = clamp01((t - f(e.end) / 60) / barLengthAt(e.end));
-    const ease = 1 - (1 - k) * (1 - k);
-    return e.metal + (m - e.metal) * ease;
-  }
-  return m;
+  const after = afterOverride(t);
+  if (after) return after.heavy / 100;
+  return measuredAt(t);
 };
 /** The metal amount a singer's line takes: blue a step toward pop, orange a step toward metal. */
 export const metalFor = (t: number, singer: SingerKey): number => {

@@ -99,8 +99,9 @@ if (take === 'take-v4') {
   let all1 = true;
   for (let tt = groove.start + 0.01; tt < groove.end - 0.02; tt += 0.25) if (M.metalAt(tt) !== 1) all1 = false;
   check('ear override: intro_groove sets the metal amount to 1, whatever its measured 61', all1);
-  const after = M.metalAt(verse.start + 1.5 * grid.gridLenAt(T.downbeats, verse.start));
-  check('after the groove the amount slides back to the measured curve within ~1 bar', after < 0.6, after.toFixed(2));
+  const vbar = T.bars.find((b) => Math.abs(b.start - verse.start) < 1 / 60);
+  const onDown = M.metalAt(verse.start + 0.001);
+  check('a hard switch on the verse-1 downbeat: the bar own measured value at once, no slide', vbar && Math.abs(onDown - vbar.heavy / 100) < 1e-9 && M.metalAt(verse.start - 0.02) === 1, `${onDown.toFixed(2)} vs bar ${vbar?.heavy}`);
   let smooth = 0;
   for (let tt = 20; tt < T.duration - 1; tt += 1 / 60) smooth = Math.max(smooth, Math.abs(M.metalAt(tt + 1 / 60) - M.metalAt(tt)));
   check('outside the overrides the amount never jumps more than 0.02 per frame', smooth <= 0.02, smooth.toFixed(4));
