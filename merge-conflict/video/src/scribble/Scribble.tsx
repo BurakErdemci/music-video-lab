@@ -1,12 +1,16 @@
 // Neon chalk scribbles tracing a card's silhouette (architecture.md "scribble/"). The outline comes OFFLINE
 // from tools/card_outline.py. Draw-on with stroke-dashoffset; every 4 frames at 60 fps the jitter is
 // re-seeded (a deliberate boil). Seeded stars and zigzags sit around the figure, as in the approved F5 look.
-// Positions follow the 3D card exactly: the same living-still numbers and the camera projection.
+// Positions follow the dancing 3D card exactly: the outline is deformed by the same rig and projected by the
+// same camera. The glow is masked out of the figure itself: a stroke on the silhouette edge (the face profile)
+// used to paint a cyan blob over the face (proof20 frame 1150).
 import { type CameraPose, project } from '../camera/camera.ts';
-import { type Placement, alive } from '../cards/Card.tsx';
+import type { Placement } from '../cards/Card.tsx';
 import { OUTLINES } from '../cards/outlines.ts';
 import { type Hex, mixHex, outQuad, ramp } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
+import { deformPoints, toWorld } from '../rig/cardRig.ts';
+import type { P } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
 import { GLOW } from '../type/Svg.tsx';
 
@@ -63,19 +67,19 @@ export const Scribble = ({ spec, t, pose }: { spec: ScribbleSpec; t: number; pos
   if (t < spec.t0 || t >= spec.t1) return null;
   const o = OUTLINES[spec.card];
   if (!o) throw new Error(`scribble ${spec.id}: no outline for ${spec.card}`);
-  const a = alive(spec.card, t, spec.seed ?? 0);
-  const h = spec.at.height * a.scale;
-  const feet = (spec.at.feet ?? FLOOR_Y) + a.bob + (spec.dy?.(t) ?? 0);
-  const z = spec.at.z ?? 0;
-  const toScreen = (x: number, y: number): Pt => {
-    // 4 % outside the silhouette so the chalk traces around the figure, not over it
-    const p = project(pose, [spec.at.x + x * h * 1.04, feet + h / 2 + y * h * 1.04, z]);
-    return [p.x, p.y];
+  const stand = { x: spec.at.x, feet: (spec.at.feet ?? FLOOR_Y) + (spec.dy?.(t) ?? 0), z: spec.at.z ?? 0, height: spec.at.height };
+  const screen = (p: P): Pt => {
+    const s = project(pose, toWorld(stand, p));
+    return [s.x, s.y];
   };
+  const shapes = o.polylines.map((pl) => deformPoints(spec.card, Array.from({ length: pl.length / 2 }, (_, i) => [pl[i * 2] as number, pl[i * 2 + 1] as number] as P), t));
+  const silhouette = shapes.map((sh) => pathOf(sh.map(screen), true)).join(' ');
+  // 4 % outside the silhouette (about the card centre) so the chalk traces around the figure
+  const toScreen = (x: number, y: number): Pt => screen([x * 1.04, y * 1.04]);
   const step = Math.floor((t * 60) / BOIL_FRAMES);
   const p = outQuad(ramp(t, spec.t0, spec.draw));
   const fade = 1 - ramp(t, spec.t1 - 0.12, 0.12);
-  const loops = o.polylines.map((pl) => Array.from({ length: pl.length / 2 }, (_, i) => toScreen(pl[i * 2] as number, pl[i * 2 + 1] as number)));
+  const loops = shapes.map((sh) => sh.map((p) => toScreen(p[0], p[1])));
   const top = toScreen(0, 0.5);
   const bottom = toScreen(0, -0.5);
   const hp = bottom[1] - top[1];
@@ -94,12 +98,20 @@ export const Scribble = ({ spec, t, pose }: { spec: ScribbleSpec; t: number; pos
   });
   return (
     <g opacity={fade}>
+      <defs>
+        <mask id={`scr-mask-${spec.id}`} maskUnits="userSpaceOnUse" x={-200} y={-200} width={2320} height={1480}>
+          <rect x={-200} y={-200} width={2320} height={1480} fill="#fff" />
+          <path d={silhouette} fill="#000" />
+        </mask>
+      </defs>
+      <g mask={`url(#scr-mask-${spec.id})`}>
       {loops.map((pts, i) => [0, 1].map((pass) => (
         <Stroke key={`${i}-${pass}`} pts={jitter(pts, `scribble:${spec.id}:${i}:${pass}:${step}`, pass ? 5 : 3)} closed p={p} color={spec.color} width={pass ? 2.2 : 4.5} glow={!pass} />
       )))}
       {decos.map((d, k) => (
         <Stroke key={`d${k}`} pts={jitter(d.pts, `scribble-d:${spec.id}:${k}:${step}`, 3)} closed={false} p={outQuad(ramp(t, spec.t0 + spec.draw * d.start, spec.draw * 0.6))} color={spec.color} width={4} glow />
       ))}
+      </g>
     </g>
   );
 };

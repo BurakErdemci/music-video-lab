@@ -1,8 +1,11 @@
 // White-out hit frames (architecture.md "fx/whiteout.tsx", Arcane "Enemy"): an overexposed white frame that
 // carries a flat figure (the card outline filled with ink), RGB-offset ghost outlines and a rainbow spray
 // bursting out of the body. Every white-out registers 2 swings (up and down) in the flash budget.
-import { type CameraPose, project } from '../camera/camera.ts';
-import { type Placement, cardCentre } from '../cards/Card.tsx';
+import { type CameraPath, type CameraPose, project } from '../camera/camera.ts';
+import type { Placement } from '../cards/Card.tsx';
+import { deformPoints, toWorld } from '../rig/cardRig.ts';
+import type { P } from '../rig/rig.ts';
+import { FLOOR_Y } from '../stage/SetPlate.tsx';
 import { OUTLINES } from '../cards/outlines.ts';
 import { RIOT } from '../grade/grade.ts';
 import type { Swing } from '../lib/flash.ts';
@@ -15,6 +18,8 @@ export interface WhiteoutSpec {
   /** Frames at 60 fps the frame stays white (2-4). */
   frames: number;
   figures?: readonly { card: string; at: Placement }[];
+  /** The camera of the shot the hit lands in: the silhouettes are projected exactly where the cards stand. */
+  camera?: CameraPath;
 }
 
 export const whiteoutSwings = (w: WhiteoutSpec): Swing[] => [{ id: w.id, t: w.t0, swings: 2 }];
@@ -26,8 +31,9 @@ const GHOSTS = [
   { dx: 3, dy: -12, c: '#1cff6a' },
 ] as const;
 
-export const Whiteout = ({ spec, t, pose }: { spec: WhiteoutSpec; t: number; pose: CameraPose }) => {
+export const Whiteout = ({ spec, t, pose: fallback }: { spec: WhiteoutSpec; t: number; pose: CameraPose }) => {
   if (!whiteoutActive(spec, t)) return null;
+  const pose = spec.camera ? spec.camera(t) : fallback;
   const k = ((t - spec.t0) * 60 + 1) / spec.frames;
   const figs = spec.figures ?? [];
   const paths: string[] = [];
@@ -35,15 +41,16 @@ export const Whiteout = ({ spec, t, pose }: { spec: WhiteoutSpec; t: number; pos
   for (const fig of figs) {
     const o = OUTLINES[fig.card];
     if (!o) throw new Error(`whiteout ${spec.id}: no outline for ${fig.card}`);
-    const [cx, cy, cz] = cardCentre(fig.at);
-    const h = fig.at.height;
+    const stand = { x: fig.at.x, feet: fig.at.feet ?? FLOOR_Y, z: fig.at.z ?? 0, height: fig.at.height };
+    const proj = (q: P) => project(pose, toWorld(stand, q));
     paths.push(o.polylines
-      .map((pl) => Array.from({ length: pl.length / 2 }, (_, i) => {
-        const p = project(pose, [cx + (pl[i * 2] as number) * h, cy + (pl[i * 2 + 1] as number) * h, cz]);
-        return `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
-      }).join(' ') + ' Z')
+      .map((pl) => deformPoints(fig.card, Array.from({ length: pl.length / 2 }, (_, i) => [pl[i * 2] as number, pl[i * 2 + 1] as number] as P), t)
+        .map((q, i) => {
+          const p = proj(q);
+          return `${i ? 'L' : 'M'}${p.x.toFixed(1)} ${p.y.toFixed(1)}`;
+        }).join(' ') + ' Z')
       .join(' '));
-    const c = project(pose, [cx, cy, cz]);
+    const c = proj([0, 0]);
     cs.push([c.x, c.y]);
   }
   const d = paths.join(' ');

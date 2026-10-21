@@ -1,15 +1,17 @@
-// <Card>: a pose cut-out as a textured plane with the grade shader (architecture.md "cards/").
-// Alive while still, all closed-form in seconds: a float of +-0.6 % scale, a slow bob, and a hair-side sway
-// in the vertex shader that bends only the top third's hair edges (the face stays put).
-// The fragment tints toward the shot hue (luminance kept) and adds a rim of the rival colour from the
-// alpha gradient: edge = 1 - blurred alpha, weighted toward the side the rival light comes from.
+// <Card>: a pose cut-out as a soft-bone mesh with the grade shader (architecture.md "cards/", fix round 1).
+// The card dances on the beat grid: a 40x60-quad plane is skinned in the vertex shader by the card's rig
+// (rig/rig.ts: hip sway per bar, beat dip with IK knees and pinned feet, chest bounce, head nod, breathing,
+// arm swing, lagged hair). The fragment tints toward the shot hue (luminance kept) and adds a rim of the
+// rival colour from the alpha gradient: edge = 1 - blurred alpha, weighted toward the rival light's side.
 import { useLoader } from '@react-three/fiber';
+import { useMemo } from 'react';
 import { staticFile } from 'remotion';
-import { DoubleSide, LinearFilter, LinearMipmapLinearFilter, NoColorSpace, TextureLoader } from 'three';
+import { BufferAttribute, DoubleSide, LinearFilter, LinearMipmapLinearFilter, NoColorSpace, PlaneGeometry, TextureLoader } from 'three';
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
 import { type Hex, rgb } from '../lib/ease.ts';
-import { hashKey } from '../lib/seeded.ts';
 import { GRADE_GLSL, type Grade, rivalOf } from '../grade/grade.ts';
+import { cardDance, cardRig } from '../rig/cardRig.ts';
+import { MAX_BONES, rigFrame, rows, weightsAt } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
 import { ORDER, useUniforms } from '../stage/Stage.tsx';
 
@@ -24,42 +26,43 @@ export const cardEntry = (id: string): ManifestEntry => {
 export const cardAspect = (id: string): number => cardEntry(id).w / cardEntry(id).h;
 export const girlOf = (id: string): 'B' | 'O' => (id.startsWith('B') ? 'B' : 'O');
 
-/** Which side the hair hangs on (-1 left, +1 right, 0 both), read off the cards (public/cards contact sheet). */
-const HAIR: Record<string, number> = { B01: -1, B02: 1, B03: -1, B04: -1, B07: -1, B08: -1, B10: -1, B11: -1, B12: -1 };
-export const hairSide = (id: string): number => HAIR[id] ?? 0;
-
 /** Where a card stands: centre x, the y of its feet (default the floor), depth z, height in world units. */
 export interface Placement { x: number; feet?: number; z?: number; height: number }
 export const cardCentre = (p: Placement): [number, number, number] => [p.x, (p.feet ?? FLOOR_Y) + p.height / 2, p.z ?? 0];
 
-/** The living-still transform at time t (seconds): same numbers drive the 3D card and its 2D scribble. */
-export const alive = (id: string, t: number, seed = 0) => {
-  const ph = (hashKey(`alive:${id}:${seed}`) % 1000) / 1000;
-  const TAU = Math.PI * 2;
-  return {
-    scale: 1 + 0.006 * Math.sin(TAU * (0.37 * t + ph)),
-    bob: 0.035 * Math.sin(TAU * (0.5 * t + ph * 1.7)),
-    sway: Math.sin(TAU * (0.23 * t + ph)) * 0.5 + 0.5,
-  };
-};
+const COLS = 40;
+const ROWS = 60;
 
 const VERT = /* glsl */ `
-uniform float uTime; uniform float uSway; uniform float uHair; uniform float uPhase;
+uniform vec3 uR0[${MAX_BONES}]; uniform vec3 uR1[${MAX_BONES}];
+attribute vec4 aBone; attribute vec4 aW;
 varying vec2 vUv;
+vec2 bone(int i, vec2 p) { vec3 a = uR0[i]; vec3 b = uR1[i]; return vec2(a.x * p.x + a.y * p.y + a.z, b.x * p.x + b.y * p.y + b.z); }
 void main() {
   vUv = uv;
-  vec3 p = position;
-  float top = smoothstep(0.58, 1.0, uv.y);
-  float dx = uv.x - 0.5;
-  // Hair hangs at the card's edges; the centre column (face, body) stays rigid.
-  float edge = smoothstep(0.08, 0.42, abs(dx));
-  float side = uHair == 0.0 ? 1.0 : smoothstep(-0.1, 0.25, dx * uHair);
-  float w = top * edge * side + 0.35 * top * top * side * (1.0 - edge);
-  float s = sin(uTime * 1.9 + uv.y * 3.0 + uPhase) * 0.6 + sin(uTime * 3.1 + uv.y * 5.0 + uPhase * 2.0) * 0.4;
-  p.x += w * uSway * s;
-  p.y += w * uSway * 0.25 * cos(uTime * 1.3 + uPhase);
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(p, 1.0);
+  vec2 p = position.xy;
+  vec2 q = bone(int(aBone.x), p) * aW.x + bone(int(aBone.y), p) * aW.y + bone(int(aBone.z), p) * aW.z + bone(int(aBone.w), p) * aW.w;
+  gl_Position = projectionMatrix * modelViewMatrix * vec4(q, 0.0, 1.0);
 }`;
+
+/** The card's skinned plane in card units (1 tall, centred), with 4 bone indices and weights per vertex. */
+const useRigGeometry = (id: string) =>
+  useMemo(() => {
+    const r = cardRig(id);
+    const g = new PlaneGeometry(r.aspect, 1, COLS, ROWS);
+    const pos = g.getAttribute('position');
+    const n = pos.count;
+    const bi = new Float32Array(n * 4);
+    const bw = new Float32Array(n * 4);
+    for (let i = 0; i < n; i++) {
+      const w = weightsAt([pos.getX(i), pos.getY(i)], r.segs);
+      bi.set(w.idx, i * 4);
+      bw.set(w.w, i * 4);
+    }
+    g.setAttribute('aBone', new BufferAttribute(bi, 4));
+    g.setAttribute('aW', new BufferAttribute(bw, 4));
+    return g;
+  }, [id]);
 
 const FRAG = /* glsl */ `
 uniform sampler2D map; uniform vec3 uHue; uniform vec3 uRival; uniform float uAmount; uniform float uRim;
@@ -87,8 +90,9 @@ void main() {
   // Split light: the rival's colour washes the side of the figure it comes from (the "cutting light").
   float side = smoothstep(-0.15, 0.45, (vUv.x - 0.5) * sign(uRimDir.x + 1e-4));
   col = mix(col, col * (uRival * 1.7 + 0.15), side * uSplit);
-  col += uRival * edge * facing * uRim;
+  // Flat silhouettes (in the dark, in white-outs) keep their rim: flatten first, then add the rim light.
   col = mix(col, uFlat, uFlatMix);
+  col += uRival * edge * facing * uRim;
   gl_FragColor = vec4(min(col, vec3(1.0)), c.a * uOpacity);
 }`;
 
@@ -115,25 +119,35 @@ export interface CardProps extends Placement {
   rival?: Hex;
   /** Extra offset (world units) for drops and shoves. */
   dy?: number;
-  /** Flat silhouette colour mix (white-out frames). */
+  /** Extra horizontal offset (world units), e.g. smear streak copies. */
+  dx?: number;
+  /** Flat silhouette colour mix (white-out frames, silhouettes in the dark). */
   flat?: { color: Hex; mix: number };
-  seed?: number;
+  /** Dance energy, 0 = still. */
+  dance?: number;
+  /** Smear squash and stretch about the feet: [sx, sy]. */
+  stretch?: [number, number];
 }
 
-export const Card = ({ id, t, grade, x, feet, z, height, opacity = 1, lit = 1, rimDir, rival, dy = 0, flat, seed = 0 }: CardProps) => {
+export const Card = ({ id, t, grade, x, feet, z, height, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 1, stretch = [1, 1] }: CardProps) => {
   const tex = useCardTexture(id);
+  const geo = useRigGeometry(id);
   const e = cardEntry(id);
-  const width = height * cardAspect(id);
-  const a = alive(id, t, seed);
-  const [cx, cy, cz] = cardCentre({ x, feet, z, height });
+  const r = cardRig(id);
+  const f = rigFrame(r.joints, t, cardDance(id, dance));
+  const r0: number[] = [];
+  const r1: number[] = [];
+  for (const xf of f.xf) {
+    const m = rows(xf);
+    r0.push(m[0], m[1], m[2]);
+    r1.push(m[3], m[4], m[5]);
+  }
   const dir = rimDir ?? [x >= 0 ? 1 : -1, 0.35];
   const dl = Math.hypot(dir[0], dir[1]) || 1;
   const u = useUniforms({
     map: tex,
-    uTime: t,
-    uSway: height * 0.012 * (0.6 + 0.4 * a.sway),
-    uHair: hairSide(id),
-    uPhase: (hashKey(`${id}:${seed}`) % 628) / 100,
+    uR0: r0,
+    uR1: r1,
     uHue: rgb(grade.hue),
     uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: grade.amount,
@@ -146,12 +160,11 @@ export const Card = ({ id, t, grade, x, feet, z, height, opacity = 1, lit = 1, r
     uFlat: rgb(flat?.color ?? '#000000'),
     uFlatMix: flat?.mix ?? 0,
   });
-  // Scale about the feet so the float never lifts the boots off the floor line.
-  const h2 = (height * a.scale) / 2;
+  // The mesh is in card units; the group places its feet and scales it (smears squash about the feet).
+  const fy = feet ?? FLOOR_Y;
   return (
-    <group position={[cx, cy - height / 2 + a.bob + dy, cz]} scale={[a.scale, a.scale, 1]} visible={opacity > 0.001}>
-      <mesh position={[0, h2 / a.scale, 0]} renderOrder={ORDER.card}>
-        <planeGeometry args={[width, height, 10, 32]} />
+    <group position={[x + dx, fy + dy, z ?? 0]} scale={[height * stretch[0], height * stretch[1], 1]} visible={opacity > 0.001}>
+      <mesh geometry={geo} position={[0, 0.5, 0]} renderOrder={ORDER.card} frustumCulled={false}>
         <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
       </mesh>
     </group>
