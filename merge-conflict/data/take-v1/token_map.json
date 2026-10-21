@@ -1,0 +1,1294 @@
+[
+ {
+  "line": 0,
+  "tokens": [
+   {
+    "text": "Automatic",
+    "word": 1
+   },
+   {
+    "text": "merge",
+    "word": 2
+   },
+   {
+    "text": "failed.",
+    "word": 3
+   }
+  ]
+ },
+ {
+  "line": 1,
+  "tokens": [
+   {
+    "text": "Fix",
+    "word": 4
+   },
+   {
+    "text": "conflicts",
+    "word": 5
+   },
+   {
+    "text": "and",
+    "word": 6
+   },
+   {
+    "text": "then",
+    "word": 7
+   },
+   {
+    "text": "commit",
+    "word": 8
+   },
+   {
+    "text": "the",
+    "word": 9
+   },
+   {
+    "text": "result.",
+    "word": 10
+   }
+  ]
+ },
+ {
+  "line": 2,
+  "tokens": [
+   {
+    "text": "I'm",
+    "word": 11
+   },
+   {
+    "text": "HEAD,",
+    "word": 12
+   },
+   {
+    "text": "I'm",
+    "word": 13
+   },
+   {
+    "text": "main,",
+    "word": 14
+   },
+   {
+    "text": "I'm",
+    "word": 15
+   },
+   {
+    "text": "stable",
+    "word": 16
+   },
+   {
+    "text": "and",
+    "word": 17
+   },
+   {
+    "text": "clean",
+    "word": 18
+   }
+  ]
+ },
+ {
+  "line": 3,
+  "tokens": [
+   {
+    "text": "Line",
+    "word": 19
+   },
+   {
+    "text": "forty-two,",
+    "word": [
+     20,
+     21
+    ]
+   },
+   {
+    "text": "the",
+    "word": 22
+   },
+   {
+    "text": "button",
+    "word": 23
+   },
+   {
+    "text": "was",
+    "word": 24
+   },
+   {
+    "text": "blue,",
+    "word": 25
+   },
+   {
+    "text": "the",
+    "word": 26
+   },
+   {
+    "text": "calmest",
+    "word": 27
+   },
+   {
+    "text": "you've",
+    "word": 28
+   },
+   {
+    "text": "seen",
+    "word": 29
+   }
+  ]
+ },
+ {
+  "line": 4,
+  "tokens": [
+   {
+    "text": "Reviewed",
+    "word": 30
+   },
+   {
+    "text": "and",
+    "word": 31
+   },
+   {
+    "text": "approved",
+    "word": 32
+   },
+   {
+    "text": "by",
+    "word": 33
+   },
+   {
+    "text": "the",
+    "word": 34
+   },
+   {
+    "text": "whole",
+    "word": 35
+   },
+   {
+    "text": "design",
+    "word": 36
+   },
+   {
+    "text": "team",
+    "word": 37
+   }
+  ]
+ },
+ {
+  "line": 5,
+  "tokens": [
+   {
+    "text": "Then",
+    "word": 38
+   },
+   {
+    "text": "someone",
+    "word": 39
+   },
+   {
+    "text": "pushed",
+    "word": 40
+   },
+   {
+    "text": "at",
+    "word": 41
+   },
+   {
+    "text": "midnight...",
+    "word": 42
+   },
+   {
+    "text": "who",
+    "word": 43
+   },
+   {
+    "text": "are",
+    "word": 44
+   },
+   {
+    "text": "you?",
+    "word": 45
+   }
+  ]
+ },
+ {
+  "line": 6,
+  "tokens": [
+   {
+    "text": "I'm",
+    "word": 46
+   },
+   {
+    "text": "feature",
+    "word": 47
+   },
+   {
+    "text": "branch,",
+    "word": 48
+   },
+   {
+    "text": "I'm",
+    "word": 49
+   },
+   {
+    "text": "fresh",
+    "word": 50
+   },
+   {
+    "text": "from",
+    "word": 51
+   },
+   {
+    "text": "the",
+    "word": 52
+   },
+   {
+    "text": "night",
+    "word": 53
+   }
+  ]
+ },
+ {
+  "line": 7,
+  "tokens": [
+   {
+    "text": "The",
+    "word": 54
+   },
+   {
+    "text": "button",
+    "word": 55
+   },
+   {
+    "text": "is",
+    "word": 56
+   },
+   {
+    "text": "PINK",
+    "word": 57
+   },
+   {
+    "text": "now",
+    "word": 58
+   },
+   {
+    "text": "and",
+    "word": 59
+   },
+   {
+    "text": "baby,",
+    "word": 60
+   },
+   {
+    "text": "the",
+    "word": 61
+   },
+   {
+    "text": "pink",
+    "word": 62
+   },
+   {
+    "text": "is",
+    "word": 63
+   },
+   {
+    "text": "right",
+    "word": 64
+   }
+  ]
+ },
+ {
+  "line": 8,
+  "tokens": [
+   {
+    "text": "I",
+    "word": 65
+   },
+   {
+    "text": "rewrote",
+    "word": 66
+   },
+   {
+    "text": "your",
+    "word": 67
+   },
+   {
+    "text": "CSS",
+    "word": 68
+   },
+   {
+    "text": "and",
+    "word": 69
+   },
+   {
+    "text": "I'm",
+    "word": 70
+   },
+   {
+    "text": "ready",
+    "word": 71
+   },
+   {
+    "text": "to",
+    "word": 72
+   },
+   {
+    "text": "fight",
+    "word": 73
+   }
+  ]
+ },
+ {
+  "line": 9,
+  "tokens": [
+   {
+    "text": "Three",
+    "word": 74
+   },
+   {
+    "text": "hundred",
+    "word": 74
+   },
+   {
+    "text": "commits",
+    "word": 75
+   },
+   {
+    "text": "and",
+    "word": 76
+   },
+   {
+    "text": "I",
+    "word": 77
+   },
+   {
+    "text": "never",
+    "word": 78
+   },
+   {
+    "text": "asked",
+    "word": 79
+   },
+   {
+    "text": "once!",
+    "word": 80
+   }
+  ]
+ },
+ {
+  "line": 10,
+  "tokens": [
+   {
+    "text": "Blue!",
+    "word": 81
+   }
+  ]
+ },
+ {
+  "line": 11,
+  "tokens": [
+   {
+    "text": "Pink!",
+    "word": 82
+   }
+  ]
+ },
+ {
+  "line": 12,
+  "tokens": [
+   {
+    "text": "Blue!",
+    "word": 83
+   }
+  ]
+ },
+ {
+  "line": 13,
+  "tokens": [
+   {
+    "text": "PINK!",
+    "word": 84
+   }
+  ]
+ },
+ {
+  "line": 14,
+  "tokens": [
+   {
+    "text": "Somebody",
+    "word": 85
+   },
+   {
+    "text": "resolve",
+    "word": 86
+   },
+   {
+    "text": "this!",
+    "word": 87
+   }
+  ]
+ },
+ {
+  "line": 15,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 88
+   },
+   {
+    "text": "current",
+    "word": 89
+   },
+   {
+    "text": "change!",
+    "word": 90
+   },
+   {
+    "text": "(NO!)",
+    "word": 91
+   }
+  ]
+ },
+ {
+  "line": 16,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 92
+   },
+   {
+    "text": "incoming",
+    "word": 93
+   },
+   {
+    "text": "change!",
+    "word": 94
+   },
+   {
+    "text": "(NO!)",
+    "word": 95
+   }
+  ]
+ },
+ {
+  "line": 17,
+  "tokens": [
+   {
+    "text": "Two",
+    "word": 96
+   },
+   {
+    "text": "girls,",
+    "word": 97
+   },
+   {
+    "text": "one",
+    "word": 98
+   },
+   {
+    "text": "line,",
+    "word": 99
+   },
+   {
+    "text": "the",
+    "word": 100
+   },
+   {
+    "text": "build",
+    "word": 101
+   },
+   {
+    "text": "is",
+    "word": 102
+   },
+   {
+    "text": "on",
+    "word": 103
+   },
+   {
+    "text": "fire",
+    "word": 104
+   }
+  ]
+ },
+ {
+  "line": 18,
+  "tokens": [
+   {
+    "text": "Merge",
+    "word": 105
+   },
+   {
+    "text": "conflict,",
+    "word": 106
+   },
+   {
+    "text": "merge",
+    "word": 107
+   },
+   {
+    "text": "conflict,",
+    "word": 108
+   },
+   {
+    "text": "heart",
+    "word": 109
+   },
+   {
+    "text": "going",
+    "word": 110
+   },
+   {
+    "text": "haywire",
+    "word": 111
+   }
+  ]
+ },
+ {
+  "line": 19,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 112
+   },
+   {
+    "text": "current",
+    "word": 113
+   },
+   {
+    "text": "change!",
+    "word": 114
+   },
+   {
+    "text": "(NEVER!)",
+    "word": 115
+   }
+  ]
+ },
+ {
+  "line": 20,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 116
+   },
+   {
+    "text": "incoming",
+    "word": 117
+   },
+   {
+    "text": "change!",
+    "word": 118
+   },
+   {
+    "text": "(NEVER!)",
+    "word": 119
+   }
+  ]
+ },
+ {
+  "line": 21,
+  "tokens": [
+   {
+    "text": "Equals,",
+    "word": [
+     120,
+     121
+    ]
+   },
+   {
+    "text": "equals,",
+    "word": [
+     122,
+     123
+    ]
+   },
+   {
+    "text": "equals",
+    "word": 124
+   },
+   {
+    "text": "in",
+    "word": 125
+   },
+   {
+    "text": "the",
+    "word": 126
+   },
+   {
+    "text": "middle",
+    "word": 127
+   },
+   {
+    "text": "of",
+    "word": 128
+   },
+   {
+    "text": "my",
+    "word": 129
+   },
+   {
+    "text": "soul",
+    "word": 130
+   }
+  ]
+ },
+ {
+  "line": 22,
+  "tokens": [
+   {
+    "text": "Merge",
+    "word": 131
+   },
+   {
+    "text": "conflict,",
+    "word": 132
+   },
+   {
+    "text": "merge",
+    "word": 133
+   },
+   {
+    "text": "conflict,",
+    "word": [
+     134,
+     135
+    ]
+   },
+   {
+    "text": "I",
+    "word": 136
+   },
+   {
+    "text": "can't",
+    "word": 137
+   },
+   {
+    "text": "take",
+    "word": 138
+   },
+   {
+    "text": "control",
+    "word": 139
+   }
+  ]
+ },
+ {
+  "line": 23,
+  "tokens": [
+   {
+    "text": "You",
+    "word": 140
+   },
+   {
+    "text": "use",
+    "word": 141
+   },
+   {
+    "text": "tabs!",
+    "word": 142
+   }
+  ]
+ },
+ {
+  "line": 24,
+  "tokens": [
+   {
+    "text": "You",
+    "word": 143
+   },
+   {
+    "text": "use",
+    "word": 144
+   },
+   {
+    "text": "spaces!",
+    "word": 145
+   }
+  ]
+ },
+ {
+  "line": 25,
+  "tokens": [
+   {
+    "text": "You",
+    "word": 146
+   },
+   {
+    "text": "named",
+    "word": 147
+   },
+   {
+    "text": "a",
+    "word": 148
+   },
+   {
+    "text": "variable",
+    "word": 149
+   },
+   {
+    "text": "\"data2\"!",
+    "word": [
+     150,
+     151
+    ]
+   }
+  ]
+ },
+ {
+  "line": 26,
+  "tokens": [
+   {
+    "text": "You",
+    "word": 152
+   },
+   {
+    "text": "wrote",
+    "word": 153
+   },
+   {
+    "text": "a",
+    "word": 154
+   },
+   {
+    "text": "comment",
+    "word": 155
+   },
+   {
+    "text": "that",
+    "word": 156
+   },
+   {
+    "text": "just",
+    "word": 157
+   },
+   {
+    "text": "says",
+    "word": 158
+   },
+   {
+    "text": "\"don't",
+    "word": 159
+   },
+   {
+    "text": "touch\"!",
+    "word": 160
+   }
+  ]
+ },
+ {
+  "line": 27,
+  "tokens": [
+   {
+    "text": "I",
+    "word": 161
+   },
+   {
+    "text": "wrote",
+    "word": 162
+   },
+   {
+    "text": "that",
+    "word": 163
+   },
+   {
+    "text": "comment!",
+    "word": 164
+   }
+  ]
+ },
+ {
+  "line": 28,
+  "tokens": [
+   {
+    "text": "I",
+    "word": 165
+   },
+   {
+    "text": "KNOW!",
+    "word": 166
+   },
+   {
+    "text": "I",
+    "word": 167
+   },
+   {
+    "text": "TOUCHED",
+    "word": 168
+   },
+   {
+    "text": "IT!",
+    "word": 169
+   }
+  ]
+ },
+ {
+  "line": 29,
+  "tokens": [
+   {
+    "text": "AAAAAH!",
+    "word": null
+   }
+  ]
+ },
+ {
+  "line": 30,
+  "tokens": [
+   {
+    "text": "GIT!",
+    "word": 171
+   }
+  ]
+ },
+ {
+  "line": 31,
+  "tokens": [
+   {
+    "text": "PUSH!",
+    "word": 172
+   }
+  ]
+ },
+ {
+  "line": 32,
+  "tokens": [
+   {
+    "text": "FORCE!",
+    "word": 173
+   }
+  ]
+ },
+ {
+  "line": 33,
+  "tokens": [
+   {
+    "text": "...you",
+    "word": 174
+   },
+   {
+    "text": "wouldn't.",
+    "word": 175
+   }
+  ]
+ },
+ {
+  "line": 34,
+  "tokens": [
+   {
+    "text": "Maybe",
+    "word": 176
+   },
+   {
+    "text": "blue",
+    "word": 177
+   },
+   {
+    "text": "was",
+    "word": 178
+   },
+   {
+    "text": "never",
+    "word": 179
+   },
+   {
+    "text": "really",
+    "word": 180
+   },
+   {
+    "text": "mine",
+    "word": 181
+   }
+  ]
+ },
+ {
+  "line": 35,
+  "tokens": [
+   {
+    "text": "Maybe",
+    "word": 182
+   },
+   {
+    "text": "pink",
+    "word": 183
+   },
+   {
+    "text": "was",
+    "word": 184
+   },
+   {
+    "text": "just",
+    "word": 185
+   },
+   {
+    "text": "my",
+    "word": 186
+   },
+   {
+    "text": "way",
+    "word": 187
+   },
+   {
+    "text": "to",
+    "word": 188
+   },
+   {
+    "text": "say",
+    "word": 189
+   },
+   {
+    "text": "hello",
+    "word": 190
+   }
+  ]
+ },
+ {
+  "line": 36,
+  "tokens": [
+   {
+    "text": "We're",
+    "word": 191
+   },
+   {
+    "text": "the",
+    "word": 192
+   },
+   {
+    "text": "same",
+    "word": 193
+   },
+   {
+    "text": "file,",
+    "word": 194
+   },
+   {
+    "text": "just",
+    "word": 195
+   },
+   {
+    "text": "from",
+    "word": 196
+   },
+   {
+    "text": "different",
+    "word": 197
+   },
+   {
+    "text": "times",
+    "word": 198
+   }
+  ]
+ },
+ {
+  "line": 37,
+  "tokens": [
+   {
+    "text": "Two",
+    "word": 199
+   },
+   {
+    "text": "branches",
+    "word": 200
+   },
+   {
+    "text": "of",
+    "word": 201
+   },
+   {
+    "text": "the",
+    "word": 202
+   },
+   {
+    "text": "same",
+    "word": 203
+   },
+   {
+    "text": "old",
+    "word": 204
+   },
+   {
+    "text": "tree,",
+    "word": 205
+   },
+   {
+    "text": "you",
+    "word": 206
+   },
+   {
+    "text": "know",
+    "word": 207
+   }
+  ]
+ },
+ {
+  "line": 38,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 208
+   },
+   {
+    "text": "both",
+    "word": 209
+   },
+   {
+    "text": "changes!",
+    "word": 210
+   },
+   {
+    "text": "(YES!)",
+    "word": 211
+   }
+  ]
+ },
+ {
+  "line": 39,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 212
+   },
+   {
+    "text": "both",
+    "word": 213
+   },
+   {
+    "text": "changes!",
+    "word": 214
+   },
+   {
+    "text": "(YES!)",
+    "word": null
+   }
+  ]
+ },
+ {
+  "line": 40,
+  "tokens": [
+   {
+    "text": "Blue",
+    "word": 215
+   },
+   {
+    "text": "and",
+    "word": 216
+   },
+   {
+    "text": "pink",
+    "word": 217
+   },
+   {
+    "text": "together,",
+    "word": 218
+   },
+   {
+    "text": "it's",
+    "word": 219
+   },
+   {
+    "text": "a",
+    "word": 220
+   },
+   {
+    "text": "gradient",
+    "word": 221
+   },
+   {
+    "text": "now",
+    "word": 222
+   }
+  ]
+ },
+ {
+  "line": 41,
+  "tokens": [
+   {
+    "text": "Two",
+    "word": 223
+   },
+   {
+    "text": "girls,",
+    "word": 224
+   },
+   {
+    "text": "one",
+    "word": 225
+   },
+   {
+    "text": "line,",
+    "word": 226
+   },
+   {
+    "text": "and",
+    "word": 227
+   },
+   {
+    "text": "we",
+    "word": 228
+   },
+   {
+    "text": "figured",
+    "word": 229
+   },
+   {
+    "text": "it",
+    "word": 230
+   },
+   {
+    "text": "out",
+    "word": 231
+   }
+  ]
+ },
+ {
+  "line": 42,
+  "tokens": [
+   {
+    "text": "Accept",
+    "word": 232
+   },
+   {
+    "text": "both",
+    "word": 233
+   },
+   {
+    "text": "changes!",
+    "word": 234
+   },
+   {
+    "text": "(YES!)",
+    "word": 235
+   }
+  ]
+ },
+ {
+  "line": 43,
+  "tokens": [
+   {
+    "text": "Commit",
+    "word": null
+   },
+   {
+    "text": "and",
+    "word": 238
+   },
+   {
+    "text": "push",
+    "word": 239
+   },
+   {
+    "text": "it!",
+    "word": 240
+   },
+   {
+    "text": "(PUSH",
+    "word": 241
+   },
+   {
+    "text": "IT!)",
+    "word": 242
+   }
+  ]
+ },
+ {
+  "line": 44,
+  "tokens": [
+   {
+    "text": "Equals,",
+    "word": 243
+   },
+   {
+    "text": "equals,",
+    "word": 244
+   },
+   {
+    "text": "equals,",
+    "word": 245
+   },
+   {
+    "text": "now",
+    "word": 246
+   },
+   {
+    "text": "we're",
+    "word": 247
+   },
+   {
+    "text": "whole",
+    "word": 248
+   }
+  ]
+ },
+ {
+  "line": 45,
+  "tokens": [
+   {
+    "text": "Merge",
+    "word": 249
+   },
+   {
+    "text": "conflict",
+    "word": 250
+   },
+   {
+    "text": "resolved",
+    "word": 251
+   },
+   {
+    "text": "inside",
+    "word": 252
+   },
+   {
+    "text": "my",
+    "word": 253
+   },
+   {
+    "text": "soul",
+    "word": 254
+   }
+  ]
+ },
+ {
+  "line": 46,
+  "tokens": [
+   {
+    "text": "Build",
+    "word": null
+   },
+   {
+    "text": "failed.",
+    "word": 255
+   }
+  ]
+ },
+ {
+  "line": 47,
+  "tokens": [
+   {
+    "text": "Syntax",
+    "word": 258
+   },
+   {
+    "text": "error",
+    "word": 259
+   },
+   {
+    "text": "on",
+    "word": 260
+   },
+   {
+    "text": "line",
+    "word": 261
+   },
+   {
+    "text": "forty-two.",
+    "word": 261
+   }
+  ]
+ },
+ {
+  "line": 48,
+  "tokens": [
+   {
+    "text": "AAAAAAAH!",
+    "word": null
+   }
+  ]
+ }
+]
