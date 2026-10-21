@@ -78,7 +78,7 @@ const useRigGeometry = (id: string) =>
 const FRAG = /* glsl */ `
 uniform sampler2D map; uniform vec3 uHue; uniform vec3 uRival; uniform float uAmount; uniform float uRim;
 uniform vec2 uTexel; uniform vec2 uRimDir; uniform float uSplit; uniform float uOpacity; uniform float uLit; uniform vec3 uFlat; uniform float uFlatMix;
-uniform vec2 uClip; uniform float uSoft; uniform float uGround;
+uniform vec2 uClip; uniform float uSoft; uniform float uGround; uniform float uFade;
 uniform vec3 uKey; uniform float uKeyAmt; uniform vec4 uSweep; uniform vec3 uSweepCol; uniform float uDots; uniform vec3 uBall; uniform float uTime;
 varying vec2 vUv; varying float vWorldX; varying vec3 vWorld;
 // Mirror-ball reflections: dots fixed on a sphere around the ball, rotating with time; a fragment is lit when
@@ -134,7 +134,9 @@ void main() {
   col += vec3(1.0, 0.95, 0.9) * ballDots(vWorld) * uDots;
   col = mix(col, uFlat, uFlatMix);
   col += uRival * edge * facing * uRim;
-  gl_FragColor = vec4(min(col, vec3(1.0)), c.a * uOpacity);
+  // the floor reflection fades out within uFade of the card height below her soles (0 = no fade, the card itself)
+  float fade = uFade > 0.0 ? 1.0 - smoothstep(0.0, uFade, vUv.y) : 1.0;
+  gl_FragColor = vec4(min(col, vec3(1.0)), c.a * uOpacity * fade);
 }`;
 
 const SHADOW_VERT = /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
@@ -250,13 +252,15 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
     uFlat: rgb(flat?.color ?? '#000000'),
     uFlatMix: flat?.mix ?? 0,
     uGround: grounded ? 1 : 0,
+    uFade: 0,
   });
   // The mesh is in card units; the group places its feet and scales it (smears squash about the feet).
-  // the reflection: the same skinned card mirrored below the floor line, faint and soft
+  // the reflection (round 7c, Burak): the same skinned card mirrored below her soles at full length, 32 % opaque,
+  // blurred, tinted to the floor and fading out over 30 % of her height, so she stands on the glossy floor
   const refl = useUniforms({
     map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uRipAmp: RIPPLE_MAX * rippleAmp(t), uRipPhase: ripplePhase(t), uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: Math.min(1, grade.amount + 0.3), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
-    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.16 : 0,
+    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 1, uOpacity: grounded ? opacity * 0.32 : 0, uFade: 0.3,
     uLit: lit * 0.8, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
   });
   const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.78 : 0 });
@@ -275,7 +279,7 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
             <planeGeometry args={[w * 1.3, height * 0.2]} />
             <shaderMaterial {...shadow} vertexShader={SHADOW_VERT} fragmentShader={SHADOW_FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
           </mesh>
-          <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], -height * stretch[1] * 0.55, 1]} visible={opacity > 0.001}>
+          <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], -height * stretch[1], 1]} visible={opacity > 0.001}>
             <mesh geometry={geo} position={[0, 0.5, 0]} renderOrder={ORDER.pool + 1} frustumCulled={false}>
               <shaderMaterial {...refl} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
             </mesh>
