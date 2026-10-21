@@ -134,9 +134,11 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const metal = t >= SCREAM.start && !quiet;
   const hits = metal ? HITS : VERSE_PUNCHES;
   const h = [...hits].reverse().find((x) => t >= x) ?? 0;
-  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : metal ? 0.08 : 0.06;
+  // the solo sits just under the chorus: its kicks are lighter than the scream's and the breakdown's
+  const solo = t >= SOLO.start;
+  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : solo ? 0.05 : metal ? 0.08 : 0.06;
   const punchedPose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
-  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : 0.2) : punchedPose;
+  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : solo ? 0.12 : 0.2) : punchedPose;
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);
