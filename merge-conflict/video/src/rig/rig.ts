@@ -203,16 +203,35 @@ export const rows = (x: Xf): [number, number, number, number, number, number] =>
 };
 
 // ---- dance motion on the beat grid ----------------------------------------------------------------
+/** One deliberate gesture (round 4, Burak: "the swaying looks absurd"): eased in over `frames` (12-20 at 60 fps)
+ *  from t0 with outQuad, then HELD. Angles in radians, added to the held pose. */
+export interface Accent { t0: number; frames: number; head?: number; upper?: number; arm?: 'L' | 'R'; armU?: number; armF?: number; why: string }
 export interface Dance {
-  /** 0 = still, 1 = full dance. */
+  /** The old beat loop (lean, bounce, nod, arm swing, squash, hair wave): 0 = off. Nothing in the film uses it;
+   *  it is kept only as an option and as rigcheck's stress test. */
   energy: number;
-  /** 0..1 how much the arms swing (crossed arms or hands on hips: low). */
+  /** 0..1 how much the arms swing in the loop (crossed arms or hands on hips: low). */
   arms: number;
+  accents?: readonly Accent[];
 }
-export const DANCE: Dance = { energy: 1, arms: 1 };
+/** The default: a held card. Only a slow breath (0.22 % of the card height, period 3.4 s), a faint hair-tip drift
+ *  and its accents move it. */
+export const DANCE: Dance = { energy: 0, arms: 1 };
 /** Cards whose arms are locked to the body (crossed, hands on hips, hand at the chin) swing them less. */
 const ARMS: Record<string, number> = { BD2: 0.2, OD2: 0.2, B01: 0.15, O03: 0.1, B04: 0.6, O04: 0.5, O06: 0.6, O07: 0.6, B11: 0.3, O11: 0.3, O10: 0.2 };
-export const danceOf = (id: string, energy = 1): Dance => ({ energy, arms: ARMS[id] ?? 1 });
+export const danceOf = (id: string, energy = 0, accents?: readonly Accent[]): Dance => ({ energy, arms: ARMS[id] ?? 1, accents });
+/** The character is animated on SIXES at 60 fps (10 drawings a second, "Scroll Up!" measured on threes at 30):
+ *  the rig time is held for RIG_STEP frames. The breath and the loop step on the global grid (phase 0); each
+ *  accent steps on its own grid anchored at its t0, so its first and key frames land on its beat. */
+export const RIG_STEP = 6;
+/** t (seconds) held on the RIG_STEP-frame grid that passes through `anchor`. */
+export const stepT = (t: number, anchor = 0): number => {
+  const fr = Math.round(t * 60);
+  const f0 = Math.round(anchor * 60);
+  return (f0 + Math.floor((fr - f0) / RIG_STEP) * RIG_STEP) / 60;
+};
+export const ACCENT_MIN_FRAMES = 12;
+export const ACCENT_MAX_FRAMES = 20;
 
 const TAU = Math.PI * 2;
 // Amplitude scales, tuned against tools/rigcheck.mjs (quad area within [0.85, 1.15], no folds, limbs <= 6 %).
@@ -225,7 +244,8 @@ const add = (a: P, b: P): P => [a[0] + b[0], a[1] + b[1]];
 export interface Frame { xf: Xf[]; squash: number; joints: Record<string, P> }
 
 /** Bone transforms of a card at t seconds. Pure function of (joints, t, dance). */
-export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
+export const rigFrame = (j: Joints, tIn: number, d: Dance = DANCE): Frame => {
+  const t = stepT(tIn);
   const E = d.energy;
   const bp = beatPos(t);
   const fr = bp - Math.floor(bp);
@@ -238,6 +258,21 @@ export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
   const breath = 0.0022 * Math.sin((TAU * t) / 3.4);
   const armU = E * d.arms * 0.1 * ARM_AMP;
   const armF = E * d.arms * 0.08 * ARM_AMP;
+  // accents: each eased in once and held
+  let accHead = 0;
+  let accUpper = 0;
+  const accArm = { L: [0, 0], R: [0, 0] } as Record<'L' | 'R', [number, number]>;
+  for (const a of d.accents ?? []) {
+    if (a.frames < ACCENT_MIN_FRAMES || a.frames > ACCENT_MAX_FRAMES) throw new Error(`accent "${a.why}": ${a.frames} frames (allowed ${ACCENT_MIN_FRAMES}-${ACCENT_MAX_FRAMES} at 60 fps)`);
+    const u = Math.min(1, Math.max(0, ((stepT(tIn, a.t0) - a.t0) * 60) / a.frames));
+    const k = 1 - (1 - u) * (1 - u);
+    accHead += (a.head ?? 0) * k;
+    accUpper += (a.upper ?? 0) * k;
+    if (a.arm) {
+      (accArm[a.arm] as [number, number])[0] += (a.armU ?? 0) * k;
+      (accArm[a.arm] as [number, number])[1] += (a.armF ?? 0) * k;
+    }
+  }
   const H = j.hips;
   // Close-ups dance with the head only: the bust stays on the pinned bottom edge.
   const spineTheta = j.body ? lean : 0;
@@ -249,11 +284,11 @@ export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
   const spine: Xf = { theta: spineTheta, p: H, q: H };
   set('spine', spine);
   const C2 = add(apply(spine, j.chest), [0, breath]);
-  const upperT = spineTheta + chestTheta;
+  const upperT = spineTheta + chestTheta + accUpper;
   const upper: Xf = { theta: upperT, p: j.chest, q: C2 };
   set('upper', upper);
   const N2 = apply(upper, j.neck);
-  const headT = upperT + nod;
+  const headT = upperT + nod + accHead;
   const head: Xf = { theta: headT, p: j.neck, q: N2 };
   set('head', head);
   const joints: Record<string, P> = { hips: H, chest: C2, neck: N2, head: apply(head, j.head) };
@@ -264,10 +299,10 @@ export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
     if (!sh || !el) continue;
     const ph = s === 'L' ? 0 : Math.PI;
     const S2 = apply(upper, sh);
-    const ua: Xf = { theta: upperT + armU * Math.sin(Math.PI * bp + ph + 0.4), p: sh, q: S2 };
+    const ua: Xf = { theta: upperT + armU * Math.sin(Math.PI * bp + ph + 0.4) + (accArm[s] as [number, number])[0], p: sh, q: S2 };
     set(s === 'L' ? 'uarmL' : 'uarmR', ua);
     const E2 = apply(ua, el);
-    const fa: Xf = { theta: ua.theta + armF * Math.sin(Math.PI * bp + ph + 1.1), p: el, q: E2 };
+    const fa: Xf = { theta: ua.theta + armF * Math.sin(Math.PI * bp + ph + 1.1) + (accArm[s] as [number, number])[1], p: el, q: E2 };
     set(s === 'L' ? 'farmL' : 'farmR', fa);
     joints[`${s.toLowerCase()}Shoulder`] = S2;
     joints[`${s.toLowerCase()}Elbow`] = E2;
@@ -276,7 +311,9 @@ export const rigFrame = (j: Joints, t: number, d: Dance = DANCE): Frame => {
   if (j.hairRoot) {
     const R2 = apply(head, j.hairRoot);
     // Hair follows through: the same bar and beat motion, lagged, with a little overshoot (hair only).
-    const follow = E * HAIR_AMP * (0.085 * Math.sin(TAU * bar - 1.15) + 0.05 * Math.sin(Math.PI * bp - 1.0) + 0.02 * Math.sin(Math.PI * 2 * bp - 2.0));
+    // a held card's hair tips drift faintly and slowly (not on the beat); the loop adds the old follow-through
+    const drift = 0.006 * Math.sin((TAU * t) / 4.1 + 0.7);
+    const follow = drift + E * HAIR_AMP * (0.085 * Math.sin(TAU * bar - 1.15) + 0.05 * Math.sin(Math.PI * bp - 1.0) + 0.02 * Math.sin(Math.PI * 2 * bp - 2.0));
     j.hairTips.forEach((_, k) => {
       // Hair takes only half of the head's turn: long hair hangs down by the pelvis, which does not move.
       set(`hair${k}` as BoneName, { theta: headT * 0.5 + follow * (1 - 0.2 * k), p: j.hairRoot as P, q: R2 });

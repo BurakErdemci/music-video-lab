@@ -2,6 +2,7 @@
 // The card shader, the scribble outline and the white-out silhouette all deform through these functions,
 // so the 2D layers follow the dancing card exactly.
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
+import { ACCENTS } from './accents.ts';
 import { BONES, type Dance, type Frame, type Joints, type P, type WeightGrid, boneSegments, danceOf, deform, restJoints, rigFrame, weightGrid, weightsAt } from './rig.ts';
 import { POSES } from './poses.ts';
 
@@ -27,10 +28,11 @@ export const cardRig = (id: string): CardRig => {
 };
 
 /** Dance of a card instance: its arm factor, scaled by an energy (0 = a still card). */
-export const cardDance = (id: string, energy = 1): Dance => danceOf(id, energy);
+/** The motion of a card: held (energy 0) with the accents of girls' accent table for this card. */
+export const cardDance = (id: string, energy = 0): Dance => danceOf(id, energy, ACCENTS[id]);
 
 /** Deform a list of card-unit points at time t (weights computed per point, as the shader's vertices). */
-export const deformPoints = (id: string, pts: readonly P[], t: number, energy = 1): P[] => {
+export const deformPoints = (id: string, pts: readonly P[], t: number, energy = 0): P[] => {
   const r = cardRig(id);
   const f = frameOf(id, t, energy);
   return pts.map((p) => deform(f, p, weightsAt(p, r.grid)));
@@ -46,7 +48,7 @@ export const toWorld = (s: Stand, p: P): [number, number, number] => [
 
 const STILL: Frame = { xf: BONES.map(() => ({ theta: 0, p: [0, 0] as P, q: [0, 0] as P })), squash: 0, joints: {} };
 /** The rig frame of a card at t; a rigid card (no keypoints) stands still. */
-export const frameOf = (id: string, t: number, energy = 1): Frame => {
+export const frameOf = (id: string, t: number, energy = 0): Frame => {
   const r = cardRig(id);
   return r.joints ? rigFrame(r.joints, t, cardDance(id, energy)) : STILL;
 };

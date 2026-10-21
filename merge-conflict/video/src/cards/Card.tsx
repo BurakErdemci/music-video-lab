@@ -142,7 +142,7 @@ export interface CardProps extends Placement {
   dx?: number;
   /** Flat silhouette colour mix (white-out frames, silhouettes in the dark). */
   flat?: { color: Hex; mix: number };
-  /** Dance energy, 0 = still. */
+  /** The old beat-loop energy; 0 (default) = a held card. The film never sets it. */
   dance?: number;
   /** Smear squash and stretch about the feet: [sx, sy]. */
   stretch?: [number, number];
@@ -155,7 +155,7 @@ export interface CardProps extends Placement {
   clip?: { x: number; keep: 'left' | 'right' };
 }
 
-export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 1, stretch = [1, 1], clip, soft = 0, ground }: CardProps) => {
+export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 0, stretch = [1, 1], clip, soft = 0, ground }: CardProps) => {
   const tex = useCardTexture(id);
   const geo = useRigGeometry(id);
   const e = cardEntry(id);
