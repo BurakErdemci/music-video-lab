@@ -7,7 +7,7 @@ import { Kaleido, SceneTransition, type TransitionKind, type TransitionSpec } fr
 
 const SEG = 40;
 const CUT = 20;
-const KINDS: TransitionKind[] = ['streaks', 'mirror', 'shatter', 'ink', 'diff', 'tunnel', 'shock', 'dissolve'];
+const KINDS: TransitionKind[] = ['streaks', 'mirror', 'shatter', 'ink', 'diff', 'tunnel', 'shock', 'dissolve', 'laser', 'glitch', 'fire', 'tear'];
 export const TRANS_LAB_FRAMES = SEG * (KINDS.length + 1);
 
 const PALETTE: [`#${string}`, `#${string}`][] = [
@@ -17,7 +17,15 @@ const PALETTE: [`#${string}`, `#${string}`][] = [
   ['#1f7a4a', '#ff7a3d'],
 ];
 
-const specs: TransitionSpec[] = KINDS.map((kind, i) => ({ id: `lab-${kind}`, kind, at: (i * SEG + CUT) / 60, colors: PALETTE[i % PALETTE.length]!, origin: i % 3 === 1 ? [1100, 420] : undefined, glyph: i === 5 ? '=' : undefined }));
+// Hand-picked colours for the new kinds so each reads as its theme (neon, glitch, fire, steel).
+const OVERRIDE: Partial<Record<TransitionKind, [`#${string}`, `#${string}`]>> = {
+  laser: ['#4a1a8a', '#ff2fd0'],
+  glitch: ['#2a1a7a', '#ffcf30'],
+  fire: ['#8a1c1c', '#ffb020'],
+  tear: ['#3a4a6a', '#ff7a2a'],
+};
+
+const specs: TransitionSpec[] = KINDS.map((kind, i) => ({ id: `lab-${kind}`, kind, at: (i * SEG + CUT) / 60, colors: OVERRIDE[kind] ?? PALETTE[i % PALETTE.length]!, origin: i % 3 === 1 ? [1100, 420] : undefined, glyph: i === 5 ? '=' : undefined }));
 
 export const TransLab = () => {
   const frame = useCurrentFrame();
@@ -29,9 +37,9 @@ export const TransLab = () => {
   return (
     <AbsoluteFill style={{ background: '#000' }}>
       <Svg>
-        <rect width={W} height={H} fill={kaleido ? '#10121c' : afterCut ? '#3a1218' : '#121a44'} />
+        <rect width={W} height={H} fill={kaleido ? '#10121c' : afterCut ? '#8f3f55' : '#3f4f9c'} />
         {!kaleido && (
-          <text x={W / 2} y={H / 2 + 330} textAnchor="middle" fontFamily="sans-serif" fontWeight={900} fontSize={900} fill={afterCut ? '#5a2430' : '#26357c'}>
+          <text x={W / 2} y={H / 2 + 330} textAnchor="middle" fontFamily="sans-serif" fontWeight={900} fontSize={900} fill={afterCut ? '#a8566d' : '#5668b8'}>
             {afterCut ? 'B' : 'A'}
           </text>
         )}

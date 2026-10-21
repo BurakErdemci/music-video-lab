@@ -8,7 +8,7 @@ import { clamp01, type Hex, inQuad, lerp, mixHex, outQuad, ramp } from '../../li
 import { seeded } from '../../lib/seeded.ts';
 import { GLOW } from '../../type/Svg.tsx';
 
-export type TransitionKind = 'streaks' | 'mirror' | 'shatter' | 'ink' | 'diff' | 'tunnel' | 'shock' | 'dissolve';
+export type TransitionKind = 'streaks' | 'mirror' | 'shatter' | 'ink' | 'diff' | 'tunnel' | 'shock' | 'dissolve' | 'laser' | 'glitch' | 'fire' | 'tear';
 
 export interface TransitionSpec {
   id: string;
@@ -373,7 +373,211 @@ const Dissolve = ({ spec, a, b, ox, oy, reach }: Ctx) => {
   return <g>{squares}</g>;
 };
 
-const KINDS: Record<TransitionKind, (c: Ctx) => ReactNode> = { streaks: Streaks, mirror: Mirror, shatter: Shatter, ink: Ink, diff: Diff, tunnel: Tunnel, shock: Shock, dissolve: Dissolve };
+/** Cover amount: rises to 1 at the cut, falls back after it. */
+const coverOf = (c: Ctx) => (c.b > 0 ? 1 - c.b : c.a);
+
+/** The a/b progress re-derived from time snapped to every `n` frames, plus the snap index (the seed key for stepped jitter). */
+const stepped = (c: Ctx, n: number) => {
+  const k = Math.floor(Math.round(c.t * FPS) / n);
+  const tq = (k * n) / FPS;
+  const [t0, t1] = transitionWindow(c.spec);
+  const pre = c.spec.at - t0;
+  return { k, a: pre > 0 ? ramp(tq, t0, pre) : 1, b: ramp(tq, c.spec.at, t1 - c.spec.at) };
+};
+
+const FullRect = ({ fill, opacity }: { fill: string; opacity: number }) => <rect x={-20} y={-20} width={W + 40} height={H + 40} fill={fill} opacity={opacity} />;
+
+const LASER_BEAMS = 8;
+
+/** Two emitters per side fan beams that sweep in, cross into a grid at the cut and sweep off the other way. */
+const Laser = (ctx: Ctx) => {
+  const { spec, a, b, t } = ctx;
+  const [c0, c1] = spec.colors;
+  const cover = coverOf(ctx);
+  const gid = `lz-${spec.id}`;
+  // Sweep offset in radians: zero at the cut, opposite directions before and after it.
+  const sweep = b > 0 ? 0.9 * inQuad(b) : -0.9 * (1 - outQuad(a));
+  const beams: ReactNode[] = [];
+  for (const side of [1, -1]) {
+    for (const e of [0, 1]) {
+      for (let i = 0; i < LASER_BEAMS; i++) {
+        const f = i / (LASER_BEAMS - 1);
+        const th = (e === 0 ? lerp(-0.25, 1.3, f) : lerp(-1.3, 0.25, f)) + sweep * (e === 0 ? 1 : -1);
+        const ox = side > 0 ? -60 : W + 60;
+        const oy = H * (e === 0 ? 0.2 : 0.8);
+        const op = ramp(cover, ((i + e * 3) / (LASER_BEAMS + 3)) * 0.4, 0.4);
+        if (op <= 0) continue;
+        // The slow shimmer keeps the grid alive between frames.
+        const wob = 1 + 0.25 * Math.sin(t * 40 + i * 1.7 + e);
+        const col = (i + e) % 2 ? mixHex(c0, LIGHT, 0.5) : c1;
+        beams.push(
+          <g key={`${side}-${e}-${i}`} opacity={op}>
+            <GlowLine d={`M${ox},${oy} L${ox + Math.cos(th) * side * 2700},${oy + Math.sin(th) * 2700}`} color={col} w={3 * wob} />
+          </g>,
+        );
+      }
+    }
+  }
+  return (
+    <g>
+      <defs>
+        <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+          <stop offset="0" stopColor={mixHex(c0, DARK, 0.05)} />
+          <stop offset="0.5" stopColor={mixHex(mixHex(c0, c1, 0.35), DARK, 0.2)} />
+          <stop offset="1" stopColor={mixHex(c1, DARK, 0.3)} />
+        </linearGradient>
+      </defs>
+      <FullRect fill={`url(#${gid})`} opacity={cover ** 1.5} />
+      {beams}
+    </g>
+  );
+};
+
+/** Horizontal slices with cyan/magenta fringes that slide in opposite directions in 2-frame steps. */
+const Glitch = (ctx: Ctx) => {
+  const { spec } = ctx;
+  const [c0, c1] = spec.colors;
+  const { k, a, b } = stepped(ctx, 2);
+  const cover = coverOf(ctx);
+  const rng = seeded(`glitch-${spec.id}`);
+  const n = rng.int(10, 16);
+  const weights = Array.from({ length: n }, () => rng.range(0.5, 1.5));
+  const total = weights.reduce((s, w) => s + w, 0);
+  const fills = [mixHex(c0, LIGHT, 0.3), mixHex(c1, DARK, 0.1), mixHex(c0, c1, 0.5)];
+  const hold = Math.min(a, 1 - b);
+  let y = 0;
+  const slices = weights.map((w, i) => {
+    const h = (w / total) * H;
+    const y0 = y;
+    y += h;
+    const sw = W * rng.range(0.7, 1);
+    const x0 = rng.range(-0.1, 1 - sw / W + 0.1) * W;
+    const fill = rng.pick(fills);
+    const dir = rng() < 0.5 ? -1 : 1;
+    const r = seeded(`glitch-${spec.id}-${i}-${k}`);
+    const slide = dir * W * 1.2 * (b > 0 ? inQuad(b) : 1 - outQuad(a));
+    const off = slide + r.range(-1, 1) * 170 * hold;
+    const split = (10 + r.range(0, 32)) * hold;
+    return (
+      <g key={i} transform={`translate(${off},0)`}>
+        <rect x={x0 - split} y={y0} width={sw} height={h + 1} fill="#19e6ff" opacity={0.75} />
+        <rect x={x0 + split} y={y0} width={sw} height={h + 1} fill="#ff2fd6" opacity={0.75} />
+        <rect x={x0} y={y0} width={sw} height={h + 1} fill={fill} />
+        <rect x={x0} y={y0} width={sw} height={4} fill={mixHex(fill, LIGHT, 0.6)} opacity={0.8} />
+      </g>
+    );
+  });
+  return (
+    <g>
+      <FullRect fill={mixHex(mixHex(c0, c1, 0.3), DARK, 0.55)} opacity={b > 0 ? 1 - ramp(b, 0, 0.5) : cover ** 1.5} />
+      {slices}
+    </g>
+  );
+};
+
+const FIRE_LAYERS = [
+  { base: '#8f1010', tip: '#c81e12', amp: 230, target: -150, rise: 0, burn: 0.25 },
+  { base: '#d6480f', tip: '#ff7a1a', amp: 180, target: 0.3 * H, rise: 0.1, burn: 0.12 },
+  { base: '#e8a014', tip: '#ffd23a', amp: 130, target: 0.78 * H, rise: 0.2, burn: 0 },
+] as const;
+
+/** Flame wall in three stacked layers (red leads, yellow trails); tongue heights re-seed every 3 frames. */
+const Fire = (ctx: Ctx) => {
+  const { spec, a, b } = ctx;
+  const [c0, c1] = spec.colors;
+  const k = stepped(ctx, 3).k;
+  return (
+    <g>
+      {FIRE_LAYERS.map((L, l) => {
+        const xr = seeded(`fire-${spec.id}-${l}`);
+        const yr = seeded(`fire-${spec.id}-${l}-${k}`);
+        const rise = outQuad(clamp01((a - L.rise) / (1 - L.rise)));
+        const top = lerp(H + L.amp + 40, L.target, rise) - (b > 0 ? inQuad(b) * H * 1.2 : 0);
+        const bot = b > 0 ? lerp(H + 400, -400, inQuad(clamp01((b - L.burn) / (1 - L.burn)))) : H + 400;
+        if (bot <= top || (a <= 0 && b <= 0)) return null;
+        const edge = (y: number) => {
+          const pts: [number, number][] = [];
+          for (let x = -80; x < W + 160; x += 80) {
+            const jx = xr.range(-15, 15);
+            pts.push([x + jx, y], [x + 40 + jx, y - L.amp * yr.range(0.3, 1)]);
+          }
+          return pts;
+        };
+        const topPts = edge(top);
+        const botPts = edge(bot).reverse();
+        const gid = `fr-${spec.id}-${l}`;
+        const body = mixHex(mixHex(L.base, c0, 0.15), DARK, 0.05);
+        return (
+          <g key={l}>
+            <defs>
+              <linearGradient id={gid} x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0" stopColor={mixHex(L.tip, c1, 0.12)} />
+                <stop offset="0.35" stopColor={body} />
+                <stop offset="1" stopColor={mixHex(body, DARK, 0.3)} />
+              </linearGradient>
+            </defs>
+            <polygon points={polyPts([...topPts, ...botPts])} fill={`url(#${gid})`} />
+          </g>
+        );
+      })}
+    </g>
+  );
+};
+
+/** Slabs between jagged diagonal cracks; they jolt in 2-frame steps, sit tight at the cut, then fall. */
+const Tear = (ctx: Ctx) => {
+  const { spec } = ctx;
+  const [c0, c1] = spec.colors;
+  const { k, a, b } = stepped(ctx, 2);
+  const rng = seeded(`tear-${spec.id}`);
+  const n = rng.int(3, 5);
+  const lean = rng.sign() * W * 0.22;
+  const ys: number[] = [];
+  for (let y = -60; y < H + 120; y += 90) ys.push(y);
+  const bounds: [number, number][][] = [ys.map((y) => [-600, y] as [number, number])];
+  for (let i = 0; i < n; i++) {
+    const xt = (W * (i + 1)) / (n + 1) + rng.range(-70, 70);
+    const sl = lean + rng.range(-0.04, 0.04) * W;
+    bounds.push(ys.map((y) => [xt + (sl * (y + 60)) / (H + 120) + rng.range(-34, 34), y] as [number, number]));
+  }
+  bounds.push(ys.map((y) => [W + 600, y] as [number, number]));
+  const hold = Math.min(a, 1 - b);
+  const slabs: ReactNode[] = [];
+  for (let j = 0; j <= n; j++) {
+    const lo = bounds[j]!;
+    const hi = bounds[j + 1]!;
+    const r = seeded(`tear-${spec.id}-${j}-${k}`);
+    const ps = seeded(`tear-${spec.id}-fall-${j}`);
+    const speed = ps.range(0.8, 1.25);
+    const spin = ps.range(-14, 14);
+    const drift = ps.range(-120, 120);
+    const cx = (lo[0]![0] + hi[0]![0]) / 2;
+    const fall = inQuad(b);
+    const dy = (j % 2 ? 1 : -1) * H * 1.1 * (1 - outQuad(a)) + fall * H * 1.5 * speed + r.range(-1, 1) * 14 * hold;
+    const dx = r.range(-1, 1) * 22 * hold + fall * drift;
+    const gid = `tr-${spec.id}-${j}`;
+    slabs.push(
+      <g key={j} transform={`translate(${dx},${dy}) rotate(${spin * fall} ${cx} ${H / 2})`}>
+        <defs>
+          <linearGradient id={gid} x1="0" y1="0" x2="1" y2="1">
+            <stop offset="0" stopColor={mixHex(mixHex(c0, c1, 0.15 + 0.5 * (j / n)), LIGHT, 0.12)} />
+            <stop offset="1" stopColor={mixHex(c0, DARK, 0.3)} />
+          </linearGradient>
+        </defs>
+        <polygon points={polyPts([...lo, ...hi.slice().reverse()])} fill={`url(#${gid})`} />
+        <GlowLine d={polyPath(j < n ? hi : lo)} color={c1} w={5} />
+      </g>,
+    );
+  }
+  return (
+    <g>
+      <FullRect fill={mixHex(c0, DARK, 0.6)} opacity={b > 0 ? 1 - ramp(b, 0, 0.35) : a ** 1.2} />
+      {slabs}
+    </g>
+  );
+};
+
+const KINDS: Record<TransitionKind, (c: Ctx) => ReactNode> = { streaks: Streaks, mirror: Mirror, shatter: Shatter, ink: Ink, diff: Diff, tunnel: Tunnel, shock: Shock, dissolve: Dissolve, laser: Laser, glitch: Glitch, fire: Fire, tear: Tear };
 
 export const SceneTransition = ({ spec, t }: { spec: TransitionSpec; t: number }) => {
   const [t0, t1] = transitionWindow(spec);
