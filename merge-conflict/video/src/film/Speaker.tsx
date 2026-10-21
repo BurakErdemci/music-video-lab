@@ -4,6 +4,7 @@
 // knee-up (she fills the frame from the first frame, the terminal beside her), then her face close-up on the
 // next downbeat but one (never longer than 2 bars).
 import { AbsoluteFill } from 'remotion';
+import { useShotBackground } from '../layer.ts';
 import type { ShotState } from './framing.ts';
 import { typePlane } from '../camera/camera.ts';
 import { Card, type Placement } from '../cards/Card.tsx';
@@ -66,7 +67,7 @@ export const Speaker = ({ frame }: { frame: number }) => {
     </g>
   );
   return (
-    <AbsoluteFill style={{ background: '#000' }}>
+    <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={cam.pose}>
         <TerminalWorld t={t} fail={FAIL_T} />
         <Field t={t} grade={DARK} layer="back" density={0.35} alpha={0.7} hueMix={0.6} dust />

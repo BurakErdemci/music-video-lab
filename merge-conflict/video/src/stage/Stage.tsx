@@ -2,6 +2,7 @@
 // Every 3D element (set plate, spotlight, cards, particles) is a child of this. `flat` and `linear`: no
 // tone mapping and no output colour conversion, so every shader writes raw values to the framebuffer.
 import { useThree } from '@react-three/fiber';
+import { useLayer } from '../layer.ts';
 import { ThreeCanvas } from '@remotion/three';
 import { type ReactNode, useLayoutEffect, useMemo } from 'react';
 import type { IUniform, PerspectiveCamera, ShaderMaterial } from 'three';
@@ -22,7 +23,9 @@ const CameraRig = ({ pose }: { pose: CameraPose }) => {
   return null;
 };
 
-export const Stage = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (
+export const Stage = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (useLayer() === 'type' ? null : <StageCanvas pose={pose}>{children}</StageCanvas>);
+
+const StageCanvas = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (
   <ThreeCanvas width={W} height={H} flat linear camera={{ fov: pose.fov, near: 0.1, far: 200, position: pose.position }} gl={{ antialias: true }}>
     <CameraRig pose={pose} />
     {children}

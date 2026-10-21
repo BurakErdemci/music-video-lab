@@ -10,6 +10,7 @@
 //  the logo whips out over the last 12 frames, so the verse downbeat is a clean cut.
 // plus a metal hit (brush slashes) on every second beat.
 import type { ReactNode } from 'react';
+import { useShotBackground } from '../layer.ts';
 import { AbsoluteFill } from 'remotion';
 import { typePlane } from '../camera/camera.ts';
 import { Card } from '../cards/Card.tsx';
@@ -193,7 +194,7 @@ export const Groove = ({ frame }: { frame: number }) => {
     </g>
   );
   return (
-    <AbsoluteFill style={{ background: '#000' }}>
+    <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
         {kind === 'clones' || kind === 'low' ? <ChevronTunnelWorld t={t} hits={GROOVE_HITS} /> : kind === 'knee' || kind === 'waist' ? <><PlateLayer id="W11" base={cam.base} /><ForgeWorld t={t} hits={GROOVE_HITS} plate="shot" /></> : <><PlateLayer id="W04" base={cam.base} /><CathedralWorld t={t} hits={GROOVE_HITS} plate="shot" /></>}
         <Field t={t} grade={grade} layer="back" density={0.9} hueMix={0.5} metal={1} bursts={[{ t: downbeat(3), origin: [0, -2.6, 0.5] }]} />

@@ -1,5 +1,6 @@
 import { AbsoluteFill, Audio, Composition, staticFile } from 'remotion';
 import { Film } from './Film.tsx';
+import { type Layer, LayerContext } from './layer.ts';
 import { Lab, LAB_FRAMES } from './lab/Lab.tsx';
 import { LOGO_FRAMES, LogoBoard } from './lab/LogoBoard.tsx';
 import { TRANS_LAB_FRAMES, TransLab } from './transitions/scene/TransLab.tsx';
@@ -15,16 +16,19 @@ const W = 1920;
 const H = 1080;
 const SMOKE_FRAMES = 240;
 
-const Video = () => (
+/** `layer`: the whole film, or only its type / its world (tools/framecheck.mjs --type renders both). */
+const Video = ({ layer = 'all' }: { layer?: Layer }) => (
   <AbsoluteFill>
-    <Film />
+    <LayerContext.Provider value={layer}>
+      <Film />
+    </LayerContext.Provider>
     <Audio src={staticFile('audio/merge-conflict-v4.wav')} />
   </AbsoluteFill>
 );
 
 export const Root = () => (
   <>
-    <Composition id="MC60" component={Video} durationInFrames={DURATION_FRAMES} fps={FPS} width={W} height={H} />
+    <Composition id="MC60" component={Video} durationInFrames={DURATION_FRAMES} fps={FPS} width={W} height={H} defaultProps={{ layer: 'all' as Layer }} />
     <Composition id="Smoke" component={Video} durationInFrames={SMOKE_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="Lab" component={Lab} durationInFrames={LAB_FRAMES} fps={FPS} width={W} height={H} />
     <Composition id="LogoBoard" component={LogoBoard} durationInFrames={LOGO_FRAMES} fps={FPS} width={W} height={H} />

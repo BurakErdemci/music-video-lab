@@ -1,6 +1,7 @@
 // The film on take-v4: exactly one shot per frame (each shot owns the frame's single ThreeCanvas), then the
 // white-out hits on top. 0-140.04 s is built (round 7); the rest of the song is still the placeholder.
 import type { ComponentType } from 'react';
+import { useLayer, useShotBackground } from './layer.ts';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
 import { HOME } from './camera/camera.ts';
 import { Groove, grooveStateAt } from './film/Groove.tsx';
@@ -54,10 +55,10 @@ export const Film = () => {
   const t = sec(frame);
   const shot = SHOTS.find((s) => frame >= s.from && frame < s.to);
   return (
-    <AbsoluteFill style={{ background: '#000' }}>
+    <AbsoluteFill style={{ background: useShotBackground() }}>
       <Fonts />
       {shot ? <shot.Component frame={frame} /> : null}
-      {WHITEOUTS.map((w) => <Whiteout key={w.id} spec={w} t={t} pose={HOME} />)}
+      {useLayer() !== 'type' && WHITEOUTS.map((w) => <Whiteout key={w.id} spec={w} t={t} pose={HOME} />)}
     </AbsoluteFill>
   );
 };
