@@ -4,7 +4,8 @@
 import { barLengthAt, barPos, f } from '../timing.ts';
 
 export type FramingKind = 'stage' | 'face' | 'tiny' | 'low' | 'clones' | 'split' | 'knee' | 'waist';
-export interface FramingCue { t: number; kind: FramingKind }
+/** who: the girl the framing is on (a cut from one girl's face to the other's is a new framing). */
+export interface FramingCue { t: number; kind: FramingKind; who?: 'B' | 'O' | 'both' }
 /** Length (s) of the bar t falls in, from the measured downbeats (kept for callers; the check counts bars). */
 export const barAt = (t: number): number => barLengthAt(t);
 /** A framing plan; throws when any framing holds longer than 2 bars before `end`. */
@@ -15,7 +16,8 @@ export const framingPlan = (cues: readonly FramingCue[], end: number): FramingCu
     // 60 fps frame of tolerance expressed in the local bar length
     const held = barPos(until) - barPos(c.t);
     if (held > 2 + 1 / 60 / barLengthAt(until)) throw new Error(`framing "${c.kind}" at ${c.t.toFixed(2)} s holds ${held.toFixed(2)} bars (${(until - c.t).toFixed(2)} s), longer than 2 bars`);
-    if (i && c.kind === (cues[i - 1] as FramingCue).kind) throw new Error(`framing "${c.kind}" at ${c.t.toFixed(2)} s repeats the previous framing`);
+    const prev = cues[i - 1];
+    if (prev && c.kind === prev.kind && (c.who ?? '') === (prev.who ?? '')) throw new Error(`framing "${c.kind}" at ${c.t.toFixed(2)} s repeats the previous framing`);
   });
   return [...cues];
 };
