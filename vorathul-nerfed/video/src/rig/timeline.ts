@@ -191,7 +191,7 @@ const handCards = (a: HandName, b: HandName, f: number, key: Key, fade: number):
 
 /** Progress of a transition after `n` frames of `dur`, on the rig grid; the last frame is always exact. */
 export const transitionProgress = (n: number, dur: number, ease: Ease | undefined, step = DEFAULT_STEP, fps = DEFAULT_FPS): number => {
-  const nq = n >= dur ? dur : Math.floor(n / step) * step;
+  const nq = n >= dur ? dur : quantFrame(n, step);
   const antic = Math.min(framesOf(ANTICIPATION_S, fps), Math.floor(dur / 2));
   if (ease === 'strike') {
     if (nq < antic) return -ANTICIPATION * smooth(nq / antic);

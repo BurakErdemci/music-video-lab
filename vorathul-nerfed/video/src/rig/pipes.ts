@@ -85,7 +85,7 @@ export const pipeStateAt = (p: PipesDef, events: readonly PipeEvent[], wing: Sid
       case 'cork': {
         st.glow = 0;
         const u = clamp((frame - (cur.at - T.cork)) / T.cork, 0, 1);
-        st.cork = { show: true, travel: outCubic(u), scale: frame === cur.at ? 1.15 : 1 };
+        st.cork = { show: true, travel: outCubic(u), scale: frame >= cur.at && frame < cur.at + 1 ? 1.15 : 1 };
         break;
       }
       case 'return': {
@@ -105,5 +105,6 @@ export const pipeStateAt = (p: PipesDef, events: readonly PipeEvent[], wing: Sid
   return st;
 };
 
-/** Rig-quantised frame for glow ramps and sway: the global grid of `step` frames (1 = every frame). */
-export const quantFrame = (frame: number, step = DEFAULT_STEP): number => Math.floor(frame / step) * step;
+/** Rig-quantised frame for glow ramps and sway: the global grid of `step` frames. step 1 passes the frame through
+ *  unchanged, so the fractional scene frames of Nerfed60 (frame60 / 2) are not floored back to 30 fps. */
+export const quantFrame = (frame: number, step = DEFAULT_STEP): number => (step <= 1 ? frame : Math.floor(frame / step) * step);
