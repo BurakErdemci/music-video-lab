@@ -2,9 +2,10 @@
 // width never jumps. After landing it holds with a blinking cursor so the layer keeps moving.
 import { type Hex, inOutQuad, lerp, mixHex } from '../lib/ease.ts';
 import { MONO_ADV, MONO } from './fonts.tsx';
+import { Scrim } from './Scrim.tsx';
 import { GLOW } from './Svg.tsx';
 
-export interface CounterSpec { from: number; to: number; t0: number; t1: number; x: number; y: number; size: number; color: Hex; digits?: number; suffix?: string }
+export interface CounterSpec { from: number; to: number; t0: number; t1: number; x: number; y: number; size: number; color: Hex; digits?: number; suffix?: string; /** a dark plate behind the digits */ backing?: boolean }
 
 export const counterValue = (s: CounterSpec, t: number): number => Math.round(lerp(s.from, s.to, inOutQuad((t - s.t0) / (s.t1 - s.t0))));
 
@@ -15,6 +16,7 @@ export const Counter = ({ spec, t }: { spec: CounterSpec; t: number }) => {
   const cursor = t > spec.t1 && Math.floor(t * 3) % 2 === 0;
   return (
     <g transform={`translate(${spec.x - w / 2} ${spec.y})`} fontFamily={MONO} fontSize={spec.size}>
+      {spec.backing && <Scrim x={0} y={-spec.size * 0.74} w={w} h={spec.size * 0.84} pad={spec.size * 0.12} />}
       {GLOW.map((g, k) => (
         <text key={k} fill="none" stroke={spec.color} strokeOpacity={g.o} strokeWidth={spec.size * g.w}>{v}</text>
       ))}

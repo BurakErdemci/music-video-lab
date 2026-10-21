@@ -4,6 +4,7 @@
 import { type Hex, mixHex } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { type Face, CAP, familyOf, layout } from './fonts.tsx';
+import { FRAME, FRAME_ALPHA, FRAME_W } from './Scrim.tsx';
 import { slamScale } from './Slam.tsx';
 import { GLOW } from './Svg.tsx';
 
@@ -25,6 +26,8 @@ export interface LightBoxSpec {
   slam?: boolean;
   /** Draw the box around the letters. */
   box?: boolean;
+  /** A light edge and a soft shadow on the box, for a plate it would melt into. */
+  backing?: boolean;
 }
 
 const FLICKER = 7 / 60;
@@ -52,7 +55,10 @@ export const LightBox = ({ spec, t }: { spec: LightBoxSpec; t: number }) => {
   return (
     <g transform={`translate(${spec.x} ${spec.y - capH / 2}) scale(${spec.slam && t >= spec.t0 ? slamScale(t, spec.t0) : 1}) translate(${-width / 2} ${capH / 2})`} fontFamily={familyOf(face)} fontSize={spec.size}>
       {spec.box && (
-        <rect x={-pad} y={-capH - pad} width={width + 2 * pad} height={capH + 2 * pad} rx={spec.size * 0.08} fill="#07030c" fillOpacity={0.78} stroke="#3a2a4a" strokeWidth={spec.size * 0.035} />
+        <>
+          {spec.backing && <rect x={-pad - 28} y={-capH - pad - 28} width={width + 2 * pad + 56} height={capH + 2 * pad + 56} rx={spec.size * 0.08 + 28} fill="#000" fillOpacity={0.49} />}
+          <rect x={-pad} y={-capH - pad} width={width + 2 * pad} height={capH + 2 * pad} rx={spec.size * 0.08} fill="#07030c" fillOpacity={spec.backing ? 0.86 : 0.78} stroke={spec.backing ? FRAME : '#3a2a4a'} strokeOpacity={spec.backing ? FRAME_ALPHA : 1} strokeWidth={spec.backing ? FRAME_W : spec.size * 0.035} />
+        </>
       )}
       {[...text].map((ch, i) => {
         if (ch === ' ') return null;

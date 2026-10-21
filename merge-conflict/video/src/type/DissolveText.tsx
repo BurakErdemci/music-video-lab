@@ -4,7 +4,7 @@ import { type Hex, inQuad, lerp, outQuad, ramp } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { type Face, familyOf, layout } from './fonts.tsx';
 
-export interface DissolveSpec { id: string; text: string; t0: number; t1: number; x: number; y: number; size: number; color: Hex; face?: Face }
+export interface DissolveSpec { id: string; text: string; t0: number; t1: number; x: number; y: number; size: number; color: Hex; face?: Face; /** a soft dark halo under each letter, for a plate as bright as the letters */ halo?: boolean }
 const GLYPHS = ['0', '1', '<', '>', '=', '{', '}', ';', '/', '#'];
 const LIFE = 0.6;
 
@@ -35,6 +35,11 @@ export const DissolveText = ({ spec, t }: { spec: DissolveSpec; t: number }) => 
         });
         return (
           <g key={i}>
+            {spec.halo && (
+              <text x={cx + dx} y={dy} fontSize={spec.size} fill="none" stroke="#000" strokeOpacity={0.45 * (1 - k) * lerp(0, 1, pop)} strokeWidth={spec.size * 0.3} strokeLinejoin="round" textAnchor="middle" transform={`rotate(${rot} ${cx + dx} ${dy - spec.size * 0.4})`}>
+                {ch}
+              </text>
+            )}
             <text x={cx + dx} y={dy} fontSize={spec.size} fill={spec.color} stroke="#0b0614" strokeWidth={spec.size * 0.05} paintOrder="stroke" textAnchor="middle" opacity={(1 - k) * lerp(0, 1, pop)} transform={`rotate(${rot} ${cx + dx} ${dy - spec.size * 0.4})`}>
               {ch}
             </text>

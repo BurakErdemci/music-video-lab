@@ -118,7 +118,7 @@ export const GrooveLogo = ({ t }: { t: number }) => {
   const bp = beatPos(t);
   return (
     <g transform={`translate(960 520) scale(${land * p}) translate(-960 -520)`}>
-      <MergeConflictLogo id="groove-logo" design={LOGO_DESIGN} resolved={false} cx={960} cy={520} width={1640} beat={bp - Math.floor(bp)} beatIndex={beatIndexAt(t)} apart={apart} />
+      <MergeConflictLogo id="groove-logo" design={LOGO_DESIGN} resolved={false} cx={960} cy={520} width={1500} beat={bp - Math.floor(bp)} beatIndex={beatIndexAt(t)} apart={apart} />
     </g>
   );
 };

@@ -11,6 +11,7 @@ import { clamp01, type Hex, lerp, mixHex, outQuad } from '../../lib/ease.ts';
 import { seeded } from '../../lib/seeded.ts';
 import type { Token } from '../../lyrics/bind.ts';
 import { capOf, type Face, familyOf, layout, MONO_ADV, widthOf } from '../fonts.tsx';
+import { FRAME, FRAME_ALPHA, FRAME_W } from '../Scrim.tsx';
 import { GLOW } from '../Svg.tsx';
 import { clean, INK } from './common.tsx';
 
@@ -224,7 +225,11 @@ export const RunwayLine = ({ spec, t, pose }: { spec: RunwaySpec; t: number; pos
   // a dark backing on the floor under the typed part (round 7c: cyan glyphs on the blue runway read at ~1.5:1)
   const len = Math.max(1, n) * adv + adv * 0.6;
   const quad = [at(-adv * 0.4, -spec.size * 0.35), at(len, -spec.size * 0.35), at(len, spec.size * 1.45), at(-adv * 0.4, spec.size * 1.45)].map((q) => project(pose, q));
-  if (quad.every((q) => q.s >= 1 && Math.abs(q.x) < 6000 && Math.abs(q.y) < 6000)) glyphs.push(<polygon key="backing" points={quad.map((q) => `${q.x},${q.y}`).join(' ')} fill="#05030a" fillOpacity={0.72} />);
+  if (quad.every((q) => q.s >= 1 && Math.abs(q.x) < 6000 && Math.abs(q.y) < 6000)) {
+    // a light edge and a soft shadow carry the 3:1 on a bright floor (the shadow's alpha stays under the 0.5 the type layer counts)
+    const pts = quad.map((q) => `${q.x},${q.y}`).join(' ');
+    glyphs.push(<polygon key="shadow" points={pts} fill="none" stroke="#000" strokeOpacity={0.49} strokeWidth={56} strokeLinejoin="round" />, <polygon key="backing" points={pts} fill="#05030a" fillOpacity={0.72} stroke={FRAME} strokeOpacity={FRAME_ALPHA} strokeWidth={FRAME_W} strokeLinejoin="round" />);
+  }
   for (let i = 0; i < n; i++) {
     const ch = full[i] ?? ' ';
     if (ch === ' ') continue;

@@ -7,7 +7,7 @@
 import type { ReactNode } from 'react';
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { beatPos } from '../../timing.ts';
-import { Scrim } from '../Scrim.tsx';
+import { FRAME, FRAME_ALPHA, FRAME_W, Scrim } from '../Scrim.tsx';
 import { capOf, type Face, familyOf, layout } from '../fonts.tsx';
 import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, landScale, solidAt, tokensOf, visible } from './common.tsx';
 
@@ -78,7 +78,7 @@ export const Flap = ({ spec, t, cols = 16, backing = false }: { spec: FormSpec; 
 const sungPx = (toks: readonly { start: number; end: number }[], widths: readonly number[], t: number): number =>
   toks.reduce((a, tk, i) => a + (widths[i] as number) * Math.min(1, Math.max(0, (t - tk.start) / Math.max(0.05, tk.end - tk.start))), 0);
 
-export interface RingOptions { cx: number; cy: number; r: number; size: number; face?: Face; minSize?: number }
+export interface RingOptions { cx: number; cy: number; r: number; size: number; face?: Face; minSize?: number; /** a dark band along the arc with a light edge and a soft shadow, for a plate as bright as the letters */ backing?: boolean }
 /** The arc the RING uses: 220 degrees over the top, so every letter stays upright (no upside-down bottom). */
 const ARC0 = -Math.PI - 0.35;
 const ARC = Math.PI + 0.7;
@@ -103,8 +103,17 @@ export const Ring = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: RingOpt
   const total = widths.reduce((a, b) => a + b, 0);
   const scroll = Math.max(0, Math.min(total - arcLen, sungPx(toks, widths, t) - arcLen * 0.85));
   let s = -scroll + Math.max(0, (arcLen - total) / 2);
+  const a1 = ARC0 + ARC;
+  const arc = `M ${opt.cx + Math.cos(ARC0) * opt.r} ${opt.cy + Math.sin(ARC0) * opt.r} A ${opt.r} ${opt.r} 0 1 1 ${opt.cx + Math.cos(a1) * opt.r} ${opt.cy + Math.sin(a1) * opt.r}`;
   return (
     <g fontFamily={familyOf(face)}>
+      {opt.backing && t >= (toks[0]?.start ?? 0) && (
+        <g fill="none" strokeLinecap="round">
+          <path d={arc} stroke="#000" strokeOpacity={0.49} strokeWidth={size * 1.9 + 2 * FRAME_W + 56} />
+          <path d={arc} stroke={FRAME} strokeOpacity={FRAME_ALPHA} strokeWidth={size * 1.9 + 2 * FRAME_W} />
+          <path d={arc} stroke="#07040c" strokeOpacity={0.8} strokeWidth={size * 1.9} />
+        </g>
+      )}
       {letters.map((l, i) => {
         const mid = s + l.adv / 2;
         s += l.adv;
