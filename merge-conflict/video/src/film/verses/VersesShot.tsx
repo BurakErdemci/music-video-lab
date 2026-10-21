@@ -16,7 +16,7 @@ import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { FLOOR_Y } from '../../stage/floor.ts';
 import { barPos, downbeats, sec, sectionNamed } from '../../timing.ts';
-import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
+import { clipKind, SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { RunwayLine } from '../../type/forms/Mega.tsx';
 import { Svg } from '../../type/Svg.tsx';
@@ -58,7 +58,7 @@ const COLORS: Record<VerseScene, [Hex, Hex]> = {
 };
 const TRANSITIONS: TransitionSpec[] = VSHOTS.map((s, i) => {
   const cover = i === 0 || (VSHOTS[i - 1] as VShot).scene !== s.scene;
-  return { id: `v-tr-${s.id}`, kind: cover ? (s.into ?? 'streaks') : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
+  return { id: `v-tr-${s.id}`, kind: cover ? clipKind(s.into ?? 'streaks', false, i) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
 });
 
 // orange gathers out of particles as the intruder (done on "you?")

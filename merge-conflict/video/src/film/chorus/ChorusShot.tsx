@@ -14,7 +14,7 @@ import { Dissolve, dissolvePlan } from '../../particles/dissolve.tsx';
 import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { barPos, sec } from '../../timing.ts';
-import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
+import { clipKind, SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { PlateLayer } from '../../worlds/plate.tsx';
@@ -70,7 +70,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
   const TRANSITIONS: TransitionSpec[] = P.SHOTS.map((s, i) => {
     const prev = P.SHOTS[i - 1];
     const cover = !prev || prev.scene !== s.scene;
-    const kind = cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock';
+    const kind = cover ? clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), false, i) : 'shock';
     return { id: `ch${v}-tr-${s.id}`, kind, at: s.t, pre: cover ? 4 / 60 : 0, post: cover ? 8 / 60 : 14 / 60, colors: COLORS[s.scene], origin: s.origin ?? (cover ? undefined : SHOCK_ORIGIN) };
   });
 

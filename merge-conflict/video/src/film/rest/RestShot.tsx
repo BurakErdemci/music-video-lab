@@ -18,7 +18,7 @@ import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { FLOOR_Y } from '../../stage/floor.ts';
 import { barPos, sec, sectionNamed } from '../../timing.ts';
-import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
+import { clipKind, SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { familyOf } from '../../type/fonts.tsx';
 import { Svg } from '../../type/Svg.tsx';
@@ -57,7 +57,7 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
 const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
   const i = RSHOTS.indexOf(s);
   const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
-  return { id: `r-tr-${s.id}`, kind: cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
+  return { id: `r-tr-${s.id}`, kind: cover ? clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), s.t >= SCREAM.start, i) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
 });
 
 const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;

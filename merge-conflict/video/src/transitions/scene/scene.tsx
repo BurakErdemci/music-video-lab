@@ -10,6 +10,9 @@ import { GLOW } from '../../type/Svg.tsx';
 
 export type TransitionKind = 'streaks' | 'mirror' | 'shatter' | 'ink' | 'diff' | 'tunnel' | 'shock' | 'dissolve' | 'laser' | 'glitch' | 'fire' | 'tear';
 
+/** Halftone-dot ('mirror') and torn-paper ('ink') covers are retired: disco parts get glitch/laser, metal parts fire/tear, alternating by shot index. */
+export const clipKind = (kind: TransitionKind, metal: boolean, i: number): TransitionKind => (kind === 'mirror' || kind === 'ink' ? (metal ? (i % 2 === 0 ? 'fire' : 'tear') : i % 2 === 0 ? 'glitch' : 'laser') : kind);
+
 export interface TransitionSpec {
   id: string;
   kind: TransitionKind;
