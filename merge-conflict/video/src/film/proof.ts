@@ -13,9 +13,8 @@
 //  16.88    "I'm HEAD, I'm main, I'm stable and clean" as STACK beside her (knee-up); she KICKS "HEAD" off on
 //           "stable"; a small full figure on the next downbeat but one; CLEAN morphs into LINE, which opens
 //           "Line forty-two..." as a DIFF.
-import { HOME } from '../camera/camera.ts';
+import { type CameraPath, type CameraPose, drift, HOME, HOME_Z, punched, shifted } from '../camera/camera.ts';
 import type { Placement } from '../cards/Card.tsx';
-import { smearPlan } from '../cards/smear.tsx';
 import { at } from '../events.ts';
 import { whiteoutSwings, type WhiteoutSpec } from '../fx/whiteout.tsx';
 import { framingPlan } from '../girls/framing.ts';
@@ -88,11 +87,6 @@ export const KICK = kickPlan({
   at: VERSE_B,
   dir: 1,
 });
-/** The blue girl's verse track: the kick, then the next pose on the next downbeat but one. */
-export const VERSE_SMEARS = [
-  smearPlan({ id: 'kick-head', t: at('kick-head'), from: GIRL.B.verse, to: GIRL.B.kick, dir: 1, frames: 8 }),
-  smearPlan({ id: 'pose-bd1', t: at('pose-bd1'), from: GIRL.B.kick, to: GIRL.B.next, dir: -1, frames: 10 }),
-];
 const cleanAt = stackLayout(STACK2, at('morph-line')).find((w) => w.tok === 7);
 if (!cleanAt) throw new Error('proof: the STACK has no CLEAN');
 export const DIFF3: FormSpec = { id: 'verse-3', line: 3, key: 5, singer: 'B', t0: at('tok-3-0'), t1: 30, box: { x: 600, y: 300, w: 1260, h: 460 } };
@@ -121,6 +115,36 @@ export const FRAMINGS = framingPlan(
   ],
   PROOF_END,
 );
+
+// ---- the camera: every held shot moves continuously (round 4); the groove adds a fov punch every 2 beats --------
+const LOW: CameraPose = { position: [0, -2.6, HOME_Z - 3], target: [0, 1.2, 0], fov: 46 };
+const lift = (p: CameraPose, dy: number): CameraPose => ({ ...p, position: [p.position[0], p.position[1] + dy, p.position[2]], target: [p.target[0], p.target[1] + dy * 0.6, p.target[2]] });
+/** One move per framing cue, in cue order: from -> to over the cue's span; typeZ is the type layer's depth. */
+export const CAMERA: readonly { from: CameraPose; to: CameraPose; typeZ: number; move: string }[] = [
+  { from: HOME, to: shifted(HOME, [-0.5, 0.25, -1.0]), typeZ: 0.8, move: 'slow push-in toward her' },
+  { from: shifted(HOME, [-1.2, 1.0, -4.5]), to: shifted(HOME, [-0.9, 1.15, -5.3]), typeZ: 0.8, move: 'cut closer, slow push-in on her face' },
+  { from: shifted(HOME, [-1.2, 0, -0.4]), to: shifted(HOME, [1.2, 0, -0.4]), typeZ: 1, move: 'lateral dolly left to right (parallax)' },
+  { from: HOME, to: shifted(HOME, [0, 0.2, -2.2]), typeZ: 1, move: 'push-in through the clones' },
+  { from: LOW, to: lift(LOW, 0.9), typeZ: 1, move: 'low angle, vertical rise' },
+  { from: shifted(HOME, [0.8, 0.3, -0.6]), to: shifted(HOME, [-0.6, 0.3, -1.2]), typeZ: 0, move: 'lateral dolly and push past her' },
+  { from: shifted(HOME, [0, 0.4, -1.8]), to: shifted(HOME, [0, 0.2, 0.6]), typeZ: 1, move: 'pull-out from the logo' },
+  { from: shifted(HOME, [0, -0.6, -0.6]), to: shifted(HOME, [0, 0.6, -1.0]), typeZ: 1, move: 'vertical travel up and push' },
+  { from: HOME, to: shifted(HOME, [0.6, 0.15, -1.1]), typeZ: 0.8, move: 'slow push-in toward the STACK' },
+  { from: shifted(HOME, [0.3, 0.4, 0]), to: shifted(HOME, [1.1, 0.4, -0.4]), typeZ: 0.8, move: 'lateral dolly past the kick' },
+];
+/** The camera at t: the shot's pose, its base pose (the type layer is authored in its screen space) and depth. */
+export const cameraAt = (t: number): { pose: CameraPose; base: CameraPose; typeZ: number } => {
+  let i = 0;
+  while (i < FRAMINGS.length - 1 && t >= (FRAMINGS[i + 1] as { t: number }).t - 1e-9) i++;
+  const c = CAMERA[i];
+  if (!c) throw new Error(`no camera for framing ${i}`);
+  const t0 = (FRAMINGS[i] as { t: number }).t;
+  const t1 = (FRAMINGS[i + 1] as { t: number } | undefined)?.t ?? PROOF_END;
+  let path: CameraPath = drift(c.from, c.to, t0, t1);
+  if (t >= GROOVE.start && t < VERSE.start) path = punched(path, GROOVE_HITS, 0.05);
+  return { pose: path(t), base: c.from, typeZ: c.typeZ };
+};
+if (CAMERA.length !== FRAMINGS.length) throw new Error(`proof: ${CAMERA.length} camera moves for ${FRAMINGS.length} framings`);
 
 // ---- flash budget ------------------------------------------------------------------------------------------
 export const WHITEOUTS: readonly WhiteoutSpec[] = [

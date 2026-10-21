@@ -11,12 +11,12 @@
 // plus a metal hit (brush slashes) on every second beat.
 import type { ReactNode } from 'react';
 import { AbsoluteFill } from 'remotion';
-import { HOME } from '../camera/camera.ts';
+import { typePlane } from '../camera/camera.ts';
 import { Card } from '../cards/Card.tsx';
 import { at } from '../events.ts';
 import { framingAt } from '../girls/framing.ts';
 import { silhouetteD } from '../girls/silhouette.ts';
-import { framing, waistUp } from '../girls/staging.tsx';
+import { waistUp } from '../girls/staging.tsx';
 import { GRADES, type Grade, metalGrade } from '../grade/grade.ts';
 import { clamp01, type Hex, outQuad } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
@@ -31,7 +31,7 @@ import { MergeConflictLogo } from '../type/logo/Logo.tsx';
 import { Slam } from '../type/Slam.tsx';
 import { Svg } from '../type/Svg.tsx';
 import { ThroughCounter, TypeWhip } from '../type/transitions/transitions.tsx';
-import { COUNTER_DIVE, FRAMINGS, GROOVE_BIG, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, LOGO_DESIGN, OURS, WHIP_GROOVE, WHIP_OUT } from './proof.ts';
+import { cameraAt, COUNTER_DIVE, FRAMINGS, GROOVE_BIG, GROOVE_CARDS, GROOVE_HITS, GROOVE_O, LINE1, LOGO_DESIGN, OURS, WHIP_GROOVE, WHIP_OUT } from './proof.ts';
 
 const RED: Hex = '#e01b1b';
 const STEEL: Hex = '#c8ced6';
@@ -135,8 +135,10 @@ export const Groove = ({ frame }: { frame: number }) => {
   else if (kind === 'knee') cards = <Card id={C.knee} t={t} grade={silGrade(grade, 2.6)} {...GROOVE_BIG} rimDir={[-1, 0.2]} {...SILHOUETTE} />;
   else if (kind === 'tiny') cards = <Card id={C.tiny} t={t} grade={sil} x={0} height={2.6} {...SILHOUETTE} />;
   else cards = <Card id={C.waist} t={t} grade={silGrade(grade, 2.4)} {...waistUp(4.4, 13)} rimDir={[-1, 0.2]} {...SILHOUETTE} />;
-  const lowGirl = { full: C.low, close: C.low, color: RED };
-  const pose = kind === 'low' ? framing('low', t, lowGirl, lowGirl).pose : HOME;
+  // the camera moves continuously in every framing, with a fov punch every second beat (proof.ts cameraAt)
+  const cam = cameraAt(t);
+  const pose = cam.pose;
+  const plane = typePlane(pose, cam.base, cam.typeZ);
   const oursT = at('slam-ours');
   const theirsT = at('slam-theirs');
   const splitT = at('split-theirs');
@@ -151,7 +153,8 @@ export const Groove = ({ frame }: { frame: number }) => {
     </g>
   );
   // from bar 8 THEIRS sits BEHIND the big silhouette: masked by her rig-deformed outline
-  const behind = kind === 'knee' ? silhouetteD(C.knee, GROOVE_BIG, HOME, t) : '';
+  // the type plane of this framing sits at z = 0 with her, so her outline in the base screen masks it exactly
+  const behind = kind === 'knee' ? silhouetteD(C.knee, GROOVE_BIG, cam.base, t) : '';
   const theirsLayer = (
     <g mask={behind ? 'url(#behind-her)' : undefined}>
       {behind && (
@@ -185,7 +188,9 @@ export const Groove = ({ frame }: { frame: number }) => {
       <Svg>
         <FormDefs />
         <Slashes t={t} />
-        <TypeWhip plan={WHIP_OUT} t={t} color={RED} from={<TypeWhip plan={WHIP_GROOVE} t={t} color={RED} from={<Flap spec={{ ...LINE1, t1: Infinity }} t={t} cols={13} />} to={typeLayer} />} to={null} />
+        <g transform={plane.transform}>
+          <TypeWhip plan={WHIP_OUT} t={t} color={RED} from={<TypeWhip plan={WHIP_GROOVE} t={t} color={RED} from={<Flap spec={{ ...LINE1, t1: Infinity }} t={t} cols={13} />} to={typeLayer} />} to={null} />
+        </g>
       </Svg>
     </AbsoluteFill>
   );

@@ -65,9 +65,8 @@ export const EVENTS: FilmEvent[] = [
   ev('whip-verse', 'type-change', 'downbeat', 12),
   ev('blue-enter', 'card', 'downbeat', 12),
   ...tokens(2, 8, 'type'),
-  ev('kick-head', 'kick', 'token', '2:5'),
+  ev('kick-head', 'kick', 'downbeat', 14),
   ev('framing-stage-2', 'framing', 'downbeat', 14),
-  ev('pose-bd1', 'smear', 'downbeat', 14),
   ev('morph-line', 'transition', 'token', '2:7'),
   ...tokens(3, 2, 'type'),
 ];
