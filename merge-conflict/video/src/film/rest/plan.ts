@@ -98,6 +98,23 @@ const METAL: MShot[] = [
   { id: 'solo-end', t: bar(9), scene: 'cathedral', cam: 'wide', into: 'tunnel', move: 'orbit', B: ['BS3', full(-2.2, 5.0)], O: ['OS2', full(2.2, 5.2)] },
   { id: 'solo-end-faces', t: half(9), scene: 'duel', cam: 'close', into: 'shatter', move: 'dollyzoom', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
 ];
+// the solo's cut rate doubles (round 7c, "Living motion"): every solo shot of two beats or more gets a second
+// framing on its middle beat, the same girls from another angle (paintings excepted)
+const ALT: Record<CamVariant, CamVariant> = { hero: 'low', low: 'hero', wide: 'close', close: 'hero', reverse: 'hero' };
+{
+  const solo = METAL.filter((m) => m.t >= SOLO.start - 1e-6);
+  for (const [i, m] of solo.entries()) {
+    const end = solo[i + 1]?.t ?? SOLO.end;
+    const mid = bt(m.t + (end - m.t) / 2 - 0.05);
+    if (m.scene === 'panel' || mid - m.t < 0.3 || end - mid < 0.3) continue;
+    // a low angle under a full figure with the solo's push loses her feet; the faces take it, the stages reverse
+    const face = m.scene === 'faceO' || m.scene === 'faceB' || m.scene === 'duel' || m.scene === 'scream';
+    // (the tunnel's reverse starts deep inside it, past the girls: it widens instead)
+    const cam = ALT[m.cam] === 'low' && !face ? (m.scene === 'tunnel' ? 'wide' : 'reverse') : ALT[m.cam];
+    METAL.push({ id: `${m.id}-b`, t: mid, scene: m.scene, cam, into: 'shock', move: m.move });
+  }
+  METAL.sort((x, y) => x.t - y.t);
+}
 const metalPoses = (who: 'B' | 'O'): RPose[] =>
   METAL.flatMap((m) => {
     const w = m[who];
