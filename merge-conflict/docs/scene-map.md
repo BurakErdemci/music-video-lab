@@ -213,3 +213,5 @@ Burak: "the raspy voice is full metal everywhere except her first verse, screami
 
 - **Type and transitions follow the same split** (Burak: "pop transitions in the pop parts, metal transitions in the metal parts"). A solo line takes the style of its singer's costume at that moment. A `both` line takes the style of the set (`metalAt`).
 - **Signature moment:** "Merge conflict, merge conflict" (49.14, 59.60, 91.68, 102.08 s) uses one type move every time; at 176.80 s ("Merge conflict resolved inside my soul") the same move returns resolved, the two colours joined.
+
+- **Logo (Burak, 2026-10-21):** design **B**, the split word (blue-chrome disco half against orange-flame metal half, cut on a diagonal with diff marks). Code: `video/src/type/logo/Logo.tsx`; resolved state for 176.80 s.
