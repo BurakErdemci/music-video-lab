@@ -33,13 +33,13 @@ partly built; no 7c proof has been rendered yet.
   it and will commit `video/public/cards/frames.json` alone.
   - Format: `{id: {face:[x0,y0,x1,y1], action:[...], kind:'bust'|'full'}}`, normalised to the card PNG with y down.
   - Verify a sample visually before trusting it.
-- **New cover transitions** (Gemini item 4): a Sonnet lane is adding the kinds `laser` and `glitch` (disco) and `fire`
-  and `tear` (metal) to `transitions/scene/scene.tsx` plus TransLab.
-  - Its TransLab render (`out/translab-r7c.mp4`, pid 33408) was running at handoff and belongs to that lane.
-  - It will commit only scene.tsx and TransLab.tsx; those two files show as modified in the tree until then.
-  - After it lands, nothing uses the new kinds yet. Remap in the three shot transition builders
-    (ChorusShot/VersesShot/RestShot): `mirror -> laser`, and `ink -> glitch` (disco) or `fire`/`tear` (metal).
-    0-64 may change only for this item.
+- **New cover transitions** (Gemini item 4): landed after the handoff in 34d2ec1, which touches only
+  `transitions/scene/scene.tsx` and TransLab.
+  - New kinds: `laser` and `glitch` (disco), `fire` and `tear` (metal); each covers the frame fully at the cut at a mean
+    luminance of 0.28-0.46.
+  - TransLab passes the flash check only after its fake A/B backdrop was lightened; its worst window sits at 3.
+  - Nothing uses the new kinds yet. Remap in the three shot transition builders (ChorusShot/VersesShot/RestShot):
+    `mirror -> laser`, and `ink -> glitch` (disco) or `fire`/`tear` (metal). 0-64 may change only for this item.
 - The modified `video/public/plates/*.png` in the tree are not mine (the resolution rule, coordinator). Untouched.
 
 ## Not started
