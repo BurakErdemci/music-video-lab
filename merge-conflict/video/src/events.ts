@@ -5,7 +5,9 @@
 // 'word': ref = "<text>#<nth>"; 'token': ref = "<line>:<token>" (the token's time through the token map).
 // t is the scene-clock time in seconds the event fires at. Erasable TypeScript only: node loads this file.
 import { bindLine } from './lyrics/bind.ts';
-import { acceptHook, beat, downbeat, lines, word, words } from './timing.ts';
+import { acceptHook, beat, beats, downbeat, lines, sectionNamed, word, words } from './timing.ts';
+
+const beatsIn = (a: number, b: number): number[] => beats.map((x, i) => [x, i] as const).filter(([x]) => x >= a && x < b).map(([, i]) => i);
 
 export type EventAnchor = 'beat' | 'downbeat' | 'hook' | 'word' | 'token';
 export interface FilmEvent { id: string; anchor: EventAnchor; ref: number | string; t: number; kind: string }
@@ -26,6 +28,9 @@ const timeOf = (anchor: EventAnchor, ref: number | string): number => {
 const ev = (id: string, kind: string, anchor: EventAnchor, ref: number | string): FilmEvent => ({ id, anchor, ref, t: timeOf(anchor, ref), kind });
 const tokens = (line: number, n: number, kind: string): FilmEvent[] => Array.from({ length: n }, (_, k) => ev(`tok-${line}-${k}`, kind, 'token', `${line}:${k}`));
 
+/** Beats of chorus 1 (42.90-64.15 s) with an even index: the chorus pulse. */
+const CHORUS = sectionNamed('chorus1');
+const CHORUS_PULSES = beatsIn(CHORUS.start, CHORUS.end).filter((b) => b % 2 === 0);
 /** intro_groove (4.37-16.33 s, hard metal by Burak's ear): a metal hit on every second beat, 13..47. */
 const GROOVE_HITS = Array.from({ length: 18 }, (_, k) => 13 + 2 * k);
 
@@ -65,12 +70,46 @@ export const EVENTS: FilmEvent[] = [
   ev('whip-verse', 'type-change', 'downbeat', 12),
   ev('blue-enter', 'card', 'downbeat', 12),
   ...tokens(2, 8, 'type'),
-  // anticipation then release on the word: a crouch on "I'm", the kick on "stable" (camera punch, low angle)
-  ev('kick-anticipate', 'card', 'token', '2:4'),
+  // anticipation then release on the word: a crouch on "main" (about half a bar), the kick on "stable"
+  ev('kick-anticipate', 'card', 'token', '2:3'),
   ev('kick-head', 'kick', 'token', '2:5'),
   ev('framing-stage-2', 'framing', 'token', '2:5'),
   ev('morph-line', 'transition', 'token', '2:7'),
-  ...tokens(3, 2, 'type'),
+  ...tokens(3, 10, 'type'),
+  ev('framing-v1-low', 'framing', 'downbeat', 15),
+  ev('framing-v1-waist', 'framing', 'downbeat', 16),
+  ...tokens(4, 8, 'type'),
+  ev('framing-v1-face', 'framing', 'downbeat', 18),
+  ...tokens(5, 8, 'type'),
+  // orange's first real entrance, the intruder: anticipation on "who", release on "you?"
+  ev('orange-anticipate', 'card', 'token', '5:5'),
+  ev('orange-release', 'card', 'token', '5:7'),
+  // verse 2 (orange, disco)
+  ...tokens(6, 8, 'type'),
+  ev('framing-v2-waist', 'framing', 'downbeat', 22),
+  ...tokens(7, 10, 'type'),
+  ev('framing-v2-split', 'framing', 'downbeat', 24),
+  ...tokens(8, 9, 'type'),
+  ev('framing-v2-low', 'framing', 'downbeat', 26),
+  ev('framing-v2-stage', 'framing', 'downbeat', 27),
+  ...tokens(9, 8, 'type'),
+  // pre-chorus: the ping-pong, then orange's metal transformation on "ORANGE!"
+  ...tokens(10, 1, 'type'),
+  ...tokens(11, 1, 'type'),
+  ...tokens(12, 1, 'type'),
+  ...tokens(13, 1, 'type'),
+  ev('framing-pre-both', 'framing', 'downbeat', 31),
+  ...tokens(14, 3, 'type'),
+  // chorus 1
+  ev('framing-c1', 'framing', 'downbeat', 32),
+  ...[15, 16, 17, 18, 19, 20, 21, 22].flatMap((l) => tokens(l, lines[l]?.text.split(/\s+/).filter(Boolean).length ?? 0, 'type')),
+  ev('framing-c3', 'framing', 'downbeat', 34),
+  ev('framing-c7', 'framing', 'downbeat', 39),
+  ev('framing-c8', 'framing', 'downbeat', 41),
+  ev('framing-c9', 'framing', 'downbeat', 42),
+  ev('framing-c13', 'framing', 'downbeat', 47),
+  // a visible pulse (camera punch on the metal half, the flames, the buttons' glow) on every second chorus beat
+  ...CHORUS_PULSES.map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b)),
 ];
 
 const BY_ID = new Map(EVENTS.map((e) => [e.id, e]));
