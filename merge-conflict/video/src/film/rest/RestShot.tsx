@@ -26,7 +26,7 @@ import { SUBWAY_CAMERA, SubwayWorld, TERMINAL_CAMERA, TerminalWorld } from '../.
 import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
 import { BLAME_CAMERA, BLAME_GUTTERS, BlameWorld, CALLGRID_CAMERA, CallGridWorld, COUNTDOWN_FRAME, PIPELINE_CAMERA, PipelineWorld, SQUASH_CAMERA, SquashWorld } from '../../worlds/v3.tsx';
 import { CASE_LINE, GUILTY_TAG, LASERCASE_CAMERA, LaserCaseWorld, NAMETAG_CAMERA, NameTagWorld, WHISPER_CAMERA, WhisperWorld, WHITESPACE_CAMERA, WhitespaceWorld } from '../../worlds/v4.tsx';
-import { Arena, CYAN, InsertWorld, pulseAt, RED, SplitWorld } from '../chorus/worlds.tsx';
+import { Arena, CYAN, InsertWorld, RED, SplitWorld } from '../chorus/worlds.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BLUE_METAL_AT, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
 import { type Box, RestType } from './type.tsx';
@@ -48,7 +48,8 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
   cathedral: ['#c81e2a', '#e9620b'], forge: ['#e9320b', '#ffb020'], warning: ['#ff2217', '#c84a10'], pushface: ['#ff2217', '#e9620b'], whisper: ['#2a3a6a', '#4a5a8a'],
   tunnel: ['#e9320b', '#c81e2a'], arena: ['#2d63fb', '#e92645'], duel: ['#226de5', '#ff2222'],
 };
-const TRANSITIONS: TransitionSpec[] = RSHOTS.map((s, i) => {
+const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
+  const i = RSHOTS.indexOf(s);
   const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
   return { id: `r-tr-${s.id}`, kind: cover ? (s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks')) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: COLORS[s.scene] };
 });
@@ -87,7 +88,6 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : heavy || t >= SOLO.start ? 0.07 : 0.05;
   const pose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
   const plane = typePlane(pose, planeBase, 1);
-  const p = pulseAt(t) * 0.35;
   // anchors: where the world's objects sit on the type plane's screen
   const P = (v: Vec3) => project(planeBase, v);
   const rect = (r: { centre: Vec3; width: number; height: number }): Box => {
@@ -167,7 +167,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
       <Stage pose={pose}>
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} />}
         {world}
-        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.6 + p} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
+        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.7} hueMix={0.5} metal={t >= SCREAM.start ? 0.7 : 0.3} bursts={bursts} />}
         {blueFig}
         {figure('O', orangeP)}
         {turn.active && <Dissolve plan={BLUE_TURN} t={t} grade={BLUE_METAL} />}
@@ -180,6 +180,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
         </g>
         <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
         {scene === 'warning' && <WarningScreen t={t} t0={shot.t} />}
+        {/* out of the whisper's near-black the solo opens up over 0.6 s instead of jumping bright (a flash pair) */}
+        {t >= SOLO.start && t < SOLO.start + 0.6 && <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={0.8 * (1 - (t - SOLO.start) / 0.6)} />}
         {TRANSITIONS.map((s) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;

@@ -12,7 +12,8 @@ export type RestScene =
   | 'rails' | 'subway' | 'squash' | 'blame' | 'pipeline' | 'callgrid'
   | 'whitespace' | 'nametag' | 'lasercase' | 'scream' | 'cathedral' | 'forge' | 'warning' | 'pushface' | 'whisper' | 'tunnel' | 'arena' | 'duel';
 export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
-export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind }
+/** `fade`: the cut is carried by a fade up from black instead of a cover (out of the whisper's near-black). */
+export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; fade?: boolean }
 export interface RPose { t: number; card: string | null; at?: Placement }
 
 const tk = (line: number, k: number) => at(`tok-${line}-${k}`);
@@ -65,7 +66,8 @@ export const RSHOTS: RShot[] = [
   // the whisper: the quietest frame of the clip
   { id: 'whisper', t: WHISPER.start, scene: 'whisper', cam: 'hero', into: 'dissolve' },
   // the solo: the dance duel, cuts on the riff through the metal worlds
-  { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', into: 'streaks' },
+  // the fade up out of the whisper carries this cut (RestShot); a cover on top of it would flash
+  { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', fade: true },
   { id: 'solo-forge-2', t: bt(SOLO.start + 0.66), scene: 'forge', cam: 'close', into: 'shock' },
   { id: 'solo-cathedral', t: db(SOLO.start + 1.3), scene: 'cathedral', cam: 'hero', into: 'shatter' },
   { id: 'solo-cathedral-2', t: bt(SOLO.start + 2.0), scene: 'cathedral', cam: 'low', into: 'shock' },
