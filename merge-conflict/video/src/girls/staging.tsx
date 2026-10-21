@@ -81,6 +81,15 @@ export const framing = (kind: FramingKind, t: number, singer: Girl, other: Girl)
   }
 };
 
+/** The pose-per-bar pool of each girl: the 16 disco dance cards first (hip-bump, arm-roll, strut, Y-arms,
+ *  crouch-snap, kick, point-cross, shimmy), then the full-figure poses of the first set. */
+export const DANCE_POOL = {
+  B: ['BD1', 'BD2', 'BD3', 'BD4', 'BD5', 'BD6', 'BD7', 'BD8', 'B03', 'B04', 'B07', 'B10'],
+  O: ['OD1', 'OD2', 'OD3', 'OD4', 'OD5', 'OD6', 'OD7', 'OD8', 'O06', 'O07', 'O08', 'O12'],
+} as const;
+/** The kick card of each girl, for KICK. */
+export const KICK_CARD = { B: 'BD6', O: 'OD6' } as const;
+
 // ---- pose per bar with ghost trails --------------------------------------------------------------------
 export interface PoseBarPlan { id: string; cards: readonly string[]; first: number; bars: number; color: Hex; smears: SmearPlan[] }
 /** A new pose on each of `bars` downbeats from downbeat index `first`, cycling through `cards`. */

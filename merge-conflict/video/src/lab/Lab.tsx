@@ -30,7 +30,7 @@ import type { Hex } from '../lib/ease.ts';
 import { downbeat } from '../timing.ts';
 import { HoopType, type HoopPlan, kickCards, kickPlan, KickWord, perchDy, perchPlacement, perchVisible, PerchWord, RevealBoard, type RevealPlan, revealDone, throwPlan, throwRecoil, ThrowWords } from '../girls/interact.tsx';
 import { Fill, Knockout } from '../girls/inside.tsx';
-import { focusAt, focusLook, focusPlan, framing, type FramingKind, framingPlan, type Girl, poseBarDraws, poseBarPlan } from '../girls/staging.tsx';
+import { DANCE_POOL, focusAt, focusLook, focusPlan, framing, type FramingKind, framingPlan, type Girl, poseBarDraws, poseBarPlan } from '../girls/staging.tsx';
 import { hueAt, keyFill } from '../type/forms/common.tsx';
 import { LightBox } from '../type/LightBox.tsx';
 import { Slam } from '../type/Slam.tsx';
@@ -378,7 +378,7 @@ const W3 = lineTokens(3);
 const tok = (line: readonly Token[], i: number) => line[i] as Token;
 
 const KICK_AT: Placement = { x: -1.6, height: 6.6 };
-const KICK = kickPlan({ id: 'lab-kick', word: { text: 'HEAD', x: 980, y: 900, size: 230, face: 'display', fill: '#19c8ff' }, tok: tok(W0, 1), kick: tok(W0, 3).start, idle: 'B03', kickCard: 'B12', at: KICK_AT, dir: 1 });
+const KICK = kickPlan({ id: 'lab-kick', word: { text: 'HEAD', x: 980, y: 900, size: 230, face: 'display', fill: '#19c8ff' }, tok: tok(W0, 1), kick: tok(W0, 3).start, idle: 'BD3', kickCard: 'BD6', at: KICK_AT, dir: 1 });
 const PERCH = { id: 'lab-perch', word: { text: 'HEAD', x: 300, y: 1010, size: 520, face: 'bungee' as const, fill: '#ff7a1a' as Hex }, letter: 2, tok: tok(W0, 1), land: tok(W0, 3).start, card: 'O11', height: 4.6, pose: HOME };
 const HOOP_AT: Placement = { x: 0, height: 7 };
 const hoopPlan = (): HoopPlan => ({ id: 'lab-hoop', tokens: W3.slice(0, 5), key: 2, card: 'O06', at: HOOP_AT, pose: HOME, rx: 360, ry: 80, size: 72, speed: 1.7, fill: (i) => hueAt('O', 0, i), keyFill: keyFill('O') });
@@ -414,7 +414,7 @@ const framingSeg = (kind: FramingKind, title: string) => {
     return { pose: f.pose, split: f.split, cards: f.cards.map(({ key, ...c }) => <Card key={key} grade={gradeOf(c.id)} {...c} />) };
   }, (st) => <Stack spec={{ id: `fr-${kind}`, line: 0, key: 1, singer: 'B', t0: -Infinity, t1: Infinity, box: { x: 260, y: 200, w: 1400, h: 620 } }} t={st} />);
 };
-const POSEBAR = poseBarPlan('lab-posebar', ['B03', 'B04', 'B07', 'B02'], 7, 2, '#19c8ff');
+const POSEBAR = poseBarPlan('lab-posebar', DANCE_POOL.B, 7, 2, '#19c8ff');
 const POSE_AT: Placement = { x: 0, height: 7 };
 
 const GIRLS: Segment[] = [
@@ -454,7 +454,7 @@ const GIRLS: Segment[] = [
   framingSeg('low', 'framing LOW: low angle'),
   framingSeg('clones', 'framing CLONES: five copies, phase-offset in the dance'),
   framingSeg('split', 'framing SPLIT: one girl per half'),
-  girlSeg('posebar', 'girls POSE PER BAR: a new pose each downbeat, ghost trails fade over a beat', downbeat(7) - 0.4, (st) => ({
+  girlSeg('posebar', 'girls POSE PER BAR: a new dance card each downbeat, ghost trails fade over a beat', downbeat(7) - 0.4, (st) => ({
     pose: HOME,
     cards: poseBarDraws(POSEBAR, st, POSE_AT.height).map((d, i) =>
       draw(d, POSE_AT, st, `pb${i}`, d.ghost !== undefined ? { flat: { color: POSEBAR.color, mix: 0.85 }, soft: 0.3 } : {}),
