@@ -4,7 +4,7 @@
 import { useThree } from '@react-three/fiber';
 import { useLayer } from '../layer.ts';
 import { ThreeCanvas } from '@remotion/three';
-import { type ReactNode, useLayoutEffect, useMemo } from 'react';
+import { createContext, type ReactNode, useContext, useLayoutEffect, useMemo } from 'react';
 import type { IUniform, PerspectiveCamera, ShaderMaterial } from 'three';
 import { type CameraPose, H, W } from '../camera/camera.ts';
 
@@ -25,10 +25,19 @@ const CameraRig = ({ pose }: { pose: CameraPose }) => {
 
 export const Stage = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (useLayer() === 'type' ? null : <StageCanvas pose={pose}>{children}</StageCanvas>);
 
+/** The frame's camera pose for elements that stand relative to it (the plates, worlds/plate.tsx). The provider sits
+ *  inside the canvas: React contexts do not cross into the three.js reconciler from outside. */
+const PoseContext = createContext<CameraPose | null>(null);
+export const useStagePose = (): CameraPose => {
+  const p = useContext(PoseContext);
+  if (!p) throw new Error('useStagePose outside a <Stage>');
+  return p;
+};
+
 const StageCanvas = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (
   <ThreeCanvas width={W} height={H} flat linear camera={{ fov: pose.fov, near: 0.1, far: 200, position: pose.position }} gl={{ antialias: true }}>
     <CameraRig pose={pose} />
-    {children}
+    <PoseContext.Provider value={pose}>{children}</PoseContext.Provider>
   </ThreeCanvas>
 );
 

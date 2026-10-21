@@ -1,16 +1,16 @@
 // Painted world plates (W01-W11, approved for a trial on 21 Oct 2026) as the back layer of the code-built worlds.
-// A plate is laid on two planes facing the shot's opening camera: a far plane covering the whole frame, and a
-// near plane at the same angular size showing only the plate's floor (its lower 42 %, faded at the top). At the
-// opening pose they coincide; as the camera travels the floor slides faster than the far wall, so the painting
-// keeps depth. The neon, particles and girls of the world stand in front.
+// A plate is laid on two planes facing the frame's camera (round 7c: placed by worlds/plategeo.ts so it never
+// shows above 1.25x its pixels at 2K): a far plane covering the whole frame, and a near plane showing only the
+// plate's floor (its lower 42 %, faded at the top). At the opening pose they coincide; as the camera travels the
+// floor slides further than the far wall, so the painting keeps depth. The neon, particles and girls of the world stand in front.
 // A world draws <PlateBackdrop plate={...} />: with no plate the dark code backdrop, with 'shot' nothing (the shot
 // draws <PlateLayer/> itself).
 import { useLoader } from '@react-three/fiber';
-import { useMemo } from 'react';
 import { staticFile } from 'remotion';
 import { Matrix4, NoColorSpace, Quaternion, TextureLoader, Vector3 } from 'three';
-import { type CameraPose, H, W } from '../camera/camera.ts';
-import { useUniforms } from '../stage/Stage.tsx';
+import type { CameraPose } from '../camera/camera.ts';
+import { useStagePose, useUniforms } from '../stage/Stage.tsx';
+import { plateView } from './plategeo.ts';
 
 const PlateImage = ({ src, z, size }: { src: string; z: number; size: [number, number] }) => {
   const tex = useLoader(TextureLoader, staticFile(src));
@@ -42,25 +42,17 @@ void main() {
   gl_FragColor = vec4(c.rgb * uGain, a);
 }`;
 
-const PLATE_ASPECT = 1536 / 1024;
-
-const Layer = ({ tex, base, dist, near, gain, margin }: { tex: unknown; base: CameraPose; dist: number; near: boolean; gain: number; margin: number }) => {
-  const { pos, quat, w, h } = useMemo(() => {
-    const p = new Vector3(...base.position);
-    const fwd = new Vector3(...base.target).sub(p).normalize();
-    const right = new Vector3().crossVectors(fwd, new Vector3(0, 1, 0)).normalize();
-    const up = new Vector3().crossVectors(right, fwd);
-    // cover the frame's width with a margin for the camera's travel and the framing guard's widening (round 7c:
-    // 1.45, so the 2x plates show at 1.21x their pixels at the 2K output); the 3:2 plate overflows top and bottom
-    const ww = 2 * dist * Math.tan((base.fov * Math.PI) / 360) * (W / H) * margin;
-    const q = new Quaternion().setFromRotationMatrix(new Matrix4().makeBasis(right, up, fwd.clone().negate()));
-    return { pos: p.add(fwd.multiplyScalar(dist)).toArray() as [number, number, number], quat: q, w: ww, h: ww / PLATE_ASPECT };
-  }, [base, dist, margin]);
-  const u = useUniforms({ map: tex, uNear: near ? 1 : 0, uGain: gain });
+/** One plane of a plate, placed for the frame's camera by plateView (worlds/plategeo.ts). */
+const Layer = ({ tex, base, dist, near, gain, margin, follow }: { tex: unknown; base: CameraPose; dist: number; near: boolean; gain: number; margin: number; follow: number }) => {
+  const v = plateView(useStagePose(), base, dist, margin, follow);
+  const r = new Vector3(...v.right);
+  const u = new Vector3(...v.up);
+  const quat = new Quaternion().setFromRotationMatrix(new Matrix4().makeBasis(r, u, new Vector3().crossVectors(r, u)));
+  const uni = useUniforms({ map: tex, uNear: near ? 1 : 0, uGain: gain });
   return (
-    <mesh position={pos} quaternion={quat} renderOrder={near ? 0.5 : 0} frustumCulled={false}>
-      <planeGeometry args={[w, h]} />
-      <shaderMaterial {...u} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} />
+    <mesh position={v.centre} quaternion={quat} renderOrder={near ? 0.5 : 0} frustumCulled={false}>
+      <planeGeometry args={[v.w, v.h]} />
+      <shaderMaterial {...uni} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} />
     </mesh>
   );
 };
@@ -72,8 +64,8 @@ export const PlateLayer = ({ id, base, dist = 46, gain = 0.92, margin = 1.45, pa
   tex.colorSpace = NoColorSpace;
   return (
     <>
-      <Layer tex={tex} base={base} dist={dist} near={false} gain={gain} margin={margin} />
-      {!panel && <Layer tex={tex} base={base} dist={dist * 0.45} near gain={gain} margin={margin} />}
+      <Layer tex={tex} base={base} dist={dist} near={false} gain={gain} margin={margin} follow={0.5} />
+      {!panel && <Layer tex={tex} base={base} dist={dist * 0.45} near gain={gain} margin={margin} follow={0.8} />}
     </>
   );
 };
