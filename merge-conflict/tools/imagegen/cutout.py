@@ -25,7 +25,7 @@ from PIL import Image, ImageDraw
 from scipy import ndimage as ndi
 
 ROOT = Path(__file__).resolve().parents[2]
-ROUND = "h-poses"
+ROUND = "h-poses"  # default round; --round picks another keyed single-figure round
 CARDS = ROOT / "video" / "public" / "cards"
 OUT = ROOT / "video" / "out"
 
@@ -145,13 +145,14 @@ def contact(files, path_base, th=420, cols=12):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="", help="comma-separated ids, e.g. O01,B05")
+    ap.add_argument("--round", default=ROUND, help="round folder under stil/prompts, e.g. j-dance")
     args = ap.parse_args()
     only = {s for s in args.only.split(",") if s}
     CARDS.mkdir(parents=True, exist_ok=True)
     OUT.mkdir(parents=True, exist_ok=True)
 
     manifest, report, produced = {}, [], []
-    for e in json.loads((ROOT / "stil" / "prompts" / ROUND / "round.json").read_text("utf-8")):
+    for e in json.loads((ROOT / "stil" / "prompts" / args.round / "round.json").read_text("utf-8")):
         cid = e["id"].split("-")[0]
         if only and cid not in only:
             continue
@@ -177,7 +178,7 @@ def main():
     merged.update(manifest)
     mpath.write_text(json.dumps(dict(sorted(merged.items())), indent=2), "utf-8")
     if produced and not only:
-        contact(produced, OUT / "cutout-contact")
+        contact(produced, OUT / f"cutout-contact-{args.round}")
     json.dump(report, sys.stdout, indent=1)
     print()
 
