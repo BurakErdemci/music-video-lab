@@ -110,22 +110,22 @@ for (const id of Object.keys(POSES).sort()) {
 }
 console.log(rows.join('\n'));
 
-// 3. Stepping (round 4): the film's card motion (held + accents, no loop) changes only on RIG_STEP-frame steps,
-//    on the global grid (phase 0) or on an accent's own grid (phase = its start frame mod RIG_STEP).
+// 3. Stepping (round 4): the film's card motion (held + accents, no loop) changes only on ACCENT_STEP_FRAMES-frame steps,
+//    on the global grid (phase 0) or on an accent's own grid (phase = its start frame mod ACCENT_STEP_FRAMES).
 let stepBad = 0, stepChanges = 0;
 const phases = new Set([0]);
 for (const id of Object.keys(POSES).sort()) {
   const e = manifest[id];
   const j = rig.restJoints(POSES[id], e.w / e.h);
   const acc = ACCENTS[id] ?? [];
-  const allowed = new Set([0, ...acc.map((a) => Math.round(a.t0 * 60) % rig.RIG_STEP)]);
-  acc.forEach((a) => phases.add(Math.round(a.t0 * 60) % rig.RIG_STEP));
+  const allowed = new Set([0, ...acc.map((a) => Math.round(a.t0 * 60) % rig.ACCENT_STEP_FRAMES)]);
+  acc.forEach((a) => phases.add(Math.round(a.t0 * 60) % rig.ACCENT_STEP_FRAMES));
   let prev = null;
   for (let f = from; f <= to; f++) {
     const key = JSON.stringify(rig.rigFrame(j, f / 60, rig.danceOf(id, 0, acc)).xf.map((x) => rig.rows(x).map((v) => v.toFixed(7))));
     if (prev !== null && key !== prev) {
       stepChanges++;
-      if (!allowed.has(((f % rig.RIG_STEP) + rig.RIG_STEP) % rig.RIG_STEP)) { stepBad++; if (stepBad < 5) console.log(`  off-step change: ${id} @ f${f}`); }
+      if (!allowed.has(((f % rig.ACCENT_STEP_FRAMES) + rig.ACCENT_STEP_FRAMES) % rig.ACCENT_STEP_FRAMES)) { stepBad++; if (stepBad < 5) console.log(`  off-step change: ${id} @ f${f}`); }
     }
     prev = key;
   }
@@ -137,5 +137,5 @@ if (selftest) console.log('SELFTEST: a deliberate pinch of the lower body (x hal
 console.log(`rigcheck frames ${from}-${to}, ${rows.length} cards:`);
 console.log(`  limb length: max change ${limbWorst.pct.toFixed(2)} % (${limbWorst.id} ${limbWorst.limb} @ f${limbWorst.frame}), limit ${LIMB_PCT} % -> ${limbBad ? 'FAIL' : 'PASS'}`);
 console.log(`  quad area: ${quadsChecked} painted quads per frame, ratio min ${areaMin.r.toFixed(3)} (${areaMin.id} @ f${areaMin.frame}), max ${areaMax.r.toFixed(3)} (${areaMax.id} @ f${areaMax.frame}), folds ${folds}; limits [${AREA_MIN}, ${AREA_MAX}], 0 folds -> ${areaBad ? 'FAIL' : 'PASS'}`);
-console.log(`  stepping: the held + accent motion changes only every ${rig.RIG_STEP} frames (phases ${[...phases].sort((a, b) => a - b).join(', ')}): ${stepChanges} changes, ${stepBad} off-step -> ${stepFail ? 'FAIL' : 'PASS'}`);
+console.log(`  stepping: the held + accent motion changes only every ${rig.ACCENT_STEP_FRAMES} frames (phases ${[...phases].sort((a, b) => a - b).join(', ')}): ${stepChanges} changes, ${stepBad} off-step -> ${stepFail ? 'FAIL' : 'PASS'}`);
 process.exit((limbBad ? 1 : 0) | (areaBad ? 2 : 0) | (stepFail ? 4 : 0));

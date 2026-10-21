@@ -220,15 +220,16 @@ export const DANCE: Dance = { energy: 0, arms: 1 };
 /** Cards whose arms are locked to the body (crossed, hands on hips, hand at the chin) swing them less. */
 const ARMS: Record<string, number> = { BD2: 0.2, OD2: 0.2, B01: 0.15, O03: 0.1, B04: 0.6, O04: 0.5, O06: 0.6, O07: 0.6, B11: 0.3, O11: 0.3, O10: 0.2 };
 export const danceOf = (id: string, energy = 0, accents?: readonly Accent[]): Dance => ({ energy, arms: ARMS[id] ?? 1, accents });
-/** The character is animated on SIXES at 60 fps (10 drawings a second, "Scroll Up!" measured on threes at 30):
- *  the rig time is held for RIG_STEP frames. The breath and the loop step on the global grid (phase 0); each
+/** THE accent-timing switch (pending Burak's call): 6 = the character animated on sixes at 60 fps (10 drawings
+ *  a second, "Scroll Up!" measured on threes at 30); 1 = every frame (his earlier preference: on-twos characters
+ *  bothered viewers in PRESS START). The rig time is held for ACCENT_STEP_FRAMES frames. The breath and the loop step on the global grid (phase 0); each
  *  accent steps on its own grid anchored at its t0, so its first and key frames land on its beat. */
-export const RIG_STEP = 6;
-/** t (seconds) held on the RIG_STEP-frame grid that passes through `anchor`. */
+export const ACCENT_STEP_FRAMES = 6;
+/** t (seconds) held on the ACCENT_STEP_FRAMES-frame grid that passes through `anchor`. */
 export const stepT = (t: number, anchor = 0): number => {
   const fr = Math.round(t * 60);
   const f0 = Math.round(anchor * 60);
-  return (f0 + Math.floor((fr - f0) / RIG_STEP) * RIG_STEP) / 60;
+  return (f0 + Math.floor((fr - f0) / ACCENT_STEP_FRAMES) * ACCENT_STEP_FRAMES) / 60;
 };
 export const ACCENT_MIN_FRAMES = 12;
 export const ACCENT_MAX_FRAMES = 20;
