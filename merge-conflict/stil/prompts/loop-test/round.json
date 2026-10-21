@@ -1,0 +1,24 @@
+[
+ {
+  "id": "OH1b-headbang-mid",
+  "prompt": "stil/prompts/loop-test/OH1b-headbang-mid.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH1-headbang.png"
+  ],
+  "out": "stil/prompts/loop-test/out/OH1b-headbang-mid.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH1c-headbang-up",
+  "prompt": "stil/prompts/loop-test/OH1c-headbang-up.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH1-headbang.png"
+  ],
+  "out": "stil/prompts/loop-test/out/OH1c-headbang-up.png",
+  "key": "#808080"
+ }
+]
