@@ -7,6 +7,7 @@ import { staticFile } from 'remotion';
 import { DoubleSide, LinearFilter, LinearMipmapLinearFilter, NoColorSpace, TextureLoader } from 'three';
 import { HOME_Z } from '../camera/camera.ts';
 import { GRADE_GLSL, type Grade, gradeUniform } from '../grade/grade.ts';
+import { type Hex, rgb } from '../lib/ease.ts';
 import { ORDER, useUniforms } from './Stage.tsx';
 
 export const FLOOR_Y = -3.4;
@@ -18,17 +19,19 @@ const HASH = /* glsl */ `
 float hash12(vec2 p) { vec3 p3 = fract(vec3(p.xyx) * 0.1031); p3 += dot(p3, p3.yzx + 33.33); return fract((p3.x + p3.y) * p3.z); }`;
 
 const WALL_FRAG = /* glsl */ `
-uniform float uTime; uniform vec3 uHue; uniform float uStage; uniform vec2 uAspect;
+uniform float uTime; uniform vec3 uHue; uniform float uStage; uniform vec2 uAspect; uniform vec3 uHue2; uniform float uSplit;
 varying vec2 vUv;
 void main() {
   vec2 p = (vUv - vec2(0.5, 0.80)) * uAspect;
+  // split mode: the left half takes uHue, the right half uHue2, with a crisp seam at the centre
+  vec3 hue = mix(uHue, mix(uHue, uHue2, step(0.5, vUv.x)), uSplit);
   float r = length(p);
   float ang = atan(p.y, p.x);
   float rays = pow(0.5 + 0.5 * sin(ang * 13.0 + uTime * 0.32), 7.0) * smoothstep(1.6, 0.15, r);
   float rays2 = pow(0.5 + 0.5 * sin(ang * 21.0 - uTime * 0.21 + 1.3), 12.0) * smoothstep(1.3, 0.1, r);
   float glow = exp(-r * 2.6);
-  vec3 base = mix(vec3(0.012, 0.004, 0.03), uHue * 0.16, uStage);
-  vec3 col = base + uHue * uStage * (0.55 * rays + 0.35 * rays2 + 0.9 * glow) + vec3(1.0) * uStage * 0.35 * glow * glow;
+  vec3 base = mix(vec3(0.012, 0.004, 0.03), hue * 0.16, uStage);
+  vec3 col = base + hue * uStage * (0.55 * rays + 0.35 * rays2 + 0.9 * glow) + vec3(1.0) * uStage * 0.35 * glow * glow;
   col *= mix(1.0, smoothstep(-0.05, 0.45, vUv.y), 0.6);
   gl_FragColor = vec4(col, 1.0);
 }`;
@@ -92,14 +95,18 @@ export interface SetProps {
   dust?: number;
   /** Mirror-ball spin speed in turns per second. */
   spin?: number;
+  /** Split-screen wall: the right half takes this hue. */
+  split?: Hex;
+  /** Only the back wall (close-ups: no floor, no mirror ball peeking behind the heads). */
+  wallOnly?: boolean;
 }
 
-export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06 }: SetProps) => {
+export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06, split, wallOnly = false }: SetProps) => {
   const g = gradeUniform(grade);
   const depth = HOME_Z - WALL_Z;
   const wallH = 2 * depth * Math.tan((40 * Math.PI) / 360) * 1.6;
   const wallW = wallH * 1.9;
-  const wall = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAspect: [wallW / wallH, 1] });
+  const wall = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAspect: [wallW / wallH, 1], uHue2: rgb(split ?? grade.hue), uSplit: split ? 1 : 0 });
   const floor = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uAlign: align, uDust: dust });
   const ball = useUniforms({ uTime: t, uHue: g.hue, uStage: g.stage, uSpin: t * spin });
   return (
@@ -108,6 +115,8 @@ export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06 }: SetProps
         <planeGeometry args={[wallW, wallH]} />
         <shaderMaterial {...wall} vertexShader={VERT} fragmentShader={WALL_FRAG} depthTest={false} depthWrite={false} />
       </mesh>
+      {!wallOnly && (
+        <>
       <mesh position={[0, FLOOR_Y, -6]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.floor}>
         <planeGeometry args={[60, 20]} />
         <shaderMaterial {...floor} vertexShader={VERT} fragmentShader={FLOOR_FRAG} depthTest={false} depthWrite={false} side={DoubleSide} />
@@ -116,6 +125,8 @@ export const CodeSet = ({ t, grade, align = 0, dust = 0, spin = 0.06 }: SetProps
         <sphereGeometry args={[1.9, 64, 32]} />
         <shaderMaterial {...ball} vertexShader={VERT} fragmentShader={BALL_FRAG} depthTest={false} depthWrite={false} />
       </mesh>
+        </>
+      )}
     </>
   );
 };

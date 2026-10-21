@@ -41,7 +41,7 @@ export const Whiteout = ({ spec, t, pose: fallback }: { spec: WhiteoutSpec; t: n
   for (const fig of figs) {
     const o = OUTLINES[fig.card];
     if (!o) throw new Error(`whiteout ${spec.id}: no outline for ${fig.card}`);
-    const stand = { x: fig.at.x, feet: fig.at.feet ?? FLOOR_Y, z: fig.at.z ?? 0, height: fig.at.height };
+    const stand = { x: fig.at.x, feet: fig.at.feet ?? FLOOR_Y, z: fig.at.z ?? 0, height: fig.at.height, flip: fig.at.flip };
     const proj = (q: P) => project(pose, toWorld(stand, q));
     paths.push(o.polylines
       .map((pl) => deformPoints(fig.card, Array.from({ length: pl.length / 2 }, (_, i) => [pl[i * 2] as number, pl[i * 2 + 1] as number] as P), t)

@@ -67,7 +67,7 @@ export const Scribble = ({ spec, t, pose }: { spec: ScribbleSpec; t: number; pos
   if (t < spec.t0 || t >= spec.t1) return null;
   const o = OUTLINES[spec.card];
   if (!o) throw new Error(`scribble ${spec.id}: no outline for ${spec.card}`);
-  const stand = { x: spec.at.x, feet: (spec.at.feet ?? FLOOR_Y) + (spec.dy?.(t) ?? 0), z: spec.at.z ?? 0, height: spec.at.height };
+  const stand = { x: spec.at.x, feet: (spec.at.feet ?? FLOOR_Y) + (spec.dy?.(t) ?? 0), z: spec.at.z ?? 0, height: spec.at.height, flip: spec.at.flip };
   const screen = (p: P): Pt => {
     const s = project(pose, toWorld(stand, p));
     return [s.x, s.y];
