@@ -27,10 +27,10 @@ export interface LineDesign { line: number; key: number; keyColor: Hex; x: numbe
 
 /** Proof (0-20 s) designs: the line's key word big, in the colour the story gives it. */
 export const DESIGNS: readonly LineDesign[] = [
-  { line: 0, key: 1, keyColor: CYAN, x: 1190, y: 120 },
-  { line: 1, key: 5, keyColor: BLUE, x: 1190, y: 120 },
-  { line: 2, key: 2, keyColor: CYAN, x: 1190, y: 120 },
-  { line: 3, key: 0, keyColor: ORANGE, x: 1190, y: 120 },
+  { line: 0, key: 1, keyColor: CYAN, x: 1010, y: 70 },
+  { line: 1, key: 5, keyColor: BLUE, x: 1010, y: 70 },
+  { line: 2, key: 2, keyColor: CYAN, x: 1010, y: 70 },
+  { line: 3, key: 0, keyColor: ORANGE, x: 1010, y: 70 },
 ];
 
 const Line = ({ d, t }: { d: LineDesign; t: number }) => {
@@ -41,7 +41,7 @@ const Line = ({ d, t }: { d: LineDesign; t: number }) => {
   if (t < first - 0.2 || t >= out) return null;
   const fadeOut = ramp(t, out - 0.1, 0.1);
   return (
-    <div style={{ position: 'absolute', left: d.x, top: d.y, width: 1920 - d.x - 70, display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 22, rowGap: 0, opacity: 1 - fadeOut }}>
+    <div style={{ position: 'absolute', left: d.x, top: d.y, width: 1920 - d.x - 70, display: 'flex', flexWrap: 'wrap', alignItems: 'baseline', columnGap: 26, rowGap: 0, opacity: 1 - fadeOut }}>
       {toks.map((tk, k) => {
         const key = k === d.key;
         const inP = outQuad((t - tk.start) / (6 / 60));
@@ -52,13 +52,13 @@ const Line = ({ d, t }: { d: LineDesign; t: number }) => {
         if (key) {
           const s = lerp(1.6, 1, inP) * (1 + 0.025 * Math.sin(t * 5));
           return (
-            <span key={k} style={{ visibility: hide, display: 'inline-block', fontFamily: DISPLAY, fontSize: 150, lineHeight: 1.0, color: d.keyColor, transform: `scale(${s})`, transformOrigin: 'left bottom', WebkitTextStroke: '5px #0b0614', paintOrder: 'stroke', textShadow: `0 0 26px ${d.keyColor}` }}>
+            <span key={k} style={{ visibility: hide, display: 'inline-block', fontFamily: DISPLAY, fontSize: 210, lineHeight: 1.0, color: d.keyColor, transform: `scale(${s})`, transformOrigin: 'left bottom', WebkitTextStroke: '7px #0b0614', paintOrder: 'stroke', textShadow: `0 0 26px ${d.keyColor}` }}>
               {tk.text.toUpperCase()}
             </span>
           );
         }
         return (
-          <span key={k} style={{ visibility: hide, display: 'inline-block', fontFamily: SANS, fontWeight: 800, fontSize: 46, color: singing ? '#ffffff' : '#d9d2ea', transform: `translateY(${lerp(18, 0, inP)}px)`, opacity: inP, WebkitTextStroke: '3px #0b0614', paintOrder: 'stroke' }}>
+          <span key={k} style={{ visibility: hide, display: 'inline-block', fontFamily: SANS, fontWeight: 800, fontSize: 60, color: singing ? '#ffffff' : '#d9d2ea', transform: `translateY(${lerp(18, 0, inP)}px)`, opacity: inP, WebkitTextStroke: '3px #0b0614', paintOrder: 'stroke' }}>
             {tk.text}
           </span>
         );

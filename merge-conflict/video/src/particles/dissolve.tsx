@@ -76,11 +76,18 @@ uniform vec3 uHue; uniform float uAmount; uniform float uAlpha; uniform vec3 uRi
 varying vec3 vCol; varying float vS;
 ${GRADE_GLSL}
 void main() {
+  // A solid core with a soft halo: each point reads as a spark of light, not a speck of soot.
   float r = length(gl_PointCoord - 0.5);
-  float a = 1.0 - smoothstep(0.32, 0.5, r);
+  float core = 1.0 - smoothstep(0.18, 0.26, r);
+  float halo = (1.0 - smoothstep(0.2, 0.5, r)) * 0.55;
+  float a = max(core, halo);
   vec3 c = gradeTint(vCol, uHue, uAmount);
-  // Flying points catch the rival light a little, so the scatter reads as light, not dust.
-  c = mix(c, c + uRival * 0.35 + 0.15, vS * 0.6);
+  // Light the points with the shot hue (dark costumes otherwise read as grey-black soot), hotter while flying,
+  // with a touch of the rival colour.
+  vec3 light = uHue * 1.25 + 0.22;
+  c = mix(c, light, 0.45 + 0.35 * vS);
+  c = mix(c, c + uRival * 0.4, vS * 0.35);
+  c = mix(c, vec3(1.0), core * 0.25 * vS);
   a *= uAlpha;
   if (a < 0.01) discard;
   gl_FragColor = vec4(min(c, vec3(1.0)), a);
