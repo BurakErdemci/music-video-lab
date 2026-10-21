@@ -1,6 +1,6 @@
 // Comic key-word slam for the painting world: Anton letters in ivory with an ink outline under the fill and a
 // halftone ink shadow, a jagged burst and an ink splash behind; slams in with overshoot, crumbles out.
-import { useVideoConfig } from 'remotion';
+import { FPS } from '../../timing.ts';
 import { InkSplash } from '../../vfx/InkSplash.tsx';
 import { seeded } from '../../vfx/seeded.ts';
 import { GOLD, INK, IVORY, polyPath, VIOLET, type Pt } from '../../vfx/style.tsx';
@@ -30,7 +30,7 @@ const burstPath = (rx: number, ry: number, seed: number): string => {
 };
 
 export const Slam = ({ spec, frame }: { spec: SlamSpec; frame: number }) => {
-  const { fps } = useVideoConfig();
+  const fps = FPS;
   const t = (frame - spec.at) / fps;
   const tOut = (frame - spec.out) / fps;
   if (t < 0 || tOut >= MOTION.crumble) return null;

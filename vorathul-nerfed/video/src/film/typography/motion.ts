@@ -1,5 +1,5 @@
-// Motion grammar of the typography layer (docs/typography.md), in seconds. Components convert with the
-// composition fps, so the same numbers hold at 30 and 60 fps.
+// Motion grammar of the typography layer (docs/typography.md), in seconds. Components convert with the scene
+// clock fps (timing.ts FPS): Nerfed60 feeds fractional 30-fps-unit frames, so the same numbers hold at 60 fps.
 export const MOTION = {
   /** Slam: 2.2x -> 0.9x. */
   slamIn: 0.1,

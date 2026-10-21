@@ -1,6 +1,6 @@
 // Office release-note headline: a white UI card, Inter kicker, Plex Mono version heading, one UI-blue bar.
 // Pops up, the bar sweeps under the heading, wipes out left to right. No ink in the office.
-import { useVideoConfig } from 'remotion';
+import { FPS } from '../../timing.ts';
 import { C, MONO_FONT, UI_FONT } from '../../ui/theme.tsx';
 import { clamp01, easeOut, lerp, MOTION } from './motion.ts';
 import { HEADLINE, headlineSize, type HeadlineSpec } from './schedule.ts';
@@ -22,7 +22,7 @@ export const popEnvelope = (frame: number, at: number, out: number, fps: number)
 };
 
 export const Headline = ({ spec, frame }: { spec: HeadlineSpec; frame: number }) => {
-  const { fps } = useVideoConfig();
+  const fps = FPS;
   const e = popEnvelope(frame, spec.at, spec.out, fps);
   if (!e.visible) return null;
   const { w, h } = headlineSize(spec.title);

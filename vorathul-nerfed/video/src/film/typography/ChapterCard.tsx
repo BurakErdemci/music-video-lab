@@ -1,6 +1,6 @@
 // Location title, always bottom right. Painting: a comic narration box (ivory, ink border, Anton, offset ink
 // shadow) that slams in small and crumbles out, or fades (soft). Office: a white UI card in the headline grammar.
-import { useVideoConfig } from 'remotion';
+import { FPS } from '../../timing.ts';
 import { C, MONO_FONT, UI_FONT } from '../../ui/theme.tsx';
 import { INK, IVORY } from '../../vfx/style.tsx';
 import { popEnvelope } from './Headline.tsx';
@@ -64,6 +64,6 @@ const Comic = ({ spec, frame, fps }: { spec: CardSpec; frame: number; fps: numbe
 };
 
 export const ChapterCard = ({ spec, frame }: { spec: CardSpec; frame: number }) => {
-  const { fps } = useVideoConfig();
+  const fps = FPS;
   return spec.world === 'office' ? <Office spec={spec} frame={frame} fps={fps} /> : <Comic spec={spec} frame={frame} fps={fps} />;
 };
