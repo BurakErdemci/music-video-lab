@@ -86,7 +86,7 @@ const METAL: MShot[] = [
   { id: 'solo-split', t: half(2), scene: 'duel', cam: 'hero', into: 'shatter', move: 'orbit', B: faceAt('BMX1', -4.4), O: faceAt('OMX1', 4.4, true) },
   { id: 'solo-arena', t: bar(3), scene: 'arena', cam: 'wide', into: 'mirror', move: 'whip', B: ['BQ2', full(-3.3, 5.0)], O: ['OS3', full(3.3, 5.0)] },
   { id: 'solo-split-2', t: bar(4), scene: 'duel', cam: 'close', into: 'shatter', move: 'push', B: faceAt('BMX3', -4.4), O: faceAt('OMX5', 4.4, true) },
-  { id: 'solo-horns', t: half(4), scene: 'forge', cam: 'low', into: 'streaks', move: 'orbit', B: null, O: ['OC3', full(2.4, 5.4)] },
+  { id: 'solo-horns', t: half(4), scene: 'forge', cam: 'hero', into: 'streaks', move: 'orbit', B: null, O: ['OC3', full(2.4, 5.4)] },
   // back to back (QK3)
   { id: 'solo-cathedral-2', t: bar(5), scene: 'panel', panel: 'QK3', cam: 'hero', into: 'ink', move: 'push', B: null, O: null },
   { id: 'solo-rage-2', t: half(5), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: faceC('BMX4'), O: null },
@@ -129,7 +129,7 @@ export const RSHOTS: RShot[] = [
   { id: 'squash-sorries', t: tk(25, 4), scene: 'squash', cam: 'low', into: 'shock', move: 'whip' },
   { id: 'blame-says', t: tk(26, 3), scene: 'blame', cam: 'close', into: 'shock', move: 'dollyzoom' },
   { id: 'pipeline-red', t: tk(27, 3), scene: 'pipeline', cam: 'close', into: 'shock', move: 'whip' },
-  { id: 'standup-standups', t: tk(29, 2), scene: 'callgrid', cam: 'low', into: 'shock', move: 'orbit' },
+  { id: 'standup-standups', t: tk(29, 2), scene: 'callgrid', cam: 'low', into: 'shock', move: 'whip' },
   { id: 'tabs-tabs', t: tk(38, 2), scene: 'whitespace', cam: 'close', into: 'shock', move: 'whip' },
   { id: 'spaces-spaces', t: tk(39, 2), scene: 'whitespace', cam: 'low', into: 'shock', move: 'dollyzoom' },
   { id: 'data2-named', t: tk(40, 1), scene: 'nametag', cam: 'low', into: 'shock', move: 'orbit' },

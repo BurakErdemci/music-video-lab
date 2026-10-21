@@ -99,7 +99,9 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     if (t >= P.HITS.burst) return [];
     const scene = shot.scene;
     const logoEntry = scene === 'logo' ? (t < (MERGES.merge2 as readonly number[])[0]! ? 'merge1' : 'merge2') : null;
-    const apart = logoEntry ? logoApart(t, MERGES[logoEntry] as readonly [number, number, number, number]) / 120 : 0;
+    // the girls ride the logo halves but never further out than 260 px (round 7c "Framing": at the full 1300 px fly-in
+    // and the barrel-rolled crash their faces left the frame); the halves fly in, the girls wait near the edge
+    const apart = logoEntry ? Math.min(260, logoApart(t, MERGES[logoEntry] as readonly [number, number, number, number])) / 120 : 0;
     const out: Subject[] = [];
     for (const [who, list] of [['B', P.BLUE], ['O', P.ORANGE]] as const) {
       const p = poseOf(list, t);
