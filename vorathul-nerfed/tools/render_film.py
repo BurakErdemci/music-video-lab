@@ -14,7 +14,7 @@ Exit 0 only when both checks pass.
 
 Run from anywhere (needs ffmpeg, Pillow, uv):
   python tools/render_film.py --entry src/vfx/index.ts --comp VfxGallery --frames 900-1139 --out out/gallery.mp4
-  python tools/render_film.py --entry src/index.ts --comp Nerfed60 --frames 0-16427 --out out/nerfed60.mp4       --song public/audio/song.wav
+  python tools/render_film.py --entry src/index.ts --comp Nerfed60 --frames 0-16429 --out out/nerfed60.mp4       --song public/audio/song.wav
 Flags default to the measured recommendation (see FLAGS); override with --render-flags "...".
 """
 import argparse, os, shutil, subprocess, sys, tempfile, time
