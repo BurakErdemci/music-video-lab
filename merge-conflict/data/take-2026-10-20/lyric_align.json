@@ -1,0 +1,578 @@
+[
+ {
+  "section": "Verse 1 - bouncy, bass out",
+  "voice": "Sweet voice",
+  "text": "I'm HEAD, I'm main, I'm stable and clean",
+  "ratio": 1.0,
+  "start": 10.459999999999999,
+  "end": 13.5,
+  "heard": "I'm head, I'm main, I'm stable and clean"
+ },
+ {
+  "section": "Verse 1 - bouncy, bass out",
+  "voice": "Sweet voice",
+  "text": "Line forty-two, the button was blue, the calmest you've seen",
+  "ratio": 0.82,
+  "start": 13.5,
+  "end": 15.74,
+  "heard": "Line 42, the button was blue, the"
+ },
+ {
+  "section": "Verse 1 - bouncy, bass out",
+  "voice": "Sweet voice",
+  "text": "Reviewed and approved by the whole design team",
+  "ratio": 1.0,
+  "start": 17.34,
+  "end": 19.96,
+  "heard": "Reviewed and approved by the whole design team"
+ },
+ {
+  "section": "Verse 1 - bouncy, bass out",
+  "voice": "Sweet voice",
+  "text": "Then somebody pushed at midnight... who are you?",
+  "ratio": 1.0,
+  "start": 19.96,
+  "end": 22.92,
+  "heard": "Then somebody pushed at midnight, who are you?"
+ },
+ {
+  "section": "Verse 2 - full band",
+  "voice": "Raspy voice",
+  "text": "I'm feature branch, I'm fresh from the night",
+  "ratio": 1.0,
+  "start": 23.2,
+  "end": 26.08,
+  "heard": "I'm featured branch, I'm fresh from the night"
+ },
+ {
+  "section": "Verse 2 - full band",
+  "voice": "Raspy voice",
+  "text": "The button is ORANGE now and baby, orange is right",
+  "ratio": 1.0,
+  "start": 26.08,
+  "end": 29.24,
+  "heard": "The button is orange now and baby orange is right"
+ },
+ {
+  "section": "Verse 2 - full band",
+  "voice": "Raspy voice",
+  "text": "I rewrote your CSS and I'm ready to fight",
+  "ratio": 1.0,
+  "start": 29.24,
+  "end": 32.46,
+  "heard": "I rewrote your CSS and I'm ready to fight"
+ },
+ {
+  "section": "Verse 2 - full band",
+  "voice": "Raspy voice",
+  "text": "Three hundred commits and I never asked twice!",
+  "ratio": 0.86,
+  "start": 33.2,
+  "end": 35.92,
+  "heard": "commits and I never asked twice"
+ },
+ {
+  "section": "Pre-Chorus - drums only, building",
+  "voice": "Sweet voice",
+  "text": "Blue, it's always blue!",
+  "ratio": 1.0,
+  "start": 35.92,
+  "end": 37.88,
+  "heard": "Blue, it's always blue"
+ },
+ {
+  "section": "Pre-Chorus - drums only, building",
+  "voice": "Raspy voice",
+  "text": "Orange, orange, ORANGE!",
+  "ratio": 1.0,
+  "start": 37.88,
+  "end": 39.4,
+  "heard": "Orange, orange, orange"
+ },
+ {
+  "section": "Pre-Chorus - drums only, building",
+  "voice": "Sweet voice",
+  "text": "Blue, it's always blue!",
+  "ratio": 1.0,
+  "start": 39.4,
+  "end": 41.02,
+  "heard": "Blue, it's always blue"
+ },
+ {
+  "section": "Pre-Chorus - drums only, building",
+  "voice": "Raspy voice",
+  "text": "Orange, orange, ORANGE!",
+  "ratio": 1.0,
+  "start": 41.02,
+  "end": 42.52,
+  "heard": "Orange, orange, orange"
+ },
+ {
+  "section": "Pre-Chorus - drums only, building",
+  "voice": "Raspy voice",
+  "text": "(Somebody resolve this!)",
+  "ratio": 1.0,
+  "start": 42.52,
+  "end": 45.32,
+  "heard": "Somebody resolve this!"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Accept current change! (NO!)",
+  "ratio": 1.0,
+  "start": 46.17,
+  "end": 48.28,
+  "heard": "Accept current change! No!"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Accept incoming change! (NO!)",
+  "ratio": 1.0,
+  "start": 48.68,
+  "end": 51.4,
+  "heard": "Accept incoming change! No!"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Two girls, one line, the build is on fire",
+  "ratio": 0.88,
+  "start": 53.44,
+  "end": 55.24,
+  "heard": "one line, the build is on fire"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Merge conflict, merge conflict, heart going haywire",
+  "ratio": 1.0,
+  "start": 55.24,
+  "end": 59.38,
+  "heard": "Merge conflict, merge conflict Heart going haywire"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Accept current change! (NEVER!)",
+  "ratio": 1.0,
+  "start": 59.38,
+  "end": 62.08,
+  "heard": "Except current change Never!"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Accept incoming change! (NEVER!)",
+  "ratio": 1.0,
+  "start": 62.36,
+  "end": 65.2,
+  "heard": "Except incoming change Never!"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Equals, equals, equals in the middle of my soul",
+  "ratio": 1.0,
+  "start": 65.78,
+  "end": 68.56,
+  "heard": "Equals, equals, equals in the middle of my soul"
+ },
+ {
+  "section": "Chorus - catchy sung melody, both voices, full band",
+  "voice": "Raspy voice",
+  "text": "Merge conflict, merge conflict, I can't take control",
+  "ratio": 1.0,
+  "start": 68.56,
+  "end": 72.58,
+  "heard": "Merge conflict, merge conflict I can't take control"
+ },
+ {
+  "section": "Post-Chorus - chant",
+  "voice": "Raspy voice",
+  "text": "(Current! Incoming! Current! Incoming!)",
+  "ratio": 1.0,
+  "start": 72.58,
+  "end": 75.28,
+  "heard": "Current incoming, current incoming"
+ },
+ {
+  "section": "Post-Chorus - chant",
+  "voice": "Raspy voice",
+  "text": "Conflict, conflict, CONFLICT!",
+  "ratio": 0.8,
+  "start": 75.28,
+  "end": 76.86,
+  "heard": "Conflict, conflict"
+ },
+ {
+  "section": "Verse 3 - fast trading, bass out",
+  "voice": "Sweet voice",
+  "text": "You use tabs, you use tabs!",
+  "ratio": 1.0,
+  "start": 77.6,
+  "end": 79.78,
+  "heard": "You use tabs, you use tabs"
+ },
+ {
+  "section": "Verse 3 - fast trading, bass out",
+  "voice": "Raspy voice",
+  "text": "You use spaces, spaces!",
+  "ratio": 1.0,
+  "start": 79.78,
+  "end": 80.98,
+  "heard": "You use spaces, spaces"
+ },
+ {
+  "section": "Verse 3 - fast trading, bass out",
+  "voice": "Sweet voice",
+  "text": "You named a variable \"data2\"!",
+  "ratio": 1.0,
+  "start": 81.52,
+  "end": 84.14,
+  "heard": "You named a variable data too"
+ },
+ {
+  "section": "Verse 3 - fast trading, bass out",
+  "voice": "Raspy voice",
+  "text": "You wrote a comment that just says \"don't touch\"!",
+  "ratio": 1.0,
+  "start": 84.14,
+  "end": 86.84,
+  "heard": "You wrote a comment that just says don't touch"
+ },
+ {
+  "section": "Verse 3 - fast trading, bass out",
+  "voice": "Sweet voice",
+  "text": "I wrote that comment!",
+  "ratio": 1.0,
+  "start": 86.84,
+  "end": 88.52,
+  "heard": "I wrote that comment,"
+ },
+ {
+  "section": "Verse 3 - fast trading, bass out",
+  "voice": "Raspy voice",
+  "text": "I KNOW! I TOUCHED IT!",
+  "ratio": 1.0,
+  "start": 88.68,
+  "end": 90.42,
+  "heard": "I know, I touched it,"
+ },
+ {
+  "section": "Both voices scream",
+  "voice": "Raspy voice",
+  "text": "AAAAAH!",
+  "ratio": 0,
+  "start": null,
+  "end": null,
+  "heard": null
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Accept current change! (NO!)",
+  "ratio": 1.0,
+  "start": 91.18,
+  "end": 93.72,
+  "heard": "Accept current change, no"
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Accept incoming change! (NO!)",
+  "ratio": 1.0,
+  "start": 93.72,
+  "end": 96.92,
+  "heard": "Accept incoming change, no"
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Two girls, one line, the build is on fire",
+  "ratio": 0.4,
+  "start": null,
+  "end": null,
+  "heard": null
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Merge conflict, merge conflict, heart going haywire",
+  "ratio": 1.0,
+  "start": 100.76,
+  "end": 104.84,
+  "heard": "Merge conflicts, merge conflicts, heart going haywire"
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Accept current change! (NEVER!)",
+  "ratio": 1.0,
+  "start": 104.84,
+  "end": 107.6,
+  "heard": "Accept current change, never"
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Accept incoming change! (NEVER!)",
+  "ratio": 1.0,
+  "start": 107.6,
+  "end": 110.7,
+  "heard": "Accept incoming change, never"
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Equals, equals, equals in the middle of my soul",
+  "ratio": 1.0,
+  "start": 110.7,
+  "end": 114.0,
+  "heard": "Equals, equals, equals in the middle of my soul"
+ },
+ {
+  "section": "Chorus - same melody, both voices, bigger",
+  "voice": "Raspy voice",
+  "text": "Merge conflict, merge conflict, I can't take control",
+  "ratio": 1.0,
+  "start": 114.0,
+  "end": 118.04,
+  "heard": "Merge conflicts, merge conflicts I can't take control"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Raspy voice",
+  "text": "I rebased your history while you were asleep!",
+  "ratio": 1.0,
+  "start": 118.04,
+  "end": 121.0,
+  "heard": "I rebased your history while you were asleep"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Sweet voice",
+  "text": "That history was mine, those commits were sweet!",
+  "ratio": 1.0,
+  "start": 121.0,
+  "end": 124.2,
+  "heard": "That history was mine, those commits were sweet"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Raspy voice",
+  "text": "I squashed all your sorries into one tiny line!",
+  "ratio": 1.0,
+  "start": 124.2,
+  "end": 127.38,
+  "heard": "I squashed all your sorries into one tiny line"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Sweet voice",
+  "text": "Then git blame says it's YOUR name on every line!",
+  "ratio": 1.0,
+  "start": 127.38,
+  "end": 130.36,
+  "heard": "Then git blame says it's your name on every line"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Raspy voice",
+  "text": "The pipeline is red!",
+  "ratio": 1.0,
+  "start": 130.36,
+  "end": 132.28,
+  "heard": "The pipeline is red,"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Sweet voice",
+  "text": "The reviewers are gone!",
+  "ratio": 1.0,
+  "start": 132.8,
+  "end": 135.54,
+  "heard": "the reviewers are gone"
+ },
+ {
+  "section": "Verse 4 - double-kick, aggressive",
+  "voice": "Sweet voice",
+  "text": "(And the standup's in five and nobody's on!)",
+  "ratio": 1.0,
+  "start": 136.14000000000001,
+  "end": 139.24,
+  "heard": "And the standoff's in five, and nobody's on"
+ },
+ {
+  "section": "Breakdown - slowest and heaviest, raspy voice screaming",
+  "voice": "Sweet voice",
+  "text": "GIT!",
+  "ratio": 1.0,
+  "start": 139.24,
+  "end": 139.98,
+  "heard": "Git"
+ },
+ {
+  "section": "Breakdown - slowest and heaviest, raspy voice screaming",
+  "voice": "Sweet voice",
+  "text": "PUSH!",
+  "ratio": 1.0,
+  "start": 139.98,
+  "end": 140.8,
+  "heard": "push"
+ },
+ {
+  "section": "Breakdown - slowest and heaviest, raspy voice screaming",
+  "voice": "Sweet voice",
+  "text": "FORCE!",
+  "ratio": 1.0,
+  "start": 140.8,
+  "end": 141.62,
+  "heard": "forth"
+ },
+ {
+  "section": "Break",
+  "voice": "Sweet voice - whispered",
+  "text": "...you wouldn't.",
+  "ratio": 0.67,
+  "start": 177.18,
+  "end": 177.68,
+  "heard": "you"
+ },
+ {
+  "section": "Interlude - piano only, soft",
+  "voice": "Sweet voice",
+  "text": "Maybe blue was never really mine",
+  "ratio": 0.22,
+  "start": null,
+  "end": null,
+  "heard": null
+ },
+ {
+  "section": "Interlude - piano only, soft",
+  "voice": "Raspy voice",
+  "text": "Maybe orange was just my way to say hello",
+  "ratio": 0.13,
+  "start": null,
+  "end": null,
+  "heard": null
+ },
+ {
+  "section": "Interlude - piano only, soft",
+  "voice": "Sweet voice",
+  "text": "We're the same file, just from different times",
+  "ratio": 0.15,
+  "start": null,
+  "end": null,
+  "heard": null
+ },
+ {
+  "section": "Interlude - piano only, soft",
+  "voice": "Both voices",
+  "text": "Two branches of the same old tree, you know",
+  "ratio": 0.13,
+  "start": null,
+  "end": null,
+  "heard": null
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Accept both changes! (YES!)",
+  "ratio": 1.0,
+  "start": 179.34,
+  "end": 181.9,
+  "heard": "Accept both changes, yes,"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Accept both changes! (YES!)",
+  "ratio": 1.0,
+  "start": 182.5,
+  "end": 185.08,
+  "heard": "Accept both changes, yes,"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Blue and orange together, it's a gradient now",
+  "ratio": 0.86,
+  "start": 185.64,
+  "end": 187.94,
+  "heard": "Blue and orange together, it's a"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Two girls, one line, and we figured it out",
+  "ratio": 0.67,
+  "start": 189.7,
+  "end": 192.08,
+  "heard": "conflicts and we figured it out"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Accept both changes! (YES!)",
+  "ratio": 1.0,
+  "start": 192.08,
+  "end": 194.6,
+  "heard": "Accept both changes, yes,"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Commit and push it! (PUSH IT!)",
+  "ratio": 0.91,
+  "start": 195.92,
+  "end": 198.0,
+  "heard": "and push it, push it"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Equals, equals, equals, now we're whole",
+  "ratio": 0.91,
+  "start": 198.0,
+  "end": 202.56,
+  "heard": "Equals, equals, equals, now we're"
+ },
+ {
+  "section": "Final Chorus - same melody, both voices, loudest",
+  "voice": "Both voices",
+  "text": "Merge conflict resolved inside my soul",
+  "ratio": 1.0,
+  "start": 205.16000000000003,
+  "end": 209.52,
+  "heard": "Merged conflict resolved inside my soul"
+ },
+ {
+  "section": "Outro - chant, double-kick",
+  "voice": "Both voices",
+  "text": "(Accept both! Accept both! Ship it, ship it!)",
+  "ratio": 1.0,
+  "start": 209.52,
+  "end": 212.56,
+  "heard": "Except both, except both, ship it, ship it"
+ },
+ {
+  "section": "Outro - chant, double-kick",
+  "voice": "Both voices",
+  "text": "Accept both, accept both, SHIP IT!",
+  "ratio": 1.0,
+  "start": 212.56,
+  "end": 216.04,
+  "heard": "Except both, except both, ship it"
+ },
+ {
+  "section": "Both voices scream",
+  "voice": "Both voices",
+  "text": "AAAAAAAH!",
+  "ratio": 0,
+  "start": null,
+  "end": null,
+  "heard": null
+ }
+]
