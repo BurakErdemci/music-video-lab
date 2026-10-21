@@ -387,3 +387,25 @@ Rules:
 - **GIT! PUSH! FORCE! (120.03-125.36), the slowest and heaviest:** `git push --force` typed word by word, one OQ1/OQ2/OQ3 pose per word, the warning screen, metal worlds (W04, W11).
 - **Whisper "...you wouldn't" (125.36-126.70):** blue's horror (BQ3 and BMX5), near silence. The quietest frame of the clip.
 - **Solo (126.70-140.04):** the dance duel. Air guitar OQ4 against BQ1, BQ2 blade slash, cuts on the riff, metal worlds.
+
+## No cliff after the chorus (Burak, 2026-10-21, after the 140 s proof)
+
+Burak: "the chorus is so good, it lifts so much; the new parts after it went dull, the metal part too. Make
+the other parts crazier, but not everything a chorus, that would tire." Measured on proof140 (motion = mean
+frame-to-frame luma difference, `tools/intensity.mjs`): chorus 1 and 2 at 26.4; verse 3 at 6.1, scream 9.0,
+GIT PUSH FORCE 11.3, solo 18.8. Leaving the chorus drops the film to under a quarter of its motion.
+
+Binding rules, measured by `tools/intensity.mjs` (extend it; exit 1 on any failure):
+- The chorus stays the peak: each chorus >= 1.5x the verses' mean on events per beat and on motion (unchanged).
+- **Floor after a chorus:** verse 3 and verse 4 each reach motion >= 0.5x the chorus mean and events per beat
+  >= the mean of verses 1-2 (1.10).
+- **Metal sits just under the chorus:** scream, GIT PUSH FORCE and the solo each reach motion between 0.7x and
+  1.0x the chorus mean, events per beat >= 1.10. The whisper (1.3 s) is the one deliberate drop and is exempt.
+- **No cliff:** the 4 s after each chorus ends average >= 0.5x the chorus mean motion.
+- Verses 1-2 (approved in round 6) stay as they are.
+
+How (take the chorus's tools, not its signature): camera moves on every line (push-in, whip pan, orbit, dolly
+zoom on the accent word), lyric-locked hits, type with effects; in metal add stepped camera shake on kicks,
+fire and spark bursts, cut-ins to the faces (BX/OX/BMX/OMX), a new framing every bar in the solo (duel
+alternation, split screen, low angles), never two bars on the same full-body stage shot. The "Merge conflict"
+logo move stays the chorus's own. Flash <= 3/s still holds.
