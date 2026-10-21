@@ -9,6 +9,9 @@
 // the shots render (moves, punches, shakes, dolly zooms, recoils, the logo halves). The bundle is built with the
 // project's own esbuild, so this tool reads the TSX shots without a browser. Card rig deformation is not modelled
 // (held cards move only by the 6-frame accent step).
+// Pixel scale (scene-map.md "Resolution"): the final render is the 1920x1080 composition at 4/3 (2560x1440), so no card
+// or plate may show above 1.25x its native pixels there (a card is measured against the file the manifest loads: its
+// "px" if present, else w x h; a plate against 3072x2048, its far plane and, except for a moment panel, its near plane).
 //   node tools/framecheck.mjs [--range 0-140.04] [--step 1] [--selftest]
 //   node tools/framecheck.mjs --type [--range 0-140.04] [--fps 2]
 // --type checks the type instead (scene-map.md "Polish from Gemini's review", item 1): it bundles the film once,
@@ -18,7 +21,8 @@
 // Exit 1 on any failure (the selftest must exit 1: it frames a face card twice the frame).
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
-import { mkdirSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
@@ -54,6 +58,49 @@ const frames = M.CARD_FRAMES;
 
 const FLOOR_Y = -3.4;
 const screenBox = M.screenBox;
+
+// ---- pixel scale at the 2K output ---------------------------------------------------------------------------------
+const SCALE_MAX = 1.25, OUT = 4 / 3, PLATE_PX = [3072, 2048];
+const MANIFEST = JSON.parse(readFileSync(path.join(VIDEO, 'public', 'cards', 'manifest.json'), 'utf8'));
+const PANEL_DIST = 30; // RestShot passes dist 30 for a moment panel (far plane only); every other plate is 46
+
+/** Each card's on-screen size over its loaded file's pixels, at the 2K output. */
+const cardScales = (state) => [...state.subjects, ...(state.extras ?? [])].map((s) => {
+  const e = MANIFEST[s.card];
+  const [nw, nh] = e.px ?? [e.w, e.h];
+  const b = screenBox(state.pose, s, [0, 0, 1, 1]);
+  return { id: s.card, kind: 'card', f: OUT * Math.max((b.y1 - b.y0) / nh, (b.x1 - b.x0) / nw) };
+});
+
+/** The plate's far plane (and near plane, unless a panel) on screen over the plate's pixels, at the 2K output. */
+const plateScales = (state) => {
+  const pl = state.plate;
+  if (!pl) return [];
+  const { base, dist, margin } = pl;
+  const sub = (a, b) => a.map((v, i) => v - b[i]);
+  const cross = (a, b) => [a[1] * b[2] - a[2] * b[1], a[2] * b[0] - a[0] * b[2], a[0] * b[1] - a[1] * b[0]];
+  const norm = (a) => { const l = Math.hypot(...a); return a.map((v) => v / l); };
+  const fwd = norm(sub(base.target, base.position));
+  const right = norm(cross(fwd, [0, 1, 0]));
+  const up = cross(right, fwd);
+  const out = [];
+  for (const [name, d] of dist === PANEL_DIST ? [['far', dist]] : [['far', dist], ['near', dist * 0.45]]) {
+    const w = 2 * d * Math.tan((base.fov * Math.PI) / 360) * (W / H) * margin;
+    const h = w / (PLATE_PX[0] / PLATE_PX[1]);
+    const c = base.position.map((v, i) => v + fwd[i] * d);
+    const at = (r, u) => M.project(state.pose, c.map((v, i) => v + right[i] * r * w / 2 + up[i] * u * h / 2));
+    const len = (p, q) => Math.hypot(p.x - q.x, p.y - q.y);
+    const f = OUT * Math.max(len(at(-1, 0), at(1, 0)) / PLATE_PX[0], len(at(0, -1), at(0, 1)) / PLATE_PX[1]);
+    out.push({ id: pl.id, kind: `plate ${name}`, f });
+  }
+  return out;
+};
+
+/** The scale failures of one frame's state, in the shape of check()'s (plus the run key and the size to rank by). */
+const scaleFails = (state) => [...cardScales(state), ...plateScales(state)].filter((x) => x.f > SCALE_MAX).map((x) => ({
+  s: { card: x.id }, key: `scale ${x.kind}`, size: x.f,
+  why: `${x.kind} ${x.id} ${x.f.toFixed(2)}x native at 2K`,
+}));
 
 /** The failures of one frame's state. */
 const check = (state) => {
@@ -101,8 +148,12 @@ if (selftest) {
   const big = check({ pose: M.HOME, shot: 'selftest-big', subjects: [{ card, at: { x: 0, feet: -9, height: 22 } }] });
   const ok = check({ pose: M.HOME, shot: 'selftest-ok', subjects: [{ card, at: { x: 0, feet: -4.5, height: 6 } }] });
   console.log(`selftest on ${card}: oversized -> ${big.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; fitted -> ${ok.map((b) => b.why).join('; ') || 'passed'}`);
+  // the scale rule: the same card drawn at 22 units fails it, at 1/3 of that it does not
+  const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -9, height: 22 } }] });
+  const sOk = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -4.5, height: 2 } }] });
+  console.log(`selftest scale on ${card}: oversized -> ${sBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; small -> ${sOk.map((b) => b.why).join('; ') || 'passed'}`);
   rmSync(outDir, { recursive: true, force: true });
-  process.exit(big.length > 0 && ok.length === 0 ? 1 : 0);
+  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 ? 1 : 0);
 }
 
 if (arg('dump')) {
@@ -128,8 +179,8 @@ if (process.argv.includes('--type')) {
   const picks = [];
   for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
   const serveUrl = await bundle({ entryPoint: path.join(VIDEO, 'src/index.ts'), publicDir: path.join(VIDEO, 'public') });
-  const shots = path.join(outDir, 'shots');
-  mkdirSync(shots, { recursive: true });
+  // a private dir: the shared .framecheck dir is deleted by every other framecheck run that ends
+  const shots = mkdtempSync(path.join(tmpdir(), 'typecheck-'));
   const samples = [];
   await withRenderLock(async () => {
     const chromiumOptions = { gl: 'angle' };
@@ -148,11 +199,13 @@ if (process.argv.includes('--type')) {
     const faces = st.subjects.filter((x) => !x.silhouette && frames[x.card]).map((x) => { const b = screenBox(st.pose, x, frames[x.card].face); return [b.x0, b.y0, b.x1, b.y1]; });
     samples.push({ frame: fr, t: fr / FPS, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), faces });
   }
-  const list = path.join(outDir, 'samples.json');
+  const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));
   const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'typeframe.py'), list], { stdio: 'inherit' });
   rmSync(serveUrl, { recursive: true, force: true });
-  rmSync(outDir, { recursive: true, force: true });
+  // --keep <dir> copies the stills there before the temp dir goes
+  if (arg('keep')) cpSync(shots, path.resolve(arg('keep')), { recursive: true });
+  rmSync(shots, { recursive: true, force: true });
   process.exit(py.status ?? 1);
 }
 
@@ -167,10 +220,10 @@ for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += step) {
   if (!st) continue;
   checked++;
   if (st.fit && st.fit.z > 1.005) { widened++; if (st.fit.z > maxZ[0]) maxZ.splice(0, 2, st.fit.z, fr); }
-  for (const fail of check(st)) {
-    const key = `${st.shot}|${fail.s.card}|${fail.why.replace(/ \(.*$/, '').replace(/\d+ %/, 'N %')}`;
-    // a run reports its worst frame: the largest overshoot in px or share of the frame
-    const size = Math.max(0, ...(fail.why.match(/\d+/g) ?? []).map(Number));
+  for (const fail of [...check(st), ...scaleFails(st)]) {
+    const key = `${st.shot}|${fail.s.card}|${fail.key ?? fail.why.replace(/ \(.*$/, '').replace(/\d+ %/, 'N %')}`;
+    // a run reports its worst frame: the largest overshoot in px or share of the frame (a scale failure: its factor)
+    const size = fail.size ?? Math.max(0, ...(fail.why.match(/\d+/g) ?? []).map(Number));
     const r = open.get(key);
     if (r && fr - r.last <= step) {
       r.last = fr;
