@@ -60,9 +60,13 @@
     "source": "B05-shout-close.png"
   },
   "B06": {
-    "file": "cards/B06.png",
+    "file": "cards/hd/B06.webp",
     "w": 1024,
     "h": 1496,
+    "px": [
+      2048,
+      2992
+    ],
     "bbox": [
       0,
       40,
@@ -156,9 +160,13 @@
     "source": "BC1-tile-stomp.png"
   },
   "BC2": {
-    "file": "cards/BC2.png",
+    "file": "cards/hd/BC2.webp",
     "w": 940,
     "h": 1497,
+    "px": [
+      1880,
+      2994
+    ],
     "bbox": [
       28,
       12,
@@ -252,9 +260,13 @@
     "source": "BD6-kick.png"
   },
   "BD7": {
-    "file": "cards/BD7.png",
+    "file": "cards/hd/BD7.webp",
     "w": 969,
     "h": 1525,
+    "px": [
+      1938,
+      3050
+    ],
     "bbox": [
       55,
       11,
@@ -432,9 +444,13 @@
     "source": "BM8-sky-scream.png"
   },
   "BMX1": {
-    "file": "cards/BMX1.png",
+    "file": "cards/hd/BMX1.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -444,9 +460,13 @@
     "source": "BMX1-base.png"
   },
   "BMX2": {
-    "file": "cards/BMX2.png",
+    "file": "cards/hd/BMX2.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -456,9 +476,13 @@
     "source": "BMX2-scream.png"
   },
   "BMX3": {
-    "file": "cards/BMX3.png",
+    "file": "cards/hd/BMX3.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -468,9 +492,13 @@
     "source": "BMX3-smirk.png"
   },
   "BMX4": {
-    "file": "cards/BMX4.png",
+    "file": "cards/hd/BMX4.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -480,9 +508,13 @@
     "source": "BMX4-rage.png"
   },
   "BMX5": {
-    "file": "cards/BMX5.png",
+    "file": "cards/hd/BMX5.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -528,9 +560,13 @@
     "source": "BQ1-air-guitar.png"
   },
   "BQ2": {
-    "file": "cards/BQ2.png",
+    "file": "cards/hd/BQ2.webp",
     "w": 1000,
     "h": 1463,
+    "px": [
+      2000,
+      2926
+    ],
     "bbox": [
       13,
       18,
@@ -600,9 +636,13 @@
     "source": "BR3-sing-soft.png"
   },
   "BS1": {
-    "file": "cards/BS1.png",
+    "file": "cards/hd/BS1.webp",
     "w": 1014,
     "h": 1441,
+    "px": [
+      2028,
+      2882
+    ],
     "bbox": [
       10,
       3,
@@ -624,9 +664,13 @@
     "source": "BS2-keytar-lean.png"
   },
   "BS3": {
-    "file": "cards/BS3.png",
+    "file": "cards/hd/BS3.webp",
     "w": 1011,
     "h": 1305,
+    "px": [
+      2022,
+      2610
+    ],
     "bbox": [
       7,
       119,
@@ -648,9 +692,13 @@
     "source": "BS4-keytar-spin.png"
   },
   "BV1": {
-    "file": "cards/BV1.png",
+    "file": "cards/hd/BV1.webp",
     "w": 1002,
     "h": 1268,
+    "px": [
+      2004,
+      2536
+    ],
     "bbox": [
       5,
       142,
@@ -696,9 +744,13 @@
     "source": "BV4-gone.png"
   },
   "BV5": {
-    "file": "cards/BV5.png",
+    "file": "cards/hd/BV5.webp",
     "w": 997,
     "h": 1212,
+    "px": [
+      1994,
+      2424
+    ],
     "bbox": [
       12,
       169,
@@ -744,9 +796,13 @@
     "source": "BV8-offended.png"
   },
   "BX1": {
-    "file": "cards/BX1.png",
+    "file": "cards/hd/BX1.webp",
     "w": 1024,
     "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
     "bbox": [
       0,
       14,
@@ -756,9 +812,13 @@
     "source": "BX1-base.png"
   },
   "BX2": {
-    "file": "cards/BX2.png",
+    "file": "cards/hd/BX2.webp",
     "w": 1024,
     "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
     "bbox": [
       0,
       14,
@@ -768,9 +828,13 @@
     "source": "BX2-smug.png"
   },
   "BX3": {
-    "file": "cards/BX3.png",
+    "file": "cards/hd/BX3.webp",
     "w": 1024,
     "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
     "bbox": [
       0,
       14,
@@ -780,9 +844,13 @@
     "source": "BX3-shock.png"
   },
   "BX4": {
-    "file": "cards/BX4.png",
+    "file": "cards/hd/BX4.webp",
     "w": 1024,
     "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
     "bbox": [
       0,
       14,
@@ -792,9 +860,13 @@
     "source": "BX4-shout.png"
   },
   "BX5": {
-    "file": "cards/BX5.png",
+    "file": "cards/hd/BX5.webp",
     "w": 1024,
     "h": 1522,
+    "px": [
+      2048,
+      3044
+    ],
     "bbox": [
       0,
       14,
@@ -948,9 +1020,13 @@
     "source": "O12-joy-spin.png"
   },
   "OC1": {
-    "file": "cards/OC1.png",
+    "file": "cards/hd/OC1.webp",
     "w": 888,
     "h": 1511,
+    "px": [
+      1776,
+      3022
+    ],
     "bbox": [
       70,
       7,
@@ -972,9 +1048,13 @@
     "source": "OC2-no-point.png"
   },
   "OC3": {
-    "file": "cards/OC3.png",
+    "file": "cards/hd/OC3.webp",
     "w": 899,
     "h": 1513,
+    "px": [
+      1798,
+      3026
+    ],
     "bbox": [
       76,
       3,
@@ -1092,9 +1172,13 @@
     "source": "OF1-charge.png"
   },
   "OF2": {
-    "file": "cards/OF2.png",
+    "file": "cards/hd/OF2.webp",
     "w": 980,
     "h": 1408,
+    "px": [
+      1960,
+      2816
+    ],
     "bbox": [
       19,
       22,
@@ -1224,9 +1308,13 @@
     "source": "OM2-headbang.png"
   },
   "OM3": {
-    "file": "cards/OM3.png",
+    "file": "cards/hd/OM3.webp",
     "w": 973,
     "h": 1534,
+    "px": [
+      1946,
+      3068
+    ],
     "bbox": [
       51,
       2,
@@ -1248,9 +1336,13 @@
     "source": "OM4-scream-crouch.png"
   },
   "OM5": {
-    "file": "cards/OM5.png",
+    "file": "cards/hd/OM5.webp",
     "w": 968,
     "h": 1526,
+    "px": [
+      1936,
+      3052
+    ],
     "bbox": [
       56,
       10,
@@ -1284,9 +1376,13 @@
     "source": "OM7-kick.png"
   },
   "OM8": {
-    "file": "cards/OM8.png",
+    "file": "cards/hd/OM8.webp",
     "w": 1000,
     "h": 1532,
+    "px": [
+      2000,
+      3064
+    ],
     "bbox": [
       24,
       4,
@@ -1296,9 +1392,13 @@
     "source": "OM8-sky-scream.png"
   },
   "OMX1": {
-    "file": "cards/OMX1.png",
+    "file": "cards/hd/OMX1.webp",
     "w": 1024,
     "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
     "bbox": [
       0,
       52,
@@ -1308,9 +1408,13 @@
     "source": "OMX1-base.png"
   },
   "OMX2": {
-    "file": "cards/OMX2.png",
+    "file": "cards/hd/OMX2.webp",
     "w": 1024,
     "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
     "bbox": [
       0,
       52,
@@ -1320,9 +1424,13 @@
     "source": "OMX2-snarl.png"
   },
   "OMX3": {
-    "file": "cards/OMX3.png",
+    "file": "cards/hd/OMX3.webp",
     "w": 1024,
     "h": 1486,
+    "px": [
+      2048,
+      2972
+    ],
     "bbox": [
       0,
       50,
@@ -1332,9 +1440,13 @@
     "source": "OMX3-scream.png"
   },
   "OMX4": {
-    "file": "cards/OMX4.png",
+    "file": "cards/hd/OMX4.webp",
     "w": 1024,
     "h": 1484,
+    "px": [
+      2048,
+      2968
+    ],
     "bbox": [
       0,
       52,
@@ -1344,9 +1456,13 @@
     "source": "OMX4-tongue.png"
   },
   "OMX5": {
-    "file": "cards/OMX5.png",
+    "file": "cards/hd/OMX5.webp",
     "w": 1024,
     "h": 1485,
+    "px": [
+      2048,
+      2970
+    ],
     "bbox": [
       0,
       51,
@@ -1476,9 +1592,13 @@
     "source": "OR3-sing-soft.png"
   },
   "OS1": {
-    "file": "cards/OS1.png",
+    "file": "cards/hd/OS1.webp",
     "w": 1022,
     "h": 1276,
+    "px": [
+      2044,
+      2552
+    ],
     "bbox": [
       0,
       112,
@@ -1488,9 +1608,13 @@
     "source": "OS1-knee-slide.png"
   },
   "OS2": {
-    "file": "cards/OS2.png",
+    "file": "cards/hd/OS2.webp",
     "w": 989,
     "h": 1505,
+    "px": [
+      1978,
+      3010
+    ],
     "bbox": [
       24,
       11,
@@ -1500,9 +1624,13 @@
     "source": "OS2-behind-head.png"
   },
   "OS3": {
-    "file": "cards/OS3.png",
+    "file": "cards/hd/OS3.webp",
     "w": 1000,
     "h": 1515,
+    "px": [
+      2000,
+      3030
+    ],
     "bbox": [
       10,
       3,
@@ -1692,9 +1820,13 @@
     "source": "OV7-touched.png"
   },
   "OX1": {
-    "file": "cards/OX1.png",
+    "file": "cards/hd/OX1.webp",
     "w": 1014,
     "h": 1328,
+    "px": [
+      2028,
+      2656
+    ],
     "bbox": [
       4,
       167,
@@ -1704,9 +1836,13 @@
     "source": "OX1-base.png"
   },
   "OX2": {
-    "file": "cards/OX2.png",
+    "file": "cards/hd/OX2.webp",
     "w": 1015,
     "h": 1329,
+    "px": [
+      2030,
+      2658
+    ],
     "bbox": [
       5,
       167,
@@ -1716,9 +1852,13 @@
     "source": "OX2-wink.png"
   },
   "OX3": {
-    "file": "cards/OX3.png",
+    "file": "cards/hd/OX3.webp",
     "w": 1015,
     "h": 1330,
+    "px": [
+      2030,
+      2660
+    ],
     "bbox": [
       4,
       167,
@@ -1740,9 +1880,13 @@
     "source": "OX4-laugh.png"
   },
   "OX5": {
-    "file": "cards/OX5.png",
+    "file": "cards/hd/OX5.webp",
     "w": 1015,
     "h": 1334,
+    "px": [
+      2030,
+      2668
+    ],
     "bbox": [
       4,
       164,
