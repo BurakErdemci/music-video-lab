@@ -1,0 +1,290 @@
+{
+  "B01": {
+    "file": "cards/B01.png",
+    "w": 903,
+    "h": 1526,
+    "bbox": [
+      121,
+      10,
+      1024,
+      1536
+    ],
+    "source": "B01-arms-crossed.png"
+  },
+  "B02": {
+    "file": "cards/B02.png",
+    "w": 918,
+    "h": 1528,
+    "bbox": [
+      106,
+      8,
+      1024,
+      1536
+    ],
+    "source": "B02-hair-whip.png"
+  },
+  "B03": {
+    "file": "cards/B03.png",
+    "w": 913,
+    "h": 1528,
+    "bbox": [
+      111,
+      8,
+      1024,
+      1536
+    ],
+    "source": "B03-disco-step.png"
+  },
+  "B04": {
+    "file": "cards/B04.png",
+    "w": 840,
+    "h": 1532,
+    "bbox": [
+      184,
+      4,
+      1024,
+      1536
+    ],
+    "source": "B04-disco-point.png"
+  },
+  "B05": {
+    "file": "cards/B05.png",
+    "w": 1022,
+    "h": 1471,
+    "bbox": [
+      2,
+      65,
+      1024,
+      1536
+    ],
+    "source": "B05-shout-close.png"
+  },
+  "B06": {
+    "file": "cards/B06.png",
+    "w": 1024,
+    "h": 1496,
+    "bbox": [
+      0,
+      40,
+      1024,
+      1536
+    ],
+    "source": "B06-eye-roll-close.png"
+  },
+  "B07": {
+    "file": "cards/B07.png",
+    "w": 945,
+    "h": 1526,
+    "bbox": [
+      79,
+      10,
+      1024,
+      1536
+    ],
+    "source": "B07-stomp.png"
+  },
+  "B08": {
+    "file": "cards/B08.png",
+    "w": 1000,
+    "h": 1508,
+    "bbox": [
+      24,
+      28,
+      1024,
+      1536
+    ],
+    "source": "B08-stumble-back.png"
+  },
+  "B09": {
+    "file": "cards/B09.png",
+    "w": 1016,
+    "h": 1527,
+    "bbox": [
+      8,
+      9,
+      1024,
+      1536
+    ],
+    "source": "B09-furious-close.png"
+  },
+  "B10": {
+    "file": "cards/B10.png",
+    "w": 908,
+    "h": 1529,
+    "bbox": [
+      116,
+      7,
+      1024,
+      1536
+    ],
+    "source": "B10-reach-light.png"
+  },
+  "B11": {
+    "file": "cards/B11.png",
+    "w": 991,
+    "h": 1525,
+    "bbox": [
+      33,
+      11,
+      1024,
+      1536
+    ],
+    "source": "B11-sitting.png"
+  },
+  "B12": {
+    "file": "cards/B12.png",
+    "w": 1015,
+    "h": 1528,
+    "bbox": [
+      9,
+      8,
+      1024,
+      1536
+    ],
+    "source": "B12-joy-spin.png"
+  },
+  "O01": {
+    "file": "cards/O01.png",
+    "w": 1019,
+    "h": 1532,
+    "bbox": [
+      5,
+      4,
+      1024,
+      1536
+    ],
+    "source": "O01-spot-dive.png"
+  },
+  "O02": {
+    "file": "cards/O02.png",
+    "w": 1007,
+    "h": 1451,
+    "bbox": [
+      17,
+      85,
+      1024,
+      1536
+    ],
+    "source": "O02-shove.png"
+  },
+  "O03": {
+    "file": "cards/O03.png",
+    "w": 973,
+    "h": 1519,
+    "bbox": [
+      51,
+      17,
+      1024,
+      1536
+    ],
+    "source": "O03-hands-hips.png"
+  },
+  "O04": {
+    "file": "cards/O04.png",
+    "w": 976,
+    "h": 1534,
+    "bbox": [
+      48,
+      2,
+      1024,
+      1536
+    ],
+    "source": "O04-point-camera.png"
+  },
+  "O05": {
+    "file": "cards/O05.png",
+    "w": 1024,
+    "h": 1422,
+    "bbox": [
+      0,
+      114,
+      1024,
+      1536
+    ],
+    "source": "O05-shout-close.png"
+  },
+  "O06": {
+    "file": "cards/O06.png",
+    "w": 951,
+    "h": 1531,
+    "bbox": [
+      73,
+      5,
+      1024,
+      1536
+    ],
+    "source": "O06-disco-point.png"
+  },
+  "O07": {
+    "file": "cards/O07.png",
+    "w": 989,
+    "h": 1530,
+    "bbox": [
+      35,
+      6,
+      1024,
+      1536
+    ],
+    "source": "O07-stomp.png"
+  },
+  "O08": {
+    "file": "cards/O08.png",
+    "w": 1006,
+    "h": 1521,
+    "bbox": [
+      18,
+      15,
+      1024,
+      1536
+    ],
+    "source": "O08-spin.png"
+  },
+  "O09": {
+    "file": "cards/O09.png",
+    "w": 1010,
+    "h": 1380,
+    "bbox": [
+      14,
+      156,
+      1024,
+      1536
+    ],
+    "source": "O09-power-slide.png"
+  },
+  "O10": {
+    "file": "cards/O10.png",
+    "w": 1024,
+    "h": 1460,
+    "bbox": [
+      0,
+      76,
+      1024,
+      1536
+    ],
+    "source": "O10-wink-close.png"
+  },
+  "O11": {
+    "file": "cards/O11.png",
+    "w": 976,
+    "h": 1527,
+    "bbox": [
+      48,
+      9,
+      1024,
+      1536
+    ],
+    "source": "O11-sitting.png"
+  },
+  "O12": {
+    "file": "cards/O12.png",
+    "w": 925,
+    "h": 1529,
+    "bbox": [
+      99,
+      7,
+      1024,
+      1536
+    ],
+    "source": "O12-joy-spin.png"
+  }
+}
