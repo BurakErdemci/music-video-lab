@@ -73,3 +73,19 @@ export const plateView = (pose: CameraPose, base: CameraPose, dist: number, marg
   const w = span * frameW;
   return { centre, right, up, w, h: w / PLATE_ASPECT, span, scale: (span * OUTPUT_W) / PLATE_PX };
 };
+
+/** The 2.5D parallax of a moment painting (round 7c, Burak: the paintings felt like a slideshow): from its depth map
+ *  (public/plates/depth/<id>.png, near = white), near pixels slide further than far ones as the camera trucks away
+ *  from the opening pose, and swell as it pushes in. `shift` (texture units at full depth) and `zoom` drive the
+ *  panel shader in worlds/plate.tsx; `mag` is the most a pixel is magnified beyond the plane's own scale, and is
+ *  kept so the painting never shows above 1.25x its pixels (`scale` is the plane's, plateView's). */
+export const panelParallax = (pose: CameraPose, base: CameraPose, dist: number, scale: number): { shift: [number, number]; zoom: number; mag: number } => {
+  const [bf, br, bu] = basis({ ...base, roll: 0 });
+  const d: Vec3 = [pose.position[0] - base.position[0], pose.position[1] - base.position[1], pose.position[2] - base.position[2]];
+  const dot = (a: Vec3, b: Vec3) => a[0] * b[0] + a[1] * b[1] + a[2] * b[2];
+  const shift: [number, number] = [(dot(d, br) / dist) * 2.5, (dot(d, bu) / dist) * 2.5];
+  // a push swells the near half of the painting (depth above 0.3) by up to `zoom`, capped by the pixel rule
+  const room = Math.max(0, 1.25 / Math.max(scale, 1e-3) - 1);
+  const zoom = Math.min(Math.max(0, (dot(d, bf) / dist) * 0.8), room / 0.7);
+  return { shift, zoom, mag: 1 + 0.7 * zoom };
+};
