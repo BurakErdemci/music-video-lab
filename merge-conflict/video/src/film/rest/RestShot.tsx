@@ -73,7 +73,9 @@ const TRANSITIONS: TransitionSpec[] = (() => {
     const colors = s.scene === 'panel' && metal ? METAL_PANEL : COLORS[s.scene];
     if (!cover) return [{ id: `r-tr-${s.id}`, kind: 'shock', at: s.t, pre: 0, post: 14 / 60, colors, origin: [960, 980] }];
     if (metal) {
-      if (s.t - last < COVER_GAP) return [];
+      // a painting enters the solo on a hard cut: a 6-frame cover into it dipped dark and flashed back, and with the
+      // hard cuts around it the 133 s window counted 5 flashes a second (round 7d)
+      if (s.t - last < COVER_GAP || (s.scene === 'panel' && s.t >= SOLO.start)) return [];
       last = s.t;
     }
     const kind = clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), metal, i);
