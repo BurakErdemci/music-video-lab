@@ -1,0 +1,154 @@
+[
+ {
+  "id": "RK1-bg",
+  "prompt": "stil/prompts/w-layers/RK1-bg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK1-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK1-bg.png"
+ },
+ {
+  "id": "RK1-fg",
+  "prompt": "stil/prompts/w-layers/RK1-fg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK1-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK1-fg.png"
+ },
+ {
+  "id": "RK1-fgb",
+  "prompt": "stil/prompts/w-layers/RK1-fgb.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK1-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK1-fgb.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK1-fg.png"
+  ]
+ },
+ {
+  "id": "RK1-fgc",
+  "prompt": "stil/prompts/w-layers/RK1-fgc.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK1-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK1-fgc.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK1-fg.png"
+  ]
+ },
+ {
+  "id": "RK2-bg",
+  "prompt": "stil/prompts/w-layers/RK2-bg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK2-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK2-bg.png"
+ },
+ {
+  "id": "RK2-fg",
+  "prompt": "stil/prompts/w-layers/RK2-fg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK2-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK2-fg.png"
+ },
+ {
+  "id": "RK2-fgb",
+  "prompt": "stil/prompts/w-layers/RK2-fgb.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK2-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK2-fgb.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK2-fg.png"
+  ]
+ },
+ {
+  "id": "RK2-fgc",
+  "prompt": "stil/prompts/w-layers/RK2-fgc.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK2-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK2-fgc.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK2-fg.png"
+  ]
+ },
+ {
+  "id": "RK11-bg",
+  "prompt": "stil/prompts/w-layers/RK11-bg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK11-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK11-bg.png"
+ },
+ {
+  "id": "RK11-fg",
+  "prompt": "stil/prompts/w-layers/RK11-fg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK11-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK11-fg.png"
+ },
+ {
+  "id": "RK11-fgb",
+  "prompt": "stil/prompts/w-layers/RK11-fgb.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK11-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK11-fgb.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK11-fg.png"
+  ]
+ },
+ {
+  "id": "RK11-fgc",
+  "prompt": "stil/prompts/w-layers/RK11-fgc.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK11-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK11-fgc.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK11-fg.png"
+  ]
+ },
+ {
+  "id": "RK12-bg",
+  "prompt": "stil/prompts/w-layers/RK12-bg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK12-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK12-bg.png"
+ },
+ {
+  "id": "RK12-fg",
+  "prompt": "stil/prompts/w-layers/RK12-fg.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/out/RK12-wide.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK12-fg.png"
+ },
+ {
+  "id": "RK12-fgb",
+  "prompt": "stil/prompts/w-layers/RK12-fgb.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK12-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK12-fgb.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK12-fg.png"
+  ]
+ },
+ {
+  "id": "RK12-fgc",
+  "prompt": "stil/prompts/w-layers/RK12-fgc.prompt.txt",
+  "refs": [
+   "stil/prompts/w-layers/out/RK12-fg.png"
+  ],
+  "out": "stil/prompts/w-layers/out/RK12-fgc.png",
+  "depends_on": [
+   "stil/prompts/w-layers/out/RK12-fg.png"
+  ]
+ }
+]

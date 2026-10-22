@@ -1,0 +1,10 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./RK2-fgc.png
+
+The attached image shows two girls (ORANGE hair and BLUE hair) on a flat pure green #00FF00 background: drawing A of a short stepped animation loop.
+
+Task: draw drawing C of the loop: the SAME two girls, same outfits, same style, same lighting, same size and the same place in the frame, on the same flat pure green #00FF00 (no shadow, glow or gradient on it). Change ONLY this: the hair flows back the other way; both chins lift slightly, the hands pressed together a little harder. Keep the change small and natural, like the next drawing of a hand-drawn animation; do not flip, rotate or move the bodies elsewhere.
+
+Output: 16:9 landscape at the same size and framing as the attached image (for example 1672x941).
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks. No border.
+
+After copying, print the output path and pixel size.
