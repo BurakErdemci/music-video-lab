@@ -25,7 +25,7 @@ import { CLOCK_CAMERA, CLOCK_FACE, ClockWorld, PRESS_CAMERA, PressWorld, SUBWAY_
 import { ALLEY_CAMERA, AlleyWorld, GRAFFITI_CAMERA, GRAFFITI_PANEL, GraffitiWorld, RAILS_CAMERA, RailsWorld, SCOREBOARD, STADIUM_CAMERA, StadiumWorld } from '../../worlds/v2.tsx';
 import { Arena, BLUE, CYAN, InsertWorld, pulseAt, RED, RunwayWorld, SplitWorld } from '../chorus/worlds.tsx';
 import { PRE_T, type VerseScene, VBLUE, VERSE_TYPE, VORANGE, type VPose, VSHOTS, type VShot } from './plan.ts';
-import { hoopFill, hoopKey, VerseType } from './type.tsx';
+import { hoopFill, hoopKey, VERSE_SCREEN, VerseType } from './type.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
@@ -198,14 +198,14 @@ export const VersesShot = ({ frame }: { frame: number }) => {
         })}
         {/* the type over the covers (round 7d: no card or effect is drawn over a settled type form) */}
         <g transform={plane.transform}>
-          <VerseType entries={VERSE_TYPE.filter((e) => e.id !== 'v-feature' && e.id !== 'v-css')} t={t} pose={pose} anchors={anchors} />
+          <VerseType entries={VERSE_TYPE.filter((e) => !VERSE_SCREEN.includes(e.id))} t={t} pose={pose} anchors={anchors} />
           {/* the strike of 00:00 on the painted clock: two light rings opening from its face */}
           {scene === 'clock' && t >= tk(5, 4) && t < tk(5, 4) + 0.5 && [0, 0.08].map((d) => {
             const u = clamp01((t - tk(5, 4) - d) / 0.42);
             return <circle key={d} cx={anchors.clock.cx} cy={anchors.clock.cy} r={anchors.clock.r * (0.9 + 0.6 * outQuad(u))} fill="none" stroke="#cfeaff" strokeWidth={18 * (1 - u)} opacity={1 - u} />;
           })}
         </g>
-        <VerseType entries={VERSE_TYPE.filter((e) => e.id === 'v-feature' || e.id === 'v-css')} t={t} pose={pose} anchors={anchors} hoop={hoop} throwP={scene === 'alley' ? throwP : undefined} />
+        <VerseType entries={VERSE_TYPE.filter((e) => VERSE_SCREEN.includes(e.id))} t={t} pose={pose} anchors={anchors} hoop={hoop} throwP={scene === 'alley' ? throwP : undefined} />
       </Svg>
     </AbsoluteFill>
   );

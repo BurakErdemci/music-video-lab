@@ -15,24 +15,29 @@ const KEYWORDS = /^(the|was|and|by|at|i'm|then|who|are|you)$/i;
 const classOf = (w: string): Hex => (/^\d/.test(w) ? SYNTAX.number : KEYWORDS.test(clean(w)) ? SYNTAX.keyword : /^[A-Z]/.test(w) ? SYNTAX.fn : SYNTAX.plain);
 
 /** terminal: git's error in red on black (the intro), instead of editor syntax colours */
-export interface CodeOptions { gutter: string; size: number; keyScale?: number; chrome?: string; terminal?: boolean; /** a light edge and a soft shadow round the panel, for a plate it would melt into */ backing?: boolean }
+export interface CodeOptions { gutter: string; size: number; keyScale?: number; chrome?: string; terminal?: boolean; /** a light edge and a soft shadow round the panel, for a plate it would melt into */ backing?: boolean; /** wrap the line inside the panel, top-aligned (round 7d: a long line at a readable size) */ wrap?: boolean }
 const TERMINAL_RED = '#ff3b3b';
 
 /** Characters of a token visible at t: typed across its measured start..end. */
 export const typed = (text: string, t: number, start: number, end: number): number =>
   t < start ? 0 : Math.max(1, Math.min(text.length, Math.ceil(text.length * clamp01((t - start) / Math.max(0.08, end - start)))));
 
-interface Run { text: string; color: Hex; size: number; x: number; tok: number; isKey: boolean; start: number; end: number }
+interface Run { text: string; color: Hex; size: number; x: number; tok: number; isKey: boolean; start: number; end: number; line: number }
 
-const runsOf = (spec: FormSpec, size: number, keyScale: number, x0: number): Run[] => {
+const runsOf = (spec: FormSpec, size: number, keyScale: number, x0: number, maxX = Infinity): Run[] => {
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
   let x = x0;
+  let line = 0;
   return toks.map((tk, i) => {
     const isKey = i === k;
     const sz = isKey ? size * keyScale : size;
     const text = isKey ? clean(tk.text).toUpperCase() + tk.text.slice(clean(tk.text).length) : tk.text;
-    const r = { text, color: classOf(tk.text), size: sz, x, tok: i, isKey, start: tk.start, end: tk.end };
+    if (x > x0 && x + text.length * MONO_ADV * sz > maxX) {
+      x = x0;
+      line++;
+    }
+    const r = { text, color: classOf(tk.text), size: sz, x, tok: i, isKey, start: tk.start, end: tk.end, line };
     x += (text.length + 1) * MONO_ADV * sz;
     return r;
   });
@@ -47,16 +52,26 @@ const Panel = ({ x, y, w, h, title, terminal = false }: { x: number; y: number; 
   </g>
 );
 
-export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOptions }) => {
-  if (!visible(spec, t)) return null;
+/** A CODE panel's runs and the baseline of each line: one line two thirds down the panel, or (wrap) lines from under
+ *  the title bar. */
+const codeLayout = (spec: FormSpec, opt: CodeOptions) => {
   const { box } = spec;
   const size = opt.size;
   const keyScale = opt.keyScale ?? 1.9;
   const gw = (opt.gutter.length + 2) * MONO_ADV * size;
-  const base = box.y + box.h * 0.66;
-  const runs = runsOf(spec, size, keyScale, box.x + 40 + gw);
+  const runs = runsOf(spec, size, keyScale, box.x + 40 + gw, opt.wrap ? box.x + box.w - 30 : Infinity);
+  const baseOf = (line: number) => (opt.wrap ? box.y + 46 + 24 + size * keyScale * 0.9 + line * size * 1.35 * Math.max(1, keyScale * 0.8) : box.y + box.h * 0.66);
+  return { size, keyScale, runs, baseOf };
+};
+
+export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOptions }) => {
+  if (!visible(spec, t)) return null;
+  const { box } = spec;
+  const { size, runs, baseOf } = codeLayout(spec, opt);
+  const base = baseOf(0);
   const lastTyped = [...runs].reverse().find((r) => t >= r.start);
   const cursorX = lastTyped ? lastTyped.x + typed(lastTyped.text, t, lastTyped.start, lastTyped.end) * MONO_ADV * lastTyped.size : (runs[0]?.x ?? box.x);
+  const cursorY = baseOf(lastTyped?.line ?? 0);
   const blink = beatPos(t) % 1 < 0.55;
   return (
     <g fontFamily={MONO} fontWeight={700}>
@@ -67,18 +82,19 @@ export const Code = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: CodeOpt
         const n = typed(r.text, t, r.start, r.end);
         if (!n) return null;
         const pop = outQuad((t - r.start) / (8 / 60));
+        const y = baseOf(r.line);
         if (r.isKey) {
           const w = r.text.length * MONO_ADV * r.size;
           return (
             <g key={r.tok}>
-              <rect x={r.x - 8} y={base - r.size * 0.86} width={w + 16} height={r.size * 1.08} rx={8} fill={opt.terminal ? TERMINAL_RED : keyFill(spec.singer, t)} fillOpacity={(opt.terminal ? 0.85 : 0.28) * pop} />
-              <text x={r.x} y={base} fontSize={r.size} fill={opt.terminal ? '#ffffff' : keyFill(spec.singer, t)} stroke="#0d1117" strokeWidth={r.size * 0.04} paintOrder="stroke">{r.text.slice(0, n)}</text>
+              <rect x={r.x - 8} y={y - r.size * 0.86} width={w + 16} height={r.size * 1.08} rx={8} fill={opt.terminal ? TERMINAL_RED : keyFill(spec.singer, t)} fillOpacity={(opt.terminal ? 0.85 : 0.28) * pop} />
+              <text x={r.x} y={y} fontSize={r.size} fill={opt.terminal ? '#ffffff' : keyFill(spec.singer, t)} stroke="#0d1117" strokeWidth={r.size * 0.04} paintOrder="stroke">{r.text.slice(0, n)}</text>
             </g>
           );
         }
-        return <text key={r.tok} x={r.x} y={base} fontSize={r.size} fill={opt.terminal ? TERMINAL_RED : r.color}>{r.text.slice(0, n)}</text>;
+        return <text key={r.tok} x={r.x} y={y} fontSize={r.size} fill={opt.terminal ? TERMINAL_RED : r.color}>{r.text.slice(0, n)}</text>;
       })}
-      {blink && <rect x={cursorX + 4} y={base - size * 0.82} width={size * 0.12} height={size} fill="#e6edf3" />}
+      {blink && <rect x={cursorX + 4} y={cursorY - size * 0.82} width={size * 0.12} height={size} fill="#e6edf3" />}
     </g>
   );
 };
@@ -120,8 +136,8 @@ export const Diff = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: DiffOpt
 
 /** Where a CODE run's word sits (for transitions that land on it). */
 export const codeWordAt = (spec: FormSpec, opt: CodeOptions, i: number): { x: number; y: number; size: number; text: string } => {
-  const gw = (opt.gutter.length + 2) * MONO_ADV * opt.size;
-  const r = runsOf(spec, opt.size, opt.keyScale ?? 1.9, spec.box.x + 40 + gw)[i];
+  const { runs, baseOf } = codeLayout(spec, opt);
+  const r = runs[i];
   if (!r) throw new Error(`code ${spec.id}: no word ${i}`);
-  return { x: r.x, y: spec.box.y + spec.box.h * 0.66, size: r.size, text: r.text };
+  return { x: r.x, y: baseOf(r.line), size: r.size, text: r.text };
 };

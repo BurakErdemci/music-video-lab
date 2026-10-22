@@ -41,6 +41,9 @@ const AVOID: Record<string, AvoidBox> = {
   'p-resolve': { x: 460, y: 200, w: 1000, h: 140 },
 };
 
+/** The verse entries drawn in screen space (the rest ride the type plane). */
+export const VERSE_SCREEN: readonly string[] = ['v-feature', 'v-css', 'v-orange'];
+
 export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose; anchors: Anchors; hoop?: HoopPlan; throwP?: ThrowPlan }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
@@ -77,13 +80,11 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
         out.push(<Wave key={e.id} spec={spec(e, { x: 120, y: 140, w: 1680, h: 300 })} t={t} opt={{ size: 150, face: 'shrikhand', amp: 50 }} />);
         break;
       case 'v-orange': {
-        // the painted panel's box, kept inside the margin whatever the camera does with the plane
-        const q = anchors.panel ?? { x: 160, y: 200, w: 1100, h: 460 };
-        const [px0, py0] = [Math.max(q.x, 300), Math.max(q.y, 130)];
-        const chars = lineTokens(e.line).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.7 : 1), 2);
-        const p = { x: px0, y: py0, w: Math.min(q.x + q.w, 1690) - px0, h: Math.min(q.y + q.h, 880) - py0 };
-        out.push(<Diff key={e.id} spec={spec(e, p)} t={t} opt={{ minus: 'the button was blue', size: Math.min(86, p.h / 4.2, (p.w - 70) / (0.6 * chars)), keyScale: 1.7, title: 'button.css', backing: true }} />);
-        dyn = { x: p.x - 90, y: p.y - 50, w: p.w + 180, h: p.h + 100 };
+        // round 7d: a wide terminal in screen space at a readable size (on the painted panel it shrank to a 1.5 % cap
+        // under the plane); it takes the band clear of her face (type/avoid.ts)
+        const p = { x: 150, y: 730, w: 1620, h: 300 };
+        out.push(<Diff key={e.id} spec={spec(e, p)} t={t} opt={{ minus: 'the button was blue', size: 60, keyScale: 1.5, title: 'button.css', backing: true }} />);
+        dyn = p;
         break;
       }
       case 'v-css':
@@ -125,7 +126,7 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
     // round 7d: no knockout; the form moves or shrinks off the faces of the shot (type/avoid.ts)
     const b = dyn ?? AVOID[e.id];
     if (b && out.length > n0) {
-      const tf = avoidFaces(VERSES_LIVE, t, b, e.id !== 'v-feature' && e.id !== 'v-css');
+      const tf = avoidFaces(VERSES_LIVE, t, b, !VERSE_SCREEN.includes(e.id));
       if (tf) out.push(<g key={`${e.id}-avoid`} transform={tf}>{out.splice(n0)}</g>);
     }
     // the words thrown between the girls fly to them, wherever the CSS block went

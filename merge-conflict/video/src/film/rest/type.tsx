@@ -53,19 +53,23 @@ const panelAt = (t: number): boolean => {
   return i >= 0 && (RSHOTS[i] as RShot).scene === 'panel';
 };
 
+/** The terminals (round 7d): a wide panel in a band, its code at 60 px (a 4 % cap), wrapped onto two lines. */
+const TERM_SIZE = 60;
+const TERM = { x: 150, y: 760, w: 1620, h: 270 };
+const DIFF_BOX = { x: 150, y: 730, w: 1620, h: 300 };
+
 /** Each form's box (its own coordinates: the type plane, or the screen for the Shouts) for type/avoid.ts; forms that
  *  sit on a world object (gutter, countdown, tag, case line) and the moment paintings' Flap stay where they are. */
 const AVOID: Record<string, AvoidBox> = {
   'r-rebased': { x: 530, y: 90, w: 860, h: 140 },
   'r-mine': { x: 120, y: 120, w: 1680, h: 300 },
   'r-squash': { x: 340, y: 140, w: 720, h: 420 },
-  'r-blame': { x: 640, y: 330, w: 640, h: 270 },
+  'r-blame': TERM,
   'r-gone': { x: 580, y: 140, w: 760, h: 150 },
   'r-tabs': { x: 890, y: 470, w: 900, h: 300 },
   'r-spaces': { x: 160, y: 200, w: 1100, h: 420 },
-  'r-touch': { x: 700, y: 330, w: 690, h: 370 },
-  'r-wrote': { x: 210, y: 300, w: 1000, h: 420 },
-  'r-touched': { x: 390, y: 250, w: 1110, h: 450 },
+  'r-touch': TERM,
+  'r-touched': DIFF_BOX,
   'r-red': { x: 110, y: 80, w: 1700, h: 310 },
   'r-git': { x: 220, y: 250, w: 600, h: 300 },
   'r-push': { x: 70, y: 180, w: 680, h: 400 },
@@ -75,7 +79,7 @@ const AVOID: Record<string, AvoidBox> = {
 
 /** Forms drawn in screen space (the rest ride the type plane): the Shouts, and the marquee, whose board the pipeline
  *  push magnified past the frame on the plane (round 7d). */
-export const REST_SCREEN: readonly string[] = ['Shout', 'Marquee'];
+export const REST_SCREEN: readonly string[] = ['Shout', 'Marquee', 'Code', 'Diff'];
 /** PUSH! too: on the plane the smash's dolly zoom carried it off the left edge while it was still on (round 7d). */
 export const restOnScreen = (e: TypeEntry): boolean => REST_SCREEN.includes(e.form) || e.id === 'r-push';
 
@@ -99,15 +103,11 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
       case 'r-squash':
         out.push(<Stack key={e.id} spec={spec(e, { x: 340, y: 140, w: 720, h: 420 })} t={t} />);
         break;
-      case 'r-blame': {
-        // the blame shots push in so far that the plane shows 2.3x here: the panel is authored at the size that fits the
-        // margin in the tightest of them (the canyon's own gutter box overflowed it), the type sized to its width
-        const g = { x: 640, y: 330, w: 640, h: 270 };
-        const toks = words(e);
-        const chars = toks.reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.6 : 1), 'blue'.length + 2);
-        out.push(<Code key={e.id} spec={spec(e, g)} t={t} opt={{ gutter: 'blue', size: Math.min(64, g.h / 6, (g.w - 90) / (0.6 * chars)), keyScale: 1.6, chrome: 'git blame button.css', backing: true }} />);
+      case 'r-blame':
+        // round 7d: a wide terminal in screen space, the line wrapped at a readable size (on the plane it was sized to
+        // the line's length and shrank to a 1.5 % cap); it takes the band clear of the faces (type/avoid.ts)
+        out.push(<Code key={e.id} spec={spec(e, TERM)} t={t} opt={{ gutter: 'blue', size: TERM_SIZE, keyScale: 1.3, chrome: 'git blame button.css', backing: true, wrap: true }} />);
         break;
-      }
       case 'r-red':
         out.push(
           <g key={e.id}>
@@ -143,19 +143,15 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<LightBox key={`${e.id}-q`} spec={{ id: `${e.id}-q`, words: words(e).slice(0, 4).map((w) => ({ text: w.text.toUpperCase(), color: '#7fe3ff' })), t0: e.t0 + 0.05, stagger: 0.04, t1: e.t1, x: 960, y: 150, size: 84, box: true }} t={t} />);
         break;
       }
-      case 'r-touch': {
-        // the case's own line box overflowed the margin when the plane magnified: the panel is authored at the size that
-        // fits the tightest of the comment shots, the type sized to its width
-        const b = { x: 700, y: 330, w: 690, h: 370 };
-        const chars = words(e).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.5 : 1), '//'.length + 2);
-        out.push(<Code key={e.id} spec={spec(e, b)} t={t} opt={{ gutter: '//', size: Math.min(62, (b.w - 90) / (0.6 * chars)), keyScale: 1.5, chrome: 'comment.js', backing: true }} />);
+      case 'r-touch':
+        out.push(<Code key={e.id} spec={spec(e, TERM)} t={t} opt={{ gutter: '//', size: TERM_SIZE, keyScale: 1.3, chrome: 'comment.js', backing: true, wrap: true }} />);
         break;
-      }
       case 'r-wrote':
-        out.push(<Stamp key={e.id} spec={spec(e, { x: 210, y: 300, w: 1000, h: 420 })} t={t} />);
+        // in the low middle, between blue (left) and orange's face (right), never on either girl (round 7d)
+        out.push(<Stamp key={e.id} spec={spec(e, { x: 560, y: 600, w: 820, h: 420 })} t={t} />);
         break;
       case 'r-touched':
-        out.push(<Diff key={e.id} spec={spec(e, { x: 390, y: 250, w: 1110, h: 450 })} t={t} opt={{ minus: "// don't touch", size: Math.min(78, (1110 - 90) / (0.6 * (2 + words(e).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.8 : 1), 0)))), keyScale: 1.8, title: 'comment.js', backing: true }} />);
+        out.push(<Diff key={e.id} spec={spec(e, DIFF_BOX)} t={t} opt={{ minus: "// don't touch", size: TERM_SIZE, keyScale: 1.5, title: 'comment.js', backing: true }} />);
         break;
       case 'r-scream':
         // it slams once the scream's shatter cover has cleared (10 frames; over the cover it read at 1.9:1), and sits
