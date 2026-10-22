@@ -80,10 +80,10 @@ const kickW = (t: number): number => {
 
 /** A shot's camera move about the girl it frames (round 7b: a camera move on every line). k: 0..1 across the shot,
  *  u: seconds into it. */
-const moved = (pose: CameraPose, move: Move, k: number, u: number, focus: Vec3, dir: number): CameraPose => {
+const moved = (pose: CameraPose, move: Move, k: number, u: number, focus: Vec3, dir: number, pushDepth = 0.38): CameraPose => {
   const rel: Vec3 = [pose.position[0] - focus[0], pose.position[1] - focus[1], pose.position[2] - focus[2]];
   if (move === 'push') {
-    const d = 1 - 0.38 * outQuad(k);
+    const d = 1 - pushDepth * outQuad(k);
     return { ...pose, position: [focus[0] + rel[0] * d, focus[1] + rel[1] * d, focus[2] + rel[2] * d] };
   }
   if (move === 'orbit') {
@@ -109,7 +109,7 @@ const kick = (pose: CameraPose, t: number, amp: number): CameraPose => {
   const w = 1 - (t - h) / 0.25;
   const r = seeded(`r-kick:${Math.floor(t * 20)}`);
   const d = amp * w;
-  return { ...pose, position: [pose.position[0] + r.range(-d, d), pose.position[1] + r.range(-d, d), pose.position[2]], roll: (pose.roll ?? 0) + r.range(-0.04, 0.04) * w };
+  return { ...pose, position: [pose.position[0] + r.range(-d, d), pose.position[1] + r.range(-d, d), pose.position[2]], roll: (pose.roll ?? 0) + r.range(-0.04, 0.04) * w * Math.min(1, amp / 0.26) };
 };
 
 const BLUE_DISCO: Grade = { ...GRADES.reviewed, amount: 0.42 };
@@ -147,7 +147,8 @@ const restCamera = (t: number) => {
   const dir = idx % 2 ? 1 : -1;
   // the tunnel's hero move flies the camera through the girls standing in it; a shot travels its first 45 %
   const raw = variant(HERO[scene], shot.cam, scene === 'tunnel' ? k * 0.45 : k, focus);
-  const base = move ? moved(raw, move, k, t - shot.t, focus, dir) : raw;
+  // the solo pushes 20 % (its doubled cuts carry the motion, round 7c), every other shot 38 %
+  const base = move ? moved(raw, move, k, t - shot.t, focus, dir, t >= SOLO.start ? 0.2 : 0.38) : raw;
   const planeBase = variant(HERO[scene], shot.cam, 0, focus);
   // the punch: every sung word and second beat in the verses, every kick in the scream, breakdown and solo (with a
   // stepped shake, hardest in the breakdown); the whisper holds still
@@ -158,9 +159,9 @@ const restCamera = (t: number) => {
   const h = [...hits].reverse().find((x) => t >= x) ?? 0;
   // the solo sits just under the chorus: its kicks are lighter than the scream's and the breakdown's
   const solo = t >= SOLO.start;
-  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.1 : solo ? 0.035 : metal ? 0.09 : 0.06;
+  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.05 : solo ? 0.035 : metal ? 0.09 : 0.06;
   const punchedPose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
-  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.3 : solo ? 0.07 : 0.26) : punchedPose;
+  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.12 : solo ? 0.07 : 0.26) : punchedPose;
   return { shot, k, scene, blueP, orangeP, pose, planeBase, quiet, metal, heavy, solo };
 };
 
