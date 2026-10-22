@@ -12,7 +12,6 @@ import { Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
 import { DissolveText } from '../../type/DissolveText.tsx';
-import { faceBoxes, Knockout, planeFaceBoxes, planeMarginPath } from '../../type/Knockout.tsx';
 import { LightBox } from '../../type/LightBox.tsx';
 import { Scrim } from '../../type/Scrim.tsx';
 import { Slam } from '../../type/Slam.tsx';
@@ -20,7 +19,6 @@ import { layout, MONO } from '../../type/fonts.tsx';
 import { beatPos } from '../../timing.ts';
 import type { TypeEntry } from '../chorus/typeplan.ts';
 import { type RShot, RSHOTS } from './plan.ts';
-import { restStateAt } from './RestShot.tsx';
 
 export interface Box { x: number; y: number; w: number; h: number }
 export interface RestAnchors { gutter?: Box; countdown?: Box; tag?: Box; caseLine?: Box; /** GIT! and PUSH! end with their shots. */ gitUntil?: number; pushUntil?: number }
@@ -151,8 +149,7 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         break;
     }
   }
-  // the Shouts are drawn in screen space, the rest on the type plane (RestShot.tsx)
-  const onScreen = entries.some((e) => e.form === 'Shout');
-  const st = restStateAt(t);
-  return <Knockout id={onScreen ? 'r-face-knockout-s' : 'r-face-knockout'} faces={(onScreen ? faceBoxes : planeFaceBoxes)(st)} clip={onScreen ? undefined : planeMarginPath(st)}>{out}</Knockout>;
+  // the Shouts are drawn in screen space, the rest on the type plane (RestShot.tsx); no form is cut around a face
+  // (round 7d, "No knockouts"): each is placed clear of the faces of the shots it plays over
+  return <g>{out}</g>;
 };

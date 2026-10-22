@@ -13,10 +13,8 @@ import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
 import { MergeConflictLogo } from '../../type/logo/Logo.tsx';
 import { Kaleido } from '../../transitions/scene/scene.tsx';
-import { Knockout, faceBoxes } from '../../type/Knockout.tsx';
 import { Scrim } from '../../type/Scrim.tsx';
 import { LOGO_DESIGN } from '../proof.ts';
-import { CHORUS2_START, chorus1StateAt, chorus2StateAt } from './ChorusShot.tsx';
 import type { TypeEntry } from './typeplan.ts';
 
 /** Logo B's signature move (the same both times): the halves fly in from off frame and crash on "conflict",
@@ -30,7 +28,7 @@ export const logoApart = (t: number, merge: readonly [number, number, number, nu
 };
 
 // Forms drawn in screen space: inside the 4 % margin whatever the camera does, below the girls' faces (they sit in the
-// upper half of every chorus frame), and cut away around any face that still crosses them (type/Knockout.tsx).
+// upper half of every chorus frame), never cut around a face (round 7d, "No knockouts").
 // The rest live on the type plane, so the camera carries them.
 const SCREEN_FORMS: readonly string[] = ['Shout', 'Logo', 'Stack', 'Stamp', 'Extrude', 'Marquee', 'FlameText'];
 const box = { x: 300, y: 520, w: 1320, h: 480 };
@@ -105,7 +103,5 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         break;
     }
   }
-  if (!screen) return <g>{out}</g>;
-  const faces = faceBoxes((t < CHORUS2_START ? chorus1StateAt : chorus2StateAt)(t));
-  return <Knockout id="ch-face-knockout" faces={faces}>{out}</Knockout>;
+  return <g>{out}</g>;
 };

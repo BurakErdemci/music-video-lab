@@ -13,13 +13,11 @@ import { Flap, Ring, Wave } from '../../type/forms/Letters.tsx';
 import { Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
-import { faceBoxes, Knockout, planeFaceBoxes, planeMarginPath, screenMarginPath } from '../../type/Knockout.tsx';
 import { LightBox } from '../../type/LightBox.tsx';
 import { Scrim } from '../../type/Scrim.tsx';
 import { Slam } from '../../type/Slam.tsx';
 import type { TypeEntry } from '../chorus/typeplan.ts';
 import { KICK, STACK2 } from '../proof.ts';
-import { versesStateAt } from './VersesShot.tsx';
 
 export interface Anchors { clock?: { cx: number; cy: number; r: number }; panel?: { x: number; y: number; w: number; h: number }; board?: { x: number; y: number; w: number; h: number } }
 
@@ -102,10 +100,9 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
         break;
     }
   }
-  // the hoop and the CSS block are drawn in screen space, the rest on the type plane (VersesShot.tsx)
-  const onScreen = entries.some((e) => e.id === 'v-feature' || e.id === 'v-css');
-  const st = versesStateAt(t);
-  return <Knockout id={onScreen ? 'v-face-knockout-s' : 'v-face-knockout'} faces={(onScreen ? faceBoxes : planeFaceBoxes)(st)} clip={onScreen ? screenMarginPath : planeMarginPath(st)}>{out}</Knockout>;
+  // the hoop and the CSS block are drawn in screen space, the rest on the type plane (VersesShot.tsx); no form is cut
+  // around a face (round 7d, "No knockouts")
+  return <g>{out}</g>;
 };
 
 export const hoopFill = (i: number) => hueAt('O', 28, i);

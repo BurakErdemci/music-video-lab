@@ -37,7 +37,7 @@ const barTimeAfter = (t: number, n: number): number => {
   return a + (p - i) * (b - a);
 };
 import { HoopType, type HoopPlan, hoopPlan, kickCards, kickPlan, KickWord, perchDy, perchPlacement, perchVisible, PerchWord, RevealBoard, type RevealPlan, revealDone, throwPlan, throwRecoil, ThrowWords } from '../girls/interact.tsx';
-import { Fill, Knockout } from '../girls/inside.tsx';
+import { Fill } from '../girls/inside.tsx';
 import { DANCE_POOL, focusAt, focusLook, focusPlan, framing, framingAt, type FramingKind, framingPlan, type Girl, poseBarDraws, poseBarPlan } from '../girls/staging.tsx';
 import { hueAt, keyFill } from '../type/forms/common.tsx';
 import { LightBox } from '../type/LightBox.tsx';
@@ -470,7 +470,6 @@ const GIRLS: Segment[] = [
       draw(d, POSE_AT, st, `pb${i}`, d.ghost !== undefined ? { flat: { color: POSEBAR.color, mix: 0.85 }, soft: 0.3 } : {}),
     ),
   }), () => null),
-  girlSeg('knockout', 'inside KNOCKOUT: the girl only through the letters', tok(W0, 1).start - 0.2, (st) => ({ pose: HOME, cards: <Card id="B09" t={st} grade={B} x={0} feet={-7.2} height={12} /> }), (st) => <Knockout plan={{ id: 'lab-ko', tokens: W0, key: 1, face: 'display', field: '#0a0414', edge: '#19c8ff' }} t={st} />),
   girlSeg('fill', 'inside FILL: her silhouette filled with the line', tok(W2, 0).start - 0.2, (st) => ({ pose: HOME, cards: <Card id="B07" t={st} grade={B} x={0} height={8} flat={{ color: '#05030a', mix: 0.92 }} /> }), (st, pose) => <Fill plan={{ id: 'lab-fill', tokens: W2, key: 2, card: 'B07', at: { x: 0, height: 8 }, pose, colors: ['#19c8ff', '#2f7bff', '#8fd8ff', '#7a6cff'], keyColor: '#ff7a1a', size: 54 }} t={st} />),
 ];
 
