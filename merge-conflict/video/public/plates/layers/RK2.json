@@ -1,0 +1,53 @@
+{
+  "size": [
+    3640,
+    2048
+  ],
+  "drawings": {
+    "fg": {
+      "box": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "touch": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "cover": 0.588
+    },
+    "fgb": {
+      "box": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "touch": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "cover": 0.6027
+    },
+    "fgc": {
+      "box": [
+        0.0,
+        0.0,
+        1.0,
+        1.0
+      ],
+      "touch": {
+        "left": true,
+        "right": true,
+        "top": true,
+        "bottom": true
+      },
+      "cover": 0.6133
+    }
+  }
+}
