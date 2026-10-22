@@ -1,5 +1,5 @@
 // The film on take-v4: exactly one shot per frame (each shot owns the frame's single ThreeCanvas), then the
-// white-out hits on top. 0-140.04 s is built (round 7); the rest of the song is still the placeholder.
+// white-out hits on top. 0-140.04 s is rounds 6-7, 140.04 s to the end round 8 (film/finale).
 import type { ComponentType } from 'react';
 import { useLayer, useShotBackground } from './layer.ts';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
@@ -12,23 +12,13 @@ import type { ShotState } from './film/framing.ts';
 import { REST_END, V4 } from './film/rest/plan.ts';
 import { RestShot, restStateAt } from './film/rest/RestShot.tsx';
 import { VersesShot, versesStateAt } from './film/verses/VersesShot.tsx';
+import { FinaleShot, finaleStateAt } from './film/finale/FinaleShot.tsx';
 import { Whiteout } from './fx/whiteout.tsx';
-import { beatIndexAt, DURATION_FRAMES, f, sec, sectionAt } from './timing.ts';
+import { DURATION_FRAMES, f, sec } from './timing.ts';
 import { Fonts } from './type/fonts.tsx';
 
 /** `state`: what the shot shows at t (camera and placed cards), for tools/framecheck.mjs. */
 interface Shot { id: string; from: number; to: number; Component: ComponentType<{ frame: number }>; state?: (t: number) => ShotState }
-
-const Placeholder = ({ frame }: { frame: number }) => {
-  const t = sec(frame);
-  return (
-    <AbsoluteFill style={{ background: '#000', color: '#fff', fontFamily: 'monospace', fontSize: 64, justifyContent: 'center', alignItems: 'center' }}>
-      <div>{sectionAt(t)}</div>
-      <div>beat {beatIndexAt(t)}</div>
-      <div>{t.toFixed(3)} s</div>
-    </AbsoluteFill>
-  );
-};
 
 export const SHOTS: Shot[] = [
   { id: 'speaker', from: 0, to: f(GROOVE.start), Component: Speaker, state: speakerStateAt },
@@ -38,7 +28,7 @@ export const SHOTS: Shot[] = [
   { id: 'verse3', from: f(PROOF_END), to: f(CHORUS2_START), Component: RestShot, state: restStateAt },
   { id: 'chorus2', from: f(CHORUS2_START), to: f(V4.start), Component: Chorus2Shot, state: chorus2StateAt },
   { id: 'verse4-solo', from: f(V4.start), to: f(REST_END), Component: RestShot, state: restStateAt },
-  { id: 'placeholder', from: f(REST_END), to: DURATION_FRAMES, Component: Placeholder },
+  { id: 'finale', from: f(REST_END), to: DURATION_FRAMES, Component: FinaleShot, state: finaleStateAt },
 ];
 // Overlapping shots would mount two ThreeCanvases on one frame (a second canvas renders black in parallel renders).
 for (let i = 1; i < SHOTS.length; i++) {

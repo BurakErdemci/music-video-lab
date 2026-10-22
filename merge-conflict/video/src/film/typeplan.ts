@@ -4,5 +4,6 @@ import { CHORUS1, CHORUS2 } from './chorus/plan.ts';
 import { REST_TYPE } from './rest/plan.ts';
 import { chorusType, type TypeEntry } from './chorus/typeplan.ts';
 import { INTRO_TYPE, VERSE_TYPE } from './verses/plan.ts';
+import { FINALE_TYPE } from './finale/plan.ts';
 
-export const TYPE_PLAN: readonly TypeEntry[] = [...INTRO_TYPE, ...VERSE_TYPE, ...chorusType(CHORUS1), ...REST_TYPE, ...chorusType(CHORUS2)].sort((a, b) => a.t0 - b.t0);
+export const TYPE_PLAN: readonly TypeEntry[] = [...INTRO_TYPE, ...VERSE_TYPE, ...chorusType(CHORUS1), ...REST_TYPE, ...chorusType(CHORUS2), ...FINALE_TYPE].sort((a, b) => a.t0 - b.t0);
