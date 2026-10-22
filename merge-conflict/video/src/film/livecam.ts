@@ -23,8 +23,8 @@ export const bassAt = (t: number): number => (BASS[Math.max(0, Math.min(BASS.len
 /** Peak shake (px at 1080 lines, at full bass energy) per section, and whether it is stepped (metal). */
 const SHAKE: Record<string, [number, boolean]> = {
   intro_robot: [2, false], intro_groove: [9, true], verse1_sweet: [3, false], verse2_raspy: [3.5, false], prechorus: [4, false],
-  chorus1: [7, false], verse3_rebase: [5, false], chorus2: [7, false], verse4_trade: [5.5, false], scream: [10, true],
-  breakdown_git_push_force: [12, true], whisper: [0, true], guitar_solo: [8, true], piano_interlude: [0, false], build: [3, false],
+  chorus1: [9, false], verse3_rebase: [5, false], chorus2: [9, false], verse4_trade: [5.5, false], scream: [10, true],
+  breakdown_git_push_force: [3, true], whisper: [0, true], guitar_solo: [5, true], piano_interlude: [0, false], build: [3, false],
   final_chorus: [7, false], post_chorus_chant: [9, true], robot_build_failed: [2, false], scream_end: [10, true], outro: [8, true],
 };
 
@@ -44,7 +44,7 @@ export const shakeAt = (t: number): [number, number] => {
   const [peak, stepped] = SHAKE[sec] ?? [0, false];
   if (peak === 0) return [0, 0];
   // the solo trembles on the tempo: an extra kick of shake on every beat, decaying within it
-  const tremble = sec === 'guitar_solo' ? 0.6 * Math.exp(-(beatPos(t) % 1) * 5) : 0;
+  const tremble = sec === 'guitar_solo' ? 0.35 * Math.exp(-(beatPos(t) % 1) * 5) : 0;
   const a = peak * Math.min(1.3, bassAt(t) + tremble);
   // stepped: a new offset every 3 frames (20 per second); smooth: 9 keys per second, eased between
   const u = stepped ? Math.floor(Math.round(t * 60) / 3) : t * 9;
