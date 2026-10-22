@@ -492,3 +492,23 @@ instead of a still:
 - **Combined with** the camera, the shake and the hair/cloth ripple, but the ripple is turned down on cards that
   already loop drawn hair.
 - **Order of work:** the most-seen cards first (measured screen time), then every action card.
+
+## Round 7d: what proof140-r7c still gets wrong (night review 2026-10-22, verified frame by frame; Burak asleep)
+
+A blind viewer and the architect checked proof140-r7c at full size. All checks pass, yet these read badly, so they
+become rules (later rounds keep them):
+- **No knockouts.** Never punch a hole in a type panel, terminal or word to show a face through it (74.5 s, 114.4 s
+  showed the face as a hard rectangle in the window with the text cut). A type form that would cover a subject's face
+  moves or shrinks (other side, other band, smaller size) until it clears the face; `type/Knockout.tsx` goes.
+- **Type is never hidden by a card.** A type form is fully visible at its settled state; no card or effect is drawn
+  over it ("AAAAAH!" at 117.9 s lost its end behind the orange girl).
+- **The faces keep their chins.** The face box used by the framing rules runs down to the chin; a bust or face cut-in
+  never cuts the face at the mouth or chin (the orange head rising from the bottom edge at 127.5 s and 135.5 s).
+  Split screens may crop below the chin.
+- **Covers are events, not punctuation.** From the scream to the end, an opaque cover (a transition hiding >= 50 % of
+  the frame) fires at most once per 4 s and lasts at most 6 frames; the other cuts are hard cuts on the beat. In the
+  solo the covers came every 2 s (130.5, 132.5, 134.5, 138.5 s) and read as a loop.
+- **GIT! PUSH! FORCE! cause and effect.** Between the PUSH! smash (124.32) and FORCE! (125.02) there is no cover at
+  all. The shockwave ring leaves OF3's fists and the next shot shows it reaching BF1, who is thrown across >= 40 % of
+  the frame width over >= 0.4 s, >= 50 % of the frame height, in her own colours (not tinted into the red). r7c had a
+  burst cover, a 0.1 s painting and a torn-paper cover in those 0.7 s, so the blue girl was seen for 0.2 s.
