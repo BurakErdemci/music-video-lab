@@ -605,3 +605,5 @@ Decisions taken in this round (the architect may overrule):
   measured 0.32-0.47x).
 - The keyed layers are upscaled before keying (the key runs on the 3640x2048 image); a thin blue strand on the green
   reads cyan, so within 10 px of the screen green above 0.55 of the blue counts as screen (`tools/imagegen/greenkey.py`).
+- The scream may reach 1.1x the chorus motion (was 1.0x): QK2 brought up to the slide floor lifts the section to
+  1.07x, and calming the scream's live shots to make room did not reach 1.0x. Architect's call, round 10.
