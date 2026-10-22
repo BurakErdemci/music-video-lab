@@ -73,8 +73,8 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         // the tunnel's chevrons are as bright as the letters: a backing
         out.push(
           <g key={e.id}>
-            <Scrim x={300} y={600} w={1320} h={400} pad={16} />
-            <Stack spec={spec(e, { x: 300, y: 600, w: 1320, h: 400 })} t={t} />
+            <Scrim x={460} y={770} w={1000} h={200} pad={14} />
+            <Stack spec={spec(e, { x: 460, y: 770, w: 1000, h: 200 })} t={t} />
           </g>,
         );
         break;
@@ -137,7 +137,7 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         break;
       case 'f-ship2':
       case 'f-ship4':
-        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'SHIP IT!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 810, w: 1000, rot: e.id === 'f-ship2' ? -4 : 4 }} t={t} />);
+        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'SHIP IT!', at: e.t0, until: e.t1, style: 'steel', color: '#ffd23a', cx: 960, cy: 790, w: 920, rot: e.id === 'f-ship2' ? -4 : 4 }} t={t} />);
         break;
       case 'f-acc6':
         out.push(<Slam key={e.id} spec={{ text: 'ACCEPT BOTH!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 900, size: 130, color: '#ff4a1a', face: 'metalmania', rot: -3 }} t={t} />);
@@ -159,7 +159,7 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
       }
       // ---- the scream end and the outro: the merge's epilogue
       case 'f-scream':
-        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'AAAAAAAH!', at: e.t0 + 4 / 60, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 810, w: 1380, rot: -3 }} t={t} />);
+        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'AAAAAAAH!', at: e.t0 + 4 / 60, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 790, w: 1300, rot: -3 }} t={t} />);
         break;
       case 'f-fix':
       case 'f-log':

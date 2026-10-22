@@ -44,7 +44,7 @@ const faceC = (card: string, flip = false): Who => [card, faceSized(card, 0, fli
 /** Fusion busts: a shade smaller, so both laughing heads fit their halves with their chins. */
 const bustAt = (card: string, x: number): Who => [card, faceSized(card, x, false, 1.8, 0.55)];
 /** The stage-dive cards are landscape: they fly above the floor. */
-const dive = (card: string, x: number, flip = false): Who => [card, { x, feet: -1.4, height: 3.0, flip, z: 0 }];
+const dive = (card: string, x: number, flip = false): Who => [card, { x, feet: -0.6, height: 3.0, flip, z: 0 }];
 
 /** The build's girls: they rise from one knee in the tree and float up with it (the flight carries the camera). */
 export const RISE: Record<'B' | 'O', Placement> = { B: { x: -2.4, feet: -4.0, height: 5.2, z: 2.0 }, O: { x: 2.4, feet: -4.0, height: 5.2, z: 2.0 } };
@@ -78,7 +78,7 @@ export const FSHOTS: FShot[] = [
   { id: 'gradient-now', t: tk(55, 7), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   // "Two girls, one line,": the runway again, but now they reach for each other (chorus 1 had them back to back)
   { id: 'line-two', t: tk(56, 0), scene: 'runway', cam: 'hero', move: 'push', into: 'shock', B: ['PB3', full(-1.5, 4.8)], O: ['PO3', full(1.5, 4.8)] },
-  { id: 'line-one', t: tk(56, 2), scene: 'runway', cam: 'low', move: 'dollyzoom', into: 'shock' },
+  { id: 'line-one', t: tk(56, 2), scene: 'runway', cam: 'hero', move: 'dollyzoom', into: 'shock' },
   // "and we figured it out": cheek to cheek at one mic (RK5)
   { id: 'rk5', t: tk(56, 4), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
   { id: 'rk5-b', t: tk(56, 6), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'orbit', into: 'shock' },
@@ -117,8 +117,8 @@ export const FSHOTS: FShot[] = [
   { id: 'chant-2', t: tk(63, 0), scene: 'forge', cam: 'reverse', move: 'push', into: 'shock', B: ['BH1', full(-2.4, 4.8)], O: ['OH1', full(2.4, 4.8)] },
   { id: 'chant-faces-2', t: tk(63, 2), scene: 'duel', cam: 'hero', move: 'dollyzoom', into: 'shock', B: faceAt('BMX4', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'ship-2', t: tk(63, 4), scene: 'marena', cam: 'wide', move: 'whip', into: 'tear', B: ['BS1', full(-3.0, 5.0)], O: ['OS1', full(3.0, 5.0)] },
-  { id: 'dive-2', t: tk(64, 0), scene: 'tunnel', cam: 'wide', move: 'push', into: 'shock', B: dive('BH2', -2.0), O: dive('OH2', 2.2) },
-  { id: 'dive-2b', t: tk(64, 2), scene: 'tunnel', cam: 'low', move: 'orbit', into: 'shock' },
+  { id: 'dive-2', t: tk(64, 0), scene: 'tunnel', cam: 'hero', move: 'push', into: 'shock', B: dive('BH2', -2.0), O: dive('OH2', 2.2) },
+  { id: 'dive-2b', t: tk(64, 2), scene: 'tunnel', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'ship-3', t: tk(64, 4), scene: 'cathedral', cam: 'hero', move: 'dollyzoom', into: 'shock', B: ['BS3', full(-2.4, 5.0)], O: ['OS3', full(2.4, 5.0)] },
   // ---- "Build failed. Syntax error on line forty-two." (193.10-196.49): the music stops; blue reads it deadpan
   //      (the intro's terminal), orange's jaw drops, the frozen jump (RK9). Comedic hard stop: hard cuts, no move.
