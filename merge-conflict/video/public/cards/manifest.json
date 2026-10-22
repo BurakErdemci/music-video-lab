@@ -147,6 +147,18 @@
     ],
     "source": "B12-joy-spin.png"
   },
+  "BB1": {
+    "file": "cards/BB1.png",
+    "w": 1004,
+    "h": 1394,
+    "bbox": [
+      17,
+      73,
+      1021,
+      1467
+    ],
+    "source": "BB1-brace.png"
+  },
   "BC1": {
     "file": "cards/hd/BC1.webp",
     "w": 931,
@@ -499,6 +511,42 @@
     ],
     "source": "BF1-blown.png"
   },
+  "BF1b": {
+    "file": "cards/BF1b.png",
+    "w": 912,
+    "h": 1390,
+    "bbox": [
+      23,
+      80,
+      935,
+      1470
+    ],
+    "source": "BF1b-action.png"
+  },
+  "BF1c": {
+    "file": "cards/BF1c.png",
+    "w": 912,
+    "h": 1390,
+    "bbox": [
+      23,
+      80,
+      935,
+      1470
+    ],
+    "source": "BF1c-action.png"
+  },
+  "BF2": {
+    "file": "cards/BF2.png",
+    "w": 1013,
+    "h": 1007,
+    "bbox": [
+      5,
+      250,
+      1018,
+      1257
+    ],
+    "source": "BF2-airborne.png"
+  },
   "BH1": {
     "file": "cards/BH1.png",
     "w": 984,
@@ -754,6 +802,30 @@
       1536
     ],
     "source": "BMX1-base.png"
+  },
+  "BMX1b": {
+    "file": "cards/BMX1b.png",
+    "w": 1024,
+    "h": 1524,
+    "bbox": [
+      0,
+      12,
+      1024,
+      1536
+    ],
+    "source": "BMX1b-face.png"
+  },
+  "BMX1c": {
+    "file": "cards/BMX1c.png",
+    "w": 1024,
+    "h": 1524,
+    "bbox": [
+      0,
+      12,
+      1024,
+      1536
+    ],
+    "source": "BMX1c-face.png"
   },
   "BMX2": {
     "file": "cards/hd/BMX2.webp",
@@ -2059,6 +2131,30 @@
     ],
     "source": "OF2-leap.png"
   },
+  "OF2b": {
+    "file": "cards/OF2b.png",
+    "w": 980,
+    "h": 1408,
+    "bbox": [
+      19,
+      22,
+      999,
+      1430
+    ],
+    "source": "OF2b-action.png"
+  },
+  "OF2c": {
+    "file": "cards/OF2c.png",
+    "w": 980,
+    "h": 1408,
+    "bbox": [
+      19,
+      22,
+      999,
+      1430
+    ],
+    "source": "OF2c-action.png"
+  },
   "OF3": {
     "file": "cards/hd/OF3.webp",
     "w": 1013,
@@ -2075,6 +2171,30 @@
     ],
     "source": "OF3-smash.png"
   },
+  "OF3b": {
+    "file": "cards/OF3b.png",
+    "w": 1013,
+    "h": 1306,
+    "bbox": [
+      11,
+      111,
+      1024,
+      1417
+    ],
+    "source": "OF3b-action.png"
+  },
+  "OF3c": {
+    "file": "cards/OF3c.png",
+    "w": 1013,
+    "h": 1306,
+    "bbox": [
+      11,
+      111,
+      1024,
+      1417
+    ],
+    "source": "OF3c-action.png"
+  },
   "OF4": {
     "file": "cards/OF4.png",
     "w": 899,
@@ -2086,6 +2206,30 @@
       1509
     ],
     "source": "OF4-force.png"
+  },
+  "OF4b": {
+    "file": "cards/OF4b.png",
+    "w": 899,
+    "h": 1489,
+    "bbox": [
+      88,
+      20,
+      987,
+      1509
+    ],
+    "source": "OF4b-idle.png"
+  },
+  "OF4c": {
+    "file": "cards/OF4c.png",
+    "w": 899,
+    "h": 1489,
+    "bbox": [
+      88,
+      20,
+      987,
+      1509
+    ],
+    "source": "OF4c-idle.png"
   },
   "OH1": {
     "file": "cards/OH1.png",

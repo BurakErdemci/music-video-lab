@@ -1,6 +1,6 @@
 Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./BB1-brace.png
 
-Subject: the BLUE girl of the attached METAL-FORM model sheet, full body, BRACING against an oncoming blast that comes from the LEFT side of the frame: knees bent low, feet planted wide, leaning INTO the blast toward the left, both forearms crossed up in front of her face as a shield, eyes narrowed over her forearms, teeth gritted, the coat tails and the long ponytail blown back toward the RIGHT.
+Subject: the BLUE girl of the attached METAL-FORM model sheet, full body, BRACING against an oncoming blast that comes from the LEFT side of the frame: knees bent low, feet planted wide, leaning INTO the blast toward the left, both forearms crossed up in front of her face as a shield, eyes narrowed over her forearms, teeth gritted, the coat tails and the long ponytail blown back toward the RIGHT. Her trousers are the WIDE FLARED metal trousers and her boots the HUGE PLATFORM boots of the model sheet, exactly as on the sheet (NOT straight trousers, NOT combat boots).
 
 Acting: this is an ACTION frame from an animated music video, NOT a standing pose. Push the pose hard: a strong line of action through the whole body, clear silhouette, exaggerated cartoon acting, the face fully committed to the emotion.
 
