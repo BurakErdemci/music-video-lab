@@ -20,9 +20,9 @@ const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const VIDEO = path.join(ROOT, 'video');
 const FPS = 60;
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i === -1 ? d : process.argv[i + 1]; };
-/** The painting's floor as a share of its section's live-shot median. Why 0.4: see the round 10 section of
+/** The painting's floor as a share of its section's live-shot median. Why 0.5: see the round 10 section of
  *  docs/scene-map.md (measured on proof232-r9 and proof232-r10). */
-export const FACTOR = 0.4;
+export const FACTOR = 0.5;
 const HEAD = 6, TAIL = 2;
 const PANEL_DIST = 30;
 const median = (xs) => { const s = [...xs].sort((a, b) => a - b); const n = s.length; return n ? (n % 2 ? s[(n - 1) / 2] : (s[n / 2 - 1] + s[n / 2]) / 2) : 0; };
