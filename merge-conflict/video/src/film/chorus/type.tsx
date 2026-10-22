@@ -15,6 +15,8 @@ import { MergeConflictLogo } from '../../type/logo/Logo.tsx';
 import { Kaleido } from '../../transitions/scene/scene.tsx';
 import { Scrim } from '../../type/Scrim.tsx';
 import { LOGO_DESIGN } from '../proof.ts';
+import { avoidFaces, type Box as AvoidBox } from '../../type/avoid.ts';
+import { CHORUS1_LIVE, CHORUS2_LIVE, CHORUS2_START } from './ChorusShot.tsx';
 import type { TypeEntry } from './typeplan.ts';
 
 /** Logo B's signature move (the same both times): the halves fly in from off frame and crash on "conflict",
@@ -35,13 +37,37 @@ const box = { x: 300, y: 520, w: 1320, h: 480 };
 /** NO! sits off the screaming face (her bust is right of centre for orange, left for blue); NEVER! spans both. */
 const shoutPlace = (e: TypeEntry) =>
   e.text === 'NEVER!' ? { cx: 960, cy: 820, w: 1800, rot: e.style === 'steel' ? -4 : 4 } : e.style === 'steel' ? { cx: 640, cy: 720, w: 1120, rot: -7 } : { cx: 1300, cy: 720, w: 1120, rot: 6 };
+/** Each form's box for type/avoid.ts (the plane's coordinates for the plane forms, the screen's for the rest); the
+ *  runway line lies on the floor and stays. */
+const avoidBox = (e: TypeEntry, c2: boolean): AvoidBox | undefined => {
+  switch (e.form) {
+    case 'Stack': return box;
+    case 'Stamp': return { x: 200, y: 520, w: 1500, h: 480 };
+    case 'Shout': {
+      const p = shoutPlace(e);
+      const h = (p.w / (e.text ?? 'NO!').length) * 1.5 + p.w * Math.abs(Math.sin((p.rot * Math.PI) / 180));
+      return { x: p.cx - p.w / 2, y: p.cy - h / 2, w: p.w, h };
+    }
+    case 'FlameText': return { x: 140, y: 590, w: 1640, h: 300 };
+    case 'Wave': return { x: 140, y: 640, w: 1640, h: 380 };
+    case 'Extrude': return { x: 260, y: 560, w: 1400, h: 440 };
+    case 'Marquee': return { x: 140, y: 610, w: 1640, h: 390 };
+    case 'GlitchText': return c2 ? { x: 140, y: 600, w: 1640, h: 330 } : { x: 140, y: 680, w: 1640, h: 400 };
+    case 'Logo': return { x: 385, y: 200, w: 1150, h: 600 };
+    default: return undefined;
+  }
+};
 const form = (e: TypeEntry, b = box): FormSpec => ({ id: `ch-${e.id}-${e.line}`, line: e.line, key: e.key, singer: e.singer, t0: e.t0, t1: e.t1, box: b, range: e.range });
 
 export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose; screen: boolean; merges: Record<string, readonly [number, number, number, number]> }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
+    const n0 = out.length;
     if (t < e.t0 - 0.02 || t >= e.t1) continue;
-    const isScreen = SCREEN_FORMS.includes(e.form);
+    // chorus 2's I CAN'T TAKE CONTROL is set in screen space: on the plane its barrel roll carried the second row off
+    // the frame bottom (round 7d, 105.4-105.9 s)
+    const c2 = t >= CHORUS2_START;
+    const isScreen = SCREEN_FORMS.includes(e.form) || (e.form === 'GlitchText' && c2);
     if (isScreen !== screen) continue;
     const toks = lineTokens(e.line).slice(e.range[0], e.range[1]);
     switch (e.form) {
@@ -78,7 +104,7 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         );
         break;
       case 'GlitchText':
-        out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, y: 820, size: 170, face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
+        out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, ...(c2 ? { y: 720, size: 130 } : { y: 820, size: 170 }), face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
         break;
       case 'Logo': {
         const m = merges[e.id] as readonly [number, number, number, number];
@@ -86,10 +112,12 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         const bp = beatPos(t);
         const crash = [m[1], m[3]].filter((c) => t >= c).at(-1);
         const kick = crash === undefined ? 1 : 1 + 0.25 * (1 - outQuad(clamp01((t - crash) / (10 / 60))));
-        const logo = <MergeConflictLogo id={`ch-logo-${e.id}`} design={LOGO_DESIGN} resolved={false} cx={960} cy={500} width={1150} beat={bp - Math.floor(bp)} beatIndex={beatIndexAt(t)} apart={apart} />;
+        // chorus 2 (round 7d, 92-94 and 102.9-104 s read as red on blue): the letters aligned across the cut and no
+        // kaleidoscope copies behind the crash
+        const logo = <MergeConflictLogo id={`ch-logo-${e.id}`} design={LOGO_DESIGN} resolved={false} cx={960} cy={500} width={1150} beat={bp - Math.floor(bp)} beatIndex={beatIndexAt(t)} apart={apart} aligned={c2} />;
         out.push(
           <g key={e.id} transform={`translate(960 500) scale(${kick}) translate(-960 -500)`}>
-            {crash !== undefined && t - crash < 0.45 && (
+            {crash !== undefined && t - crash < 0.45 && !c2 && (
               <Kaleido t={t} at={crash} dur={0.45} wedges={8} cx={960} cy={500}>
                 {logo}
               </Kaleido>
@@ -101,6 +129,12 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
       }
       default:
         break;
+    }
+    // round 7d: no knockout; the form moves or shrinks off the faces of the shot (type/avoid.ts)
+    const b = avoidBox(e, c2);
+    if (b && out.length > n0) {
+      const tf = avoidFaces(c2 ? CHORUS2_LIVE : CHORUS1_LIVE, t, b, !isScreen);
+      if (tf) out.push(<g key={`${e.id}-avoid`} transform={tf}>{out.splice(n0)}</g>);
     }
   }
   return <g>{out}</g>;

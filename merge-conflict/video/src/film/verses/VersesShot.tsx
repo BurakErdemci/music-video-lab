@@ -101,7 +101,7 @@ const rawVersesStateAt = (t: number): ShotState => {
   add('B', blueP);
   add('O', orangeP);
   const plateId = PLATES[scene];
-  return { pose, shot: shot.id, subjects, plate: plateId ? { id: plateId, base: planeBase, dist: 46, margin: 1.45 } : undefined };
+  return { pose, shot: shot.id, subjects, typeBase: planeBase, plate: plateId ? { id: plateId, base: planeBase, dist: 46, margin: 1.45 } : undefined };
 };
 
 const live = liveCamera(rawVersesStateAt, (t) => {
@@ -110,6 +110,7 @@ const live = liveCamera(rawVersesStateAt, (t) => {
   return { t0: shot.t, t1: next?.t ?? sectionNamed('chorus1').start, key: `v-${shot.id}` };
 });
 export const versesStateAt = live.stateAt;
+export const VERSES_LIVE = live;
 
 export const VersesShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);

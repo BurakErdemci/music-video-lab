@@ -18,7 +18,9 @@ import { Slam } from '../../type/Slam.tsx';
 import { layout, MONO } from '../../type/fonts.tsx';
 import { beatPos } from '../../timing.ts';
 import type { TypeEntry } from '../chorus/typeplan.ts';
+import { avoidFaces, type Box as AvoidBox } from '../../type/avoid.ts';
 import { type RShot, RSHOTS } from './plan.ts';
+import { REST_LIVE } from './RestShot.tsx';
 
 export interface Box { x: number; y: number; w: number; h: number }
 export interface RestAnchors { gutter?: Box; countdown?: Box; tag?: Box; caseLine?: Box; /** GIT! and PUSH! end with their shots. */ gitUntil?: number; pushUntil?: number }
@@ -51,9 +53,34 @@ const panelAt = (t: number): boolean => {
   return i >= 0 && (RSHOTS[i] as RShot).scene === 'panel';
 };
 
+/** Each form's box (its own coordinates: the type plane, or the screen for the Shouts) for type/avoid.ts; forms that
+ *  sit on a world object (gutter, countdown, tag, case line) and the moment paintings' Flap stay where they are. */
+const AVOID: Record<string, AvoidBox> = {
+  'r-rebased': { x: 530, y: 90, w: 860, h: 140 },
+  'r-mine': { x: 120, y: 120, w: 1680, h: 300 },
+  'r-squash': { x: 340, y: 140, w: 720, h: 420 },
+  'r-blame': { x: 640, y: 330, w: 640, h: 270 },
+  'r-gone': { x: 580, y: 140, w: 760, h: 150 },
+  'r-tabs': { x: 890, y: 470, w: 900, h: 300 },
+  'r-spaces': { x: 160, y: 200, w: 1100, h: 420 },
+  'r-touch': { x: 700, y: 330, w: 690, h: 370 },
+  'r-wrote': { x: 210, y: 300, w: 1000, h: 420 },
+  'r-touched': { x: 390, y: 250, w: 1110, h: 450 },
+  'r-red': { x: 110, y: 80, w: 1700, h: 310 },
+  'r-git': { x: 220, y: 250, w: 600, h: 300 },
+  'r-push': { x: 70, y: 180, w: 780, h: 420 },
+  'r-force': { x: 110, y: 160, w: 860, h: 340 },
+  'r-wouldnt': { x: 1080, y: 470, w: 740, h: 100 },
+};
+
+/** Forms drawn in screen space (the rest ride the type plane): the Shouts, and the marquee, whose board the pipeline
+ *  push magnified past the frame on the plane (round 7d). */
+export const REST_SCREEN: readonly string[] = ['Shout', 'Marquee'];
+
 export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[]; t: number; anchors: RestAnchors }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
+    const n0 = out.length;
     // a dissolving line drifts 0.6 s past its end, but the whisper's must not drift onto the solo's first face
     if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' && e.id !== 'r-wouldnt' ? 0.6 : 0)) continue;
     switch (e.id) {
@@ -83,7 +110,9 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(
           <g key={e.id}>
             <Scrim x={140} y={110} w={1640} h={250} pad={20} />
-            <Marquee spec={spec(e, { x: 140, y: 110, w: 1640, h: 250 })} t={t} />
+            {/* the scroll runs inside its board (the margin clip that used to hold it went with the knockouts) */}
+            <clipPath id="r-red-clip"><rect x={130} y={100} width={1660} height={270} /></clipPath>
+            <g clipPath="url(#r-red-clip)"><Marquee spec={spec(e, { x: 140, y: 110, w: 1640, h: 250 })} t={t} /></g>
           </g>,
         );
         break;
@@ -97,7 +126,8 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         break;
       }
       case 'r-nobody':
-        out.push(<Flap key={e.id} spec={spec(e, { x: 360, y: 760, w: 1200, h: 220 })} t={t} cols={16} backing />);
+        // (round 7d: the both-singer gradient letters read at low contrast on the bright corridor; white, key kept)
+        out.push(<Flap key={e.id} spec={spec(e, { x: 360, y: 760, w: 1200, h: 220 })} t={t} cols={16} backing ink="#ffffff" />);
         break;
       case 'r-tabs':
         out.push(<Slam key={e.id} spec={{ text: 'TABS!', t0: lineTokens(e.line)[2]?.start ?? e.t0, t1: e.t1 - 0.02, x: 1340, y: 620, size: 300, color: '#19c8ff', face: 'bungee', rot: -5 }} t={t} />);
@@ -127,8 +157,8 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         break;
       case 'r-scream':
         // it slams once the scream's shatter cover has cleared (10 frames; over the cover it read at 1.9:1), and sits
-        // a few px above the bottom margin
-        out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0 + 10 / 60, until: e.t1, style: 'steel', color: '#ff2a14', ...(panelAt(t) ? { cx: 960, cy: 880, w: 985 } : { cx: 960, cy: 700, w: 1480 }), rot: -3 }} t={t} />);
+        // in the bottom band under the faces' chins (round 7d: at 700 its ends ran onto both faces), inside the margin
+        out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0 + 10 / 60, until: e.t1, style: 'steel', color: '#ff2a14', ...(panelAt(t) ? { cx: 960, cy: 845, w: 880 } : { cx: 960, cy: 830, w: 900 }), rot: -3 }} t={t} />);
         break;
       // GIT! PUSH! FORCE! (round 7c storyboard): each word stands beside orange (she is on the right third), never
       // over her face or her action, and leaves with her shot; the painting after PUSH! stays uncovered
@@ -142,11 +172,18 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<Shout key={e.id} spec={{ id: 'r-force-s', text: 'FORCE!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 540, cy: 330, w: 860, rot: -4 }} t={t} />);
         break;
       case 'r-wouldnt':
-        // the quietest frame: small, low, and it dissolves as she finishes
-        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: '...you wouldn’t.', t0: e.t0, t1: e.t1 - 0.3, x: 1240, y: 820, size: 64, color: '#9fb8d8', face: 'mono' }} t={t} />);
+        // the quietest frame: quiet type in the dark to her right, clear of her coat and legs (round 7d: small grey
+        // type over her legs at 125.7 s read badly), and it dissolves as she finishes
+        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: '...you wouldn’t.', t0: e.t0, t1: e.t1 - 0.3, x: 1440, y: 540, size: 72, color: '#dce6ff', face: 'mono' }} t={t} />);
         break;
       default:
         break;
+    }
+    // round 7d: no knockout; the form moves or shrinks off the faces of the shot (type/avoid.ts)
+    const b = AVOID[e.id];
+    if (b && out.length > n0) {
+      const tf = avoidFaces(REST_LIVE, t, b, !REST_SCREEN.includes(e.form));
+      if (tf) out.push(<g key={`${e.id}-avoid`} transform={tf}>{out.splice(n0)}</g>);
     }
   }
   // the Shouts are drawn in screen space, the rest on the type plane (RestShot.tsx); no form is cut around a face

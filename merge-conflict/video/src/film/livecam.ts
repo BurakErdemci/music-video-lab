@@ -228,5 +228,5 @@ export const liveCamera = (raw: (t: number) => ShotState, span: (t: number) => S
     const g = guard(pose, subjects);
     return { ...st, pose: g.pose, subjects, extras, fit: { z: g.z, ok: g.ok } };
   };
-  return { stateAt, poseAt: (t: number) => stateAt(t).pose };
+  return { stateAt, poseAt: (t: number) => stateAt(t).pose, spanAt: span };
 };

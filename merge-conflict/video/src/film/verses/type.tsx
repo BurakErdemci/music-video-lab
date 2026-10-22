@@ -17,15 +17,36 @@ import { LightBox } from '../../type/LightBox.tsx';
 import { Scrim } from '../../type/Scrim.tsx';
 import { Slam } from '../../type/Slam.tsx';
 import type { TypeEntry } from '../chorus/typeplan.ts';
+import { avoidFaces, type Box as AvoidBox } from '../../type/avoid.ts';
 import { KICK, STACK2 } from '../proof.ts';
+import { VERSES_LIVE } from './VersesShot.tsx';
 
 export interface Anchors { clock?: { cx: number; cy: number; r: number }; panel?: { x: number; y: number; w: number; h: number }; board?: { x: number; y: number; w: number; h: number } }
 
 const spec = (e: TypeEntry, box: FormSpec['box']): FormSpec => ({ id: `v-${e.id}`, line: e.line, key: e.key, singer: e.singer, t0: e.t0, t1: e.t1, box, range: e.range });
 
+/** Each form's box for type/avoid.ts (plane coordinates; the CSS block's in screen space). The hoop, the clock ring,
+ *  the scoreboard counter and the words thrown between the girls play with their objects and stay. */
+const AVOID: Record<string, AvoidBox> = {
+  'v-head': STACK2.box,
+  'v-line42': { x: 760, y: 240, w: 770, h: 500 },
+  'v-approved': { x: 1060, y: 200, w: 760, h: 380 },
+  'v-fresh': { x: 120, y: 140, w: 1680, h: 300 },
+  'v-css': { x: 260, y: 90, w: 1400, h: 440 },
+  'v-never': { x: 200, y: 680, w: 1500, h: 250 },
+  'p-blue': { x: 730, y: 410, w: 900, h: 300 },
+  'p-orange': { x: 120, y: 260, w: 1000, h: 420 },
+  'p-blue2': { x: 940, y: 590, w: 800, h: 360 },
+  'p-transform': { x: 110, y: 650, w: 1300, h: 220 },
+  'p-resolve': { x: 460, y: 200, w: 1000, h: 140 },
+};
+
 export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose; anchors: Anchors; hoop?: HoopPlan; throwP?: ThrowPlan }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
+    const n0 = out.length;
+    // a box the case computes from its anchor (the clock, the panel, the board)
+    let dyn: AvoidBox | undefined;
     if (t < e.t0 || t >= e.t1) continue;
     switch (e.id) {
       case 'v-head':
@@ -46,6 +67,7 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
         const c = anchors.clock ?? { cx: 1180, cy: 420, r: 300 };
         // the arc sits low in the dial: round the dial's rim it would run off the top of the frame
         out.push(<Ring key={e.id} spec={spec(e, { x: c.cx - c.r, y: c.cy - c.r, w: 2 * c.r, h: 2 * c.r })} t={t} opt={{ cx: c.cx, cy: c.cy + 310, r: c.r * 0.77, size: 64, face: 'righteous', backing: true }} />);
+        dyn = { x: c.cx - c.r * 0.77 - 60, y: c.cy + 310 - c.r * 0.77 - 60, w: 2 * (c.r * 0.77 + 60), h: 2 * (c.r * 0.77 + 60) };
         break;
       }
       case 'v-feature':
@@ -61,16 +83,17 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
         const chars = lineTokens(e.line).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.7 : 1), 2);
         const p = { x: px0, y: py0, w: Math.min(q.x + q.w, 1690) - px0, h: Math.min(q.y + q.h, 880) - py0 };
         out.push(<Diff key={e.id} spec={spec(e, p)} t={t} opt={{ minus: 'the button was blue', size: Math.min(86, p.h / 4.2, (p.w - 70) / (0.6 * chars)), keyScale: 1.7, title: 'button.css', backing: true }} />);
+        dyn = { x: p.x - 90, y: p.y - 50, w: p.w + 180, h: p.h + 100 };
         break;
       }
       case 'v-css':
         out.push(<Extrude key={e.id} spec={spec(e, { x: 260, y: 90, w: 1400, h: 440 })} t={t} opt={{ size: 300, face: 'shrikhand', depth: 0.28 }} />);
-        if (throwP) out.push(<ThrowWords key={`${e.id}-throw`} plan={throwP} t={t} />);
         break;
       case 'v-commits': {
         const b = anchors.board ?? { x: 560, y: 120, w: 800, h: 360 };
         const tok = lineTokens(e.line);
         out.push(<Counter key={e.id} spec={{ from: 0, to: 300, t0: tok[0]?.start ?? e.t0, t1: tok[2]?.end ?? e.t0 + 0.8, x: b.x + b.w / 2, y: b.y + b.h * 0.78, size: b.h * 0.78, color: '#ff7a1a', digits: 3, backing: true }} t={t} />);
+        dyn = b;
         break;
       }
       case 'v-never':
@@ -99,6 +122,14 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
       default:
         break;
     }
+    // round 7d: no knockout; the form moves or shrinks off the faces of the shot (type/avoid.ts)
+    const b = dyn ?? AVOID[e.id];
+    if (b && out.length > n0) {
+      const tf = avoidFaces(VERSES_LIVE, t, b, e.id !== 'v-feature' && e.id !== 'v-css');
+      if (tf) out.push(<g key={`${e.id}-avoid`} transform={tf}>{out.splice(n0)}</g>);
+    }
+    // the words thrown between the girls fly to them, wherever the CSS block went
+    if (e.id === 'v-css' && throwP && t >= e.t0 && t < e.t1) out.push(<ThrowWords key={`${e.id}-throw`} plan={throwP} t={t} />);
   }
   // the hoop and the CSS block are drawn in screen space, the rest on the type plane (VersesShot.tsx); no form is cut
   // around a face (round 7d, "No knockouts")

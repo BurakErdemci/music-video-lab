@@ -33,7 +33,7 @@ import { CASE_LINE, GUILTY_TAG, LASERCASE_CAMERA, LaserCaseWorld, NAMETAG_CAMERA
 import { Arena, CYAN, InsertWorld, RED, SplitWorld } from '../chorus/worlds.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BLUE_METAL_AT, type Move, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
-import { type Box, GitHud, RestType } from './type.tsx';
+import { type Box, GitHud, REST_SCREEN, RestType } from './type.tsx';
 
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
 const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
@@ -204,7 +204,7 @@ const rawRestStateAt = (t: number): ShotState => {
   if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop, dx: blownDx(t) });
   if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O'), crop });
   const plateId = scene === 'panel' ? shot.panel : PLATES[scene];
-  return { pose, shot: shot.id, subjects, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75 } : undefined };
+  return { pose, shot: shot.id, subjects, typeBase: planeBase, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75 } : undefined };
 };
 
 const live = liveCamera(rawRestStateAt, (t) => {
@@ -215,6 +215,7 @@ const live = liveCamera(rawRestStateAt, (t) => {
   return { t0: shot.t, t1: Math.min(next?.t ?? stop, stop), key: `r-${shot.id}` };
 });
 export const restStateAt = live.stateAt;
+export const REST_LIVE = live;
 
 export const RestShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
@@ -359,9 +360,9 @@ export const RestShot = ({ frame }: { frame: number }) => {
         })}
         {/* the type over every effect and cover (round 7d: no card or effect is drawn over a settled type form) */}
         <g transform={plane.transform}>
-          <RestType entries={REST_TYPE.filter((e) => e.form !== 'Shout')} t={t} anchors={anchors} />
+          <RestType entries={REST_TYPE.filter((e) => !REST_SCREEN.includes(e.form))} t={t} anchors={anchors} />
         </g>
-        <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
+        <RestType entries={REST_TYPE.filter((e) => REST_SCREEN.includes(e.form))} t={t} anchors={anchors} />
         <GitHud t={t} t0={PUSH_HUD.t0} t1={PUSH_HUD.t1} until={PUSH_HUD.until} />
       </Svg>
     </AbsoluteFill>

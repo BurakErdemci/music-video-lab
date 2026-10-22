@@ -122,7 +122,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
   const rawStateAt = (t: number): ShotState => {
     const { pose, shot, base } = cameraAt(t);
     const plate = PLATES[v][shot.scene];
-    return { pose, shot: `ch${v}-${shot.id}`, subjects: girlsAt(t, shot), plate: plate ? { id: plate, base, dist: 46, margin: plateMargin(shot.scene) } : undefined };
+    return { pose, shot: `ch${v}-${shot.id}`, subjects: girlsAt(t, shot), typeBase: base, plate: plate ? { id: plate, base, dist: 46, margin: plateMargin(shot.scene) } : undefined };
   };
   const liveCam = liveCamera(rawStateAt, (t) => {
     const { shot, next } = shotAt(P.SHOTS, t);
@@ -239,7 +239,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     );
   };
 
-  return { Shot, stateAt, START: P.SHOTS[0]?.t ?? 0, END: L.end, PLAN: P, TYPE, TRANSITIONS };
+  return { Shot, stateAt, live: liveCam, START: P.SHOTS[0]?.t ?? 0, END: L.end, PLAN: P, TYPE, TRANSITIONS };
 };
 
 const C1 = makeChorusShot(CHORUS1, 1);
@@ -247,6 +247,8 @@ const C2 = makeChorusShot(CHORUS2, 2);
 export const ChorusShot = C1.Shot;
 export const chorus1StateAt = C1.stateAt;
 export const chorus2StateAt = C2.stateAt;
+export const CHORUS1_LIVE = C1.live;
+export const CHORUS2_LIVE = C2.live;
 export const Chorus2Shot = C2.Shot;
 export const CHORUS_START = C1.START;
 export const CHORUS2_START = C2.START;
