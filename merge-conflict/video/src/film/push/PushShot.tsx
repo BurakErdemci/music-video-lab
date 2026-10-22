@@ -198,6 +198,8 @@ export const pushStateAt = (t: number): ShotState => {
 
 /** The whisper's dissolve cover starts two frames before 125.36, inside this span (the rest family draws the rest). */
 const OUT: TransitionSpec = { id: 'r-tr-whisper', kind: 'dissolve', at: PUSH_END, pre: 2 / 60, post: 4 / 60, colors: ['#2a3a6a', '#4a5a8a'] };
+/** The opaque covers this family draws, for tools/covercheck.mjs (the whisper's, shared with the rest family by id). */
+export const pushCovers = () => [{ id: OUT.id, kind: OUT.kind, window: transitionWindow(OUT) }];
 
 const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
 /** Blue in her own colours (black leather, deep blue hair, steel): a light pull toward her blue, a cold rim and a cold

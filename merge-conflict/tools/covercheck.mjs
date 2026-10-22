@@ -4,7 +4,9 @@
 // thin rings and spokes and no fill) fires at most once per 4 s, start to start, and is drawn on at most 6 frames;
 // none plays between PUSH! and FORCE! (124.32-125.02 s), where the cuts are hard. The covers come from the film's own
 // list (video/src/film/rest/RestShot.tsx restCovers and, from 140.04 s, film/finale/FinaleShot.tsx finaleCovers: the
-// same specs the shots draw), so this measures what renders.
+// same specs the shots draw), so this measures what renders. Since round 9 GIT! PUSH! FORCE! (120.03-125.36 s) is its
+// own family (film/push, Film.tsx): a rest cover lying wholly inside that span is never drawn and is dropped, the
+// family's own covers (pushCovers) are added, and a cover both families draw a part of counts once (by id).
 //   node tools/covercheck.mjs [--range 117.36-232.12] [--selftest]
 // Exit 1 on any failure (the selftest must exit 1: it plants covers 2 s apart in both parts, a 15-frame cover and one at PUSH!).
 import { createRequire } from 'node:module';
@@ -24,7 +26,7 @@ const outDir = path.join(VIDEO, 'out', '.covercheck');
 mkdirSync(outDir, { recursive: true });
 const outfile = path.join(outDir, 'covers.mjs');
 await esbuild.build({
-  stdin: { contents: "export { restCovers, COVER_GAP, COVER_FRAMES, PUSH_SPAN } from './film/rest/RestShot.tsx';\nexport { finaleCovers } from './film/finale/FinaleShot.tsx';", resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
+  stdin: { contents: "export { restCovers, COVER_GAP, COVER_FRAMES, PUSH_SPAN } from './film/rest/RestShot.tsx';\nexport { finaleCovers } from './film/finale/FinaleShot.tsx';\nexport { pushCovers, PUSH_START, PUSH_END } from './film/push/PushShot.tsx';", resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
   bundle: true, platform: 'node', format: 'esm', outfile, jsx: 'automatic', packages: 'external', logLevel: 'error',
 });
 process.removeAllListeners('warning');
@@ -63,7 +65,11 @@ if (process.argv.includes('--selftest')) {
 }
 
 // the rest family's covers end at 140.04 s and the finale's start there; the 4 s gap runs across the seam
-const { inRange, fails } = check([...M.restCovers(), ...M.finaleCovers()], M.COVER_GAP, M.COVER_FRAMES, M.PUSH_SPAN);
+const notDrawn = M.restCovers().filter((c) => c.window[0] >= M.PUSH_START - 1e-6 && c.window[1] <= M.PUSH_END + 1e-6);
+const restDrawn = M.restCovers().filter((c) => !notDrawn.includes(c));
+const pushOwn = M.pushCovers().filter((c) => !restDrawn.some((r) => r.id === c.id));
+console.log(`push family ${M.PUSH_START}-${M.PUSH_END} s: ${notDrawn.length} rest covers inside it not drawn${notDrawn.length ? ` (${notDrawn.map((c) => c.id).join(', ')})` : ''}, ${pushOwn.length} of its own added`);
+const { inRange, fails } = check([...restDrawn, ...pushOwn, ...M.finaleCovers()], M.COVER_GAP, M.COVER_FRAMES, M.PUSH_SPAN);
 console.log(`covercheck ${A}-${B} s: ${inRange.length} opaque covers`);
 for (const c of inRange) console.log(`  ${c.window[0].toFixed(3)}-${c.window[1].toFixed(3)}  ${c.kind.padEnd(9)} ${c.id}`);
 for (const f of fails) console.log(`  FAIL ${f}`);
