@@ -1,6 +1,6 @@
 // Type placed clear of the faces (round 7d, scene-map.md "No knockouts"): a form that would cover a subject's face box
 // (down to the chin, film/framing.ts faceFrame) moves or shrinks instead of being cut around the face. Per shot, the
-// faces are taken at three moments (12, 50 and 88 % of the shot) from the family's own living state, and the form's
+// faces are taken at five moments (2, 12, 50, 88 and 98 % of the shot) from the family's own living state, and the form's
 // box is tried at its authored place, then mirrored, in the top or bottom band and at the sides, always at its own
 // size (round 7d: a form never shrinks to clear a face; its glyphs keep >= 3.5 % of the frame height, and a shot
 // with no room is re-framed instead); the first placement that clears every face (with a pad) at all three moments
@@ -15,7 +15,11 @@ export interface Live { stateAt: (t: number) => ShotState; spanAt: (t: number) =
 
 const PAD = 28;
 const M = { x0: 0.04 * W, y0: 0.04 * H, x1: 0.96 * W, y1: 0.96 * H };
-const SAMPLES = [0.12, 0.5, 0.88];
+/** The forms' shadows, strokes and shakes reach past their boxes, and a plane form swells with the camera's pushes
+ *  and punches: a moved box keeps this much inside the margin (px, screen / plane). */
+const SAFE_SCREEN = 30;
+const SAFE_PLANE = 80;
+const SAMPLES = [0.02, 0.12, 0.5, 0.88, 0.98];
 const SCALES = [1];
 const memo = new Map<string, string>();
 
@@ -38,6 +42,7 @@ export const avoidFaces = (live: Live, t: number, box: Box, plane: boolean): str
     const map = plane ? typePlane(st.pose, (st.typeBase ?? st.pose) as CameraPose, 1).map : (x: number, y: number): [number, number] => [x, y];
     return { faces, map };
   });
+  const SAFE = plane ? SAFE_PLANE : SAFE_SCREEN;
   const cx = box.x + box.w / 2;
   const cy = box.y + box.h / 2;
   let best = { score: Infinity, tf: '' };
@@ -45,8 +50,8 @@ export const avoidFaces = (live: Live, t: number, box: Box, plane: boolean): str
   outer: for (const s of SCALES) {
     const w = box.w * s;
     const h = box.h * s;
-    const xs = [cx, W - cx, M.x0 + 20 + w / 2, M.x1 - 20 - w / 2];
-    const ys = [cy, M.y0 + 16 + h / 2, M.y1 - 16 - h / 2];
+    const xs = [cx, W - cx, M.x0 + SAFE + w / 2, M.x1 - SAFE - w / 2];
+    const ys = [cy, M.y0 + SAFE + h / 2, M.y1 - SAFE - h / 2];
     for (const ny of ys) {
       for (const nx of xs) {
         let cover = 0;
@@ -55,7 +60,7 @@ export const avoidFaces = (live: Live, t: number, box: Box, plane: boolean): str
           const ps = [[nx - w / 2, ny - h / 2], [nx + w / 2, ny - h / 2], [nx - w / 2, ny + h / 2], [nx + w / 2, ny + h / 2]].map(([x, y]) => v.map(x as number, y as number));
           const r: Rect = [Math.min(...ps.map((p) => p[0])), Math.min(...ps.map((p) => p[1])), Math.max(...ps.map((p) => p[0])), Math.max(...ps.map((p) => p[1]))];
           for (const f of v.faces) cover += overlap(r, f);
-          out += Math.max(0, M.x0 - r[0]) + Math.max(0, r[2] - M.x1) + Math.max(0, M.y0 - r[1]) + Math.max(0, r[3] - M.y1);
+          out += Math.max(0, M.x0 + SAFE - r[0]) + Math.max(0, r[2] - M.x1 + SAFE) + Math.max(0, M.y0 + SAFE - r[1]) + Math.max(0, r[3] - M.y1 + SAFE);
         }
         const tf = nx === cx && ny === cy && s === 1 ? '' : `translate(${nx.toFixed(1)} ${ny.toFixed(1)}) scale(${s}) translate(${(-cx).toFixed(1)} ${(-cy).toFixed(1)})`;
         // the authored place keeps its own margin handling: only a face moves it

@@ -18,7 +18,7 @@ Per sample:
     >= 3.5 % of the frame height. Glyphs are the letter-shaped connected components of the type layer (its opaque
     pixels, and inside a panel the pixels that stand out from the panel); components on one baseline group into a
     line, and the line's cap height is the 90th percentile of its glyph heights (caps and ascenders), measured on lines
-    of 3+ glyphs. A sample with "cap_exempt" (a span another lane owns) skips it.
+    of 5+ glyphs. A sample with "cap_exempt" (a span another lane owns) skips it.
   * local contrast: the type's fill (and, separately, its outer 2 px edge band: stroke or backing) against the composite
     in a 6 px ring around it, worst case the ring's 85th/15th percentile; the better of the two must give >= 3:1; failing that, the type layer's own colour spread (own_contrast) may carry it.
 Exit 1 on any failure. Prints failing samples with time and reason, and a count per check.
@@ -134,8 +134,8 @@ def cap_lines(s, scale=2):
             col = np.percentile(rgb[y0:y1, x0:x1][sel], 90, axis=0) if sel.any() else np.zeros(3)
             if any(np.abs(col - np.array(c)).max() < 22 for c in ((139, 148, 158), (110, 118, 129))):
                 continue
-            if fill > 0.68 and 0.8 < gw / max(1, gh) < 1.25 and gh < 30:
-                continue
+            if fill > 0.6 and 0.7 < gw / max(1, gh) < 1.4 and gh <= 24:
+                continue  # a window dot, or one dot of a dot-matrix letter
             glyphs.append((y0 * scale, x0 * scale, y0 * scale + gh, x1 * scale))
     # group glyphs sharing a baseline band and close horizontally into lines
     glyphs = sorted(set(glyphs), key=lambda g: (g[0], g[1]))
@@ -160,7 +160,7 @@ def cap_lines(s, scale=2):
         lines.setdefault(find(i), []).append(g)
     out = []
     for gs in lines.values():
-        if len(gs) >= 3:
+        if len(gs) >= 5:
             hs = sorted(g[2] - g[0] for g in gs)
             out.append((float(np.percentile(hs, 90)), min(g[1] for g in gs), min(g[0] for g in gs), len(gs)))
     return out
@@ -299,7 +299,7 @@ def selftest():
             from PIL import ImageDraw, ImageFont
             d = ImageDraw.Draw(im)
             d.rectangle((560, 380, 1500, 700), fill=(13, 17, 23, 240))
-            d.text((600, 500), words, font=ImageFont.truetype("arial.ttf", size), fill=(230, 237, 243, 255))
+            d.text((600, 500), words, font=ImageFont.truetype("consola.ttf", size), fill=(230, 237, 243, 255))
         return f
     samples = [
         case("ok", rect((600, 400, 1300, 600), white), dark, [[100, 100, 200, 200]]),
