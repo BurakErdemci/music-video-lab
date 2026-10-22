@@ -155,3 +155,43 @@ Burak on proof232-r9: the paintings sat in blurred side bands and read as slides
 - **Weak spots / next:** the parallax is one-sample on the depth map, so a large slide stretches the far pixels that
   border a near object (most visible on RK11's rubble edge and RK5's faces at their shot ends); the RK11 walk loop
   plays at the outro's 3 drawings a beat, quick for a walk; the girls' plane uses one depth for both girls.
+
+## Round 11 (2026-10-23): the dawn split, the particle cap and the type and repeat fixes
+Burak on proof232-r10: "çıta çok yukarı çıkmış"; his note on the dawn walk plus the Gemini findings he confirmed.
+Full proof: `video/out/proof232-r11c.mp4`. The two earlier renders are kept, not overwritten: `proof232-r11.mp4`
+failed slidecheck on RK5 (0.47x) after the particle cap took the confetti's size; `proof232-r11b.mp4` lifted the
+chorus paintings (more drift particles, peak travel 18 %) and then put the scream at 1.104x its 1.1x ceiling, so the
+scream's painting (QK2) travels at most 7.5 % (`LIFE.travel`): scream 1.09x, QK2 0.51x its floor's base. Both rules
+are tight there; any change to the scream's shots needs a re-measure of both. Rules: scene-map.md "Round 11".
+
+- **Dawn:** `dawn` (RK11) is two bars; `dawn-us` (RK13, layered, `inserted: true`) takes the rest up to the title.
+  RK13: `tools/imagegen/upwide.py` (Upscayl to 3640x2048, no outpaint), `greenkey.py RK13` (reads stil/prompts/
+  x-layers too), `depthmap.py wide/RK13 layers/RK13-bg`. Girls depth 0.6 (the depth map puts them at 0.19 against a
+  near sky), no bob (cut at the bottom), push about their heads (`LIFE.focus`). `shotSlot()` keeps the approved
+  shots' move directions and cover kinds when a shot is inserted. Walk loops: `LAYERED.walk` -> `loopIndex(t, 1)`.
+- **Particle cap:** `particles/cap.ts` (`PARTICLE_MAX_PX` 28 at 1080 lines, `useParticleCap()` from the canvas);
+  all five point shaders (field, drift, dissolve, groove sparks, kit embers) use `min(size, uMaxPx)`;
+  `tools/particlecheck.mjs` (`--selftest` exits 1). Drift counts went up (700/420) to keep the paintings' motion.
+- **Type:** the Ring form is deleted and `typecheck` fails a retired form; v-midnight is a Stack beside the clock,
+  f-tree a `git log --graph` terminal line; Marquee: whole line shown, unsung words at 45 % of their colour, a key
+  word inside the line stays on its row; r-squash in plainer faces (`Stack faces`) in a box its landing and its avoid
+  move keep in frame; the two-girls line stands in the bottom band (choruses and finale; RunwayLine is unused);
+  "I can't take control" upright in screen space at y 790 in both choruses (a roll-following lean drew differently
+  in the type layer than in the frame); chorus 1 ends on a laser cover.
+- **framecheck --type** renders every active plan entry alone at every sample (`entries` in samples.json) and
+  `typeframe.py` checks each: `edge` (GlitchText and RunwayLine boxes inside the margin), `small` (every line's cap;
+  a line under a third of its form's biggest and under 5 % is "pressed flat"), `dim` (an unsung marquee bulb at
+  >= 30 % of the same bulb lit, from a `lit_<id>` render 0.12 s before the entry ends). On proof232-r10's tree the
+  sweep found: dim at soul (59.0, 101.5), r-red (76.0, 76.5), f-figured (168.5, 169.0); edge at control (62.5-63.5),
+  one-line (47.5, 90.0), f-line (167.0, 167.5); the squash row pressed to 3.8 % under 14.4 %.
+- **Busts:** the live camera keeps a bust card's cut edge below the frame (`livecam.ts` limit); `framecheck` fails
+  any frame showing it (r10: yes1/yes2/yes3 at 161.88, 163.48, 172.48, plus six runs of 3-57 px in 51-117 s). The YES!
+  busts sit at x ±3.9 and the split's push is 0.2.
+- **Repeats:** `tools/repeatcheck.mjs` (`--selftest` exits 1): no (scene, cam, move) twice in the finale, a
+  painting once, the logo move exempt. 26 shots changed camera or move; the second RK8 is QK1 (`impact`).
+- **OV1:** `historyString(t)` in RestShot: the commit-bulb string from the chain's cut end (per loop drawing) off
+  the right edge, jerking on each new drawing; verified by projecting its far end through `filmStateAt` on every OV1
+  frame (139 frames, far end x >= 2026 px).
+- **Open:** typecheck 0-232.12 fails its 6-forms-per-30 s rule at 127-157 (5 forms; it was 5 on r10 too: the solo
+  has no lyrics). The per-form margin sweep also found plane-carried and flying forms crossing the margin while they
+  move (v-head, the Stamps, the Logo halves, r-rebased, r-gone, r-data2, v-orange, f-equals): not gated.

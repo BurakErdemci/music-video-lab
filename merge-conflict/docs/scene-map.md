@@ -607,3 +607,22 @@ Decisions taken in this round (the architect may overrule):
   reads cyan, so within 10 px of the screen green above 0.55 of the blue counts as screen (`tools/imagegen/greenkey.py`).
 - The scream may reach 1.1x the chorus motion (was 1.0x): QK2 brought up to the slide floor lifts the section to
   1.07x, and calming the scream's live shots to make room did not reach 1.0x. Architect's call, round 10.
+
+## Round 11 (2026-10-22; Burak on proof232-r10: "çıta çok yukarı çıkmış", plus his and Gemini's notes)
+
+- **The dawn is two paintings.** RK11 (from behind) holds two bars from the outro's start; on the downbeat a hard cut
+  to RK13 (`dawn-us`, the girls walking toward us, arm in arm, laughing, the sunrise behind them, Burak's pick XK2),
+  a living painting with a slow push that swells them about their heads, until the resolved title. A shot inserted
+  into an approved table takes no slot (`inserted`), so the shots after it keep their move directions and covers.
+- **Walks step once a beat** (RK11, RK13: base, b, c, b is one stride of four beats), whatever the section's tier.
+- **No particle sprite is larger than 28 px** on its longest side at 1080 lines (`particles/cap.ts`); every
+  `gl_PointSize` is `min(<size>, uMaxPx)` (`tools/particlecheck.mjs`).
+- **Type:** the Ring (a line on an arc) is retired (`typecheck`); a dot-matrix panel shows its whole line from the
+  start, unsung words at 38 % of their own colour, in reading order; the floor-lying "two girls, one line" stands in
+  the bottom band in every chorus; "I can't take control" sits in screen space with a lean of at most 8 degrees.
+  `framecheck --type` measures each form alone: a turned or floor form inside the margin, every line's cap height,
+  no line pressed under a third of the form's biggest (and under 5 %), and unsung marquee words at >= 30 % of lit.
+- **A bust's cut edge never shows** (the live camera keeps it below the frame; `framecheck` fails any frame).
+- **No finale scene repeats** its (scene, camera, move); a painting is used once (`tools/repeatcheck.mjs`); the
+  "Merge conflict" logo move is the one motif. The second rocket ride became QK1, the PUSH! impact painting.
+- **OV1's chain** ends in the commit-bulb string, which runs off the frame's right edge and jerks with her pull.
