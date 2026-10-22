@@ -78,11 +78,13 @@ export const FSHOTS: FShot[] = [
   { id: 'gradient-now', t: tk(55, 7), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   // "Two girls, one line,": the runway again, but now they reach for each other (chorus 1 had them back to back)
   { id: 'line-two', t: tk(56, 0), scene: 'runway', cam: 'hero', move: 'push', into: 'shock', B: ['PB3', full(-1.5, 4.8)], O: ['PO3', full(1.5, 4.8)] },
+  { id: 'line-girls', t: tk(56, 1), scene: 'runway', cam: 'reverse', move: 'whip', into: 'shock' },
   { id: 'line-one', t: tk(56, 2), scene: 'runway', cam: 'hero', move: 'dollyzoom', into: 'shock' },
   // "and we figured it out": cheek to cheek at one mic (RK5)
   { id: 'rk5', t: tk(56, 4), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
   // the high five on the downbeat after the line
   { id: 'highfive', t: tk(56, 7), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB5', full(-1.9, 4.8)], O: ['PO5', full(1.9, 4.8)] },
+  { id: 'highfive-b', t: bt(169.5), scene: 'arena', cam: 'low', move: 'dollyzoom', into: 'shock' },
   { id: 'highfive-2', t: bt(170.0), scene: 'arena', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'acc3', t: tk(57, 0), scene: 'arena', cam: 'wide', move: 'whip', into: 'shock', B: ['PB1', full(-3.0)], O: ['PO1', full(3.0)] },
   { id: 'acc3-both', t: tk(57, 1), scene: 'arena', cam: 'low', move: 'push', into: 'shock' },
