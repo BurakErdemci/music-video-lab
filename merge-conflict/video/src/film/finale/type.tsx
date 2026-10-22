@@ -49,18 +49,22 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
       // ---- piano truce
       case 'f-mine': {
         // blue lets go of her line: the old `color: blue;` struck, her words added (right of her)
-        // sized to the panel's width: the line (key word 1.5x) and its gutter must fit inside it
-        const box = { x: 1100, y: 640, w: 720, h: 280 };
-        const chars = 2 + words(e).reduce((a, w, i) => a + (w.text.length + 1) * (i === e.key ? 1.5 : 1), 0);
-        out.push(<Diff key={e.id} spec={spec(e, box)} t={t} opt={{ minus: 'color: blue;', size: Math.min(46, (box.w - 90) / (0.6 * chars)), keyScale: 1.5, title: 'button.css', backing: true }} />);
+        // the bottom band, as wide as the margin allows: at the readable minimum (cap >= 3.5 % of the frame) the
+        // line needs the width; her face sits high in the shot
+        const box = { x: 100, y: 776, w: 1720, h: 220 };
+        out.push(<Diff key={e.id} spec={spec(e, box)} t={t} opt={{ minus: 'color: blue;', size: 58, keyScale: 1.3, backing: true }} />);
         break;
       }
+      case 'f-orange':
+        out.push(<Wave key={e.id} spec={spec(e, { x: 120, y: 780, w: 1680, h: 220 })} t={t} opt={{ size: 112, minSize: 100, face: 'shrikhand', amp: 12 }} />);
+        break;
       case 'f-hello':
-        out.push(<Wave key={e.id} spec={spec(e, { x: 220, y: 820, w: 1480, h: 170 })} t={t} opt={{ size: 64, face: 'shrikhand', amp: 12 }} />);
+        // "my way to say hello": a warm light-box sign, the key word lit last
+        out.push(<LightBox key={e.id} spec={{ id: e.id, words: words(e).map((w, i) => ({ text: clean(w.text), color: (i === words(e).length - 1 ? '#ffb020' : '#ffd6b0') as Hex })), t0: e.t0, stagger: 0.05, t1: e.t1, x: 960, y: 930, size: 92, box: true, backing: true }} t={t} />);
         break;
       // ---- build
       case 'f-file':
-        out.push(<Flap key={e.id} spec={spec(e, { x: 330, y: 830, w: 1260, h: 170 })} t={t} cols={20} backing />);
+        out.push(<Flap key={e.id} spec={spec(e, { x: 240, y: 740, w: 1440, h: 260 })} t={t} cols={14} backing />);
         break;
       case 'f-tree':
         out.push(<Ring key={e.id} spec={spec(e, { x: 700, y: 520, w: 520, h: 300 })} t={t} opt={{ cx: 960, cy: 790, r: 230, size: 42, face: 'righteous', backing: true }} />);
@@ -73,8 +77,8 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         // the tunnel's chevrons are as bright as the letters: a backing
         out.push(
           <g key={e.id}>
-            <Scrim x={460} y={770} w={1000} h={200} pad={14} />
-            <Stack spec={spec(e, { x: 460, y: 770, w: 1000, h: 200 })} t={t} />
+            <Scrim x={360} y={730} w={1200} h={260} pad={14} />
+            <Stack spec={spec(e, { x: 360, y: 730, w: 1200, h: 260 })} t={t} />
           </g>,
         );
         break;

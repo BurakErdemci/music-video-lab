@@ -192,7 +192,8 @@ export const FHITS = {
 export const FINALE_TYPE: TypeEntry[] = [
   // piano truce: blue lets go of her line, orange says hello
   { id: 'f-mine', line: 49, range: [0, 6], form: 'Diff', t0: tk(49, 0), t1: tk(50, 0), singer: 'B', key: 1 },
-  { id: 'f-hello', line: 50, range: [0, 9], form: 'Wave', t0: tk(50, 0), t1: tk(51, 0), singer: 'O', key: 8 },
+  { id: 'f-orange', line: 50, range: [0, 4], form: 'Wave', t0: tk(50, 0), t1: tk(50, 4), singer: 'O', key: 1 },
+  { id: 'f-hello', line: 50, range: [4, 9], form: 'LightBox', t0: tk(50, 4), t1: tk(51, 0), singer: 'O', key: 8 },
   // the build: a departure board for "different times", then the ring round the meeting hands
   { id: 'f-file', line: 51, range: [0, 8], form: 'Flap', t0: tk(51, 0), t1: tk(52, 0), singer: 'B', key: 3 },
   { id: 'f-tree', line: 52, range: [0, 9], form: 'Ring', t0: tk(52, 0), t1: BUILD.end - 0.1, singer: 'both', key: 1 },
