@@ -512,6 +512,10 @@ become rules (later rounds keep them):
   all. The shockwave ring leaves OF3's fists and the next shot shows it reaching BF1, who is thrown across >= 40 % of
   the frame width over >= 0.4 s, >= 50 % of the frame height, in her own colours (not tinted into the red). r7c had a
   burst cover, a 0.1 s painting and a torn-paper cover in those 0.7 s, so the blue girl was seen for 0.2 s.
+- **Type never shrinks to clear a face.** A lyric line's glyph cap height is >= 3.5 % of the frame height at its
+  settled state, code text in terminals included. To clear a face a form moves to another band or side, or the shot's
+  framing changes (wider, or the girl to one side); it never shrinks below that floor. Measured by
+  `tools/framecheck.mjs --type` (`small` in tools/typeframe.py, with a selftest).
 
 ## Burak's notes on proof140-r7c (2026-10-22 morning, watched on a 2K monitor)
 
