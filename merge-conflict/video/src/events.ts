@@ -124,6 +124,13 @@ export const EVENTS: FilmEvent[] = [
   ...[sectionNamed('scream'), sectionNamed('breakdown_git_push_force'), sectionNamed('guitar_solo')].flatMap((sec) => beatsIn(sec.start, sec.end).flatMap((b) => [ev(`hit-${b}`, 'hit', 'beat', b), ...(b % 2 === 0 ? [ev(`spark-${b}`, 'spark', 'offbeat', b)] : [])])),
   // (every third beat: denser accents lifted the verses' events-per-beat mean past what keeps the chorus at 1.5x)
   ...[sectionNamed('verse3_rebase'), sectionNamed('verse4_trade')].flatMap((sec) => beatsIn(sec.start, sec.end).filter((b) => b % 3 === 1).map((b) => ev(`accent-${b}`, 'accent', 'beat', b))),
+  // round 8 (140.04-232.12): the piano truce, the build, the final chorus, the chant, "Build failed", the scream end
+  // and the outro. Every sung word lands on its token; the piano breathes on every second beat, the build and the
+  // final chorus pulse on every beat, the metal parts kick on every beat with sparks on every second offbeat.
+  ...[49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66].flatMap((l) => tokens(l, lines[l]?.text.split(/\s+/).filter(Boolean).length ?? 0, 'type')),
+  ...beatsIn(sectionNamed('piano_interlude').start, sectionNamed('piano_interlude').end).filter((b) => b % 2 === 0).map((b) => ev(`breath-${b}`, 'breath', 'beat', b)),
+  ...[sectionNamed('build'), sectionNamed('final_chorus')].flatMap((sec) => beatsIn(sec.start, sec.end).map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b))),
+  ...[sectionNamed('post_chorus_chant'), sectionNamed('scream_end'), sectionNamed('outro')].flatMap((sec) => beatsIn(sec.start, sec.end).flatMap((b) => [ev(`hit-${b}`, 'hit', 'beat', b), ...(b % 2 === 0 && sec.name !== 'outro' ? [ev(`spark-${b}`, 'spark', 'offbeat', b)] : [])])),
 ];
 
 const BY_ID = new Map(EVENTS.map((e) => [e.id, e]));
