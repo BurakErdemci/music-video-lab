@@ -282,7 +282,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
         return (
           <>
             <WhisperWorld t={t} />
-            <TilePlatform position={[0, FLOOR_Y, -2]} width={30} depth={16} cols={30} rows={16} splitX={0} left="#16306e" right="#6e3416" t={t} pulse={0.1} opacity={0.55} />
+            <TilePlatform position={[0, FLOOR_Y, -2]} width={30} depth={16} cols={30} rows={16} splitX={0} left="#4a7ae8" right="#e8884a" t={t} pulse={0.25} opacity={0.95} />
           </>
         );
       case 'flight':

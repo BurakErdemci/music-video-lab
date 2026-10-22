@@ -47,10 +47,14 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
     if (t < e.t0 - 0.02 || t >= e.t1 + (e.form === 'DissolveText' ? 0.6 : 0)) continue;
     switch (e.id) {
       // ---- piano truce
-      case 'f-mine':
+      case 'f-mine': {
         // blue lets go of her line: the old `color: blue;` struck, her words added (right of her)
-        out.push(<Diff key={e.id} spec={spec(e, { x: 1040, y: 640, w: 780, h: 300 })} t={t} opt={{ minus: 'color: blue;', size: 46, keyScale: 1.5, title: 'button.css', backing: true }} />);
+        // sized to the panel's width: the line (key word 1.5x) and its gutter must fit inside it
+        const box = { x: 1100, y: 640, w: 720, h: 280 };
+        const chars = 2 + words(e).reduce((a, w, i) => a + (w.text.length + 1) * (i === e.key ? 1.5 : 1), 0);
+        out.push(<Diff key={e.id} spec={spec(e, box)} t={t} opt={{ minus: 'color: blue;', size: Math.min(46, (box.w - 90) / (0.6 * chars)), keyScale: 1.5, title: 'button.css', backing: true }} />);
         break;
+      }
       case 'f-hello':
         out.push(<Wave key={e.id} spec={spec(e, { x: 110, y: 820, w: 1700, h: 180 })} t={t} opt={{ size: 74, face: 'shrikhand', amp: 14 }} />);
         break;
