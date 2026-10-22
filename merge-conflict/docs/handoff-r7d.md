@@ -67,3 +67,28 @@ is left.
 - `node tools/ripplecheck.mjs` (`--selftest` must exit 1).
 - `uv run --with numpy python -I tools/energy.py` rewrites `src/data/energy.json`.
 - GPU rule: one GPU job at a time (renders, stills, Upscayl), all under `tools/locked.sh` / the render lock.
+
+## 7d changes for round 8
+Shared machinery the finale (140-232 s) also uses, changed in round 7d:
+- **No knockouts.** `type/Knockout.tsx` is gone (and the girls/inside KNOCKOUT form). A type form that would cover a
+  face moves or shrinks; nothing cuts a face out of a word or a panel. Every family draws its type group *after* its
+  transitions and effects in the `<Svg>`, so no cover or effect is drawn over a settled form; do the same in the finale.
+- **Face box down to the chin.** `faceFrame(card)` in `film/framing.ts` is frames.json's face box extended down by
+  `CHIN` = 0.10 of its height (measured on 16 cards: the chin sits 0-0.10 below the stored box). The live-camera guard
+  (`livecam.ts`), `framecheck` and `framecheck --type` use it; `faceSized` still places by the stored box. The guard
+  now aims 4 px under the 70 % face-height cap (a fit to exactly 70 % rounded over it).
+- **Covers after the scream** (`film/rest/RestShot.tsx`: `COVER_GAP` 4 s, `COVER_FRAMES` 6, `PUSH_SPAN`): at most one
+  opaque cover (any kind but 'shock') per 4 s, start to start, 2 frames before the cut and 4 after; other world changes
+  are hard cuts. `tools/covercheck.mjs` reads `restCovers()`; if the finale keeps the rule, export its own cover list
+  the same way and add it to the tool.
+- **Grounding.** frames.json carries `soles: [u0, u1, v]` for every full card (`tools/soles.py`; re-run it after adding
+  cards). `Card` puts the contact shadow (dark core + soft falloff + a short cast toward the rim side, tinted to the
+  set), the floor glow and the mirror line at the soles through the rig (`solesAt` in `rig/cardRig.ts`); the
+  reflection fades out for cameras looking down at 25-40 degrees. A world with no floor passes `ground={false}` to the
+  Card and marks the state's subject `ground: false` (see `FLOOR_SCENES` in ChorusShot). Gate:
+  `node tools/framecheck.mjs --ground` (band under each sole >= 25 % darker than the floor beside it;
+  `tools/groundframe.py --selftest`).
+- **`framecheck --type`** renders a third layer ('all') and fails a settled form with more than 2 % of its opaque
+  pixels changed in the final frame (`hidden` in `tools/typeframe.py`).
+- Smaller: `Move` 'hold' (rest plan) keeps the camera still; `Arena` takes `pads={false}`; `Flap` takes `ink`;
+  `MergeConflictLogo` takes `aligned` (each metal letter centred on its disco letter, so the cut never doubles a letter).
