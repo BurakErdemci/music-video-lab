@@ -191,6 +191,11 @@ export const VersesShot = ({ frame }: { frame: number }) => {
       <Svg>
         <FormDefs />
         {scene === 'runway' && <RunwayLine spec={{ id: 'v-runway-42', text: 'color: blue;', gutter: '42', t0: shot.t, t1: tk(4, 0), cps: 20, origin: [-1.5, FLOOR_Y + 0.02, 2.6], dir: [1, 0, 0], up: [0, 0, -1], size: 0.5, color: '#7fe3ff' }} t={t} pose={pose} />}
+        {layer !== 'type' && TRANSITIONS.map((s) => {
+          const [a, b] = transitionWindow(s);
+          return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
+        })}
+        {/* the type over the covers (round 7d: no card or effect is drawn over a settled type form) */}
         <g transform={plane.transform}>
           <VerseType entries={VERSE_TYPE.filter((e) => e.id !== 'v-feature' && e.id !== 'v-css')} t={t} pose={pose} anchors={anchors} />
           {/* the strike of 00:00 on the painted clock: two light rings opening from its face */}
@@ -200,10 +205,6 @@ export const VersesShot = ({ frame }: { frame: number }) => {
           })}
         </g>
         <VerseType entries={VERSE_TYPE.filter((e) => e.id === 'v-feature' || e.id === 'v-css')} t={t} pose={pose} anchors={anchors} hoop={hoop} throwP={scene === 'alley' ? throwP : undefined} />
-        {layer !== 'type' && TRANSITIONS.map((s) => {
-          const [a, b] = transitionWindow(s);
-          return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
-        })}
       </Svg>
     </AbsoluteFill>
   );

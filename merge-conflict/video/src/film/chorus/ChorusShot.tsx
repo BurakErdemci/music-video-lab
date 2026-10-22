@@ -225,14 +225,15 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
         </Stage>
         <Svg>
           <FormDefs />
-          <g transform={plane.transform}>
-            <ChorusType entries={TYPE} t={t} pose={pose} screen={false} merges={MERGES} />
-          </g>
-          <ChorusType entries={TYPE} t={t} pose={pose} screen merges={MERGES} />
           {layer !== 'type' && TRANSITIONS.map((s) => {
             const [a, b] = transitionWindow(s);
             return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
           })}
+          {/* the type over the covers (round 7d: no card or effect is drawn over a settled type form) */}
+          <g transform={plane.transform}>
+            <ChorusType entries={TYPE} t={t} pose={pose} screen={false} merges={MERGES} />
+          </g>
+          <ChorusType entries={TYPE} t={t} pose={pose} screen merges={MERGES} />
         </Svg>
       </AbsoluteFill>
     );

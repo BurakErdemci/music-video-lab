@@ -327,11 +327,6 @@ export const RestShot = ({ frame }: { frame: number }) => {
       </Stage>
       <Svg>
         <FormDefs />
-        <g transform={plane.transform}>
-          <RestType entries={REST_TYPE.filter((e) => e.form !== 'Shout')} t={t} anchors={anchors} />
-        </g>
-        <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
-        <GitHud t={t} t0={PUSH_HUD.t0} t1={PUSH_HUD.t1} until={PUSH_HUD.until} />
         {/* the wave throws blue back: speed streaks trail her across the frame */}
         {blownK(t) > 0 && blownK(t) < 1 && blueP?.at && (() => {
           const c = project(pose, [blueP.at.x + blownDx(t), (blueP.at.feet ?? FLOOR_Y) + blueP.at.height * 0.5, 0]);
@@ -362,6 +357,12 @@ export const RestShot = ({ frame }: { frame: number }) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
         })}
+        {/* the type over every effect and cover (round 7d: no card or effect is drawn over a settled type form) */}
+        <g transform={plane.transform}>
+          <RestType entries={REST_TYPE.filter((e) => e.form !== 'Shout')} t={t} anchors={anchors} />
+        </g>
+        <RestType entries={REST_TYPE.filter((e) => e.form === 'Shout')} t={t} anchors={anchors} />
+        <GitHud t={t} t0={PUSH_HUD.t0} t1={PUSH_HUD.t1} until={PUSH_HUD.until} />
       </Svg>
     </AbsoluteFill>
   );
