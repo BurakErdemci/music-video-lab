@@ -301,14 +301,15 @@ export const PushShot = ({ frame }: { frame: number }) => {
       </Stage>
       <Svg>
         <FormDefs />
-        {r > 0 && ringFade > 0 && (
+        {/* the ring and the streaks are effects, not type: the type layer (framecheck --type) leaves them out */}
+        {layer !== 'type' && r > 0 && ringFade > 0 && (
           <g>
             {ring(r, 26, ringFade)}
             {r > 1 && ring(r * 0.86, 12, 0.6 * ringFade)}
           </g>
         )}
         {/* the throw: speed streaks behind her (left of her card, never over her), she herself never fades */}
-        {s.id === 'push' && throwT(t) > 0 && (() => {
+        {layer !== 'type' && s.id === 'push' && throwT(t) > 0 && (() => {
           const bx = screenBox(pose, { card: b.card, at: b.at, dx: b.dx, dy: b.dy }, [0, 0.15, 1, 0.9]);
           const len = 180 + 600 * Math.min(1, throwT(t) / 0.15);
           return [0.05, 0.22, 0.4, 0.58, 0.76, 0.92].map((v, i) => {
@@ -322,10 +323,11 @@ export const PushShot = ({ frame }: { frame: number }) => {
           return t >= a0 && t < a1 ? <SceneTransition spec={OUT} t={t} /> : null;
         })()}
         {/* the type last: no effect drawn over a settled form (round 7d) */}
-        {t >= GIT && t < CHARGE && <Slam spec={{ text: 'GIT!', t0: GIT, t1: CHARGE - 0.02, x: 960, y: 230, size: 260, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />}
+        {t >= GIT && t < CHARGE && <Slam spec={{ text: 'GIT!', t0: GIT, t1: CHARGE - 0.02, x: 900, y: 175, size: 230, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />}
+        {/* (it leaves with the cut to FORCE!, not by fading out inside the shot: the fade dropped it under 3:1) */}
         {/* PUSH! in steel like FORCE! (the red extrude's P sank into the fire wall and read "rUSH"), low on the floor
             between them where the ring runs: at this distance both heads fill the top of the frame */}
-        {t >= PUSH && t < FORCE && <Shout spec={{ id: 'p-push-s', text: 'PUSH!', at: PUSH, until: FORCE, style: 'steel', color: '#ff2a14', cx: 1000, cy: 880, w: 860, rot: -3 }} t={t} />}
+        {t >= PUSH && t < FORCE && <Shout spec={{ id: 'p-push-s', text: 'PUSH!', at: PUSH, until: FORCE + 0.4, style: 'steel', color: '#ff2a14', cx: 1000, cy: 790, w: 780, rot: -3 }} t={t} />}
         {t >= FORCE && <Shout spec={{ id: 'p-force-s', text: 'FORCE!', at: FORCE, until: PUSH_END, style: 'steel', color: '#ff2a14', cx: 1320, cy: 330, w: 860, rot: -4 }} t={t} />}
         <GitHud t={t} t0={GIT + 0.25} t1={PUSH - 0.6} until={PUSH} />
       </Svg>
