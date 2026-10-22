@@ -1,4 +1,4 @@
-"""The living paintings' layers (round 10): each w-layers drawing (stil/prompts/w-layers/out/<ID>-{bg,fg,fgb,fgc}.png,
+"""The living paintings' layers (round 10): each w-layers or x-layers drawing (stil/prompts/*/out/<ID>-{bg,fg,fgb,fgc}.png,
 1672x941) upscaled with Upscayl digital-art-4x and resized to the wide plates' 3640x2048, the girls keyed off their flat
 #00FF00, written to video/public/plates/layers/<ID>-<kind>.webp, plus <ID>.json with each girls drawing's alpha box.
 Run under the render lock (Upscayl is a GPU job):
@@ -18,7 +18,8 @@ from PIL import Image
 from scipy import ndimage
 
 ROOT = Path(__file__).resolve().parents[2]
-SRC = ROOT / "stil" / "prompts" / "w-layers" / "out"
+# the drawings: the w-layers round (RK1, RK2, RK11, RK12) and the x-layers round (RK13)
+SRCS = [ROOT / "stil" / "prompts" / d / "out" for d in ("w-layers", "x-layers")]
 OUT = ROOT / "video" / "public" / "plates" / "layers"
 UPSCAYL = r"C:\Program Files\Upscayl\resources\bin\upscayl-bin.exe"
 MODELS = r"C:\Program Files\Upscayl\resources\models"
@@ -114,7 +115,7 @@ def main(ids):
         for pid in ids:
             meta = {"size": list(SIZE), "drawings": {}}
             for kind in ("bg", "fg", "fgb", "fgc"):
-                src = SRC / f"{pid}-{kind}.png"
+                src = next(d / f"{pid}-{kind}.png" for d in SRCS if (d / f"{pid}-{kind}.png").exists())
                 im = upscale(src, tmp)
                 if kind == "bg":
                     im.save(OUT / f"{pid}-bg.webp", "WEBP", quality=92, method=6)
