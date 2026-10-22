@@ -53,8 +53,9 @@ def measure_bg(rgb, key):
     return med if np.abs(med - hex_rgb(key)).max() < 40 else hex_rgb(key)
 
 
-def key_alpha(im, key, grey_max=GREY_REGION_MAX):
-    """Return (rgb uint8, alpha float 0..1, measured bg) with the key background removed."""
+def key_alpha(im, key, grey_max=GREY_REGION_MAX, face=None):
+    """Return (rgb uint8, alpha float 0..1, measured bg) with the key background removed.
+    face = (x0, y0, x1, y1) in source px: inside it only the border flood removes pixels (no hole or grey peel)."""
     rgb = np.asarray(im.convert("RGB"))
     bg = measure_bg(rgb, key)
     dist = np.abs(rgb.astype(float) - bg).max(axis=2)
@@ -63,7 +64,11 @@ def key_alpha(im, key, grey_max=GREY_REGION_MAX):
     border_labels = np.unique(np.concatenate([lab[0], lab[-1], lab[:, 0], lab[:, -1]]))
     bgmask = np.isin(lab, border_labels[border_labels > 0])
 
-    holes = (dist <= HOLE_TOL) & ~bgmask
+    # skin and pale lavender eyeshadow sit close to the key: the hole and peel steps must not bite into a face
+    keep = np.zeros(dist.shape, bool)
+    if face:
+        keep[face[1]:face[3], face[0]:face[2]] = True
+    holes = (dist <= HOLE_TOL) & ~bgmask & ~keep
     hl, hn = ndi.label(holes)
     if hn:
         sizes = ndi.sum(holes, hl, index=np.arange(1, hn + 1))
@@ -74,7 +79,7 @@ def key_alpha(im, key, grey_max=GREY_REGION_MAX):
     greyish = (sat >= GREY_SAT_MIN) & (sat < GREY_SAT) & (dist <= GREY_PEEL)
     # grey key blended into hair gaps: peel whole desaturated regions that touch the background; large ones
     # (GREY_REGION_MAX px) are artwork (grey cloth, silver) and stay
-    greyish &= ~bgmask
+    greyish &= ~bgmask & ~keep
     gl, gn = ndi.label(greyish)
     if gn:
         touch = np.unique(gl[ndi.binary_dilation(bgmask, iterations=GREY_REACH) & greyish])
@@ -144,6 +149,17 @@ def contact(files, path_base, th=420, cols=12):
         sheet.save(Path(f"{path_base}-{label}.jpg"), quality=90)
 
 
+def face_box(cid, entry, chin=0.10):
+    """frames.json face box (chin-extended) of an already cut card, in source px; None for a new card."""
+    frames = CARDS / "frames.json"
+    if entry is None or not frames.exists() or cid not in json.loads(frames.read_text("utf-8")):
+        return None
+    x0, y0, x1, y1 = json.loads(frames.read_text("utf-8"))[cid]["face"]
+    bx, by = entry["bbox"][:2]
+    w, h = entry["w"], entry["h"]
+    return (bx + int(x0 * w), by + int(y0 * h), bx + int(x1 * w + .5), by + int((y1 + chin * (y1 - y0)) * h + .5))
+
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--only", default="", help="comma-separated ids, e.g. O01,B05")
@@ -157,6 +173,8 @@ def main():
     OUT.mkdir(parents=True, exist_ok=True)
 
     manifest, report, produced = {}, [], []
+    mpath = CARDS / "manifest.json"
+    previous = json.loads(mpath.read_text("utf-8")) if mpath.exists() else {}
     for e in json.loads((ROOT / "stil" / "prompts" / args.round / "round.json").read_text("utf-8")):
         cid = e["id"].split("-")[0]
         if only and cid not in only:
@@ -166,7 +184,7 @@ def main():
             report.append({"id": cid, "status": "MISSING-SOURCE"})
             continue
         im = Image.open(src)
-        rgb, alpha, bg = key_alpha(im, e["key"], args.grey_region_max)
+        rgb, alpha, bg = key_alpha(im, e["key"], args.grey_region_max, face_box(cid, previous.get(cid)))
         card, box = autocrop(to_rgba(rgb, alpha))
         dst = CARDS / f"{cid}.png"
         card.save(dst)
@@ -178,8 +196,7 @@ def main():
                        "transparent_pct": round(100 * float((a == 0).mean()), 1),
                        "key_like_px": res, "halo_px": halo, "opaque_px_in_last_row": int((a[-1] > 0).sum())})
 
-    mpath = CARDS / "manifest.json"
-    merged = json.loads(mpath.read_text("utf-8")) if mpath.exists() else {}
+    merged = dict(previous)
     merged.update(manifest)
     mpath.write_text(json.dumps(dict(sorted(merged.items())), indent=2), "utf-8")
     if produced and not only:
