@@ -377,9 +377,10 @@ if (process.argv.includes('--type')) {
   for (const fr of picks) for (const e of activeAt(fr / FPS)) byId.set(e.id, [...(byId.get(e.id) ?? []), fr]);
   const onlyLayers = [...byId].map(([id, frs]) => ({ key: `only_${id}`, props: { layer: 'type', only: id }, frames: frs }));
   const litFrame = (e) => Math.round((e.t1 - 0.12) * FPS);
+  // (an id can return: the two choruses share their plan, so each of its entries gets its own lit frame)
   for (const id of byId.keys()) {
-    const e = M.TYPE_PLAN.find((x) => x.id === id);
-    if (e.form === 'Marquee') onlyLayers.push({ key: `lit_${id}`, props: { layer: 'type', only: id }, frames: [litFrame(e)] });
+    const lits = [...new Set(M.TYPE_PLAN.filter((x) => x.id === id && x.form === 'Marquee').map(litFrame))];
+    if (lits.length) onlyLayers.push({ key: `lit_${id}`, props: { layer: 'type', only: id }, frames: lits });
   }
   if (overlapPicks.length) onlyLayers.push({ key: 'only___none', props: { layer: 'type', only: '__none__' }, frames: overlapPicks });
   console.log(`type over type: ${overlapPicks.length} samples with two or more forms on screen, ${byId.size} forms rendered alone`);
