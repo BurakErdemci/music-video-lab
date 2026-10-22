@@ -291,6 +291,9 @@ if (process.argv.includes('--ground')) {
   done(py.status);
 }
 
+// the glyph-size rule skips GIT! PUSH! FORCE! (120.03-125.36 s): that span is being rebuilt in its own lane (round 7d)
+const CAP_EXEMPT = [[120.03, 125.36]];
+
 if (process.argv.includes('--type')) {
   const every = Math.round(FPS / Number(arg('fps', 2)));
   const picks = [];
@@ -302,7 +305,7 @@ if (process.argv.includes('--type')) {
     const st = M.filmStateAt(fr);
     const subj = st.subjects.filter((x) => !x.silhouette && frames[x.card]);
     const faces = subj.map((x) => { const b = screenBox(st.pose, x, M.faceFrame(x.card)); return [b.x0, b.y0, b.x1, b.y1]; });
-    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), faces, cards: subj.map((x) => x.card) });
+    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), cap_exempt: CAP_EXEMPT.some(([a, b]) => fr / FPS >= a && fr / FPS < b), faces, cards: subj.map((x) => x.card) });
   }
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));

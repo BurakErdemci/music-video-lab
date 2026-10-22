@@ -14,6 +14,11 @@ Per sample:
   * hidden (round 7d, "Type is never hidden by a card"): where the type layer is opaque (alpha >= 0.95), the final
     frame must show the type's own colour; a settled form with more than 2 % of those pixels changed (any channel off
     by more than 48) is covered by a card, an effect or a cover.
+  * glyph size (round 7d, "a form never shrinks to clear a face"): every settled text line keeps a glyph cap height of
+    >= 3.5 % of the frame height. Glyphs are the letter-shaped connected components of the type layer (its opaque
+    pixels, and inside a panel the pixels that stand out from the panel); components on one baseline group into a
+    line, and the line's cap height is the 90th percentile of its glyph heights (caps and ascenders), measured on lines
+    of 3+ glyphs. A sample with "cap_exempt" (a span another lane owns) skips it.
   * local contrast: the type's fill (and, separately, its outer 2 px edge band: stroke or backing) against the composite
     in a 6 px ring around it, worst case the ring's 85th/15th percentile; the better of the two must give >= 3:1; failing that, the type layer's own colour spread (own_contrast) may carry it.
 Exit 1 on any failure. Prints failing samples with time and reason, and a count per check.
@@ -31,6 +36,7 @@ FACE_COVER = 0.03
 CONTRAST = 3.0
 HIDDEN = 0.02
 HIDDEN_DIFF = 48
+CAP_MIN = 0.035
 
 
 def lum(rgb):
@@ -56,6 +62,108 @@ def hidden(s):
         return 0.0
     off = np.abs(fin - ty[..., :3]).max(axis=-1) > HIDDEN_DIFF
     return float((off & solid).sum() / solid.sum())
+
+
+def box_mean(a, r):
+    """Mean of a over a (2r+1)^2 box, by summed-area table."""
+    c = np.pad(a, ((r + 1, r), (r + 1, r)), mode="edge").cumsum(0).cumsum(1)
+    k = 2 * r + 1
+    return (c[k:, k:] - c[:-k, k:] - c[k:, :-k] + c[:-k, :-k]) / (k * k)
+
+
+def components(mask, iters=400):
+    """Connected components (4-neighbour) of a boolean mask: a list of (y0, x0, y1, x1, area)."""
+    h, w = mask.shape
+    idx = np.arange(1, h * w + 1, dtype=np.int64).reshape(h, w)
+    lab = np.where(mask, idx, 0)
+    big = h * w + 1
+    for _ in range(iters):
+        m = np.where(lab > 0, lab, big)
+        n = m.copy()
+        n[1:, :] = np.minimum(n[1:, :], m[:-1, :])
+        n[:-1, :] = np.minimum(n[:-1, :], m[1:, :])
+        n[:, 1:] = np.minimum(n[:, 1:], m[:, :-1])
+        n[:, :-1] = np.minimum(n[:, :-1], m[:, 1:])
+        n = np.where(mask, n, 0)
+        # pointer jumping: a label points at a pixel whose own label may be smaller
+        flat = n.ravel()
+        j = np.where(flat > 0, flat[np.maximum(flat - 1, 0)], 0)
+        n = np.where(mask, np.minimum(n, j.reshape(h, w)), 0)
+        if np.array_equal(n, lab):
+            break
+        lab = n
+    ys, xs = np.nonzero(lab)
+    if len(ys) == 0:
+        return []
+    l = lab[ys, xs]
+    order = np.argsort(l, kind="stable")
+    l, ys, xs = l[order], ys[order], xs[order]
+    cut = np.flatnonzero(np.diff(l)) + 1
+    out = []
+    for a, b in zip(np.r_[0, cut], np.r_[cut, len(l)]):
+        out.append((int(ys[a:b].min()), int(xs[a:b].min()), int(ys[a:b].max()) + 1, int(xs[a:b].max()) + 1, int(b - a)))
+    return out
+
+
+def cap_lines(s, scale=2):
+    """The text lines of the type layer with their cap height in full-frame px: [(cap, x0, y0, n_glyphs)]."""
+    im = Image.open(s["type"]).convert("RGBA")
+    im = im.resize((im.width // scale, im.height // scale), Image.BOX)
+    a = np.asarray(im, dtype=np.float32) / 255.0
+    solid = a[..., 3] > 0.5
+    L = a[..., 0] * 0.2126 + a[..., 1] * 0.7152 + a[..., 2] * 0.0722
+    # inside a panel: the pixels that differ from the panel around them
+    near = box_mean(L * solid, 10) / np.maximum(box_mean(solid.astype(np.float32), 10), 1e-3)
+    ink = solid & (np.abs(L - near) > 0.18)
+    rgb = a[..., :3] * 255
+    glyphs = []
+    for mask in (solid, ink):
+        # a flap tile's black split line cuts its letter in two: bridge 2 px vertically (and take it off the height)
+        grown = mask.copy()
+        for d in (1, 2):
+            grown[d:, :] |= mask[:-d, :]
+            grown[:-d, :] |= mask[d:, :]
+        for y0, x0, y1, x1, area in components(grown):
+            gh, gw = (y1 - y0 - 4) * scale, (x1 - x0) * scale
+            fill = area * scale * scale / max(1, (y1 - y0) * scale * gw)
+            if not (5 <= gh <= 320 and gw <= 2.5 * gh and 0.12 <= fill <= 0.98):
+                continue
+            # the editor chrome is not lyric: its grey title and gutter text, and the three window dots
+            sel = mask[y0:y1, x0:x1]
+            # its brightest pixels (thin bright text averages toward grey once anti-aliased)
+            col = np.percentile(rgb[y0:y1, x0:x1][sel], 90, axis=0) if sel.any() else np.zeros(3)
+            if any(np.abs(col - np.array(c)).max() < 22 for c in ((139, 148, 158), (110, 118, 129))):
+                continue
+            if fill > 0.68 and 0.8 < gw / max(1, gh) < 1.25 and gh < 30:
+                continue
+            glyphs.append((y0 * scale, x0 * scale, y0 * scale + gh, x1 * scale))
+    # group glyphs sharing a baseline band and close horizontally into lines
+    glyphs = sorted(set(glyphs), key=lambda g: (g[0], g[1]))
+    parent = list(range(len(glyphs)))
+    def find(i):
+        while parent[i] != i:
+            parent[i] = parent[parent[i]]
+            i = parent[i]
+        return i
+    for i, g in enumerate(glyphs):
+        for j in range(i + 1, len(glyphs)):
+            h_ = glyphs[j]
+            if h_[0] > g[2]:
+                break
+            hi, hj = g[2] - g[0], h_[2] - h_[0]
+            same = abs(g[2] - h_[2]) < 0.35 * max(hi, hj) and 0.5 < hi / hj < 2.0
+            close = max(g[1], h_[1]) - min(g[3], h_[3]) < 1.5 * max(hi, hj)
+            if same and close:
+                parent[find(i)] = find(j)
+    lines = {}
+    for i, g in enumerate(glyphs):
+        lines.setdefault(find(i), []).append(g)
+    out = []
+    for gs in lines.values():
+        if len(gs) >= 3:
+            hs = sorted(g[2] - g[0] for g in gs)
+            out.append((float(np.percentile(hs, 90)), min(g[1] for g in gs), min(g[0] for g in gs), len(gs)))
+    return out
 
 
 def bbox(mask):
@@ -131,6 +239,11 @@ def analyse(samples):
         settled = close(box, nxt) or close(box, prv)
         if over and settled:
             out.append({**base, "kind": "margin", "value": max(over.values()), "why": f"box {box} crosses the 4 % margin by {over} px"})
+        if settled and not s.get("cap_exempt"):
+            small = [ln for ln in cap_lines(s) if ln[0] < CAP_MIN * H]
+            if small:
+                c, x, y, n = min(small)
+                out.append({**base, "kind": "small", "value": round(100 * c / H, 1), "why": f"a text line of {n} glyphs at ({x}, {y}) has a cap height of {100 * c / H:.1f} % of the frame (min {100 * CAP_MIN:.1f} %)"})
         if settled and s.get("final"):
             h = hidden(s)
             if h > HIDDEN:
@@ -179,17 +292,28 @@ def selftest():
         return f
 
     white, dark, mid = (255, 255, 255, 255), (20, 20, 20), (150, 150, 150)
+
+    def text(words, size):
+        # a terminal: light glyphs on a dark panel, the panel in the type layer as the forms draw it
+        def f(im):
+            from PIL import ImageDraw, ImageFont
+            d = ImageDraw.Draw(im)
+            d.rectangle((560, 380, 1500, 700), fill=(13, 17, 23, 240))
+            d.text((600, 500), words, font=ImageFont.truetype("arial.ttf", size), fill=(230, 237, 243, 255))
+        return f
     samples = [
         case("ok", rect((600, 400, 1300, 600), white), dark, [[100, 100, 200, 200]]),
         case("margin", rect((20, 400, 800, 600), white), dark, []),
         case("face", rect((600, 400, 1300, 600), white), dark, [[900, 450, 1000, 550]]),
         case("contrast", rect((600, 400, 1300, 600), (170, 170, 170, 255)), mid, []),
         case("hidden", rect((600, 400, 1300, 600), white), dark, [], cover=(1150, 380, 1400, 640)),
+        case("small", text("You wrote a comment that just says", 22), (120, 120, 120), []),
+        case("bigtext", text("I WROTE THAT COMMENT", 64), (120, 120, 120), []),
     ]
     # the same box twice so the settled test sees it persist
     samples = [x for s in samples for x in (s, dict(s, t=0.5))]
     got = {(f["shot"], f["kind"]) for f in analyse(samples)}
-    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden")}
+    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden"), ("small", "small")}
     print("typeframe selftest flagged:", sorted(got))
     ok = got == want
     print("typeframe selftest: " + ("PASS" if ok else "FAIL (wanted " + str(sorted(want)) + ")"))
@@ -203,8 +327,8 @@ def main():
     out = analyse(samples)
     if len(sys.argv) > 2:
         json.dump(out, open(sys.argv[2], "w", encoding="utf-8"))
-    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden")}
-    print(f"typeframe: {len(samples)} samples; margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}")
+    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden", "small")}
+    print(f"typeframe: {len(samples)} samples; margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}, small {n['small']}")
     for f in out:
         print(f"  {f['t']:7.2f}  {str(f['shot']):22s} {f['kind']:8s} {f['why']}")
     print("typeframe: FAIL" if out else "typeframe: PASS")
