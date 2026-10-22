@@ -228,8 +228,8 @@ that was too fast. Before showing a video with characters:
    the foot on every frame broke the rhythm.
 4. **Blind viewer.** A cheaper-model agent watches at 12 fps contact and answers only "what catches
    the eye", without seeing the other reports.
-5. **Outside-model motion count.** `gemini_watch.py <video> "<question>" --from --to --fps 10
-   --resolution high`. Ask for pose changes per character and whether each transition is a cut or a
+5. **Outside-model motion count.** Send the slice to a video model (we used Gemini at 10-24 fps,
+   high resolution). Ask for pose changes per character and whether each transition is a cut or a
    teleport; ask "is this a defect" or it excuses it as style. It points to places; it does not
    measure. It was wrong about tempo, key, silence and a girl cut off at the waist, and it was first
    to see a 4-frame card edge. At 10 fps a 16-frame transition can look like a 1-frame snap: take

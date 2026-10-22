@@ -76,7 +76,7 @@ MC = [merge-conflict](../../../merge-conflict/). Useful files: the
 17. **Measure a reference before copying its cut rule.** One reference changed scene on sentence
     boundaries (18.6 % of cuts on a beat, chance 24.6 %); another locked 64.5 % of cuts to beats.
     `[measured]`
-18. **Suno recipe.** Contrast comes from stops, not from sound (`[Stop - one bar of total
+18. **Suno recipe.** Contrast comes from stops, not from volume (`[Stop - one bar of total
     silence]`). An inline "Girl A:" gets sung, so put it in its own bracketed line. "kawaii metal"
     drifts to pop; "kawaii heavy metal" works. "flat robotic voice" makes the whole line robotic.
     A persona locks one voice, and stems cannot separate two voices. Extend regenerates everything
@@ -88,7 +88,7 @@ MC = [merge-conflict](../../../merge-conflict/). Useful files: the
     liked most. `[taste]`
 20. **Getting Suno audio out.** The share page `audio_url` is off limits and guessing the CDN gives
     403. For a large file use a private draft GitHub release (up to 2 GB). `[measured]`
-21. **An outside model's listening is conversation, not measurement.** It reported a +2 key change,
+21. **An outside model's listening is an opinion, not a measurement.** It reported a +2 key change,
     155-170 BPM and "total silence", and its timestamps were off by 1-3 s. It says where to look;
     a tool gives the number. `[measured]`
 
@@ -114,8 +114,8 @@ MC = [merge-conflict](../../../merge-conflict/). Useful files: the
     face (background showed through the eyes): `holecheck` over 175 cards. The repair left a 1-2 px
     half-transparent ring: measure the ring too. A neck shadow was taken for key colour and left a
     cyan triangle. Key green after scaling up, not before (a blue wire reads cyan on green). The
-    finished render showed four legs (the artist's own legs inside the cape drawing): open the
-    final render, not only the part. `[measured]`
+    finished render showed four legs (a second pair was drawn inside the cape): open the final
+    render, not only the part. `[measured]`
 27. **A puppet rig is for poses and small life, not for acting.** A fight is a comic panel
     (anticipation 2 frames, impact silhouette 2 frames, one big hit per bar); getting up from a
     chair is a cut. The director accepted a 2D or Blender rig only for motion within 30-45
@@ -136,16 +136,16 @@ MC = [merge-conflict](../../../merge-conflict/). Useful files: the
     depth parallax from Depth Anything V2 (CPU, throwaway uv environment); seeded particles in
     front, a light sweep per bar, a flash on the hit. For long holds put the girls on their own
     layer (background without them, the girls on green, two in-betweens, looped). `slidecheck`:
-    picture shot length at least 0.5x of the section's median live-shot length (round 9 had
-    0.16-0.49x). Cropping 3:2 to 16:9 cut heads and feet. `[measured]` `[taste]`
+    a picture shot's motion is at least 0.5x the median motion of the section's live shots (round 9
+    had 0.16-0.49x). Cropping 3:2 to 16:9 cut heads and feet. `[measured]` `[taste]`
 31. **Plate cap.** At 2K a plate is at most 1.25x its native pixels, upscaled 2x first with Upscayl
     digital-art-4x. The director saw blur on a 2x enlargement. `[decision]`
 32. **Ground contact is a measured gate.** Contact shadow under the feet, a floor glow, a 40 %
     reflection (fades on a high camera); the band under the feet is at least 25 % darker than the
     floor beside it. The director: "if we solve shadow and depth we get a really good result".
     `[measured]` `[taste]`
-33. **Fake light on an unlit card comes from the card's own alpha.** Rim light, overflow and colour
-    tone for key and fill; no real lights (`meshBasicMaterial`, `toneMapped: false`). `[decision]`
+33. **Fake light on an unlit card comes from the card's own alpha.** Rim light, spill, and key and
+    fill graded by hue only; no real lights (`meshBasicMaterial`, `toneMapped: false`). `[decision]`
 34. **A cause-and-effect moment needs one geography.** 11 shots in 5.3 s never showed the wave and
     its victim in one frame: "still not impressive, it doesn't read". Fixed with 4 shots, one set,
     both sides in their own colour, plus `pushcheck`. `[measured]`
