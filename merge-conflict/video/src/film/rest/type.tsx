@@ -56,7 +56,8 @@ const panelAt = (t: number): boolean => {
 export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[]; t: number; anchors: RestAnchors }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
-    if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' ? 0.6 : 0)) continue;
+    // a dissolving line drifts 0.6 s past its end, but the whisper's must not drift onto the solo's first face
+    if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' && e.id !== 'r-wouldnt' ? 0.6 : 0)) continue;
     switch (e.id) {
       case 'r-rebased': {
         // the line must fit the margin box of the painting it ends on (the plane shows it at 1.1x there): sized to 860 px
@@ -127,7 +128,9 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<Diff key={e.id} spec={spec(e, { x: 390, y: 250, w: 1110, h: 450 })} t={t} opt={{ minus: "// don't touch", size: Math.min(78, (1110 - 90) / (0.6 * (2 + words(e).reduce((a, tk, i) => a + (tk.text.length + 1) * (i === e.key ? 1.8 : 1), 0)))), keyScale: 1.8, title: 'comment.js', backing: true }} />);
         break;
       case 'r-scream':
-        out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', ...(panelAt(t) ? { cx: 960, cy: 886, w: 985 } : { cx: 960, cy: 715, w: 1480 }), rot: -3 }} t={t} />);
+        // it slams once the scream's shatter cover has cleared (10 frames; over the cover it read at 1.9:1), and sits
+        // a few px above the bottom margin
+        out.push(<Shout key={e.id} spec={{ id: 'r-scream-s', text: 'AAAAAH!', at: e.t0 + 10 / 60, until: e.t1, style: 'steel', color: '#ff2a14', ...(panelAt(t) ? { cx: 960, cy: 880, w: 985 } : { cx: 960, cy: 700, w: 1480 }), rot: -3 }} t={t} />);
         break;
       // GIT! PUSH! FORCE! (round 7c storyboard): each word stands beside orange (she is on the right third), never
       // over her face or her action, and leaves with her shot; the painting after PUSH! stays uncovered
