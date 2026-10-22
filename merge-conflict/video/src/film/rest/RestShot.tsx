@@ -55,13 +55,34 @@ const COLORS: Record<RestScene, [Hex, Hex]> = {
 };
 // a painting cut into the metal part takes a fire cover in the metal palette, not the disco panels' violet
 const METAL_PANEL: [Hex, Hex] = ['#e9320b', '#ff2a14'];
-const TRANSITIONS: TransitionSpec[] = RSHOTS.filter((s) => !s.fade).map((s) => {
-  const i = RSHOTS.indexOf(s);
-  const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
-  return { id: `r-tr-${s.id}`, kind: cover ? clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), s.t >= SCREAM.start, i) : 'shock', at: s.t, pre: cover ? 5 / 60 : 0, post: cover ? 10 / 60 : 14 / 60, colors: s.scene === 'panel' && s.t >= SCREAM.start ? METAL_PANEL : COLORS[s.scene], origin: cover ? undefined : ([960, 980] as [number, number]) };
-});
-
 const tk = (line: number, k: number) => lineTokens(line)[k]?.start ?? 0;
+
+/** Round 7d ("Covers are events, not punctuation"): from the scream on, an opaque cover fires at most once per
+ *  COVER_GAP seconds and lasts COVER_FRAMES frames (2 before the cut, 4 after); every other world change there is a
+ *  hard cut on the beat, and from PUSH! to FORCE! no transition plays at all (the smash, the ring and the throw read
+ *  as one chain). Before the scream the covers stay as approved (15 frames). */
+export const COVER_GAP = 4;
+export const COVER_FRAMES = 6;
+export const PUSH_SPAN: readonly [number, number] = [tk(46, 0), tk(47, 0)];
+const TRANSITIONS: TransitionSpec[] = (() => {
+  let last = -Infinity;
+  return RSHOTS.flatMap((s, i): TransitionSpec[] => {
+    const cover = i === 0 || (RSHOTS[i - 1] as RShot).scene !== s.scene;
+    const metal = s.t >= SCREAM.start;
+    if (metal && s.t >= PUSH_SPAN[0] - 1e-6 && s.t <= PUSH_SPAN[1] + 1e-6) return [];
+    const colors = s.scene === 'panel' && metal ? METAL_PANEL : COLORS[s.scene];
+    if (!cover) return [{ id: `r-tr-${s.id}`, kind: 'shock', at: s.t, pre: 0, post: 14 / 60, colors, origin: [960, 980] }];
+    if (metal) {
+      if (s.t - last < COVER_GAP) return [];
+      last = s.t;
+    }
+    const kind = clipKind(s.into === 'shock' ? 'streaks' : (s.into ?? 'streaks'), metal, i);
+    return [{ id: `r-tr-${s.id}`, kind, at: s.t, pre: (metal ? 2 : 5) / 60, post: (metal ? COVER_FRAMES - 2 : 10) / 60, colors }];
+  });
+})();
+/** The opaque covers of verse 3 through the solo, for tools/covercheck.mjs: id, kind and [start, end) window. */
+export const restCovers = (): { id: string; kind: string; window: [number, number] }[] =>
+  TRANSITIONS.filter((s) => s.kind !== 'shock').map((s) => ({ id: s.id, kind: s.kind, window: transitionWindow(s) }));
 const HITS = EVENTS.filter((e) => e.kind === 'hit').map((e) => e.t);
 const SPARKS = EVENTS.filter((e) => e.kind === 'spark').map((e) => e.t);
 /** Verses 3-4: the camera punches on every sung word and on every second beat (round 7b, lyric-locked hits). */
@@ -81,6 +102,7 @@ const kickW = (t: number): number => {
 /** A shot's camera move about the girl it frames (round 7b: a camera move on every line). k: 0..1 across the shot,
  *  u: seconds into it. */
 const moved = (pose: CameraPose, move: Move, k: number, u: number, focus: Vec3, dir: number, pushDepth = 0.38): CameraPose => {
+  if (move === 'hold') return pose;
   const rel: Vec3 = [pose.position[0] - focus[0], pose.position[1] - focus[1], pose.position[2] - focus[2]];
   if (move === 'push') {
     const d = 1 - pushDepth * outQuad(k);
@@ -123,9 +145,14 @@ const BLUE_TURN = dissolvePlan({ id: 'r-blue-metal', t0: SCREAM.start - 20 / 60,
 // GIT! PUSH! FORCE! (round 7c storyboard): the HUD types the command through the build, and the wave throws blue
 // back across the frame (from right of centre to left of it in 0.3 s, then she lands and holds)
 const shotT = (id: string): number => (RSHOTS.find((s) => s.id === id) as RShot).t;
-const PUSH_HUD = { t0: tk(45, 0) + 0.25, t1: tk(46, 0) - 0.6, until: shotT('push-impact') };
-const blownK = (t: number): number => (t < shotT('push-blown') || t >= shotT('push-force') ? 0 : clamp01((t - shotT('push-blown')) / 0.3));
-const blownDx = (t: number): number => (blownK(t) === 0 ? 0 : 2.6 - 5.0 * outQuad(blownK(t)));
+const PUSH_HUD = { t0: tk(45, 0) + 0.25, t1: tk(46, 0) - 0.6, until: shotT('push-blown') };
+// round 7d: the ring enters from the right already moving, reaches her soles 3 frames after the cut and throws her
+// from right of centre to the left edge over 0.42 s (>= 40 % of the frame width, measured on the render)
+const BLOWN = shotT('push-blown');
+const HIT = BLOWN + 3 / 60;
+const BLOWN_FROM = 3.6;
+const blownK = (t: number): number => (t < HIT || t >= shotT('push-force') ? 0 : clamp01((t - HIT) / 0.42));
+const blownDx = (t: number): number => (t < BLOWN || t >= shotT('push-force') ? 0 : BLOWN_FROM - 8.4 * outQuad(blownK(t)));
 
 const lightOf = (who: 'B' | 'O', t: number, scene: RestScene): CardLight => {
   const metalScene = scene === 'cathedral' || scene === 'forge' || scene === 'tunnel' || scene === 'pushface';
@@ -143,7 +170,7 @@ const restCamera = (t: number) => {
   const focus = focusOf(blueP && (scene === 'subway' || scene === 'blame' || scene === 'whitespace' || scene === 'nametag' || scene === 'whisper') ? blueP : (orangeP ?? blueP));
   const idx = RSHOTS.indexOf(shot);
   const chosen = shot.move ?? MOVES[idx % MOVES.length];
-  const move: Move | undefined = scene === 'whisper' ? undefined : t >= SOLO.start && chosen !== 'push' ? 'push' : chosen;
+  const move: Move | undefined = scene === 'whisper' || chosen === 'hold' ? undefined : t >= SOLO.start && chosen !== 'push' ? 'push' : chosen;
   const dir = idx % 2 ? 1 : -1;
   // the tunnel's hero move flies the camera through the girls standing in it; a shot travels its first 45 %
   const raw = variant(HERO[scene], shot.cam, scene === 'tunnel' ? k * 0.45 : k, focus);
@@ -211,7 +238,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
     tag: scene === 'nametag' ? rect(GUILTY_TAG) : undefined,
     caseLine: scene === 'lasercase' ? rect(CASE_LINE) : undefined,
     gitUntil: shotT('push-charge'),
-    pushUntil: shotT('push-impact'),
+    pushUntil: shotT('push-blown'),
   };
   const fails = [tk(27, 1), tk(27, 2), tk(27, 3), tk(28, 1), tk(28, 2), tk(28, 3)];
   const bursts: Burst[] = ([
@@ -223,8 +250,8 @@ export const RestShot = ({ frame }: { frame: number }) => {
     { t: tk(46, 0) + 0.05, origin: [3, -3, 0.5] },
     { t: tk(47, 0), origin: [0, 1, 0] },
     // the debris the wave throws up with blue
-    { t: shotT('push-blown'), origin: [2.4, -1.5, 0.5] },
-    { t: shotT('push-blown') + 0.12, origin: [0, -2, 0.5] },
+    { t: HIT, origin: [BLOWN_FROM, -2.2, 0.5] },
+    { t: HIT + 0.12, origin: [0, -2.4, 0.5] },
     ...SPARKS.map((x, i) => ({ t: x, origin: [i % 2 ? 3 : -3, -1, 0] })),
   ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).sort((a, b) => a.t - b.t).slice(-4);
   const world = (() => {
@@ -276,7 +303,11 @@ export const RestShot = ({ frame }: { frame: number }) => {
     if (!pp?.at) return null;
     const clip = scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined;
     const grounded = (pp.at.feet ?? FLOOR_Y) === FLOOR_Y;
-    return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={who === 'B' ? blueGrade : ORANGE_METAL} {...pp.at} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clip} light={lightOf(who, t, scene)} ground={grounded ? undefined : false} dx={who === 'B' ? blownDx(t) : 0} />;
+    // thrown by the wave she keeps her own blue (round 7d): the forge's orange key and the metal grade went red on her
+    const own = who === 'B' && shot.id === 'push-blown';
+    const grade = own ? BLUE_DISCO : who === 'B' ? blueGrade : ORANGE_METAL;
+    const light: CardLight = own ? { key: CYAN, keyAmt: 0.35, rim: 0.6 } : lightOf(who, t, scene);
+    return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={grade} {...pp.at} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clip} light={light} ground={grounded ? undefined : false} dx={who === 'B' ? blownDx(t) : 0} />;
   };
   const turn = dissolveState(BLUE_TURN, t);
   const blueFig = turn.active ? <>{figure('B', { t: 0, card: 'BX3', at: BLUE_TURN.from?.at }, turn.fromOpacity)}{figure('B', { t: 0, card: 'BMX2', at: BLUE_TURN.to?.at }, turn.toOpacity)}</> : figure('B', blueP);
@@ -315,8 +346,18 @@ export const RestShot = ({ frame }: { frame: number }) => {
             return <ellipse key={d} cx={c.x} cy={c.y} rx={60 + 1500 * outQuad(u)} ry={(60 + 1500 * outQuad(u)) * 0.28} fill="none" stroke="#ffd0a0" strokeWidth={26 * (1 - u)} opacity={1 - u} />;
           });
         })()}
-        {/* out of the whisper's near-black the solo opens up over 0.6 s instead of jumping bright (a flash pair) */}
-        {layer !== 'type' && t >= SOLO.start && t < SOLO.start + 0.6 && <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={0.8 * (1 - (t - SOLO.start) / 0.6)} />}
+        {/* the ring of the smash arrives from the right in the next shot and reaches her soles at HIT */}
+        {shot.id === 'push-blown' && t < HIT + 0.35 && blueP?.at && (() => {
+          const c = project(pose, [blueP.at.x + BLOWN_FROM + 9, FLOOR_Y, 0]);
+          const foot = project(pose, [blueP.at.x + BLOWN_FROM, FLOOR_Y, 0]);
+          const rHit = Math.abs(c.x - foot.x);
+          // it enters 0.15 s into its growth, so it is already racing when the shot opens
+          return [0, 0.06].map((d) => {
+            const r = rHit * Math.max(0, (t - d - (BLOWN - 0.15)) / (HIT - (BLOWN - 0.15)));
+            const fade = clamp01((HIT + 0.35 - t) / 0.2);
+            return <ellipse key={d} cx={c.x} cy={c.y} rx={r} ry={r * 0.28} fill="none" stroke="#ffd0a0" strokeWidth={24 - d * 120} opacity={fade} />;
+          });
+        })()}
         {layer !== 'type' && TRANSITIONS.map((s) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;

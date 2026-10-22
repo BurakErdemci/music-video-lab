@@ -14,11 +14,11 @@ export type RestScene =
   | 'whitespace' | 'nametag' | 'lasercase' | 'scream' | 'cathedral' | 'forge' | 'pushface' | 'whisper' | 'tunnel' | 'arena' | 'duel'
   | 'faceO' | 'faceB' | 'panel';
 export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
-/** How the camera travels across a shot (round 7b, "No cliff after the chorus": a camera move on every line). */
-export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom';
-/** `fade`: the cut is carried by a fade up from black instead of a cover (out of the whisper's near-black). */
+/** How a camera travels across a shot (round 7b, "No cliff after the chorus": a camera move on every line); 'hold'
+ *  keeps the frame still so the girl's own motion carries the shot (round 7d, blue thrown by the wave). */
+export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom' | 'hold';
 /** `panel`: for scene 'panel', the moment painting shown full frame (public/plates/<panel>.webp). */
-export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; fade?: boolean; move?: Move; panel?: string }
+export interface RShot { id: string; t: number; scene: RestScene; cam: CamVariant; into?: TransitionKind; move?: Move; panel?: string }
 export interface RPose { t: number; card: string | null; at?: Placement }
 
 const tk = (line: number, k: number) => at(`tok-${line}-${k}`);
@@ -68,11 +68,12 @@ const METAL: MShot[] = [
   { id: 'push-leap', t: db(tk(45, 0) + 1.95), scene: 'forge', cam: 'low', into: 'fire', move: 'push', B: null, O: ['OF2', { x: 1.0, feet: -1.8, height: 6.2, z: 0 }] },
   { id: 'push-leap-2', t: bt(tk(45, 0) + 2.65), scene: 'forge', cam: 'reverse', into: 'shock', move: 'push', O: ['OF2', { x: -0.8, feet: -1.2, height: 6.0, z: 0, flip: true }] },
   { id: 'push-brace', t: bt(tk(45, 0) + 3.0), scene: 'forge', cam: 'hero', into: 'shock', move: 'whip', B: faceC('BMX4'), O: null },
-  // 4. PUSH!: she smashes down (an impact frame, the floor ring), then the painting, uncovered and shaken
-  { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: null, O: ['OF3', full(1.4, 6.6)] },
-  { id: 'push-impact', t: tk(46, 0) + 0.2, scene: 'panel', panel: 'QK1', cam: 'hero', into: 'shock', move: 'push', B: null, O: null },
-  // 5. the wave hits: blue is thrown back across the frame with speed streaks and debris
-  { id: 'push-blown', t: bt(tk(46, 0) + 0.3), scene: 'forge', cam: 'hero', into: 'tear', B: ['BF1', { x: 0, height: 6.2, z: 0 }], O: null },
+  // 4. PUSH!: she smashes down and the shockwave ring leaves her fists across the floor
+  // 5. hard cut on the half beat (round 7d, cause and effect, no cover): the ring races in from the right, reaches
+  //    blue and throws her across the frame in her own colours, half a second until FORCE! (the QK1 painting went:
+  //    with it blue was on screen for 0.2 s)
+  { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'hero', move: 'dollyzoom', B: null, O: ['OF3', full(1.4, 6.6)] },
+  { id: 'push-blown', t: (bt(tk(46, 0)) + bt(tk(46, 0) + 0.3)) / 2, scene: 'forge', cam: 'hero', move: 'hold', B: ['BF1', { x: 0, height: 7.4, z: 0 }], O: null },
   // 6. FORCE!: finger to the sky from a low angle, FORCE! beside her (brace and FORCE! stand in the forge: the
   //    insert world's racing lines pushed the breakdown over the chorus's motion; so does blue seeing it coming)
   { id: 'push-force', t: tk(47, 0), scene: 'forge', cam: 'low', into: 'shock', move: 'orbit', B: null, O: ['OF4', full(2.2, 6.6)] },
@@ -80,7 +81,7 @@ const METAL: MShot[] = [
   { id: 'whisper', t: WHISPER.start, scene: 'whisper', cam: 'hero', into: 'dissolve', B: ['BQ3', full(-1, 5.0)], O: null },
   { id: 'whisper-wouldnt', t: tk(48, 1), scene: 'whisper', cam: 'close', into: 'shock', B: ['BMX5', { x: -1.0, feet: -5.4, height: 11, z: 0 }] },
   // the solo: ten bars, a new framing every half bar
-  { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', fade: true, move: 'push', B: null, O: ['OS1', full(3, 5.0)] },
+  { id: 'solo-forge', t: SOLO.start, scene: 'forge', cam: 'hero', move: 'push', B: null, O: ['OS1', full(3, 5.0)] },
   { id: 'solo-tongue', t: half(0), scene: 'faceO', cam: 'hero', into: 'shatter', move: 'dollyzoom', O: faceC('OMX4', true) },
   { id: 'solo-cathedral', t: bar(1), scene: 'cathedral', cam: 'low', into: 'tunnel', move: 'orbit', B: ['BS1', full(-1.5, 5.2)], O: null },
   { id: 'solo-tunnel', t: bar(2), scene: 'tunnel', cam: 'hero', into: 'streaks', move: 'whip', B: ['BS2', full(-1.6, 4.6)], O: ['OS2', full(1.6, 4.6)] },
