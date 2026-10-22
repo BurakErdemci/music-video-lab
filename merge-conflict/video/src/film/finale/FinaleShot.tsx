@@ -34,7 +34,7 @@ import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BRANCHES_AT, BUILD, CHANT, FAILED, FBLUE, FHITS, FINAL, FINALE_END, FINALE_TYPE, FORANGE, type FScene, type FShot, FSHOTS, type Move, OUTRO, PIANO, RISE, SCREAM_END, tk } from './plan.ts';
 import { logoIn } from './logo.ts';
 import { FinaleType } from './type.tsx';
-import { flightView, type PaintView, restView } from './paint.ts';
+import { flightView, paintMag, type PaintView, restView } from './paint.ts';
 import { Painting } from './Painting.tsx';
 
 const cam = (position: Vec3, target: Vec3, fov = 40, roll = 0): CameraPose => ({ position, target, fov, roll });
@@ -262,7 +262,10 @@ const rawFinaleStateAt = (t: number): ShotState => {
   const { shot, k, scene, blueP, orangeP, pose, planeBase } = finaleCamera(t);
   const plateId = scene === 'panel' ? shot.panel : scene === 'flight' ? (t < BRANCHES_AT ? 'RK3' : undefined) : PLATES[scene];
   const panel = scene === 'panel' || scene === 'flight';
-  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)) : k } : {}) } : undefined };
+  // a painting the finale places itself (paint.ts) is reported as drawn, so framecheck measures its push and scale
+  const pv = paintViewAt(t);
+  const view = pv ? { h: pv.view.h, ox: pv.view.ox, oy: pv.view.oy, mag: paintMag(pv.view), push: scene === 'flight' } : undefined;
+  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)) : k } : {}), ...(view ? { view } : {}) } : undefined };
 };
 
 const live = liveCamera(rawFinaleStateAt, (t) => {

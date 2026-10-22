@@ -33,7 +33,13 @@ export interface ShotState {
   fit?: { z: number; ok: boolean };
   /** The painted plate behind the shot (worlds/plate.tsx): its id, the pose its far plane faces, the plane's
    *  distance and its width over the frame's, for the pixel-scale rule (round 7c, "Resolution"). */
-  plate?: { id: string; base: CameraPose; dist: number; margin: number; /** a painting's Ken Burns progress 0..1 */ kb?: number };
+  plate?: {
+    id: string; base: CameraPose; dist: number; margin: number; /** a painting's Ken Burns progress 0..1 */ kb?: number;
+    /** A painting the finale places itself (film/finale/paint.ts): its height in frame heights, centre offset in frame
+     *  widths/heights (y up), the most a pixel is magnified at 2K, and whether it is the build's flight (a push that may
+     *  crop it, scene-map.md round 9); without `push` it must be whole. */
+    view?: { h: number; ox: number; oy: number; mag: number; push: boolean };
+  };
   /** The pose the shot's type plane is authored in (typePlane(pose, typeBase, 1)), for placing type off the faces. */
   typeBase?: CameraPose;
 }

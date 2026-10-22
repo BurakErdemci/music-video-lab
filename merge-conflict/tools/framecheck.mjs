@@ -102,6 +102,8 @@ const plateScales = (state) => {
   const planes = pl.dist === PANEL_DIST ? [['far', pl.dist, 0.5]] : [['far', pl.dist, 0.5], ['near', pl.dist * 0.45, 0.8]];
   // a moment panel's depth parallax magnifies its near pixels by up to panelParallax's `mag` on top of the plane
   return planes.map(([name, d, follow]) => {
+    // a painting the finale places itself (film/finale/paint.ts): the state carries the magnification it draws with
+    if (pl.view) return { id: pl.id, kind: `plate ${name}`, f: pl.view.mag };
     if (pl.dist === PANEL_DIST) {
       // a painting shown whole (round 7d): fitted to the frame height, its capped parallax on top
       const sc = M.paintingView(state.pose, d, pl.kb ?? 1).scale;
@@ -118,13 +120,24 @@ const plateScales = (state) => {
 const paintingFails = (state, grow = 1) => {
   const pl = state.plate;
   if (!pl || pl.dist !== PANEL_DIST) return [];
-  const v = M.paintingView(state.pose, pl.dist, pl.kb ?? 1);
-  const corner = (a, b) => M.project(state.pose, [0, 1, 2].map((i) => v.centre[i] + v.right[i] * a * v.w * grow / 2 + v.up[i] * b * v.h * grow / 2));
-  const ps = [corner(-1, -1), corner(1, -1), corner(-1, 1), corner(1, 1)];
-  const x0 = Math.min(...ps.map((p) => p.x)), x1 = Math.max(...ps.map((p) => p.x)), y0 = Math.min(...ps.map((p) => p.y)), y1 = Math.max(...ps.map((p) => p.y));
+  let x0, x1, y0, y1;
+  if (pl.view) {
+    // placed by the finale (paint.ts): its rectangle in the frame, 3:2 fitted to h frame heights, offset (ox, oy up)
+    const { h, ox, oy } = pl.view;
+    const w = (h * grow * 1.5 * H) / W;
+    [x0, x1] = [(0.5 + ox - w / 2) * W, (0.5 + ox + w / 2) * W];
+    [y0, y1] = [(0.5 - oy - (h * grow) / 2) * H, (0.5 - oy + (h * grow) / 2) * H];
+  } else {
+    const v = M.paintingView(state.pose, pl.dist, pl.kb ?? 1);
+    const corner = (a, b) => M.project(state.pose, [0, 1, 2].map((i) => v.centre[i] + v.right[i] * a * v.w * grow / 2 + v.up[i] * b * v.h * grow / 2));
+    const ps = [corner(-1, -1), corner(1, -1), corner(-1, 1), corner(1, 1)];
+    [x0, x1, y0, y1] = [Math.min(...ps.map((p) => p.x)), Math.max(...ps.map((p) => p.x)), Math.min(...ps.map((p) => p.y)), Math.max(...ps.map((p) => p.y))];
+  }
   const out = [];
-  if (x0 < -1 || y0 < -1 || x1 > W + 1 || y1 > H + 1) out.push({ s: { card: pl.id }, key: 'painting cut', why: `painting ${pl.id} cut by the frame (${Math.round(x0)},${Math.round(y0)})-(${Math.round(x1)},${Math.round(y1)})` });
-  if (y1 - y0 < (1 - M.PAINT_KB) * H - 2) out.push({ s: { card: pl.id }, key: 'painting small', why: `painting ${pl.id} ${(100 * (y1 - y0) / H).toFixed(0)} % of the frame height` });
+  // the build's flight (round 9, Burak approved) may push the painting past the frame, within the pixel rule
+  const pushed = pl.view?.push === true;
+  if (!pushed && (x0 < -1 || y0 < -1 || x1 > W + 1 || y1 > H + 1)) out.push({ s: { card: pl.id }, key: 'painting cut', why: `painting ${pl.id} cut by the frame (${Math.round(x0)},${Math.round(y0)})-(${Math.round(x1)},${Math.round(y1)})` });
+  if (!pushed && y1 - y0 < (1 - M.PAINT_KB) * H - 2) out.push({ s: { card: pl.id }, key: 'painting small', why: `painting ${pl.id} ${(100 * (y1 - y0) / H).toFixed(0)} % of the frame height` });
   const over = [...state.subjects, ...(state.extras ?? [])];
   if (over.length) out.push({ s: { card: pl.id }, key: 'painting covered', why: `cards ${over.map((x) => x.card).join(', ')} drawn over painting ${pl.id}` });
   return out;
@@ -193,8 +206,15 @@ if (selftest) {
   const pBig = paintingFails(pState, 1.1);
   const pCard = paintingFails({ ...pState, subjects: [{ card, at: { x: 0, feet: -4.5, height: 6 } }] });
   console.log(`selftest painting: grown -> ${pBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; card over it -> ${pCard.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; as drawn -> ${pOk.map((b) => b.why).join('; ') || 'passed'}`);
+  // a painting the finale places itself (round 9): at rest drifted past the frame edge it fails; the flight's push past
+  // the frame passes the wholeness rule, but a push past the pixel rule fails the scale rule
+  const vState = (view) => ({ ...pState, plate: { ...pState.plate, view } });
+  const vDrift = paintingFails(vState({ h: 1, ox: 0.2, oy: 0, mag: 0.7, push: false }));
+  const vFlight = [...paintingFails(vState({ h: 1.5, ox: 0, oy: -0.2, mag: 1.1, push: true })), ...scaleFails(vState({ h: 1.5, ox: 0, oy: -0.2, mag: 1.1, push: true }))];
+  const vOver = scaleFails(vState({ h: 1.9, ox: 0, oy: 0, mag: 1.34, push: true }));
+  console.log(`selftest painting view: drifted out -> ${vDrift.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; flight push -> ${vFlight.map((b) => b.why).join('; ') || 'passed'}; pushed past 1.25x -> ${vOver.map((b) => b.why ?? b.key).join('; ') || 'PASSED (wrong)'}`);
   rmSync(outDir, { recursive: true, force: true });
-  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 && pBig.length > 0 && pCard.length > 0 && pOk.length === 0 ? 1 : 0);
+  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 && pBig.length > 0 && pCard.length > 0 && pOk.length === 0 && vDrift.length > 0 && vFlight.length === 0 && vOver.length > 0 ? 1 : 0);
 }
 
 if (arg('dump')) {
