@@ -23,7 +23,8 @@ export const FINALE_END = OUTRO.end;
 export type FScene =
   | 'panel' | 'quiet' | 'flight'
   | 'arena' | 'spin' | 'split' | 'runway' | 'walls' | 'line' | 'logo'
-  | 'forge' | 'cathedral' | 'tunnel' | 'marena' | 'duel' | 'faceO' | 'terminal' | 'title';
+  | 'forge' | 'cathedral' | 'tunnel' | 'marena' | 'duel' | 'faceO' | 'faceB' | 'terminal' | 'title'
+  | 'stadium' | 'graffiti' | 'fire';
 export type CamVariant = 'hero' | 'close' | 'low' | 'reverse' | 'wide';
 export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom' | 'still';
 /** A girl in a shot: her card and placement, null to hide her, absent to keep her pose. */
@@ -131,24 +132,26 @@ export const FSHOTS: FShot[] = [
   { id: 'rk9', t: tk(66, 2), scene: 'panel', panel: 'RK9', cam: 'hero', move: 'still', B: null, O: null },
   // ---- the scream end (196.15-213.54): metal; sky scream, guitar smash, keytar spin, the scream pillar (RK10)
   { id: 'pillar', t: SCREAM_END.start, scene: 'panel', panel: 'RK10', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
-  { id: 'sky', t: db(197.4), scene: 'cathedral', cam: 'low', move: 'push', into: 'shock', B: ['BH4', full(-2.6, 4.8)], O: ['OH4', full(2.6, 4.8)] },
+  // round 9: no set more than twice (Burak: the forge and the laser stage came round again and again) - the stadium,
+  // the fire hall, the graffiti alley and RK8 join; face inserts for each girl in her own colour
+  { id: 'sky', t: db(197.4), scene: 'stadium', cam: 'low', move: 'push', into: 'tear', B: ['BH4', full(-2.6, 4.8)], O: ['OH4', full(2.6, 4.8)] },
   { id: 'sky-faces', t: bt(198.1), scene: 'duel', cam: 'hero', move: 'dollyzoom', into: 'shock', B: faceAt('BMX2', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'smash-up', t: db(198.8), scene: 'forge', cam: 'hero', move: 'push', into: 'shock', B: null, O: ['OS4', full(1.6, 5.6)] },
   { id: 'smash', t: db(200.1), scene: 'forge', cam: 'low', move: 'dollyzoom', into: 'shock' },
-  { id: 'keytar', t: db(201.4), scene: 'tunnel', cam: 'hero', move: 'whip', into: 'tear', B: ['BS4', full(-1.4, 5.4)], O: null },
-  { id: 'keytar-b', t: bt(202.1), scene: 'tunnel', cam: 'wide', move: 'push', into: 'shock' },
+  { id: 'keytar', t: db(201.4), scene: 'fire', cam: 'hero', move: 'whip', into: 'tear', B: ['BS4', full(-1.4, 5.4)], O: null },
+  { id: 'keytar-b', t: bt(202.1), scene: 'fire', cam: 'wide', move: 'push', into: 'shock' },
   { id: 'duo', t: db(202.8), scene: 'marena', cam: 'wide', move: 'orbit', into: 'shock', B: ['BS4', full(-3.0, 5.0)], O: ['OS4', full(3.0, 5.0)] },
   { id: 'duo-faces', t: bt(203.5), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX5', 4.4, true) },
-  { id: 'sky-2', t: db(204.1), scene: 'cathedral', cam: 'reverse', move: 'orbit', into: 'shock', B: ['BH4', full(-2.4, 4.8)], O: ['OH4', full(2.4, 4.8)] },
-  { id: 'sky-2-face', t: bt(204.8), scene: 'faceO', cam: 'hero', move: 'dollyzoom', into: 'shock', B: null, O: faceC('OMX4', true) },
-  { id: 'headbang', t: db(205.4), scene: 'forge', cam: 'wide', move: 'whip', into: 'tear', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
+  // the rocket ride (RK8) as the scream's middle eight
+  { id: 'rk8-scream', t: db(204.1), scene: 'panel', panel: 'RK8', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
+  { id: 'headbang', t: db(205.4), scene: 'graffiti', cam: 'wide', move: 'whip', into: 'tear', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
   { id: 'tunnel-3', t: db(206.8), scene: 'tunnel', cam: 'hero', move: 'push', into: 'shock', B: ['BS2', full(-1.8, 4.8)], O: ['OS2', full(1.8, 4.8)] },
-  { id: 'faces-3', t: bt(207.5), scene: 'duel', cam: 'hero', move: 'orbit', into: 'shock', B: faceAt('BMX1', -4.4), O: faceAt('OMX1', 4.4, true) },
-  { id: 'arena-3', t: db(208.1), scene: 'marena', cam: 'hero', move: 'orbit', into: 'shock', B: ['BS3', full(-3.0, 5.0)], O: ['OS3', full(3.0, 5.0)] },
-  { id: 'smash-2', t: db(209.5), scene: 'forge', cam: 'low', move: 'dollyzoom', into: 'tear', B: ['BS4', full(-2.6, 5.0)], O: ['OS4', full(2.6, 5.2)] },
-  { id: 'faces-4', t: bt(210.2), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX4', -4.4), O: faceAt('OMX2', 4.4, true) },
-  { id: 'sky-3', t: db(210.8), scene: 'cathedral', cam: 'low', move: 'push', into: 'shock', B: ['BH4', full(-2.6, 4.8)], O: ['OH4', full(2.6, 4.8)] },
-  { id: 'sky-3b', t: bt(211.5), scene: 'cathedral', cam: 'wide', move: 'orbit', into: 'shock' },
+  { id: 'faces-3', t: bt(207.5), scene: 'faceO', cam: 'hero', move: 'orbit', into: 'shock', B: null, O: faceC('OMX1', true) },
+  { id: 'arena-3', t: db(208.1), scene: 'cathedral', cam: 'reverse', move: 'orbit', into: 'shock', B: ['BS3', full(-3.0, 5.0)], O: ['OS3', full(3.0, 5.0)] },
+  { id: 'smash-2', t: db(209.5), scene: 'stadium', cam: 'wide', move: 'dollyzoom', into: 'tear', B: ['BS4', full(-2.6, 5.0)], O: ['OS4', full(2.6, 5.2)] },
+  { id: 'faces-4', t: bt(210.2), scene: 'faceB', cam: 'hero', move: 'push', into: 'shock', B: faceC('BMX4'), O: null },
+  { id: 'sky-3', t: db(210.8), scene: 'fire', cam: 'low', move: 'push', into: 'shock', B: ['BH4', full(-2.6, 4.8)], O: ['OH4', full(2.6, 4.8)] },
+  { id: 'sky-3b', t: bt(211.5), scene: 'fire', cam: 'wide', move: 'orbit', into: 'shock' },
   { id: 'climax', t: db(212.1), scene: 'marena', cam: 'wide', move: 'push', into: 'shock', B: ['BS4', full(-3.0, 5.0)], O: ['OS4', full(3.0, 5.0)] },
   // ---- the outro (213.54-232.12): the dawn walk (RK11), the resolved title, a last metal round, the final freeze (RK12)
   { id: 'dawn', t: OUTRO.start, scene: 'panel', panel: 'RK11', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },

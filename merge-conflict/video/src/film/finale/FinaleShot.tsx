@@ -24,9 +24,10 @@ import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
 import { PlateLayer } from '../../worlds/plate.tsx';
 import { TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
+import { GRAFFITI_CAMERA, GraffitiWorld, STADIUM_CAMERA, StadiumWorld } from '../../worlds/v2.tsx';
 import { WHISPER_CAMERA, WhisperWorld } from '../../worlds/v4.tsx';
 import { TilePlatform } from '../../worlds/kit/index.ts';
-import { Arena, CYAN, InsertWorld, LineWorld, LogoWorld, RED, RunwayWorld, SplitWorld, WallsWorld } from '../chorus/worlds.tsx';
+import { Arena, CYAN, FireWorld, InsertWorld, LineWorld, LogoWorld, RED, RunwayWorld, SplitWorld, WallsWorld } from '../chorus/worlds.tsx';
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
@@ -39,6 +40,9 @@ import { Painting } from './Painting.tsx';
 const cam = (position: Vec3, target: Vec3, fov = 40, roll = 0): CameraPose => ({ position, target, fov, roll });
 const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
 const ARENA_CAMERA: Hero = { from: cam([-6, 1.4, 14], [0, -1, -1], 44), to: cam([4, 1.0, 12.5], [0, -1, -1], 44) };
+/** The fire hall (round 9): close enough that a girl fills about 60 % of the frame between the glowing racks (the
+ *  arena's camera left her a small figure behind them). */
+const FIRE_CAMERA: Hero = { from: cam([0, 0.2, 12.5], [0, -0.3, 0]), to: cam([0.8, 0.5, 10.6], [0, 0, 0]) };
 const HERO: Record<FScene, Hero> = {
   panel: FACE_CAMERA, quiet: WHISPER_CAMERA, flight: FACE_CAMERA,
   arena: ARENA_CAMERA, spin: { from: cam([0, 2.2, 15], [0, -1, -1], 44), to: cam([0, 2, 12], [0, -1, -1], 44) }, split: FACE_CAMERA,
@@ -48,17 +52,19 @@ const HERO: Record<FScene, Hero> = {
   logo: { from: cam([0, 0, HOME_Z + 2], [0, 0, 0]), to: cam([0, 0.2, HOME_Z], [0, 0.2, 0]) },
   title: { from: cam([0, 0, HOME_Z + 2], [0, 0, 0]), to: cam([0, 0.2, HOME_Z], [0, 0.2, 0]) },
   forge: FORGE_CAMERA, cathedral: CATHEDRAL_CAMERA, tunnel: CHEVRON_TUNNEL_CAMERA, marena: ARENA_CAMERA,
-  duel: FACE_CAMERA, faceO: FACE_CAMERA, terminal: TERMINAL_CAMERA,
+  duel: FACE_CAMERA, faceO: FACE_CAMERA, faceB: FACE_CAMERA, terminal: TERMINAL_CAMERA,
+  stadium: STADIUM_CAMERA, graffiti: GRAFFITI_CAMERA, fire: FIRE_CAMERA,
 };
 /** Painted plates behind the code worlds: the chorus's arena and fire halls, the metal plates from round 7. */
-const PLATES: Partial<Record<FScene, string>> = { arena: 'W09', spin: 'W02', runway: 'W01', forge: 'W11', cathedral: 'W04', marena: 'W09' };
-const plateMargin = (scene: FScene): number => (scene === 'spin' ? 2.2 : scene === 'arena' || scene === 'runway' || scene === 'marena' ? 1.35 : 1.75);
+const PLATES: Partial<Record<FScene, string>> = { arena: 'W09', spin: 'W02', runway: 'W01', forge: 'W11', cathedral: 'W04', marena: 'W09', stadium: 'W07', graffiti: 'W03', fire: 'W05' };
+const plateMargin = (scene: FScene): number => (scene === 'spin' ? 2.2 : scene === 'arena' || scene === 'runway' || scene === 'marena' || scene === 'fire' ? 1.35 : scene === 'stadium' || scene === 'graffiti' ? 1.45 : 1.75);
 /** Cover colours at about the plates' mean luminance (round 6's flash lesson). */
 const COLORS: Record<FScene, [Hex, Hex]> = {
   panel: ['#7a3cff', '#ff3d9a'], quiet: ['#2a3a6a', '#4a5a8a'], flight: ['#2a3a6a', '#7a3cff'], arena: ['#2d63fb', '#e92645'], spin: ['#2d63fb', '#e92645'],
   split: ['#226de5', '#ff2222'], runway: ['#1979bc', '#9a2aff'], walls: ['#3a5eee', '#cd3251'], line: ['#ae1ede', '#ff4fd8'], logo: ['#733cff', '#dc2473'],
   title: ['#733cff', '#dc2473'], forge: ['#e9320b', '#ffb020'], cathedral: ['#c81e2a', '#e9620b'], tunnel: ['#e9320b', '#c81e2a'], marena: ['#e9320b', '#2d63fb'],
-  duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], terminal: ['#c81e2a', '#2a3a6a'],
+  duel: ['#226de5', '#ff2222'], faceO: ['#ff2217', '#e9620b'], faceB: ['#1e6bff', '#2a3a9a'], terminal: ['#c81e2a', '#2a3a6a'],
+  stadium: ['#e9620b', '#5a2a9a'], graffiti: ['#e9620b', '#9a2a6a'], fire: ['#e9320b', '#ffb020'],
 };
 const METAL_PANEL: [Hex, Hex] = ['#e9320b', '#ff2a14'];
 
@@ -170,12 +176,14 @@ const gradeOf = (who: 'B' | 'O', t: number): Grade =>
   t < FINAL.start - 0.1 ? (who === 'B' ? BLUE_SOFT : ORANGE_SOFT) : t < CHANT.start ? (who === 'B' ? BLUE_MIX : ORANGE_MIX) : who === 'B' ? BLUE_METAL : ORANGE_METAL;
 
 /** Worlds with a floor the girls stand on (round 7d grounding: elsewhere the Card and the state say ground: false). */
-const FLOOR_SCENES: readonly FScene[] = ['quiet', 'arena', 'spin', 'marena', 'runway', 'walls', 'forge', 'cathedral', 'tunnel', 'terminal'];
-const METAL_SCENES: readonly FScene[] = ['forge', 'cathedral', 'tunnel', 'marena', 'duel', 'faceO', 'terminal'];
+const FLOOR_SCENES: readonly FScene[] = ['quiet', 'arena', 'spin', 'marena', 'runway', 'walls', 'forge', 'cathedral', 'tunnel', 'terminal', 'stadium', 'graffiti', 'fire'];
+const METAL_SCENES: readonly FScene[] = ['forge', 'cathedral', 'tunnel', 'marena', 'duel', 'faceO', 'terminal', 'stadium', 'graffiti', 'fire'];
 const lightOf = (who: 'B' | 'O', t: number, scene: FScene): CardLight => {
   // the piano: a soft light band drifts across the girl every two bars (round 9: no frozen 4 s in the piano)
   if (scene === 'quiet') return { key: who === 'B' ? '#9fc0ff' : '#ffc890', keyAmt: 0.3, rim: 0.9, sweep: { x: -9 + ((barPos(t) / 2) % 1) * 18, width: 1.4, amt: 0.28, color: who === 'B' ? '#d6e6ff' : '#ffe2c4', slope: 0.25 } };
   if (scene === 'flight') return { key: who === 'B' ? '#9fc0ff' : '#ffc890', keyAmt: 0.3, rim: 0.9 };
+  // her own face insert in the scream end: blue in her own cold blue (the metal key would tint her red)
+  if (scene === 'faceB') return { key: '#3a8cff', keyAmt: 0.4, rim: 1.4 };
   const metal = METAL_SCENES.includes(scene);
   const key: Hex = metal ? '#ff5a1a' : who === 'B' ? CYAN : '#ff4a1a';
   return { key, keyAmt: 0.4, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.9, amt: 0.45, color: metal ? '#ffd0a0' : who === 'B' ? '#bfefff' : '#ffd0b0', slope: 0.3 }, dots: scene === 'arena' || scene === 'spin' || scene === 'logo' || scene === 'marena' ? 0.5 : 0.1, ball: [0, 5.3, -6], rim: 1.4 };
@@ -323,6 +331,14 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
         return <SplitWorld t={t} hit={insertHit} />;
       case 'faceO':
         return <InsertWorld t={t} color={RED} hit={shot.t} />;
+      case 'faceB':
+        return <InsertWorld t={t} color="#1e6bff" hit={shot.t} />;
+      case 'stadium':
+        return <StadiumWorld t={t} plate="shot" pulse={1 - outQuad(clamp01((t - insertHit) / 0.3))} />;
+      case 'graffiti':
+        return <GraffitiWorld t={t} plate="shot" spray={shot.t - 0.4} />;
+      case 'fire':
+        return <FireWorld t={t} rise={outQuad(clamp01((t - shot.t) / 0.35))} embers={[]} plate />;
       case 'runway':
         return <RunwayWorld t={t} on={outQuad(clamp01((t - shot.t) / 0.5))} lanes={['#2f7bff', '#ff7a1a']} plate />;
       case 'walls':
