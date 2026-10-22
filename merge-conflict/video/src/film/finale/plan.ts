@@ -232,5 +232,5 @@ export const FINALE_TYPE: TypeEntry[] = [
   { id: 'f-merged', line: 67, range: [0, 1], form: 'DissolveText', t0: OUTRO.start + 0.4, t1: db(218.8) - 0.6, singer: 'both', key: 0, text: 'merged.' },
   { id: 'f-title', line: 67, range: [0, 1], form: 'Logo', t0: db(218.8), t1: db(221.5), singer: 'both', key: 0 },
   { id: 'f-log', line: 67, range: [0, 1], form: 'CodeLine', t0: db(222.8), t1: db(226.8), singer: 'both', key: 0, text: "* Merge branch 'orange' into main" },
-  { id: 'f-end', line: 67, range: [0, 1], form: 'DissolveText', t0: db(229.5), t1: FINALE_END - 0.8, singer: 'both', key: 0, text: 'resolved.' },
+  { id: 'f-end', line: 67, range: [0, 1], form: 'DissolveText', t0: db(228.2) + 0.4, t1: FINALE_END - 2.4, singer: 'both', key: 0, text: 'resolved.' },
 ];

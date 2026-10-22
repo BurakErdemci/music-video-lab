@@ -25,6 +25,7 @@ import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelW
 import { PlateLayer } from '../../worlds/plate.tsx';
 import { TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
 import { WHISPER_CAMERA, WhisperWorld } from '../../worlds/v4.tsx';
+import { TilePlatform } from '../../worlds/kit/index.ts';
 import { Arena, CYAN, InsertWorld, LineWorld, LogoWorld, RED, RunwayWorld, SplitWorld, WallsWorld } from '../chorus/worlds.tsx';
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
@@ -151,6 +152,8 @@ const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
 const gradeOf = (who: 'B' | 'O', t: number): Grade =>
   t < FINAL.start - 0.1 ? (who === 'B' ? BLUE_SOFT : ORANGE_SOFT) : t < CHANT.start ? (who === 'B' ? BLUE_MIX : ORANGE_MIX) : who === 'B' ? BLUE_METAL : ORANGE_METAL;
 
+/** Worlds with a floor the girls stand on (round 7d grounding: elsewhere the Card and the state say ground: false). */
+const FLOOR_SCENES: readonly FScene[] = ['quiet', 'arena', 'spin', 'marena', 'runway', 'walls', 'forge', 'cathedral', 'tunnel', 'terminal'];
 const METAL_SCENES: readonly FScene[] = ['forge', 'cathedral', 'tunnel', 'marena', 'duel', 'faceO', 'terminal'];
 const lightOf = (who: 'B' | 'O', t: number, scene: FScene): CardLight => {
   if (scene === 'quiet' || scene === 'flight') return { key: who === 'B' ? '#9fc0ff' : '#ffc890', keyAmt: 0.3, rim: 0.9 };
@@ -212,7 +215,8 @@ const subjectsAt = (t: number, scene: FScene, blueP: ReturnType<typeof poseAt>, 
   for (const [who, p] of [['B', blueP], ['O', orangeP]] as const) {
     if (!p?.card || !p.at) continue;
     if (scattered(who, t)) continue;
-    out.push({ card: p.card, at: p.at, clip: clip(who), dx: scene === 'logo' ? (who === 'B' ? -apart : apart) : 0, dy: scene === 'flight' ? riseDy(t) : 0 });
+    const grounded = FLOOR_SCENES.includes(scene) && (p.at.feet ?? FLOOR_Y) === FLOOR_Y;
+    out.push({ card: p.card, at: p.at, clip: clip(who), dx: scene === 'logo' ? (who === 'B' ? -apart : apart) : 0, dy: scene === 'flight' ? riseDy(t) : 0, ...(grounded ? {} : { ground: false as const }) });
   }
   return out;
 };
@@ -274,7 +278,13 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
       case 'panel':
         return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} margin={1.25} />;
       case 'quiet':
-        return <WhisperWorld t={t} />;
+        // the truce: the empty stage after hours, its floor half blue, half orange
+        return (
+          <>
+            <WhisperWorld t={t} />
+            <TilePlatform position={[0, FLOOR_Y, -2]} width={30} depth={16} cols={30} rows={16} splitX={0} left="#16306e" right="#6e3416" t={t} pulse={0.1} opacity={0.55} />
+          </>
+        );
       case 'flight':
         return (
           <>
@@ -284,9 +294,9 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
       case 'arena':
         return <Arena t={t} stomps={[]} embers={[]} led={['#ff7a1a', '#2f7bff']} plate />;
       case 'spin':
-        return <Arena t={t} stomps={[]} embers={[]} lasers={1.6} led={['#ff4fd8', CYAN]} plate />;
+        return <Arena t={t} stomps={[]} embers={[]} lasers={1.6} led={['#ff4fd8', CYAN]} plate pads={false} />;
       case 'marena':
-        return <Arena t={t} stomps={[]} embers={[]} lasers={1.4} led={['#ff3014', '#ffb020']} plate />;
+        return <Arena t={t} stomps={[]} embers={[]} lasers={1.4} led={['#ff3014', '#ffb020']} plate pads={false} />;
       case 'split':
         return <SplitWorld t={t} hit={FHITS.yes.filter((x) => x <= t).at(-1) ?? shot.t} />;
       case 'duel':
@@ -315,8 +325,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   })();
   const figure = (s: Subject) => {
     const who = s.card.startsWith('B') || s.card.startsWith('PB') ? 'B' : 'O';
-    const grounded = scene !== 'flight' && (s.at.feet ?? FLOOR_Y) === FLOOR_Y && scene !== 'split' && scene !== 'duel' && scene !== 'faceO' && scene !== 'logo';
-    return <Card key={`${who}-${s.card}`} id={s.card} t={t} grade={gradeOf(who, t)} {...s.at} dx={s.dx} dy={s.dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={s.clip} light={lightOf(who, t, scene)} ground={grounded ? undefined : false} opacity={gatherOpacity(who, t)} />;
+    return <Card key={`${who}-${s.card}`} id={s.card} t={t} grade={gradeOf(who, t)} {...s.at} dx={s.dx} dy={s.dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={s.clip} light={lightOf(who, t, scene)} ground={s.ground} opacity={gatherOpacity(who, t)} />;
   };
   const subjects = subjectsAt(t, scene, blueP, orangeP);
   const fieldGrade = metal ? ORANGE_METAL : BLUE_MIX;
@@ -334,7 +343,6 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
       </Stage>
       <Svg>
         <FormDefs />
-        <FinaleType entries={FINALE_TYPE} t={t} pose={pose} />
         {layer !== 'type' && (() => {
           // out of the solo the piano opens from black over 0.6 s; the final freeze closes to black on the last note;
           // the build-failed stop holds its frame
@@ -347,9 +355,14 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
         })}
+        {/* the type last: no cover or effect is drawn over a settled form (round 7d) */}
+        <FinaleType entries={FINALE_TYPE} t={t} pose={pose} />
       </Svg>
     </AbsoluteFill>
   );
 };
 
 export const FINALE_TRANSITIONS = TRANSITIONS;
+/** The opaque covers (every kind but the shock ring) for tools/covercheck.mjs, as the shot draws them. */
+export const finaleCovers = (): TransitionSpec[] => TRANSITIONS.filter((s) => s.kind !== 'shock');
+export { COVER_GAP };

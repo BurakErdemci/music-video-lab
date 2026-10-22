@@ -36,7 +36,7 @@ const ResolvedLogo = ({ id, t, cy, width, lock }: { id: string; t: number; cy: n
   const bp = beatPos(t);
   return (
     <g transform={`translate(960 ${cy}) scale(${kick}) translate(-960 ${-cy})`}>
-      <MergeConflictLogo id={id} design={LOGO_DESIGN} resolved cx={960} cy={cy} width={width} beat={bp - Math.floor(bp)} beatIndex={beatIndexAt(t)} apart={lock === undefined ? 0 : logoIn(t)} />
+      <MergeConflictLogo id={id} design={LOGO_DESIGN} resolved aligned cx={960} cy={cy} width={width} beat={bp - Math.floor(bp)} beatIndex={beatIndexAt(t)} apart={lock === undefined ? 0 : logoIn(t)} />
     </g>
   );
 };
