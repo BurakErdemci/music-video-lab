@@ -1,0 +1,376 @@
+[
+ {
+  "id": "BP1b-idle",
+  "prompt": "stil/prompts/loops-3/BP1b-idle.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/prompts/r-moments/out/BP1-glow-hand.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BP1b-idle.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BP1c-idle",
+  "prompt": "stil/prompts/loops-3/BP1c-idle.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/prompts/r-moments/out/BP1-glow-hand.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BP1c-idle.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OP1b-idle",
+  "prompt": "stil/prompts/loops-3/OP1b-idle.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/prompts/r-moments/out/OP1-hello.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OP1b-idle.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OP1c-idle",
+  "prompt": "stil/prompts/loops-3/OP1c-idle.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/prompts/r-moments/out/OP1-hello.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OP1c-idle.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BP2b-action",
+  "prompt": "stil/prompts/loops-3/BP2b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/prompts/r-moments/out/BP2-rise.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BP2b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BP2c-action",
+  "prompt": "stil/prompts/loops-3/BP2c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/03-karakter-mavi.png",
+   "stil/prompts/r-moments/out/BP2-rise.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BP2c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OP2b-action",
+  "prompt": "stil/prompts/loops-3/OP2b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/prompts/r-moments/out/OP2-rise.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OP2b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OP2c-action",
+  "prompt": "stil/prompts/loops-3/OP2c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/02-karakter-turuncu.png",
+   "stil/prompts/r-moments/out/OP2-rise.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OP2c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB5b-action",
+  "prompt": "stil/prompts/loops-3/PB5b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/r-moments/out/PB5-high-five.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PB5b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB5c-action",
+  "prompt": "stil/prompts/loops-3/PB5c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/r-moments/out/PB5-high-five.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PB5c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO5b-action",
+  "prompt": "stil/prompts/loops-3/PO5b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png",
+   "stil/prompts/r-moments/out/PO5-high-five.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PO5b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO5c-action",
+  "prompt": "stil/prompts/loops-3/PO5c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png",
+   "stil/prompts/r-moments/out/PO5-high-five.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PO5c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB6b-action",
+  "prompt": "stil/prompts/loops-3/PB6b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/r-moments/out/PB6-spin.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PB6b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PB6c-action",
+  "prompt": "stil/prompts/loops-3/PB6c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF1-blue-fusion.png",
+   "stil/prompts/r-moments/out/PB6-spin.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PB6c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO6b-action",
+  "prompt": "stil/prompts/loops-3/PO6b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png",
+   "stil/prompts/r-moments/out/PO6-spin.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PO6b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "PO6c-action",
+  "prompt": "stil/prompts/loops-3/PO6c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/prompts/o-keys/out/PF2-orange-fusion.png",
+   "stil/prompts/r-moments/out/PO6-spin.png"
+  ],
+  "out": "stil/prompts/loops-3/out/PO6c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH1b-action",
+  "prompt": "stil/prompts/loops-3/BH1b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH1-headbang.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH1b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH1c-action",
+  "prompt": "stil/prompts/loops-3/BH1c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH1-headbang.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH1c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH2b-action",
+  "prompt": "stil/prompts/loops-3/OH2b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH2-stage-dive.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OH2b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH2c-action",
+  "prompt": "stil/prompts/loops-3/OH2c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH2-stage-dive.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OH2c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH2b-action",
+  "prompt": "stil/prompts/loops-3/BH2b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH2-stage-dive.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH2b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH2c-action",
+  "prompt": "stil/prompts/loops-3/BH2c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH2-stage-dive.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH2c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH3b-action",
+  "prompt": "stil/prompts/loops-3/BH3b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH3-build-failed.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH3b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH3c-action",
+  "prompt": "stil/prompts/loops-3/BH3c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH3-build-failed.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH3c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH3b-idle",
+  "prompt": "stil/prompts/loops-3/OH3b-idle.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH3-jaw-drop.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OH3b-idle.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH3c-idle",
+  "prompt": "stil/prompts/loops-3/OH3c-idle.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH3-jaw-drop.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OH3c-idle.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH4b-action",
+  "prompt": "stil/prompts/loops-3/OH4b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH4-sky-scream.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OH4b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OH4c-action",
+  "prompt": "stil/prompts/loops-3/OH4c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OH4-sky-scream.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OH4c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH4b-action",
+  "prompt": "stil/prompts/loops-3/BH4b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH4-sky-scream.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH4b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BH4c-action",
+  "prompt": "stil/prompts/loops-3/BH4c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BH4-sky-scream.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BH4c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OS4b-action",
+  "prompt": "stil/prompts/loops-3/OS4b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OS4-guitar-smash.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OS4b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "OS4c-action",
+  "prompt": "stil/prompts/loops-3/OS4c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/prompts/r-moments/out/OS4-guitar-smash.png"
+  ],
+  "out": "stil/prompts/loops-3/out/OS4c-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BS4b-action",
+  "prompt": "stil/prompts/loops-3/BS4b-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BS4-keytar-spin.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BS4b-action.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BS4c-action",
+  "prompt": "stil/prompts/loops-3/BS4c-action.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-moments/out/BS4-keytar-spin.png"
+  ],
+  "out": "stil/prompts/loops-3/out/BS4c-action.png",
+  "key": "#808080"
+ }
+]

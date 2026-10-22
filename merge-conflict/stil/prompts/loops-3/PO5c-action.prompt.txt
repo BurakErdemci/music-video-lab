@@ -1,0 +1,16 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./PO5c-action.png
+
+Subject: the ORANGE girl of the attached FINAL FUSION model sheet. Change: the top of the leap: the arm stretched even higher, the body fully extended toward the left, the mane flying behind her, laughing. The legs are allowed to move for this jump.
+
+Match the attached fusion model sheet EXACTLY: her face, the huge wild flame-like orange mane, the orange-and-gold sequin cropped jacket with spiked leather vest details and flame patterns, the sequins and flames fading in a smooth gradient from orange into cool blue toward one side, flared trousers with sequins and flames, spiked platform boots.
+
+The FIRST attached image is the approved art style key frame (painterly 2D/3D hybrid animated series look, hand-painted textures with visible brushstrokes, angular graphic faces, stylised proportions). The SECOND attached image is her official model sheet: match her face, hair, outfit, accessories and proportions EXACTLY. The THIRD attached image is the base drawing of this SAME shot (frame 1 of a short stepped loop). Reproduce it EXACTLY except for what is described: the SAME canvas size, framing, scale and position on the canvas, the SAME camera angle, the SAME pose of everything not mentioned, the same outfit, accessories, colours and lighting, the same flat grey background. This is an ACTION loop around the key pose: the anticipation or follow-through of the same action, the lower body and the feet stay planted unless the description says otherwise.
+
+Lighting: neutral, even, soft studio light from the front so that coloured light can be added later; a slight rim light is fine. Keep her true colours.
+
+Composition: exactly ONE figure, alone, on a perfectly plain flat solid mid-grey #808080 background that fills the whole canvas edge to edge. No props. No floor, no cast shadow, no scenery, no particles, no motion lines, no glow, no sparks, no flames in the air (effects are added later in compositing). The whole figure (all of her hair and anything she holds) stays inside the frame with a clear grey margin on every side. Portrait 1024x1536.
+
+- ABSOLUTELY NO text, letters, numbers, labels, logos or watermarks (paper and notes are blank).
+- NO halftone, NO grain, NO texture overlay. Fully clothed, not sexualised.
+
+After copying, print the output path and pixel size.
