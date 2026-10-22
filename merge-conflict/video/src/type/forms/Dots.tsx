@@ -1,6 +1,6 @@
 // Dot-matrix forms built from the 5x7 glyph bitmaps (tools/font_metrics.py -> glyphs.json, Bungee).
-// MARQUEE: light-box bulbs. The whole sign shows as dim bulbs; a word's bulbs light at its measured start; a
-//   chase runs through the lit bulbs and every beat kicks them brighter.
+// MARQUEE: light-box bulbs. The whole line shows from the start, its unsung words dim in their own colour; a word's
+//   bulbs light at its measured start; a chase runs through the lit bulbs and every beat kicks them brighter.
 // FLOOR: letters lit in the dance-floor tiles. The tiles are projected through the shot camera onto the floor
 //   plane, so they sit on the 3D floor; the latest sung word lights, the key word holds once sung.
 import { type CameraPose, project } from '../../camera/camera.ts';
@@ -27,24 +27,28 @@ export const Marquee = ({ spec, t }: { spec: FormSpec; t: number }) => {
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
-  const rest = toks.map((tk, i) => ({ text: clean(tk.text).toUpperCase(), i })).filter((w) => w.i !== k);
-  const keyText = clean(toks[k]?.text ?? '').toUpperCase();
-  // row 0: the other words; row 1: the key word at double pitch
-  const line = rest.map((w) => w.text).join(' ');
-  const cols0 = line.length * 6;
-  const cols1 = keyText.length * 6;
-  const pitch0 = Math.min(spec.box.w / Math.max(1, cols0), spec.box.h * 0.3 / 8);
-  const pitch1 = Math.min(spec.box.w / Math.max(1, cols1), spec.box.h * 0.6 / 8);
+  const words = toks.map((tk, i) => ({ text: clean(tk.text).toUpperCase(), i }));
   const cells: { x: number; y: number; r: number; tok: number }[] = [];
-  let col = 0;
-  const x0 = spec.box.x + (spec.box.w - cols0 * pitch0) / 2;
-  for (const w of rest) {
-    for (const c of cellsOf(w.text, w.i, col, 0)) cells.push({ x: x0 + c.col * pitch0, y: spec.box.y + c.row * pitch0, r: pitch0 * 0.36, tok: c.tok });
-    col += (w.text.length + 1) * 6;
+  const row = (ws: typeof words, x: number, y: number, w: number, h: number, scale: number) => {
+    const line = ws.map((v) => v.text).join(' ');
+    const p = Math.min(w / Math.max(1, line.length * 6), h / 8);
+    const xs = x + (w - line.length * 6 * p) / 2;
+    let col = 0;
+    for (const v of ws) {
+      for (const c of cellsOf(v.text, v.i, col, 0)) cells.push({ x: xs + c.col * p, y: y + c.row * p, r: p * scale, tok: c.tok });
+      col += (v.text.length + 1) * 6;
+    }
+    return p;
+  };
+  if (k === words.length - 1 && words.length > 1) {
+    // the key word last: the other words on row 0, the key word under them at double pitch (reads in order)
+    const p0 = row(words.slice(0, k), spec.box.x, spec.box.y, spec.box.w, spec.box.h * 0.3, 0.36);
+    row([words[k] as (typeof words)[number]], spec.box.x, spec.box.y + p0 * 9, spec.box.w, spec.box.h * 0.6, 0.38);
+  } else {
+    // round 11 (Gemini, Burak: "AND WE IT OUT / FIGURED" lit out of order): a key word inside the line stays in its
+    // place on one row, in its own colour
+    row(words, spec.box.x, spec.box.y + spec.box.h * 0.2, spec.box.w, spec.box.h * 0.6, 0.38);
   }
-  const x1 = spec.box.x + (spec.box.w - cols1 * pitch1) / 2;
-  const y1 = spec.box.y + pitch0 * 9;
-  for (const c of cellsOf(keyText, k, 0, 0)) cells.push({ x: x1 + c.col * pitch1, y: y1 + c.row * pitch1, r: pitch1 * 0.38, tok: c.tok });
   const bp = beatPos(t);
   const kick = Math.exp(-5 * (bp - Math.floor(bp)));
   return (
@@ -53,7 +57,9 @@ export const Marquee = ({ spec, t }: { spec: FormSpec; t: number }) => {
         const tok = toks[c.tok];
         const on = tok && t >= tok.start;
         const color: Hex = c.tok === k ? mixHex(solidAt(spec.singer, t, 0), '#ffffff', 0.15) : solidAt(spec.singer, t, c.tok);
-        if (!on) return <circle key={i} cx={c.x} cy={c.y} r={c.r * 0.8} fill="#2a2030" />;
+        // round 11 (the unlit words were near black and the panel read as empty): the whole line shows from the
+        // start, an unsung word's bulbs at 38 % of its own colour; each word snaps to full on its sung start
+        if (!on) return <circle key={i} cx={c.x} cy={c.y} r={c.r} fill={mixHex(color, '#000000', 0.62)} />;
         const chase = 0.7 + 0.3 * Math.sin(t * 9 - (c.x + c.y) * 0.03);
         const lv = Math.min(1, chase + 0.35 * kick);
         return (
