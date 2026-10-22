@@ -12,7 +12,8 @@
 // (held cards move only by the 6-frame accent step).
 // Pixel scale (scene-map.md "Resolution"): the final render is the 1920x1080 composition at 4/3 (2560x1440), so no card
 // or plate may show above 1.25x its native pixels there (a card is measured against the file the manifest loads: its
-// "px" if present, else w x h; a plate against 3072x2048, its far plane and, except for a moment panel, its near plane).
+// "px" if present, else w x h; a world plate against 3072x2048, its far and near planes; a moment painting by the
+// magnification its view reports, its girls' plane included).
 //   node tools/framecheck.mjs [--range 0-140.04] [--step 1] [--selftest]
 //   node tools/framecheck.mjs --type [--range 0-140.04] [--fps 2]
 // --type checks the type instead (scene-map.md "Polish from Gemini's review", item 1, and "Round 7d"): it bundles the
@@ -24,8 +25,11 @@
 // --ground checks the floor contact (round 7d, "the girls look pasted on"): on sampled frames of every shot with a
 // card standing on the floor it renders the world layer and hands each card's sole line to tools/groundframe.py
 // (the band just below the soles >= 25 % darker than the floor beside them at the same height).
-// Paintings (round 7d): a moment painting's plane (plategeo.ts paintingView) projects whole inside the frame at >= 97 %
-// of its height, and no card is drawn over it.
+// Paintings (round 10, worlds/paintview.ts): a moment painting (its 16:9 plate) covers the frame and its original 3:2
+// centre is at least 97 % visible (the build's flight into RK3 may push past that); no card is drawn over it. A living
+// painting's own girls plane is not a card: its girls stay inside the frame on every side the drawing did not cut
+// (losing at most what the painting's 3 % push hides, 1.5 % of the frame), and reach past the frame on every side it
+// did (video/public/plates/layers/<ID>.json).
 // Exit 1 on any failure (the selftest must exit 1: it frames a face card twice the frame).
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -57,7 +61,8 @@ await esbuild.build({
       "export { screenBox, CARD_FRAMES, faceFrame } from './film/framing.ts';",
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
-      "export { panelParallax, plateView, paintingView, paintingParallax, PAINT_KB } from './worlds/plategeo.ts';",
+      "export { plateView } from './worlds/plategeo.ts';",
+      "export { paintRects, girlsAt, girlsMag, COVER } from './worlds/paintview.ts';",
       "export { solesAt } from './rig/cardRig.ts';",
       "export { TYPE_PLAN } from './film/typeplan.ts';",
     ].join('\n'),
@@ -74,7 +79,14 @@ const screenBox = M.screenBox;
 // ---- pixel scale at the 2K output ---------------------------------------------------------------------------------
 const SCALE_MAX = 1.25, OUT = 4 / 3;
 const MANIFEST = JSON.parse(readFileSync(path.join(VIDEO, 'public', 'cards', 'manifest.json'), 'utf8'));
-const PANEL_DIST = 30; // RestShot passes dist 30 for a moment panel (far plane only); every other plate is 46
+const PANEL_DIST = 30; // the shots pass dist 30 for a moment painting; every world plate is 46
+/** The girls drawings' alpha boxes of the living paintings (tools/imagegen/greenkey.py). */
+const LAYERS = (() => {
+  const out = {};
+  for (const id of ['RK1', 'RK2', 'RK11', 'RK12']) out[id] = JSON.parse(readFileSync(path.join(VIDEO, 'public', 'plates', 'layers', `${id}.json`), 'utf8'));
+  return out;
+})();
+const DRAWINGS = ['fg', 'fgb', 'fgc'];
 
 /** Each card's magnification at the 2K output: screen px per texel of its loaded file, measured locally on a 9x9
  *  grid of card points and kept where the point is on screen (a perspective card is larger near the camera, but
@@ -95,50 +107,57 @@ const cardScales = (state) => [...state.subjects, ...(state.extras ?? [])].map((
   return { id: s.card, kind: 'card', f: OUT * f };
 });
 
-/** The plate's far plane (and near plane, unless a moment panel) at the 2K output, from the same placement the
- *  renderer uses (video/src/worlds/plategeo.ts plateView; worlds/plate.tsx passes follow 0.5 far, 0.8 near). */
+/** The plate's far and near planes at the 2K output, from the same placement the renderer uses
+ *  (video/src/worlds/plategeo.ts plateView; worlds/plate.tsx passes follow 0.5 far, 0.8 near); a moment painting by
+ *  the magnification its view reports (its girls' plane too). */
 const plateScales = (state) => {
   const pl = state.plate;
   if (!pl) return [];
-  const planes = pl.dist === PANEL_DIST ? [['far', pl.dist, 0.5]] : [['far', pl.dist, 0.5], ['near', pl.dist * 0.45, 0.8]];
-  // a moment panel's depth parallax magnifies its near pixels by up to panelParallax's `mag` on top of the plane
-  return planes.map(([name, d, follow]) => {
-    // a painting the finale places itself (film/finale/paint.ts): the state carries the magnification it draws with
-    if (pl.view) return { id: pl.id, kind: `plate ${name}`, f: pl.view.mag };
-    if (pl.dist === PANEL_DIST) {
-      // a painting shown whole (round 7d): fitted to the frame height, its capped parallax on top
-      const sc = M.paintingView(state.pose, d, pl.kb ?? 1).scale;
-      return { id: pl.id, kind: `plate ${name}`, f: sc * M.paintingParallax(state.pose, pl.base, d, sc).mag };
-    }
-    const sc = M.plateView(state.pose, pl.base, d, pl.margin, follow).scale;
-    return { id: pl.id, kind: `plate ${name}`, f: sc };
-  });
+  if (pl.dist === PANEL_DIST) {
+    if (!pl.view) return [{ id: pl.id, kind: 'painting with no view', f: Infinity }];
+    const out = [{ id: pl.id, kind: 'plate painting', f: pl.view.mag }];
+    if (pl.view.paint?.girls) out.push({ id: pl.id, kind: 'plate girls', f: M.girlsMag(pl.view.paint) });
+    return out;
+  }
+  return [['far', pl.dist, 0.5], ['near', pl.dist * 0.45, 0.8]].map(([name, d, follow]) => ({ id: pl.id, kind: `plate ${name}`, f: M.plateView(state.pose, pl.base, d, pl.margin, follow).scale }));
 };
 
-/** A painting is shown whole (round 7d, "Paintings are always shown whole" and "Nothing is pasted over a painting"):
- *  the painting plane the renderer draws (plategeo.ts paintingView) projects inside the frame and at least
- *  (1 - PAINT_KB) of its height, and no card is drawn over it. `grow` scales the plane (the selftest's planted defect). */
-const paintingFails = (state, grow = 1) => {
+/** A painting covers the frame and shows its original 3:2 centre (round 10, Burak: no bands at the sides), no card is
+ *  drawn over it, and a living painting's girls are not cut where the drawing did not cut them. */
+const paintingFails = (state) => {
   const pl = state.plate;
   if (!pl || pl.dist !== PANEL_DIST) return [];
-  let x0, x1, y0, y1;
-  if (pl.view) {
-    // placed by the finale (paint.ts): its rectangle in the frame, 3:2 fitted to h frame heights, offset (ox, oy up)
-    const { h, ox, oy } = pl.view;
-    const w = (h * grow * 1.5 * H) / W;
-    [x0, x1] = [(0.5 + ox - w / 2) * W, (0.5 + ox + w / 2) * W];
-    [y0, y1] = [(0.5 - oy - (h * grow) / 2) * H, (0.5 - oy + (h * grow) / 2) * H];
-  } else {
-    const v = M.paintingView(state.pose, pl.dist, pl.kb ?? 1);
-    const corner = (a, b) => M.project(state.pose, [0, 1, 2].map((i) => v.centre[i] + v.right[i] * a * v.w * grow / 2 + v.up[i] * b * v.h * grow / 2));
-    const ps = [corner(-1, -1), corner(1, -1), corner(-1, 1), corner(1, 1)];
-    [x0, x1, y0, y1] = [Math.min(...ps.map((p) => p.x)), Math.max(...ps.map((p) => p.x)), Math.min(...ps.map((p) => p.y)), Math.max(...ps.map((p) => p.y))];
-  }
   const out = [];
-  // the build's flight (round 9, Burak approved) may push the painting past the frame, within the pixel rule
-  const pushed = pl.view?.push === true;
-  if (!pushed && (x0 < -1 || y0 < -1 || x1 > W + 1 || y1 > H + 1)) out.push({ s: { card: pl.id }, key: 'painting cut', why: `painting ${pl.id} cut by the frame (${Math.round(x0)},${Math.round(y0)})-(${Math.round(x1)},${Math.round(y1)})` });
-  if (!pushed && y1 - y0 < (1 - M.PAINT_KB) * H - 2) out.push({ s: { card: pl.id }, key: 'painting small', why: `painting ${pl.id} ${(100 * (y1 - y0) / H).toFixed(0)} % of the frame height` });
+  const v = pl.view?.paint;
+  if (!v) return [{ s: { card: pl.id }, key: 'painting view', why: `painting ${pl.id} reports no view` }];
+  const { plate, centre } = M.paintRects(v, W, H);
+  const gap = ['left', -plate.x0, 'right', plate.x1 - W, 'top', -plate.y0, 'bottom', plate.y1 - H].reduce((acc, x, i, arr) => (i % 2 === 0 && arr[i + 1] < -1 ? [...acc, `${x} ${Math.round(-arr[i + 1])}`] : acc), []);
+  if (gap.length) out.push({ s: { card: pl.id }, key: 'painting uncovered', why: `painting ${pl.id} leaves the frame uncovered (${gap.join(', ')} px)` });
+  // the build's flight (round 9, Burak approved) may push into the painting past its centre, within the pixel rule
+  if (!pl.view.push) {
+    const ix = Math.max(0, Math.min(W, centre.x1) - Math.max(0, centre.x0));
+    const iy = Math.max(0, Math.min(H, centre.y1) - Math.max(0, centre.y0));
+    const seen = (ix * iy) / ((centre.x1 - centre.x0) * (centre.y1 - centre.y0));
+    if (seen < 0.97 - 1e-6) out.push({ s: { card: pl.id }, key: 'painting centre', why: `painting ${pl.id} shows ${(100 * seen).toFixed(1)} % of its original centre` });
+  }
+  if (v.girls) {
+    const d = LAYERS[pl.id]?.drawings?.[DRAWINGS[v.girls.drawing]];
+    if (!d) out.push({ s: { card: pl.id }, key: 'girls box', why: `no girls box for ${pl.id} drawing ${v.girls.drawing}` });
+    else {
+      // the drawing's box (uv, y down) through the girls' plane, to frame px (y down)
+      const [u0, v0, u1, v1] = d.box;
+      const a = M.girlsAt(v, [u0, 1 - v1]);
+      const b = M.girlsAt(v, [u1, 1 - v0]);
+      const box = { x0: a[0] * W, x1: b[0] * W, y0: (1 - b[1]) * H, y1: (1 - a[1]) * H };
+      const bad = [];
+      // a side the drawing did not cut may lose what the painting's own 3 % push hides of it (1.5 % of the frame)
+      const mx = 0.015 * W + 1, my = 0.015 * H + 1;
+      for (const [side, inside, beyond] of [['left', box.x0 >= -mx, box.x0 <= 1], ['right', box.x1 <= W + mx, box.x1 >= W - 1], ['top', box.y0 >= -my, box.y0 <= 1], ['bottom', box.y1 <= H + my, box.y1 >= H - 1]]) {
+        if (d.touch[side] ? !beyond : !inside) bad.push(`${side} ${d.touch[side] ? 'leaves a gap' : 'cut'}`);
+      }
+      if (bad.length) out.push({ s: { card: pl.id }, key: 'girls cut', why: `painting ${pl.id} girls ${bad.join(', ')}` });
+    }
+  }
   const over = [...state.subjects, ...(state.extras ?? [])];
   if (over.length) out.push({ s: { card: pl.id }, key: 'painting covered', why: `cards ${over.map((x) => x.card).join(', ')} drawn over painting ${pl.id}` });
   return out;
@@ -201,21 +220,27 @@ if (selftest) {
   const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -20, height: 60 } }] });
   const sOk = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -4.5, height: 2 } }] });
   console.log(`selftest scale on ${card}: oversized -> ${sBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; small -> ${sOk.map((b) => b.why).join('; ') || 'passed'}`);
-  // the painting rule: a painting plane grown 10 % past the frame height, and a card over it, must fail; as drawn it passes
-  const pState = { pose: M.HOME, shot: 'selftest-painting', subjects: [], plate: { id: 'QK3', base: M.HOME, dist: PANEL_DIST, margin: 1.25, kb: 0.5 } };
-  const pOk = paintingFails(pState);
-  const pBig = paintingFails(pState, 1.1);
-  const pCard = paintingFails({ ...pState, subjects: [{ card, at: { x: 0, feet: -4.5, height: 6 } }] });
-  console.log(`selftest painting: grown -> ${pBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; card over it -> ${pCard.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; as drawn -> ${pOk.map((b) => b.why).join('; ') || 'passed'}`);
-  // a painting the finale places itself (round 9): at rest drifted past the frame edge it fails; the flight's push past
-  // the frame passes the wholeness rule, but a push past the pixel rule fails the scale rule
-  const vState = (view) => ({ ...pState, plate: { ...pState.plate, view } });
-  const vDrift = paintingFails(vState({ h: 1, ox: 0.2, oy: 0, mag: 0.7, push: false }));
-  const vFlight = [...paintingFails(vState({ h: 1.5, ox: 0, oy: -0.2, mag: 1.1, push: true })), ...scaleFails(vState({ h: 1.5, ox: 0, oy: -0.2, mag: 1.1, push: true }))];
-  const vOver = scaleFails(vState({ h: 1.9, ox: 0, oy: 0, mag: 1.34, push: true }));
-  console.log(`selftest painting view: drifted out -> ${vDrift.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; flight push -> ${vFlight.map((b) => b.why).join('; ') || 'passed'}; pushed past 1.25x -> ${vOver.map((b) => b.why ?? b.key).join('; ') || 'PASSED (wrong)'}`);
+  // the painting rule (round 10): covering at 101.5 % passes; shrunk to 97 % (the old fitted painting, bands at the
+  // sides) fails; pushed to 110 % hides its centre and fails; a card over it fails; the flight may push to 150 %
+  const paint = (h, extra = {}) => ({ h, ox: 0, oy: 0, shift: [0, 0], pivot: 0.3, zoom: 0, focus: [0.5, 0.5], gain: 1, ...extra });
+  const vState = (p, push = false, subjects = [], id = 'RK4') => ({ pose: M.HOME, shot: 'selftest-painting', subjects, plate: { id, base: M.HOME, dist: PANEL_DIST, margin: 1.25, view: { h: p.h, ox: p.ox, oy: p.oy, mag: 0.72 * p.h, push, paint: p } } });
+  const pOk = paintingFails(vState(paint(M.COVER * 1.015)));
+  const pSmall = paintingFails(vState(paint(0.97)));
+  const pBig = paintingFails(vState(paint(1.1)));
+  const pCard = paintingFails(vState(paint(M.COVER * 1.015), false, [{ card, at: { x: 0, feet: -4.5, height: 6 } }]));
+  const vFlight = [...paintingFails(vState(paint(1.5, { oy: -0.2 }), true)), ...scaleFails(vState(paint(1.5, { oy: -0.2 }), true))];
+  const vOver = scaleFails(vState(paint(1.9), true));
+  console.log(`selftest painting: as drawn -> ${pOk.map((b) => b.why).join('; ') || 'passed'}; fitted with bands -> ${pSmall.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; pushed to 110 % -> ${pBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; card over it -> ${pCard.map((b) => b.why).join('; ') || 'PASSED (wrong)'}`);
+  console.log(`selftest painting flight: push to 150 % -> ${vFlight.map((b) => b.why).join('; ') || 'passed'}; pushed past 1.25x -> ${vOver.map((b) => b.why ?? b.key).join('; ') || 'PASSED (wrong)'}`);
+  // a living painting's girls (RK2's drawing is cut by the frame on every side, RK11's on none): as drawn they pass;
+  // RK2's girls slid 3 % right leave a gap at the left edge, RK11's slid 40 % right are cut at the right edge
+  const girls = (id, dx) => vState(paint(M.COVER * 1.015, { girls: { drawing: 0, depth: 0.5, bob: 0, glow: '#ffffff', glowAmt: 0, shadow: 0 }, shift: [-dx / 0.2, 0], pivot: 0.3 }), false, [], id);
+  const gOk = [...paintingFails(girls('RK2', 0)), ...paintingFails(girls('RK11', 0))];
+  const gGap = paintingFails(girls('RK2', 0.03));
+  const gCut = paintingFails(girls('RK11', 0.4));
+  console.log(`selftest painting girls: as drawn -> ${gOk.map((b) => b.why).join('; ') || 'passed'}; RK2 slid -> ${gGap.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; RK11 slid out -> ${gCut.map((b) => b.why).join('; ') || 'PASSED (wrong)'}`);
   rmSync(outDir, { recursive: true, force: true });
-  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 && pBig.length > 0 && pCard.length > 0 && pOk.length === 0 && vDrift.length > 0 && vFlight.length === 0 && vOver.length > 0 ? 1 : 0);
+  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 && pOk.length === 0 && pSmall.length > 0 && pBig.length > 0 && pCard.length > 0 && vFlight.length === 0 && vOver.length > 0 && gOk.length === 0 && gGap.length > 0 && gCut.length > 0 ? 1 : 0);
 }
 
 if (arg('dump')) {
