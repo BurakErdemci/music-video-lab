@@ -316,7 +316,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
           });
         })()}
         {/* out of the whisper's near-black the solo opens up over 0.6 s instead of jumping bright (a flash pair) */}
-        {t >= SOLO.start && t < SOLO.start + 0.6 && <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={0.8 * (1 - (t - SOLO.start) / 0.6)} />}
+        {layer !== 'type' && t >= SOLO.start && t < SOLO.start + 0.6 && <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={0.8 * (1 - (t - SOLO.start) / 0.6)} />}
         {layer !== 'type' && TRANSITIONS.map((s) => {
           const [a, b] = transitionWindow(s);
           return t >= a && t < b ? <SceneTransition key={s.id} spec={s} t={t} /> : null;
