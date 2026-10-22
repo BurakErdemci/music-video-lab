@@ -1,0 +1,12 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./RK2-wide.png
+
+The attached image is a finished painting from a music video, placed in the middle of a wider 16:9 canvas. The left strip (about the first 9 % of the width) and the right strip (about the last 9 %) are only blurred placeholders.
+
+Task: OUTPAINT. Produce the same image at 16:9 landscape (for example 1824x1024), where:
+- the central painting stays EXACTLY as it is: same composition, same positions and sizes of every character and object, same background, same light. Do not move, redraw, zoom or reframe anything in the centre;
+- the two side strips are repainted as a natural continuation of the scene beyond the original edges, in exactly the same painterly style, lighting and colours, with no visible seam;
+- a character or object cut by the original edge continues naturally into the strip; otherwise nothing new and prominent appears in the strips (no extra characters, no faces), only the continuing environment.
+
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks. No border, no letterbox, no blur in the result.
+
+After copying, print the output path and pixel size.

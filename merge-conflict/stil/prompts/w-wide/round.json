@@ -1,0 +1,155 @@
+[
+ {
+  "id": "QK1-wide",
+  "prompt": "stil/prompts/w-wide/QK1-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/QK1-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/QK1-wide.png",
+  "src": "stil/prompts/q-panels/out/QK1-push-impact.png"
+ },
+ {
+  "id": "QK2-wide",
+  "prompt": "stil/prompts/w-wide/QK2-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/QK2-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/QK2-wide.png",
+  "src": "stil/prompts/q-panels/out/QK2-scream-face-off.png"
+ },
+ {
+  "id": "QK3-wide",
+  "prompt": "stil/prompts/w-wide/QK3-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/QK3-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/QK3-wide.png",
+  "src": "stil/prompts/q-panels/out/QK3-solo-back-to-back.png"
+ },
+ {
+  "id": "QK4-wide",
+  "prompt": "stil/prompts/w-wide/QK4-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/QK4-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/QK4-wide.png",
+  "src": "stil/prompts/q-panels/out/QK4-rebase-heist.png"
+ },
+ {
+  "id": "QK5-wide",
+  "prompt": "stil/prompts/w-wide/QK5-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/QK5-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/QK5-wide.png",
+  "src": "stil/prompts/q-panels/out/QK5-standup-panic.png"
+ },
+ {
+  "id": "RK1-wide",
+  "prompt": "stil/prompts/w-wide/RK1-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK1-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK1-wide.png",
+  "src": "stil/prompts/r-panels/out/RK1-after-hours.png"
+ },
+ {
+  "id": "RK10-wide",
+  "prompt": "stil/prompts/w-wide/RK10-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK10-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK10-wide.png",
+  "src": "stil/prompts/r-panels/out/RK10-scream-pillar.png"
+ },
+ {
+  "id": "RK11-wide",
+  "prompt": "stil/prompts/w-wide/RK11-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK11-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK11-wide.png",
+  "src": "stil/prompts/r-panels/out/RK11-dawn-walk.png"
+ },
+ {
+  "id": "RK12-wide",
+  "prompt": "stil/prompts/w-wide/RK12-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK12-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK12-wide.png",
+  "src": "stil/prompts/r-panels/out/RK12-final-freeze.png"
+ },
+ {
+  "id": "RK2-wide",
+  "prompt": "stil/prompts/w-wide/RK2-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK2-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK2-wide.png",
+  "src": "stil/prompts/r-panels/out/RK2-same-file.png"
+ },
+ {
+  "id": "RK3-wide",
+  "prompt": "stil/prompts/w-wide/RK3-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK3-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK3-wide.png",
+  "src": "stil/prompts/r-panels/out/RK3-two-branches.png"
+ },
+ {
+  "id": "RK4-wide",
+  "prompt": "stil/prompts/w-wide/RK4-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK4-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK4-wide.png",
+  "src": "stil/prompts/r-panels/out/RK4-gradient-now.png"
+ },
+ {
+  "id": "RK5-wide",
+  "prompt": "stil/prompts/w-wide/RK5-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK5-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK5-wide.png",
+  "src": "stil/prompts/r-panels/out/RK5-one-mic.png"
+ },
+ {
+  "id": "RK6-wide",
+  "prompt": "stil/prompts/w-wide/RK6-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK6-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK6-wide.png",
+  "src": "stil/prompts/r-panels/out/RK6-push-it.png"
+ },
+ {
+  "id": "RK7-wide",
+  "prompt": "stil/prompts/w-wide/RK7-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK7-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK7-wide.png",
+  "src": "stil/prompts/r-panels/out/RK7-resolved.png"
+ },
+ {
+  "id": "RK8-wide",
+  "prompt": "stil/prompts/w-wide/RK8-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK8-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK8-wide.png",
+  "src": "stil/prompts/r-panels/out/RK8-ship-it.png"
+ },
+ {
+  "id": "RK9-wide",
+  "prompt": "stil/prompts/w-wide/RK9-wide.prompt.txt",
+  "refs": [
+   "stil/prompts/w-wide/work/RK9-canvas.png"
+  ],
+  "out": "stil/prompts/w-wide/out/RK9-wide.png",
+  "src": "stil/prompts/r-panels/out/RK9-build-failed.png"
+ }
+]
