@@ -17,12 +17,14 @@ import { Dissolve, dissolvePlan, dissolveState } from '../../particles/dissolve.
 import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
 import { FLOOR_Y } from '../../stage/floor.ts';
-import { barPos, sec, sectionNamed } from '../../timing.ts';
+import { barPos, beatPos, sec, sectionNamed } from '../../timing.ts';
 import { clipKind, SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
-import { GlowBox } from '../../worlds/kit/index.ts';
+import { GlowBox, Halo, NeonTube } from '../../worlds/kit/index.ts';
+import { loopIndex, loopRate } from '../../rig/loop.ts';
+import { cardPoint } from '../framing.ts';
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
 import { PlateLayer } from '../../worlds/plate.tsx';
@@ -199,6 +201,28 @@ const restCamera = (t: number) => {
   return { shot, k, scene, blueP, orangeP, pose, planeBase, quiet, metal, heavy, solo };
 };
 
+// ---- the rebased history (round 11, Burak: OV1's chain ended in the air, away from the commit lights) ---------------
+// OV1 yanks the commit history, a string of glowing disco bulbs (scene-map V4 "rebased your history"). Her chain is cut
+// by the card's right edge, at a height that changes with each loop drawing (measured on OV1, OV1b, OV1c); the bulb
+// string starts there and runs off the frame's right edge, jerking toward her on every new drawing of the pull.
+const CHAIN_V = [0.2669, 0.2128, 0.3011] as const;
+const BULBS = 54;
+/** The bulb string's points at t, or null when OV1 is not pulling: from her chain's end, right and a little back. */
+export const historyString = (t: number): Vec3[] | null => {
+  const p = poseAt(RORANGE, t);
+  if (p?.card !== 'OV1' || !p.at) return null;
+  const i = loopIndex(t);
+  const end = cardPoint({ card: 'OV1', at: p.at }, 0.995, CHAIN_V[i]);
+  // the jerk: each new drawing pulls the string toward her, then it settles before the next
+  const step = beatPos(t) * loopRate(t);
+  const pull = 0.35 * Math.exp(-(step - Math.floor(step)) * 4);
+  return Array.from({ length: BULBS }, (_, k) => {
+    // denser near her, where the frame shows the string; sparser off toward the edge
+    const u = (k / (BULBS - 1)) ** 1.7;
+    return [end[0] + 50 * u - pull * u, end[1] - 1.2 * u - 0.6 * Math.sin(Math.PI * u), end[2] - 3 * u] as Vec3;
+  });
+};
+
 /** A shot's span for the living camera: verse 3 ends at chorus 2, the solo at the piano. */
 const restSpan = (t: number) => {
   const { shot } = shotIn(RSHOTS, t);
@@ -346,6 +370,20 @@ export const RestShot = ({ frame }: { frame: number }) => {
         {/* the moves (whip, orbit, dolly zoom) swing past the opening frame, so the plate overflows more */}
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={1.75} />}
         {world}
+        {(() => {
+          const pts = scene === 'rails' ? historyString(t) : null;
+          return pts ? (
+            <>
+              <NeonTube points={pts} color="#ffb070" radius={0.025} order={9.6} />
+              {pts.slice(1).map((q, k) => (
+                <group key={k}>
+                  <Halo position={q} size={0.62} color={k % 2 ? '#ff8a2a' : '#4a9cff'} intensity={1.1} order={9.7} />
+                  <GlowBox position={q} size={[0.13, 0.13, 0.13]} color={k % 2 ? '#ffd0a0' : '#c8e0ff'} edge={1} fill={0.95} order={9.75} />
+                </group>
+              ))}
+            </>
+          ) : null;
+        })()}
         {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={life ? 1 : 0.7} hueMix={0.5} metal={fk.metal} dust={fk.dust} bursts={bursts} />}
         {life && <Drift t={t} layer="mid" kind={life.particles} colors={life.colors} base={planeBase} advance={driftAdvance(t)} density={driftDensity(t)} />}
         {/* GIT!: she stands on a giant glowing ENTER key that pulses with every kick */}
