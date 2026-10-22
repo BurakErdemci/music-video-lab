@@ -69,7 +69,7 @@ export type Particles = 'dust' | 'embers' | 'sparks' | 'confetti' | 'glitter';
 export type PaintMove = 'arc' | 'truck' | 'push' | 'rise';
 /** What a painting shot does: its camera move and direction, the particles in front of it (matched to the painting)
  *  and their two colours, the sweep's colour and angle (radians, 0 = left to right). */
-export interface Life { move: PaintMove; dir: 1 | -1; particles: Particles; colors: [Hex, Hex]; sweep: Hex; angle: number; /** the depth that holds still, if not the move's own */ pivot?: number; /** the shared field's kind, if not the particles' */ field?: Particles; /** the point the push swells about (painting uv, y up) */ focus?: [number, number]; /** the two-bar sway's amplitude, if not the hold's own */ sway?: number }
+export interface Life { move: PaintMove; dir: 1 | -1; particles: Particles; colors: [Hex, Hex]; sweep: Hex; angle: number; /** the depth that holds still, if not the move's own */ pivot?: number; /** the shared field's kind, if not the particles' */ field?: Particles; /** the point the push swells about (painting uv, y up) */ focus?: [number, number]; /** the two-bar sway's amplitude, if not the hold's own */ sway?: number; /** the most it travels, if under the section's */ travel?: number }
 
 /** Every painting shot of the film, by shot id (film/rest/plan.ts and film/finale/plan.ts). */
 export const LIFE: Record<string, Life> = {
@@ -77,7 +77,8 @@ export const LIFE: Record<string, Life> = {
   'rebase-asleep': { move: 'truck', dir: 1, particles: 'glitter', colors: ['#bcd2ff', '#ffd08a'], sweep: '#cfe0ff', angle: -0.5 },
   nobody: { move: 'truck', dir: -1, particles: 'sparks', colors: ['#ff6ad5', '#8ad8ff'], sweep: '#ffd0f0', angle: 0.2 },
   // the scream: forehead to forehead, fire against ice
-  'scream-b': { move: 'arc', dir: 1, particles: 'embers', colors: ['#ff6a1a', '#4aa8ff'], sweep: '#fff0d0', angle: 1.57 },
+  // (round 11: the scream sits at its 1.1x-the-chorus ceiling, so this painting travels at most 7.5 %)
+  'scream-b': { move: 'arc', dir: 1, travel: 0.075, particles: 'embers', colors: ['#ff6a1a', '#4aa8ff'], sweep: '#fff0d0', angle: 1.57 },
   // the solo's stage painting
   'solo-cathedral-2': { move: 'arc', dir: -1, particles: 'sparks', colors: ['#ffb040', '#7ab8ff'], sweep: '#ffe0b0', angle: -0.3 },
   // the piano truce: dust in the spotlight with slow confetti, glitter along the mirror seam
@@ -135,7 +136,7 @@ export const paintShotView = (shot: string, id: string, t: number, t0: number, t
   const h = COVER * (1 + KB * Math.min(1, 0.8 * e + 0.2 * punch));
   // the camera's travel across the shot: the speed times the shot's length, at least 2 % and at most 18 % of the
   // painting; plus a sway over two bars, wider the longer the hold, so it keeps moving after its travel is spent
-  const travel = Math.min(0.18, Math.max(0.02, en.speed * dur));
+  const travel = Math.min(life.travel ?? 0.18, Math.max(0.02, en.speed * dur));
   const sway = life.sway ?? 0.012 + 0.02 * Math.max(0, dur - 2);
   const m = life.dir * (travel * (e - 0.5) * 2 + sway * Math.sin(Math.PI * barPos(t)));
   const layered = LAYERED[id];
