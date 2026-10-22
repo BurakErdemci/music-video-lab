@@ -1,6 +1,6 @@
 import { AbsoluteFill, Audio, Composition, staticFile } from 'remotion';
 import { Film } from './Film.tsx';
-import { type Layer, LayerContext } from './layer.ts';
+import { type Layer, LayerContext, TypeOnlyContext } from './layer.ts';
 import { Lab, LAB_FRAMES } from './lab/Lab.tsx';
 import { LOGO_FRAMES, LogoBoard } from './lab/LogoBoard.tsx';
 import { TRANS_LAB_FRAMES, TransLab } from './transitions/scene/TransLab.tsx';
@@ -16,11 +16,14 @@ const W = 1920;
 const H = 1080;
 const SMOKE_FRAMES = 240;
 
-/** `layer`: the whole film, or only its type / its world (tools/framecheck.mjs --type renders both). */
-const Video = ({ layer = 'all' }: { layer?: Layer }) => (
+/** `layer`: the whole film, or only its type / its world (tools/framecheck.mjs --type renders both); `only`: one
+ *  type-plan entry drawn alone (or '__none__'), for the type-over-type check. */
+const Video = ({ layer = 'all', only = null }: { layer?: Layer; only?: string | null }) => (
   <AbsoluteFill>
     <LayerContext.Provider value={layer}>
-      <Film />
+      <TypeOnlyContext.Provider value={only}>
+        <Film />
+      </TypeOnlyContext.Provider>
     </LayerContext.Provider>
     <Audio src={staticFile('audio/merge-conflict-v4.wav')} />
   </AbsoluteFill>

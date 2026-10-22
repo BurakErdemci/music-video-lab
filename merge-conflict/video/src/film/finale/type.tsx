@@ -2,6 +2,7 @@
 // (round 7c: type that rode the camera sat on faces). Round 7d from the start: no knockouts - every form is placed in
 // a band its shot's faces do not use (the busts' faces sit in the upper half, the stage shots' faces in the top
 // third), inside the 4 % margin, on a backing where the plate is as bright as the letters.
+import { typeShown, useTypeOnly } from '../../layer.ts';
 import type { ReactNode } from 'react';
 import type { CameraPose } from '../../camera/camera.ts';
 import { clamp01, type Hex, outQuad } from '../../lib/ease.ts';
@@ -43,7 +44,9 @@ const ResolvedLogo = ({ id, t, cy, width, lock }: { id: string; t: number; cy: n
 
 export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose }) => {
   const out: ReactNode[] = [];
+  const only = useTypeOnly();
   for (const e of entries) {
+    if (!typeShown(only, e.id)) continue;
     if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' ? 0.6 : 0)) continue;
     switch (e.id) {
       // ---- piano truce

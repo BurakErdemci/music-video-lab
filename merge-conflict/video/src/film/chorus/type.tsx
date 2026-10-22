@@ -1,5 +1,6 @@
 // The chorus type layer: draws every entry of chorusType() with its designed form (typeplan.ts). The Shouts are
 // drawn in screen space (they fill the frame); the rest live on the type plane, so the camera carries them.
+import { typeShown, useTypeOnly } from '../../layer.ts';
 import type { ReactNode } from 'react';
 import type { CameraPose } from '../../camera/camera.ts';
 import { clamp01, outQuad } from '../../lib/ease.ts';
@@ -61,7 +62,9 @@ const form = (e: TypeEntry, b = box): FormSpec => ({ id: `ch-${e.id}-${e.line}`,
 
 export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose; screen: boolean; merges: Record<string, readonly [number, number, number, number]> }) => {
   const out: ReactNode[] = [];
+  const only = useTypeOnly();
   for (const e of entries) {
+    if (!typeShown(only, e.id)) continue;
     const n0 = out.length;
     if (t < e.t0 - 0.02 || t >= e.t1) continue;
     // chorus 2's I CAN'T TAKE CONTROL is set in screen space: on the plane its barrel roll carried the second row off

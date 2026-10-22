@@ -1,6 +1,7 @@
 // The type of verse 3 through the whisper (round 7): every REST_TYPE entry with its designed form. Forms that live on
 // a world object get their screen box from the shot (anchors): the blame gutter, the countdown frame, the guilty
 // name tag, the code line in the display case.
+import { typeShown, useTypeOnly } from '../../layer.ts';
 import type { ReactNode } from 'react';
 import { lineTokens } from '../../lyrics/LyricLayer.tsx';
 import { Counter } from '../../type/Counter.tsx';
@@ -85,7 +86,9 @@ export const restOnScreen = (e: TypeEntry): boolean => REST_SCREEN.includes(e.fo
 
 export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[]; t: number; anchors: RestAnchors }) => {
   const out: ReactNode[] = [];
+  const only = useTypeOnly();
   for (const e of entries) {
+    if (!typeShown(only, e.id)) continue;
     const n0 = out.length;
     // a dissolving line drifts 0.6 s past its end, but the whisper's must not drift onto the solo's first face
     if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' && e.id !== 'r-wouldnt' ? 0.6 : 0)) continue;

@@ -1,6 +1,7 @@
 // The verses' type layer: draws every VERSE_TYPE entry with its designed form. Forms that live on a world object
 // (the Ring around the clock face, the Diff on the graffiti panel, the Counter on the scoreboard) get their
 // screen box from the shot (anchors), so the type plays with the object instead of floating over it.
+import { typeShown, useTypeOnly } from '../../layer.ts';
 import type { ReactNode } from 'react';
 import type { CameraPose } from '../../camera/camera.ts';
 import { KickWord, type HoopPlan, HoopType, type ThrowPlan, ThrowWords } from '../../girls/interact.tsx';
@@ -46,7 +47,9 @@ export const VERSE_SCREEN: readonly string[] = ['v-feature', 'v-css', 'v-orange'
 
 export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose; anchors: Anchors; hoop?: HoopPlan; throwP?: ThrowPlan }) => {
   const out: ReactNode[] = [];
+  const only = useTypeOnly();
   for (const e of entries) {
+    if (!typeShown(only, e.id)) continue;
     const n0 = out.length;
     // a box the case computes from its anchor (the clock, the panel, the board)
     let dyn: AvoidBox | undefined;
