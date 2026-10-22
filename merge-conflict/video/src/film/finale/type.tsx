@@ -74,7 +74,7 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
       case 'f-tree':
         // round 11 (the horseshoe sat on the tree painting's middle): the two branches as a `git log` line in a
         // terminal across the bottom band, clear of the tree's middle and the girls' faces
-        out.push(<Code key={e.id} spec={spec(e, { x: 100, y: 776, w: 1720, h: 220 })} t={t} opt={{ gutter: '*', size: 60, keyScale: 1.4, chrome: 'git log --graph', terminal: true, backing: true, wrap: true }} />);
+        out.push(<Code key={e.id} spec={spec(e, { x: 100, y: 720, w: 1720, h: 290 })} t={t} opt={{ gutter: '*', size: 62, keyScale: 1.3, chrome: 'git log --graph', terminal: true, backing: true, wrap: true }} />);
         break;
       // ---- final chorus
       case 'f-acc1':
