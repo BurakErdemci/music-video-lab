@@ -24,6 +24,8 @@
 // --ground checks the floor contact (round 7d, "the girls look pasted on"): on sampled frames of every shot with a
 // card standing on the floor it renders the world layer and hands each card's sole line to tools/groundframe.py
 // (the band just below the soles >= 25 % darker than the floor beside them at the same height).
+// Paintings (round 7d): a moment painting's plane (plategeo.ts paintingView) projects whole inside the frame at >= 97 %
+// of its height, and no card is drawn over it.
 // Exit 1 on any failure (the selftest must exit 1: it frames a face card twice the frame).
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -55,7 +57,7 @@ await esbuild.build({
       "export { screenBox, CARD_FRAMES, faceFrame } from './film/framing.ts';",
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
-      "export { panelParallax, plateView } from './worlds/plategeo.ts';",
+      "export { panelParallax, plateView, paintingView, paintingParallax, PAINT_KB } from './worlds/plategeo.ts';",
       "export { solesAt } from './rig/cardRig.ts';",
     ].join('\n'),
     resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
@@ -100,9 +102,32 @@ const plateScales = (state) => {
   const planes = pl.dist === PANEL_DIST ? [['far', pl.dist, 0.5]] : [['far', pl.dist, 0.5], ['near', pl.dist * 0.45, 0.8]];
   // a moment panel's depth parallax magnifies its near pixels by up to panelParallax's `mag` on top of the plane
   return planes.map(([name, d, follow]) => {
+    if (pl.dist === PANEL_DIST) {
+      // a painting shown whole (round 7d): fitted to the frame height, its capped parallax on top
+      const sc = M.paintingView(state.pose, d, pl.kb ?? 1).scale;
+      return { id: pl.id, kind: `plate ${name}`, f: sc * M.paintingParallax(state.pose, pl.base, d, sc).mag };
+    }
     const sc = M.plateView(state.pose, pl.base, d, pl.margin, follow).scale;
-    return { id: pl.id, kind: `plate ${name}`, f: pl.dist === PANEL_DIST ? sc * M.panelParallax(state.pose, pl.base, d, sc).mag : sc };
+    return { id: pl.id, kind: `plate ${name}`, f: sc };
   });
+};
+
+/** A painting is shown whole (round 7d, "Paintings are always shown whole" and "Nothing is pasted over a painting"):
+ *  the painting plane the renderer draws (plategeo.ts paintingView) projects inside the frame and at least
+ *  (1 - PAINT_KB) of its height, and no card is drawn over it. `grow` scales the plane (the selftest's planted defect). */
+const paintingFails = (state, grow = 1) => {
+  const pl = state.plate;
+  if (!pl || pl.dist !== PANEL_DIST) return [];
+  const v = M.paintingView(state.pose, pl.dist, pl.kb ?? 1);
+  const corner = (a, b) => M.project(state.pose, [0, 1, 2].map((i) => v.centre[i] + v.right[i] * a * v.w * grow / 2 + v.up[i] * b * v.h * grow / 2));
+  const ps = [corner(-1, -1), corner(1, -1), corner(-1, 1), corner(1, 1)];
+  const x0 = Math.min(...ps.map((p) => p.x)), x1 = Math.max(...ps.map((p) => p.x)), y0 = Math.min(...ps.map((p) => p.y)), y1 = Math.max(...ps.map((p) => p.y));
+  const out = [];
+  if (x0 < -1 || y0 < -1 || x1 > W + 1 || y1 > H + 1) out.push({ s: { card: pl.id }, key: 'painting cut', why: `painting ${pl.id} cut by the frame (${Math.round(x0)},${Math.round(y0)})-(${Math.round(x1)},${Math.round(y1)})` });
+  if (y1 - y0 < (1 - M.PAINT_KB) * H - 2) out.push({ s: { card: pl.id }, key: 'painting small', why: `painting ${pl.id} ${(100 * (y1 - y0) / H).toFixed(0)} % of the frame height` });
+  const over = [...state.subjects, ...(state.extras ?? [])];
+  if (over.length) out.push({ s: { card: pl.id }, key: 'painting covered', why: `cards ${over.map((x) => x.card).join(', ')} drawn over painting ${pl.id}` });
+  return out;
 };
 
 /** The scale failures of one frame's state, in the shape of check()'s (plus the run key and the size to rank by). */
@@ -162,8 +187,14 @@ if (selftest) {
   const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -20, height: 60 } }] });
   const sOk = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -4.5, height: 2 } }] });
   console.log(`selftest scale on ${card}: oversized -> ${sBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; small -> ${sOk.map((b) => b.why).join('; ') || 'passed'}`);
+  // the painting rule: a painting plane grown 10 % past the frame height, and a card over it, must fail; as drawn it passes
+  const pState = { pose: M.HOME, shot: 'selftest-painting', subjects: [], plate: { id: 'QK3', base: M.HOME, dist: PANEL_DIST, margin: 1.25, kb: 0.5 } };
+  const pOk = paintingFails(pState);
+  const pBig = paintingFails(pState, 1.1);
+  const pCard = paintingFails({ ...pState, subjects: [{ card, at: { x: 0, feet: -4.5, height: 6 } }] });
+  console.log(`selftest painting: grown -> ${pBig.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; card over it -> ${pCard.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; as drawn -> ${pOk.map((b) => b.why).join('; ') || 'passed'}`);
   rmSync(outDir, { recursive: true, force: true });
-  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 ? 1 : 0);
+  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 && pBig.length > 0 && pCard.length > 0 && pOk.length === 0 ? 1 : 0);
 }
 
 if (arg('dump')) {
@@ -290,7 +321,7 @@ for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += step) {
   if (!st) continue;
   checked++;
   if (st.fit && st.fit.z > 1.005) { widened++; if (st.fit.z > maxZ[0]) maxZ.splice(0, 2, st.fit.z, fr); }
-  for (const fail of [...check(st), ...scaleFails(st)]) {
+  for (const fail of [...check(st), ...scaleFails(st), ...paintingFails(st)]) {
     const key = `${st.shot}|${fail.s.card}|${fail.key ?? fail.why.replace(/ \(.*$/, '').replace(/\d+ %/, 'N %')}`;
     // a run reports its worst frame: the largest overshoot in px or share of the frame (a scale failure: its factor)
     const size = fail.size ?? Math.max(0, ...(fail.why.match(/\d+/g) ?? []).map(Number));
