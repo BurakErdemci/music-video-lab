@@ -7,7 +7,7 @@
 // (a cover's 4 frames after the cut, the cut itself) and the last 2 (a cover's 2 frames before the next cut) left
 // out, and the film's own fades from or to black (FINALE_FADES) left out.
 // The floor: the median motion of the live shots (every other shot of the film) in the same section, times FACTOR.
-//   node tools/slidecheck.mjs --video video/out/proof232-r10.mp4 [--start 0] [--range 0-232.12]
+//   node tools/slidecheck.mjs --video video/out/proof232-r10.mp4 [--start 0] [--range 0-232.12] [--all: list the live shots too]
 //   node tools/slidecheck.mjs --selftest   (must exit 1: a clean case passes and a planted static painting fails)
 // Exit 1 when a painting shot sits under its floor.
 import { spawn } from 'node:child_process';
@@ -120,6 +120,7 @@ for (const r of rows) {
   const m = r.motion === null ? '   -  ' : r.motion.toFixed(2).padStart(6);
   console.log(`${r.id.padEnd(14)} ${r.panel.padEnd(8)} ${r.section.padEnd(22)} ${`${(r.a / FPS).toFixed(2)}-${(r.b / FPS).toFixed(2)}`.padEnd(15)} ${m}  ${r.median.toFixed(2).padStart(6)}  ${r.floor.toFixed(2).padStart(5)}  ${r.ratio.toFixed(2).padStart(5)}  ${r.ok ? 'ok' : 'FAIL'}`);
 }
+if (process.argv.includes('--all')) for (const s of shots.filter((x) => !x.painting && x.motion !== null)) console.log(`  live ${s.id.padEnd(16)} ${s.section.padEnd(22)} ${(s.a / FPS).toFixed(2)}-${(s.b / FPS).toFixed(2)} ${s.motion.toFixed(2)}`);
 const fails = rows.filter((r) => !r.ok);
 console.log(fails.length ? `slidecheck: FAIL (${fails.length})` : 'slidecheck: PASS');
 process.exit(fails.length ? 1 : 0);
