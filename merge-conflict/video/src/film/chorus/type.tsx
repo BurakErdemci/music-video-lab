@@ -114,13 +114,9 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
       case 'GlitchText':
         // chorus 2: in the bottom-right corner, wrapped onto two rows (the barrel roll sweeps the faces through the
         // left and the top of these shots; round 7d)
-        // it leans a little with the camera's roll (a fifth of it, at most 8 degrees) about its own middle, set in so
-        // the turned backing keeps inside the 4 % margin (round 11)
-        out.push(
-          <g key={e.id} transform={`rotate(${(Math.max(-0.14, Math.min(0.14, 0.2 * (pose.roll ?? 0))) * 180) / Math.PI} 1380 780)`}>
-            <GlitchText spec={{ id: e.id, tokens: toks, x: 1000, y: 820, size: 120, face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />
-          </g>,
-        );
+        // upright in screen space (round 11: on the plane the barrel roll turned it and its backing past the frame;
+        // a lean that followed the roll drew differently in the type layer than in the frame, so it stays upright)
+        out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, x: 1000, y: 790, size: 120, face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
         break;
       case 'Logo': {
         const m = merges[e.id] as readonly [number, number, number, number];
