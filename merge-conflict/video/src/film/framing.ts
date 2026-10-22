@@ -33,7 +33,7 @@ export interface ShotState {
   fit?: { z: number; ok: boolean };
   /** The painted plate behind the shot (worlds/plate.tsx): its id, the pose its far plane faces, the plane's
    *  distance and its width over the frame's, for the pixel-scale rule (round 7c, "Resolution"). */
-  plate?: { id: string; base: CameraPose; dist: number; margin: number };
+  plate?: { id: string; base: CameraPose; dist: number; margin: number; /** a painting's Ken Burns progress 0..1 */ kb?: number };
   /** The pose the shot's type plane is authored in (typePlane(pose, typeBase, 1)), for placing type off the faces. */
   typeBase?: CameraPose;
 }

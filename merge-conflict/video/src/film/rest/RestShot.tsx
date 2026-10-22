@@ -196,7 +196,10 @@ const restCamera = (t: number) => {
 
 /** What verse 3 through the solo shows at t, for tools/framecheck.mjs (the cards the component draws). */
 const rawRestStateAt = (t: number): ShotState => {
-  const { shot, scene, blueP, orangeP, pose, planeBase } = restCamera(t);
+  const { shot, k, scene, blueP: blue0, orangeP: orange0, pose, planeBase } = restCamera(t);
+  // a painting shot carries only its own lyric type (round 7d, "Nothing is pasted over a painting")
+  const blueP = scene === 'panel' ? null : blue0;
+  const orangeP = scene === 'panel' ? null : orange0;
   const clip = (who: 'B' | 'O') => (scene === 'scream' || scene === 'duel' ? { x: 0, keep: who === 'B' ? ('left' as const) : ('right' as const) } : undefined);
   const turn = dissolveState(BLUE_TURN, t);
   const subjects: Subject[] = [];
@@ -206,7 +209,7 @@ const rawRestStateAt = (t: number): ShotState => {
   if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop, dx: blownDx(t) });
   if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O'), crop });
   const plateId = scene === 'panel' ? shot.panel : PLATES[scene];
-  return { pose, shot: shot.id, subjects, typeBase: planeBase, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75 } : undefined };
+  return { pose, shot: shot.id, subjects, typeBase: planeBase, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75, kb: k } : undefined };
 };
 
 const live = liveCamera(rawRestStateAt, (t) => {
@@ -222,7 +225,9 @@ export const REST_LIVE = live;
 export const RestShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const layer = useLayer();
-  const { shot, scene, blueP, orangeP, planeBase, quiet } = restCamera(t);
+  const { shot, k, scene, blueP: blue0, orangeP: orange0, planeBase, quiet } = restCamera(t);
+  const blueP = scene === 'panel' ? null : blue0;
+  const orangeP = scene === 'panel' ? null : orange0;
   const pose = live.poseAt(t);
   const plane = typePlane(pose, planeBase, 1);
   // anchors: where the world's objects sit on the type plane's screen
@@ -294,7 +299,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
         return <InsertWorld t={t} color={CYAN} hit={shot.t} />;
       case 'panel':
         // a moment painting: pushed in, shaken on the kicks by the shot camera, parallax against the particles
-        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} margin={1.25} />;
+        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} kb={k} />;
       case 'whisper':
         return <WhisperWorld t={t} />;
       case 'arena':
