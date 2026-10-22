@@ -276,6 +276,11 @@ def dim_ratio(e):
     percentile over the bulbs of (mean brightness now / mean brightness lit). Bulbs: components of the lit render
     brighter than 0.25 (the panel behind them is near black), halved for speed."""
     now, lit = bright(e["png"]), bright(e["lit"])
+    # the bulbs are compared in place: a panel the camera carries (on the type plane) is not where it was at the lit
+    # frame, so a moved panel is not measured (the screen-space panels are)
+    bn, bl = bbox(now > 0.02), bbox(lit > 0.02)
+    if bn is None or bl is None or max(abs(int(x) - int(y)) for x, y in zip(bn, bl)) > 8:
+        return 1.0
     now, lit = now[::2, ::2], lit[::2, ::2]
     ratios = []
     for y0, x0, y1, x1, area in components(lit > 0.25):
