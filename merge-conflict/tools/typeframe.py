@@ -10,7 +10,7 @@ where `type` is the frame's type layer alone on a transparent background, `world
 Per sample:
   * settled box: the type's bounding box (alpha > 0.5). When the box at the previous or the next sample (0.5 s apart)
     is within 5 % of the frame of it, the type persists (is not mid-animation) and must sit inside a 4 % margin.
-  * faces: type pixels may cover at most 3 % of any projected face box.
+  * faces: settled type pixels may cover at most 3 % of any projected face box (down to the chin).
   * hidden (round 7d, "Type is never hidden by a card"): where the type layer is opaque (alpha >= 0.95), the final
     frame must show the type's own colour; a settled form with more than 2 % of those pixels changed (any channel off
     by more than 48) is covered by a card, an effect or a cover.
@@ -136,7 +136,8 @@ def analyse(samples):
             if h > HIDDEN:
                 out.append({**base, "kind": "hidden", "value": round(100 * h), "why": f"{100 * h:.0f} % of the type's opaque pixels hidden in the final frame"})
         cards = s.get("cards") or [None] * len(s["faces"])
-        for f, card in zip(s["faces"], cards):
+        # round 7d: the face rule binds a form at its settled state (a form flying in may cross a face on its way)
+        for f, card in zip(s["faces"] if settled else [], cards):
             x0, y0, x1, y1 = [int(round(v)) for v in f]
             x0, y0, x1, y1 = max(0, x0), max(0, y0), min(W, x1), min(H, y1)
             if x1 <= x0 or y1 <= y0:
