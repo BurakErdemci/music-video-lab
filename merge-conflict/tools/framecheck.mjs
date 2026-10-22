@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 // framecheck.mjs - the framing rule (scene-map.md "Framing: the face and the action stay in frame"), per frame:
-//  - every subject card's face box (video/public/cards/frames.json) stays inside the frame with a 4 % margin;
+//  - every subject card's face box (video/public/cards/frames.json, extended down to the chin by framing.ts faceFrame)
+//    stays inside the frame with a 4 % margin;
 //  - a face box is at most 70 % of the frame height;
 //  - a full-body card ("kind": "full") shows its whole action box (a 1 % margin), unless its shot crops at the
 //    knees on purpose (then only the bottom may leave);
@@ -50,7 +51,7 @@ await esbuild.build({
       "export { filmStateAt } from './Film.tsx';",
       "export { project, HOME } from './camera/camera.ts';",
       "export { sectionAt } from './timing.ts';",
-      "export { screenBox, CARD_FRAMES } from './film/framing.ts';",
+      "export { screenBox, CARD_FRAMES, faceFrame } from './film/framing.ts';",
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
       "export { panelParallax, plateView } from './worlds/plategeo.ts';",
@@ -129,7 +130,8 @@ const check = (state) => {
     const over = (b, l, r, t, bt) => ['left', l - b.x0, 'right', b.x1 - r, 'top', t - b.y0, 'bottom', b.y1 - bt]
       .reduce((a, v, i, arr) => (i % 2 === 0 && arr[i + 1] > 0 ? [...a, `${v} ${Math.round(arr[i + 1])}`] : a), []);
     if (!s.silhouette) {
-      const fb = screenBox(state.pose, s, f.face);
+      // the face down to the chin (round 7d)
+      const fb = screenBox(state.pose, s, M.faceFrame(s.card));
       const mx = 0.04 * W, my = 0.04 * H;
       const fo = over(fb, L + mx, R - mx, my, H - my);
       if (fo.length) out.push({ s, why: `face leaves the frame (${fo.join(', ')} px)` });
@@ -170,7 +172,7 @@ if (arg('dump')) {
     if (!st) return { frame: fr, shot: null, subjects: [] };
     return { frame: fr, shot: st.shot, fit: st.fit, subjects: st.subjects.filter((x) => frames[x.card]).map((x) => {
       const box = (b) => { const r = screenBox(st.pose, x, b); return [r.x0, r.y0, r.x1, r.y1].map((v) => Math.round(v)); };
-      return { card: x.card, face: box(frames[x.card].face), action: box(frames[x.card].action), fails: check({ ...st, subjects: [x] }).map((f) => f.why) };
+      return { card: x.card, face: box(M.faceFrame(x.card)), action: box(frames[x.card].action), fails: check({ ...st, subjects: [x] }).map((f) => f.why) };
     }) };
   });
   console.log(JSON.stringify(out));
@@ -266,7 +268,7 @@ if (process.argv.includes('--type')) {
   for (const fr of picks) {
     const st = M.filmStateAt(fr);
     const subj = st.subjects.filter((x) => !x.silhouette && frames[x.card]);
-    const faces = subj.map((x) => { const b = screenBox(st.pose, x, frames[x.card].face); return [b.x0, b.y0, b.x1, b.y1]; });
+    const faces = subj.map((x) => { const b = screenBox(st.pose, x, M.faceFrame(x.card)); return [b.x0, b.y0, b.x1, b.y1]; });
     samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), faces, cards: subj.map((x) => x.card) });
   }
   const list = path.join(shots, 'samples.json');

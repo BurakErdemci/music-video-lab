@@ -50,6 +50,17 @@ export interface CardFrames {
 export const CARD_FRAMES = framesJson as unknown as Record<string, CardFrames>;
 const MANIFEST = manifestJson as Record<string, { w: number; h: number }>;
 
+/** How far the face box is extended down to take in the chin (round 7d, "The faces keep their chins"), as a share of
+ *  its height. frames.json's face box runs from the top of the head to about the chin; measured on 16 cards (B01,
+ *  B06, BMX1-4, BF1, BX3, OC1, OF3, OM1, OMX1-5) the chin sits 0 to 0.10 face-box heights below its bottom edge
+ *  (OF3 and OM1 the most, open-mouthed). */
+export const CHIN = 0.1;
+/** The face box the framing rules hold in frame and the type keeps clear of: the measured box down to the chin. */
+export const faceFrame = (card: string): [number, number, number, number] => {
+  const f = (CARD_FRAMES[card] as CardFrames).face;
+  return [f[0], f[1], f[2], f[3] + CHIN * (f[3] - f[1])];
+};
+
 /** A normalised card point (u right, v down) in world space, placed as <Card> places it. */
 export const cardPoint = (s: Subject, u: number, v: number): [number, number, number] => {
   const e = MANIFEST[s.card] as { w: number; h: number };

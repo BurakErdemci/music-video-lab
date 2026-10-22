@@ -14,7 +14,7 @@ import energyJson from '../data/energy.json' with { type: 'json' };
 import { clamp01 } from '../lib/ease.ts';
 import { hashKey, seeded } from '../lib/seeded.ts';
 import { beatPos, sectionAt } from '../timing.ts';
-import { CARD_FRAMES, cardPoint, screenBox, type ShotState, type Subject } from './framing.ts';
+import { CARD_FRAMES, cardPoint, faceFrame, screenBox, type ShotState, type Subject } from './framing.ts';
 
 const BASS = (energyJson as { bass: number[] }).bass;
 /** The kick/bass energy at t, 0..1 (tools/energy.py, the 30-150 Hz band per 60 fps frame). */
@@ -97,10 +97,11 @@ const limitsOf = (pose: CameraPose, subjects: readonly Subject[]) => {
     };
     const clipC = s.clip ? ndc(project(pose, [s.clip.x, (s.at.feet ?? -3.4) + s.at.height * 0.8, s.at.z ?? 0]))[0] : null;
     if (!s.silhouette) {
-      const fc = corners(f.face);
+      const fc = corners(faceFrame(s.card));
       for (const n of fc) lims.push({ n, lo: [-FX, -FY], hi: [FX, FY] });
       const ys = fc.map((n) => n[1]);
-      zLo = Math.max(zLo, (Math.max(...ys) - Math.min(...ys)) / 1.4);
+      // (4 px under 70 % of the height, as the margins: a face fitted to exactly 70 % rounds over it)
+      zLo = Math.max(zLo, (Math.max(...ys) - Math.min(...ys)) / (1.4 - PAD));
       if (clipC !== null) {
         const xs = fc.map((n) => n[0]);
         const room = s.clip?.keep === 'left' ? clipC - Math.max(...xs) : Math.min(...xs) - clipC;
@@ -184,7 +185,7 @@ export const guard = (pose0: CameraPose, subjects: readonly Subject[]): { pose: 
     const f = CARD_FRAMES[s.card];
     if (!f) continue;
     if (!s.silhouette) {
-      const b = screenBox(pose, s, f.face);
+      const b = screenBox(pose, s, faceFrame(s.card));
       if (b.x0 < 0.04 * W - 0.5 || b.x1 > 0.96 * W + 0.5 || b.y0 < 0.04 * H - 0.5 || b.y1 > 0.96 * H + 0.5 || b.y1 - b.y0 > 0.7 * H) ok = false;
     }
   }
