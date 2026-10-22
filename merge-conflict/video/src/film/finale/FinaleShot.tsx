@@ -124,19 +124,22 @@ const kick = (pose: CameraPose, t: number, amp: number): CameraPose => {
 // frame widths (1.15x its pixels at 2K, inside the 1.25x rule) while the particles and the girls rush past in depth.
 const flightK = (t: number): number => {
   const u = clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
-  return u ** 1.7;
+  // the speed rises linearly from 0.35 to 1.65 times the mean: moving from the first bar, faster every bar
+  return 0.35 * u + 0.65 * u * u;
 };
 export const flightPose = (t: number): CameraPose => {
   const u = clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
   const e = flightK(t);
-  return cam([0.7 * Math.sin(u * Math.PI * 1.3), -1.6 + 2.4 * e, 17 - 7 * e], [0.2 * Math.sin(u * Math.PI), 0.2 + 1.4 * e, -20], 50 - 20 * e, 0.035 * Math.sin(u * Math.PI * 2));
+  // a sway that widens as the build rises: the camera's truck works the painting's depth parallax
+  const sway = (0.6 + 1.4 * u) * Math.sin(u * Math.PI * 2.2);
+  return cam([sway, -1.6 + 2.4 * e, 17 - 7 * e], [0.35 * Math.sin(u * Math.PI * 1.5), 0.2 + 1.4 * e, -20], 50 - 20 * e, (0.02 + 0.04 * u) * Math.sin(u * Math.PI * 3));
 };
 const FLIGHT_BASE = flightPose(BUILD.start);
 /** How far the build's girls have risen (they float up from one knee until they scatter into the branches). */
 const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)));
 /** The painting ghosts behind the rising girls ("same file, different times": the two poses over each other) and
- *  lights up as they scatter into it: their particles become the tree. */
-const treeGain = (t: number): number => 0.3 + 0.65 * outQuad(clamp01((t - BRANCHES_AT) / 0.9));
+ *  lights up bar by bar as the build rises (no step: a jump in its light read as a flash and broke the rise). */
+const treeGain = (t: number): number => 0.45 + 0.5 * clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
 
 /** The fusion's grades sit between the disco and the metal ones; the piano's are soft and plain. */
 const BLUE_SOFT: Grade = { ...GRADES.reviewed, amount: 0.3 };
@@ -179,7 +182,7 @@ const finaleCamera = (t: number) => {
   if (scene === 'flight') {
     // the build's pulse: a punch on every beat that grows with the build
     const b = [...PULSES].reverse().find((x) => t >= x) ?? t;
-    const amt = 0.012 + 0.03 * flightK(t);
+    const amt = 0.025 + 0.035 * flightK(t);
     const p = flightPose(t);
     return { shot, k, scene, blueP, orangeP, pose: { ...p, fov: p.fov * (1 - amt * (1 - outQuad(clamp01((t - b) * 6)))) }, planeBase: FLIGHT_BASE };
   }
@@ -318,7 +321,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   const subjects = subjectsAt(t, scene, blueP, orangeP);
   const fieldGrade = metal ? ORANGE_METAL : BLUE_MIX;
   // confetti is earned: the final chorus and its paintings; the piano and the build get dust, the metal embers
-  const density = quiet ? 0.6 : scene === 'flight' ? 0.6 + 0.4 * flightK(t) : 0.9;
+  const density = quiet ? 0.6 : scene === 'flight' ? (t < BRANCHES_AT ? 0.6 + 0.2 * flightK(t) : 1) : 0.9;
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
@@ -326,7 +329,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
         {world}
         <Field t={t} grade={fieldGrade} layer="back" density={density} hueMix={0.6} metal={metal ? 1 : 0} dust={!final} bursts={bursts} />
         {subjects.map(figure)}
-        {PLANS.map((p) => (dissolveState(p, t).active ? <Dissolve key={p.id} plan={p} t={t} grade={gradeOf(p.id.endsWith('-b') ? 'B' : 'O', p.t0 + 0.01)} rival={p.id.endsWith('-b') ? '#ff7a1a' : '#19c8ff'} /> : null))}
+        {PLANS.map((p) => (dissolveState(p, t).active ? <Dissolve key={p.id} plan={p} t={t} grade={gradeOf(p.id.endsWith('-b') ? 'B' : 'O', p.t0 + 0.01)} rival={p.id.endsWith('-b') ? '#ff7a1a' : '#19c8ff'} spread={p.id.startsWith('f-branch') ? 1.4 : 2.4} /> : null))}
         <Field t={t} grade={BLUE_MIX} layer="front" density={density * 0.8} hueMix={0.6} metal={metal ? 1 : 0} dust={!final} bursts={bursts} />
       </Stage>
       <Svg>

@@ -48,8 +48,9 @@ const dive = (card: string, x: number, flip = false): Who => [card, { x, feet: -
 
 /** The build's girls: they rise from one knee in the tree and float up with it (the flight carries the camera). */
 export const RISE: Record<'B' | 'O', Placement> = { B: { x: -2.4, feet: -4.0, height: 5.2, z: 2.0 }, O: { x: 2.4, feet: -4.0, height: 5.2, z: 2.0 } };
-/** When the two girls scatter into the tree's two branches ("Two branches"). */
-export const BRANCHES_AT = tk(52, 0);
+/** When the two girls scatter into the tree's two branches: the build's last downbeat ("...tree, you know"), so the
+ *  burst of particles crowns the rise instead of breaking it (on "Two branches" the bar after it measured lower). */
+export const BRANCHES_AT = db(158.6);
 
 export const FSHOTS: FShot[] = [
   // ---- piano truce (140.04-149.38): disco, quiet, still; the girls come back from their own git lines
