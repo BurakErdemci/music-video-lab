@@ -155,7 +155,9 @@ const gradeOf = (who: 'B' | 'O', t: number): Grade =>
 const FLOOR_SCENES: readonly FScene[] = ['quiet', 'arena', 'spin', 'marena', 'runway', 'walls', 'forge', 'cathedral', 'tunnel', 'terminal'];
 const METAL_SCENES: readonly FScene[] = ['forge', 'cathedral', 'tunnel', 'marena', 'duel', 'faceO', 'terminal'];
 const lightOf = (who: 'B' | 'O', t: number, scene: FScene): CardLight => {
-  if (scene === 'quiet' || scene === 'flight') return { key: who === 'B' ? '#9fc0ff' : '#ffc890', keyAmt: 0.3, rim: 0.9 };
+  // the piano: a soft light band drifts across the girl every two bars (round 9: no frozen 4 s in the piano)
+  if (scene === 'quiet') return { key: who === 'B' ? '#9fc0ff' : '#ffc890', keyAmt: 0.3, rim: 0.9, sweep: { x: -9 + ((barPos(t) / 2) % 1) * 18, width: 1.4, amt: 0.28, color: who === 'B' ? '#d6e6ff' : '#ffe2c4', slope: 0.25 } };
+  if (scene === 'flight') return { key: who === 'B' ? '#9fc0ff' : '#ffc890', keyAmt: 0.3, rim: 0.9 };
   const metal = METAL_SCENES.includes(scene);
   const key: Hex = metal ? '#ff5a1a' : who === 'B' ? CYAN : '#ff4a1a';
   return { key, keyAmt: 0.4, sweep: { x: -9 + (barPos(t) % 1) * 18, width: 0.9, amt: 0.45, color: metal ? '#ffd0a0' : who === 'B' ? '#bfefff' : '#ffd0b0', slope: 0.3 }, dots: scene === 'arena' || scene === 'spin' || scene === 'logo' || scene === 'marena' ? 0.5 : 0.1, ball: [0, 5.3, -6], rim: 1.4 };
