@@ -53,13 +53,13 @@ export const BRANCHES_AT = tk(52, 0);
 
 export const FSHOTS: FShot[] = [
   // ---- piano truce (140.04-149.38): disco, quiet, still; the girls come back from their own git lines
-  { id: 'rk1', t: PIANO.start, scene: 'panel', panel: 'RK1', cam: 'hero', move: 'push', fade: true, B: null, O: null },
+  { id: 'rk1', t: PIANO.start, scene: 'panel', panel: 'RK1', cam: 'hero', move: 'orbit', fade: true, B: null, O: null },
   { id: 'piano-blue', t: tk(49, 0), scene: 'quiet', cam: 'hero', move: 'push', into: 'dissolve', B: ['BP1', full(-1.4, 5.2)], O: null },
   { id: 'piano-blue-2', t: tk(49, 4), scene: 'quiet', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'piano-orange', t: tk(50, 0), scene: 'quiet', cam: 'hero', move: 'push', into: 'dissolve', B: null, O: ['OP1', full(1.4, 5.2)] },
   { id: 'piano-orange-2', t: tk(50, 2), scene: 'quiet', cam: 'hero', move: 'orbit', into: 'shock' },
   // "say hello": the mirror pair, palms nearly touching (RK2)
-  { id: 'rk2', t: db(146.6), scene: 'panel', panel: 'RK2', cam: 'hero', move: 'push', into: 'dissolve', B: null, O: null },
+  { id: 'rk2', t: db(146.6), scene: 'panel', panel: 'RK2', cam: 'hero', move: 'orbit', into: 'dissolve', B: null, O: null },
   // ---- build (149.38-160.06): ONE continuous flight, no cut, into and through the two-branches tree (RK3)
   { id: 'flight', t: BUILD.start, scene: 'flight', cam: 'hero', move: 'still', into: 'dissolve', B: ['BP2', RISE.B], O: ['OP2', RISE.O] },
   // ---- final chorus "Accept both" (160.06-181.44): fusion; the chorus's tools, a cut every word or two beats
@@ -72,6 +72,7 @@ export const FSHOTS: FShot[] = [
   { id: 'yes2', t: tk(54, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX3', -4.3), O: bustAt('POX3', 4.3) },
   // "Blue and orange together, it's a gradient now": spinning hand in hand (RK4), then the gradient arena
   { id: 'rk4', t: tk(55, 0), scene: 'panel', panel: 'RK4', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
+  { id: 'rk4-b', t: tk(55, 3), scene: 'panel', panel: 'RK4', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'gradient', t: tk(55, 6), scene: 'spin', cam: 'hero', move: 'orbit', into: 'laser', B: ['PB6', full(-2.6)], O: ['PO6', full(2.6)] },
   { id: 'gradient-now', t: tk(55, 7), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   // "Two girls, one line,": the runway again, but now they reach for each other (chorus 1 had them back to back)
@@ -79,11 +80,13 @@ export const FSHOTS: FShot[] = [
   { id: 'line-one', t: tk(56, 2), scene: 'runway', cam: 'low', move: 'dollyzoom', into: 'shock' },
   // "and we figured it out": cheek to cheek at one mic (RK5)
   { id: 'rk5', t: tk(56, 4), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
+  { id: 'rk5-b', t: tk(56, 6), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'orbit', into: 'shock' },
   // the high five on the downbeat after the line
   { id: 'highfive', t: db(169.3), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB5', full(-1.9, 4.8)], O: ['PO5', full(1.9, 4.8)] },
   { id: 'highfive-2', t: bt(170.0), scene: 'arena', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'acc3', t: tk(57, 0), scene: 'arena', cam: 'wide', move: 'whip', into: 'shock', B: ['PB1', full(-3.0)], O: ['PO1', full(3.0)] },
   { id: 'acc3-both', t: tk(57, 1), scene: 'arena', cam: 'low', move: 'push', into: 'shock' },
+  { id: 'acc3-changes', t: tk(57, 2), scene: 'arena', cam: 'reverse', move: 'whip', into: 'shock' },
   { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX1', -4.3), O: bustAt('POX2', 4.3) },
   // "Commit and push it! (PUSH IT!)": both push, then the half mirror ball, half fireball (RK6)
   { id: 'commit', t: tk(58, 0), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB2', full(-2.6)], O: ['PO2', full(2.6)] },
@@ -98,11 +101,12 @@ export const FSHOTS: FShot[] = [
   { id: 'merge', t: tk(60, 0), scene: 'logo', cam: 'hero', move: 'still', into: 'tunnel', B: ['PB5', full(-3.4, 4.8)], O: ['PO5', full(3.4, 4.8)] },
   { id: 'merge-lock', t: tk(60, 1), scene: 'logo', cam: 'hero', move: 'push', into: 'shock' },
   { id: 'rk7', t: tk(60, 2), scene: 'panel', panel: 'RK7', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
+  { id: 'rk7-b', t: tk(60, 3), scene: 'panel', panel: 'RK7', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'soul', t: tk(60, 4), scene: 'spin', cam: 'hero', move: 'orbit', into: 'shock', B: ['PB6', full(-2.4)], O: ['PO6', full(2.4)] },
   { id: 'soul-2', t: tk(60, 5), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   { id: 'final-out', t: db(180.0), scene: 'spin', cam: 'wide', move: 'push', into: 'shock' },
   // ---- the chant (181.44-193.48): both metal; headbang, stage dive, ship it (RK8)
-  { id: 'chant', t: CHANT.start, scene: 'forge', cam: 'hero', move: 'push', into: 'fire', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
+  { id: 'chant', t: CHANT.start, scene: 'forge', cam: 'hero', move: 'push', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
   { id: 'chant-both', t: tk(61, 1), scene: 'forge', cam: 'low', move: 'orbit', into: 'shock' },
   { id: 'chant-faces', t: tk(61, 2), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX2', -4.4), O: faceAt('OMX2', 4.4, true) },
   { id: 'rk8', t: tk(61, 4), scene: 'panel', panel: 'RK8', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
@@ -111,7 +115,7 @@ export const FSHOTS: FShot[] = [
   { id: 'ship', t: tk(62, 4), scene: 'cathedral', cam: 'low', move: 'orbit', into: 'shock', B: ['BS2', full(-2.6, 5.0)], O: ['OS2', full(2.6, 5.0)] },
   { id: 'chant-2', t: tk(63, 0), scene: 'forge', cam: 'reverse', move: 'push', into: 'shock', B: ['BH1', full(-2.4, 4.8)], O: ['OH1', full(2.4, 4.8)] },
   { id: 'chant-faces-2', t: tk(63, 2), scene: 'duel', cam: 'hero', move: 'dollyzoom', into: 'shock', B: faceAt('BMX4', -4.4), O: faceAt('OMX3', 4.4, true) },
-  { id: 'ship-2', t: tk(63, 4), scene: 'marena', cam: 'wide', move: 'whip', into: 'fire', B: ['BS1', full(-3.0, 5.0)], O: ['OS1', full(3.0, 5.0)] },
+  { id: 'ship-2', t: tk(63, 4), scene: 'marena', cam: 'wide', move: 'whip', into: 'tear', B: ['BS1', full(-3.0, 5.0)], O: ['OS1', full(3.0, 5.0)] },
   { id: 'dive-2', t: tk(64, 0), scene: 'tunnel', cam: 'wide', move: 'push', into: 'shock', B: dive('BH2', -2.0), O: dive('OH2', 2.2) },
   { id: 'dive-2b', t: tk(64, 2), scene: 'tunnel', cam: 'low', move: 'orbit', into: 'shock' },
   { id: 'ship-3', t: tk(64, 4), scene: 'cathedral', cam: 'hero', move: 'dollyzoom', into: 'shock', B: ['BS3', full(-2.4, 5.0)], O: ['OS3', full(2.4, 5.0)] },
@@ -121,7 +125,7 @@ export const FSHOTS: FShot[] = [
   { id: 'jaw', t: tk(66, 0), scene: 'terminal', cam: 'hero', move: 'still', into: 'shock', B: null, O: ['OH3', full(-2.4, 6.4)] },
   { id: 'rk9', t: tk(66, 2), scene: 'panel', panel: 'RK9', cam: 'hero', move: 'still', B: null, O: null },
   // ---- the scream end (196.15-213.54): metal; sky scream, guitar smash, keytar spin, the scream pillar (RK10)
-  { id: 'pillar', t: SCREAM_END.start, scene: 'panel', panel: 'RK10', cam: 'hero', move: 'push', into: 'fire', B: null, O: null },
+  { id: 'pillar', t: SCREAM_END.start, scene: 'panel', panel: 'RK10', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   { id: 'sky', t: db(197.4), scene: 'cathedral', cam: 'low', move: 'push', into: 'shock', B: ['BH4', full(-2.6, 4.8)], O: ['OH4', full(2.6, 4.8)] },
   { id: 'sky-faces', t: bt(198.1), scene: 'duel', cam: 'hero', move: 'dollyzoom', into: 'shock', B: faceAt('BMX2', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'smash-up', t: db(198.8), scene: 'forge', cam: 'hero', move: 'push', into: 'shock', B: null, O: ['OS4', full(1.6, 5.6)] },
@@ -132,7 +136,7 @@ export const FSHOTS: FShot[] = [
   { id: 'duo-faces', t: bt(203.5), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX5', 4.4, true) },
   { id: 'sky-2', t: db(204.1), scene: 'cathedral', cam: 'reverse', move: 'orbit', into: 'shock', B: ['BH4', full(-2.4, 4.8)], O: ['OH4', full(2.4, 4.8)] },
   { id: 'sky-2-face', t: bt(204.8), scene: 'faceO', cam: 'hero', move: 'dollyzoom', into: 'shock', B: null, O: faceC('OMX4', true) },
-  { id: 'headbang', t: db(205.4), scene: 'forge', cam: 'wide', move: 'whip', into: 'fire', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
+  { id: 'headbang', t: db(205.4), scene: 'forge', cam: 'wide', move: 'whip', into: 'tear', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
   { id: 'tunnel-3', t: db(206.8), scene: 'tunnel', cam: 'hero', move: 'push', into: 'shock', B: ['BS2', full(-1.8, 4.8)], O: ['OS2', full(1.8, 4.8)] },
   { id: 'faces-3', t: bt(207.5), scene: 'duel', cam: 'hero', move: 'orbit', into: 'shock', B: faceAt('BMX1', -4.4), O: faceAt('OMX1', 4.4, true) },
   { id: 'arena-3', t: db(208.1), scene: 'marena', cam: 'hero', move: 'orbit', into: 'shock', B: ['BS3', full(-3.0, 5.0)], O: ['OS3', full(3.0, 5.0)] },
@@ -142,14 +146,14 @@ export const FSHOTS: FShot[] = [
   { id: 'sky-3b', t: bt(211.5), scene: 'cathedral', cam: 'wide', move: 'orbit', into: 'shock' },
   { id: 'climax', t: db(212.1), scene: 'marena', cam: 'wide', move: 'push', into: 'shock', B: ['BS4', full(-3.0, 5.0)], O: ['OS4', full(3.0, 5.0)] },
   // ---- the outro (213.54-232.12): the dawn walk (RK11), the resolved title, a last metal round, the final freeze (RK12)
-  { id: 'dawn', t: OUTRO.start, scene: 'panel', panel: 'RK11', cam: 'hero', move: 'push', into: 'fire', B: null, O: null },
-  { id: 'title', t: db(218.8), scene: 'title', cam: 'hero', move: 'push', into: 'fire', B: null, O: null },
+  { id: 'dawn', t: OUTRO.start, scene: 'panel', panel: 'RK11', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
+  { id: 'title', t: db(218.8), scene: 'title', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   { id: 'title-b', t: db(220.1), scene: 'title', cam: 'close', move: 'orbit', into: 'shock' },
   { id: 'outro-faces', t: db(221.5), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'outro-arena', t: db(222.8), scene: 'marena', cam: 'wide', move: 'orbit', into: 'tear', B: ['BS4', full(-3.0, 5.0)], O: ['OS4', full(3.0, 5.0)] },
   { id: 'outro-forge', t: db(224.2), scene: 'forge', cam: 'hero', move: 'push', into: 'shock', B: ['BH4', full(-2.5, 4.8)], O: ['OH4', full(2.5, 4.8)] },
   { id: 'outro-dive', t: db(225.5), scene: 'tunnel', cam: 'hero', move: 'whip', into: 'shock', B: dive('BH2', -2.2), O: dive('OH2', 2.4) },
-  { id: 'outro-cathedral', t: db(226.8), scene: 'cathedral', cam: 'low', move: 'orbit', into: 'fire', B: ['BS1', full(-2.6, 5.0)], O: ['OS1', full(2.6, 5.0)] },
+  { id: 'outro-cathedral', t: db(226.8), scene: 'cathedral', cam: 'low', move: 'orbit', into: 'tear', B: ['BS1', full(-2.6, 5.0)], O: ['OS1', full(2.6, 5.0)] },
   { id: 'freeze', t: db(228.2), scene: 'panel', panel: 'RK12', cam: 'hero', move: 'still', into: 'shock', B: null, O: null },
 ];
 FSHOTS.sort((a, b) => a.t - b.t);

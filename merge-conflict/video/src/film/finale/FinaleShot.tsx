@@ -82,6 +82,8 @@ const TRANSITIONS: TransitionSpec[] = (() => {
 })();
 
 const HITS = EVENTS.filter((e) => e.kind === 'hit' && e.t >= CHANT.start).map((e) => e.t);
+/** The metal worlds flash on every second kick: on every beat they flashed 3 times a second, and a cut on top made 4. */
+const WORLD_HITS = HITS.filter((_, i) => i % 2 === 0);
 const PULSES = EVENTS.filter((e) => e.kind === 'pulse' && e.t >= BUILD.start && e.t < CHANT.start).map((e) => e.t);
 const MOVES: readonly Move[] = ['push', 'orbit', 'whip', 'dollyzoom'];
 
@@ -132,8 +134,9 @@ export const flightPose = (t: number): CameraPose => {
 const FLIGHT_BASE = flightPose(BUILD.start);
 /** How far the build's girls have risen (they float up from one knee until they scatter into the branches). */
 const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)));
-/** The painting appears as the girls scatter: their particles become the tree. */
-const treeGain = (t: number): number => 0.95 * outQuad(clamp01((t - BRANCHES_AT) / 0.9));
+/** The painting ghosts behind the rising girls ("same file, different times": the two poses over each other) and
+ *  lights up as they scatter into it: their particles become the tree. */
+const treeGain = (t: number): number => 0.3 + 0.65 * outQuad(clamp01((t - BRANCHES_AT) / 0.9));
 
 /** The fusion's grades sit between the disco and the metal ones; the piano's are soft and plain. */
 const BLUE_SOFT: Grade = { ...GRADES.reviewed, amount: 0.3 };
@@ -184,16 +187,16 @@ const finaleCamera = (t: number) => {
   const move: Move = shot.move ?? (MOVES[idx % MOVES.length] as Move);
   const dir = idx % 2 ? 1 : -1;
   const raw = variant(HERO[scene], shot.cam, scene === 'tunnel' ? k * 0.45 : k, focus);
-  const base = moved(raw, move, k, t - shot.t, focus, dir);
+  const final = t >= FINAL.start - 0.05 && t < CHANT.start;
+  const base = moved(raw, move, k, t - shot.t, focus, dir, final && scene !== 'split' && shot.cam !== 'low' ? 0.42 : 0.3);
   const planeBase = variant(HERO[scene], shot.cam, 0, focus);
   const piano = t < BUILD.start;
   const failed = t >= tk(65, 0) && t < SCREAM_END.start;
-  const final = t >= FINAL.start - 0.05 && t < CHANT.start;
   // the final chorus punches on every beat like the choruses; the metal parts kick on every beat; the piano and the
   // build-failed stop hold still
   const hits = final ? PULSES : HITS;
   const h = [...hits].reverse().find((x) => t >= x) ?? -10;
-  const amt = piano || failed ? 0 : final ? 0.065 : t >= OUTRO.start ? 0.04 : 0.05;
+  const amt = piano || failed ? 0 : final ? 0.09 : t >= OUTRO.start ? 0.04 : 0.05;
   const punched: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
   const pose = !final && !piano && !failed ? kick(punched, t, scene === 'panel' ? 0.06 : 0.1) : punched;
   return { shot, k, scene, blueP, orangeP, pose, planeBase };
@@ -245,7 +248,6 @@ const burstsAt = (t: number): Burst[] =>
     { t: FHITS.push, origin: [0, 1, 0] },
     ...FHITS.walls.map((x) => ({ t: x, origin: [0, -1, 0] })),
     { t: FINAL_BURST_AT, origin: [0, 0, 0] },
-    { t: CHANT.start, origin: [0, -2, 0] },
     { t: FHITS.smash, origin: [1.6, -1.5, 0.5] },
     { t: FHITS.smash2, origin: [2.6, -1.5, 0.5] },
     { t: SCREAM_END.start, origin: [0, 1, 0] },
@@ -273,7 +275,6 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
       case 'flight':
         return (
           <>
-            <WhisperWorld t={t} />
             <PlateLayer id="RK3" base={planeBase} panel dist={30} gain={treeGain(t)} margin={1.02} />
           </>
         );
@@ -300,11 +301,11 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
       case 'title':
         return <LogoWorld t={t} flash={0} />;
       case 'forge':
-        return <ForgeWorld t={t} plate="shot" hits={HITS} />;
+        return <ForgeWorld t={t} plate="shot" hits={WORLD_HITS} />;
       case 'cathedral':
-        return <CathedralWorld t={t} plate="shot" hits={HITS} />;
+        return <CathedralWorld t={t} plate="shot" hits={WORLD_HITS} />;
       case 'tunnel':
-        return <ChevronTunnelWorld t={t} hits={HITS} />;
+        return <ChevronTunnelWorld t={t} hits={WORLD_HITS} />;
       case 'terminal':
         return <TerminalWorld t={t} fail={tk(65, 0)} />;
     }
@@ -317,7 +318,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   const subjects = subjectsAt(t, scene, blueP, orangeP);
   const fieldGrade = metal ? ORANGE_METAL : BLUE_MIX;
   // confetti is earned: the final chorus and its paintings; the piano and the build get dust, the metal embers
-  const density = quiet ? 0.35 : scene === 'flight' ? 0.4 + 0.6 * flightK(t) : 0.85;
+  const density = quiet ? 0.6 : scene === 'flight' ? 0.6 + 0.4 * flightK(t) : 0.9;
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
