@@ -528,3 +528,26 @@ Burak: "the motion work came out very well, it really brought the clip to life."
   carries only its own lyric type, which follows the type rules.
 - **A stray glyph:** at 1:55 an "I" type tile sits on the blue girl's head before her line starts. No type element shows
   before its line, and none over a head.
+
+## GIT! PUSH! FORCE! rebuilt (Burak 2026-10-22 morning: "still not impressive, it really does not read; that scene can be much better")
+
+This replaces the 2026-10-21 storyboard. Why the old one fails: 11 shots in 5.3 s, each from a new place, so the
+viewer loses who stands where; the wave and the blue girl are never in the same frame; everything is red (floor,
+lasers, and the blue girl tinted red); and BF1 is drawn blown by a blast from the RIGHT while orange stands on the LEFT.
+
+One stage, one geography: orange LEFT, blue RIGHT, the whole time. Four shots only:
+1. **GIT! (120.03-121.36):** a wide low two-shot. Orange (OF1, looping) gathers power, light growing in her fists;
+   blue (BB1 brace, new card) on the right in her OWN cold blue light. GIT! slams behind orange.
+2. **The charge (121.36-124.32):** ONE continuous slow push toward orange, no cuts except one. Cracks of light race
+   across the floor from orange toward blue, the `git push --force` HUD types small in a corner, and the charge glow
+   grows bar by bar. The one cut: a single cut-in to blue's face (BMX1, looping: glare, then realisation) of about
+   one bar, then back to the same push. Orange leaps (OF2) and the camera tilts up after her.
+3. **PUSH! (124.32-125.02):** ONE continuous wide shot that holds both girls. Orange lands (OF3); the shockwave ring
+   runs across the floor from left to right; the frame is shaken when it hits blue. Blue goes from BB1 to BF2 (new,
+   airborne) and is thrown out of frame right, with speed streaks. The camera whips after the wave. No cover, no
+   insert, no painting in this span.
+4. **FORCE! (125.02-125.36):** OF4 low angle, finger to the sky, FORCE! behind her.
+
+Colour: orange's side is fire, blue's side stays cold blue until the wave crosses into it. The lasers are dimmed in
+this sequence, and blue is never tinted red. BF1, if used at all, is mirrored so the blast comes from the left. Every
+card here plays its drawn loop (OF1-4, BF1, BMX1: loops-4).

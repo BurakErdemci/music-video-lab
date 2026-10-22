@@ -1,0 +1,22 @@
+[
+ {
+  "id": "BB1-brace",
+  "prompt": "stil/prompts/s-push/BB1-brace.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/s-push/out/BB1-brace.png",
+  "key": "#808080"
+ },
+ {
+  "id": "BF2-airborne",
+  "prompt": "stil/prompts/s-push/BF2-airborne.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/05-karakter-mavi-metal.png"
+  ],
+  "out": "stil/prompts/s-push/out/BF2-airborne.png",
+  "key": "#808080"
+ }
+]
