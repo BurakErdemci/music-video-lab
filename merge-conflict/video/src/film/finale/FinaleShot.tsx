@@ -33,6 +33,8 @@ import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BRANCHES_AT, BUILD, CHANT, FAILED, FBLUE, FHITS, FINAL, FINALE_END, FINALE_TYPE, FORANGE, type FScene, type FShot, FSHOTS, type Move, OUTRO, PIANO, RISE, SCREAM_END, tk } from './plan.ts';
 import { logoIn } from './logo.ts';
 import { FinaleType } from './type.tsx';
+import { flightView, type PaintView, restView } from './paint.ts';
+import { Painting } from './Painting.tsx';
 
 const cam = (position: Vec3, target: Vec3, fov = 40, roll = 0): CameraPose => ({ position, target, fov, roll });
 const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
@@ -136,6 +138,22 @@ export const flightPose = (t: number): CameraPose => {
   return cam([sway, -1.6 + 2.4 * e, 17 - 7 * e], [0.35 * Math.sin(u * Math.PI * 1.5), 0.2 + 1.4 * e, -20], 50 - 20 * e, (0.02 + 0.04 * u) * Math.sin(u * Math.PI * 3));
 };
 const FLIGHT_BASE = flightPose(BUILD.start);
+/** The paintings that move (round 9, film/finale/paint.ts): the piano's two and the dawn walk drift whole with their
+ *  depth; the build's flight pushes into RK3. Every other painting is the shared whole painting (worlds/plate.tsx). */
+const RESTING: Record<string, [number, number]> = { rk1: [1, 0.1], rk2: [-1, 0.1], dawn: [1, 0.15] };
+const FLIGHT = { t0: BUILD.start, t1: BRANCHES_AT };
+export const paintViewAt = (t: number): { id: string; view: PaintView } | null => {
+  const { shot, k } = shotIn(FSHOTS, t);
+  if (shot.scene === 'flight') {
+    if (t >= BRANCHES_AT) return null;
+    const v = flightView(t, FLIGHT);
+    return { id: 'RK3', view: { ...v, gain: v.gain * treeGain(t) } };
+  }
+  const rest = RESTING[shot.id];
+  if (rest === undefined || !shot.panel) return null;
+  const next = FSHOTS[FSHOTS.indexOf(shot) + 1];
+  return { id: shot.panel, view: restView(k, (next?.t ?? FINALE_END) - shot.t, rest[0], rest[1]) };
+};
 /** How far the build's girls have risen (they float up from one knee after they step out of the painting). */
 const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BRANCHES_AT) / (BUILD.end - BRANCHES_AT)));
 /** The painting fades up out of the piano's dark over half a second. */
@@ -273,11 +291,12 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   const failed = t >= tk(65, 0) && t < SCREAM_END.start;
   const bursts = burstsAt(t);
   const insertHit = [...HITS].reverse().find((x) => t >= x) ?? shot.t;
+  const painting = paintViewAt(t);
   const world = (() => {
     switch (scene) {
       case 'panel':
         // a painting shown whole, locked to the frame (round 7d): only its own lyric type over it
-        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} kb={k} />;
+        return painting ? <Painting id={painting.id} view={painting.view} /> : <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} kb={k} />;
       case 'quiet':
         // the truce: the empty stage after hours, its floor half blue, half orange
         return (
@@ -290,7 +309,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
         return (
           // the first bar holds the two-branches painting whole, with no card over it (round 7d); then the girls step
           // out of it as particles and rise in the light-box rig (the rig rebuilding, scene-map.md)
-          t < BRANCHES_AT ? <PlateLayer id="RK3" base={planeBase} panel dist={30} gain={treeGain(t)} kb={clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start))} /> : <LogoWorld t={t} flash={0} />
+          painting ? <Painting id={painting.id} view={painting.view} /> : <LogoWorld t={t} flash={0} />
         );
       case 'arena':
         return <Arena t={t} stomps={[]} embers={[]} led={['#ff7a1a', '#2f7bff']} plate />;
