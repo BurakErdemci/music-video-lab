@@ -512,9 +512,13 @@
     "source": "BF1-blown.png"
   },
   "BF1b": {
-    "file": "cards/BF1b.png",
+    "file": "cards/hd/BF1b.webp",
     "w": 912,
     "h": 1390,
+    "px": [
+      1824,
+      2780
+    ],
     "bbox": [
       23,
       80,
@@ -524,9 +528,13 @@
     "source": "BF1b-action.png"
   },
   "BF1c": {
-    "file": "cards/BF1c.png",
+    "file": "cards/hd/BF1c.webp",
     "w": 912,
     "h": 1390,
+    "px": [
+      1824,
+      2780
+    ],
     "bbox": [
       23,
       80,
@@ -804,9 +812,13 @@
     "source": "BMX1-base.png"
   },
   "BMX1b": {
-    "file": "cards/BMX1b.png",
+    "file": "cards/hd/BMX1b.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -816,9 +828,13 @@
     "source": "BMX1b-face.png"
   },
   "BMX1c": {
-    "file": "cards/BMX1c.png",
+    "file": "cards/hd/BMX1c.webp",
     "w": 1024,
     "h": 1524,
+    "px": [
+      2048,
+      3048
+    ],
     "bbox": [
       0,
       12,
@@ -2132,9 +2148,13 @@
     "source": "OF2-leap.png"
   },
   "OF2b": {
-    "file": "cards/OF2b.png",
+    "file": "cards/hd/OF2b.webp",
     "w": 980,
     "h": 1408,
+    "px": [
+      1960,
+      2816
+    ],
     "bbox": [
       19,
       22,
@@ -2144,9 +2164,13 @@
     "source": "OF2b-action.png"
   },
   "OF2c": {
-    "file": "cards/OF2c.png",
+    "file": "cards/hd/OF2c.webp",
     "w": 980,
     "h": 1408,
+    "px": [
+      1960,
+      2816
+    ],
     "bbox": [
       19,
       22,
@@ -2172,9 +2196,13 @@
     "source": "OF3-smash.png"
   },
   "OF3b": {
-    "file": "cards/OF3b.png",
+    "file": "cards/hd/OF3b.webp",
     "w": 1013,
     "h": 1306,
+    "px": [
+      2026,
+      2612
+    ],
     "bbox": [
       11,
       111,
@@ -2184,9 +2212,13 @@
     "source": "OF3b-action.png"
   },
   "OF3c": {
-    "file": "cards/OF3c.png",
+    "file": "cards/hd/OF3c.webp",
     "w": 1013,
     "h": 1306,
+    "px": [
+      2026,
+      2612
+    ],
     "bbox": [
       11,
       111,
