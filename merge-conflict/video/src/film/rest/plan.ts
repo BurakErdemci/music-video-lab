@@ -109,10 +109,10 @@ const ALT: Record<CamVariant, CamVariant> = { hero: 'low', low: 'hero', wide: 'c
     const mid = bt(m.t + (end - m.t) / 2 - 0.05);
     // (none right before a painting: three cuts and its cover inside a second flashed 4 times a second)
     if (m.scene === 'panel' || solo[i + 1]?.scene === 'panel' || mid - m.t < 0.3 || end - mid < 0.3) continue;
-    // a low angle under a full figure with the solo's push loses her feet; the faces take it, the stages reverse
-    const face = m.scene === 'faceO' || m.scene === 'faceB' || m.scene === 'duel' || m.scene === 'scream';
+    // a low angle under a full figure with the solo's push loses her feet, and under a face cut-in it sinks the head to
+    // the bottom edge with the set's black above it (round 7d, 127.7 and 135.9 s): both reverse instead
     // (the tunnel's reverse starts deep inside it, past the girls: it widens instead)
-    const cam = ALT[m.cam] === 'low' && !face ? (m.scene === 'tunnel' ? 'wide' : 'reverse') : ALT[m.cam];
+    const cam = ALT[m.cam] === 'low' ? (m.scene === 'tunnel' ? 'wide' : 'reverse') : ALT[m.cam];
     METAL.push({ id: `${m.id}-b`, t: mid, scene: m.scene, cam, into: 'shock', move: m.move });
   }
   METAL.sort((x, y) => x.t - y.t);
