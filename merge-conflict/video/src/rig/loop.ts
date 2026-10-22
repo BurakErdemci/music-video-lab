@@ -1,7 +1,7 @@
 // Drawn motion loops (scene-map.md, last section "Drawn motion loops everywhere", Burak): a card that has in-between
 // drawings <id>b and <id>c in the manifest plays them as a stepped loop - base, b, c, b - with the phase on the beat
 // grid and the speed following the section energy: 3 drawings a beat (about 9 a second at 180 BPM) in the choruses
-// and metal, 2 in the verses, 1 in the quiet parts, none in the piano. The drawings share the base card's framing,
+// and metal, 2 in the verses, 1 in the quiet parts, one every two beats in the piano (RATE). The drawings share the base card's framing,
 // so its rig, face/action boxes and placement are the base card's. Node-safe.
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
 import { beatPos, sectionAt } from '../timing.ts';
@@ -14,9 +14,15 @@ const PATTERN = [0, 1, 2, 1] as const;
 export const loopIds = (id: string): [string, string, string] =>
   MANIFEST[`${id}b`] && MANIFEST[`${id}c`] ? [id, `${id}b`, `${id}c`] : [id, id, id];
 
+/** Sections whose loop speed is set apart from their ripple tier (drawings per beat). The piano keeps its ripple off
+ *  (tier 0) but its girls breathe: one drawing every two beats (round 9, Burak: no frozen 4 s in the piano). */
+const RATE: Record<string, number> = { piano_interlude: 0.5 };
+
 /** Drawings per beat at t, from the section's energy tier. */
 export const loopRate = (t: number): number => {
-  const tier = TIER[sectionAt(t)] ?? 0;
+  const sec = sectionAt(t);
+  if (RATE[sec] !== undefined) return RATE[sec] as number;
+  const tier = TIER[sec] ?? 0;
   return tier >= 0.7 ? 3 : tier >= 0.35 ? 2 : tier > 0 ? 1 : 0;
 };
 
