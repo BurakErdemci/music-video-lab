@@ -73,10 +73,10 @@ export const FSHOTS: FShot[] = [
   { id: 'acc1', t: tk(53, 0), scene: 'arena', cam: 'hero', move: 'push', into: 'tunnel', B: ['PB1', full(-3.3)], O: ['PO1', full(3.3)] },
   { id: 'acc1-both', t: tk(53, 1), scene: 'arena', cam: 'low', move: 'dollyzoom', into: 'shock' },
   { id: 'acc1-changes', t: tk(53, 2), scene: 'arena', cam: 'wide', move: 'orbit', into: 'shock' },
-  { id: 'yes1', t: tk(53, 3), scene: 'split', cam: 'hero', move: 'push', into: 'glitch', B: bustAt('PBX2', -4.3), O: bustAt('POX2', 4.3) },
+  { id: 'yes1', t: tk(53, 3), scene: 'split', cam: 'hero', move: 'push', into: 'glitch', B: bustAt('PBX2', -3.9), O: bustAt('POX2', 3.9) },
   { id: 'acc2', t: tk(54, 0), scene: 'arena', cam: 'reverse', move: 'whip', into: 'shock', B: ['PB3', full(-2.4)], O: ['PO3', full(2.4)] },
   { id: 'acc2-changes', t: tk(54, 2), scene: 'arena', cam: 'low', move: 'dollyzoom', into: 'shock' },
-  { id: 'yes2', t: tk(54, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX3', -4.3), O: bustAt('POX3', 4.3) },
+  { id: 'yes2', t: tk(54, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX3', -3.9), O: bustAt('POX3', 3.9) },
   // "Blue and orange together, it's a gradient now": spinning hand in hand (RK4), then the gradient arena
   { id: 'rk4', t: tk(55, 0), scene: 'panel', panel: 'RK4', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
   { id: 'gradient', t: tk(55, 6), scene: 'spin', cam: 'hero', move: 'orbit', into: 'laser', B: ['PB6', full(-2.6)], O: ['PO6', full(2.6)] },
@@ -94,7 +94,7 @@ export const FSHOTS: FShot[] = [
   { id: 'acc3', t: tk(57, 0), scene: 'arena', cam: 'wide', move: 'whip', into: 'shock', B: ['PB1', full(-3.0)], O: ['PO1', full(3.0)] },
   { id: 'acc3-both', t: tk(57, 1), scene: 'arena', cam: 'low', move: 'push', into: 'shock' },
   { id: 'acc3-changes', t: tk(57, 2), scene: 'arena', cam: 'reverse', move: 'whip', into: 'shock' },
-  { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX1', -4.3), O: bustAt('POX2', 4.3) },
+  { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX1', -3.9), O: bustAt('POX2', 3.9) },
   // "Commit and push it! (PUSH IT!)": both push, then the half mirror ball, half fireball (RK6)
   { id: 'commit', t: tk(58, 0), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB2', full(-2.6)], O: ['PO2', full(2.6)] },
   { id: 'commit-push', t: tk(58, 2), scene: 'arena', cam: 'low', move: 'dollyzoom', into: 'shock' },

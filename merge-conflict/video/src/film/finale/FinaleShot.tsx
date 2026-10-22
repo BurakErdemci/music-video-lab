@@ -219,7 +219,7 @@ const finaleCamera = (t: number) => {
   const dir = idx % 2 ? 1 : -1;
   const raw = variant(HERO[scene], shot.cam, scene === 'tunnel' ? k * 0.45 : k, focus);
   const final = t >= FINAL.start - 0.05 && t < CHANT.start;
-  const base = moved(raw, move, k, t - shot.t, focus, dir, final && scene !== 'split' && shot.cam !== 'low' ? 0.42 : 0.3);
+  const base = moved(raw, move, k, t - shot.t, focus, dir, scene === 'split' ? 0.2 : final && shot.cam !== 'low' ? 0.42 : 0.3);
   const planeBase = variant(HERO[scene], shot.cam, 0, focus);
   const piano = t < BUILD.start;
   const failed = t >= tk(65, 0) && t < SCREAM_END.start;

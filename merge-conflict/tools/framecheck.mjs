@@ -196,6 +196,16 @@ const check = (state) => {
       if (fo.length) out.push({ s, why: `face leaves the frame (${fo.join(', ')} px)` });
       if (fb.y1 - fb.y0 > 0.7 * H) out.push({ s, why: `face ${(100 * (fb.y1 - fb.y0) / H).toFixed(0)} % of the frame height` });
     }
+    // a bust is cut at the bottom of its card: that straight edge never shows inside the frame (round 11, Burak via
+    // Gemini: the YES! busts slid in with their cut edge and the LED wall under it), entrance frames included
+    if (f.kind === 'bust') {
+      const seen = [];
+      for (let i = 0; i <= 20; i++) {
+        const p = M.project(state.pose, M.cardPoint(s, i / 20, 1));
+        if (p.x > L + 1 && p.x < R - 1 && p.y > 1 && p.y < H - 1) seen.push(p);
+      }
+      if (seen.length) out.push({ s, why: `cut edge in frame (${seen.length}/21 points, lowest gap ${Math.round(H - Math.max(...seen.map((p) => p.y)))} px above the bottom)` });
+    }
     if (f.kind === 'full') {
       const m = 0.01 * H;
       const ao = over(ab, L - m, R + m, -m, s.crop === 'knee' ? Infinity : H + m);
@@ -216,6 +226,11 @@ if (selftest) {
   const big = check({ pose: M.HOME, shot: 'selftest-big', subjects: [{ card, at: { x: 0, feet: -9, height: 22 } }] });
   const ok = check({ pose: M.HOME, shot: 'selftest-ok', subjects: [{ card, at: { x: 0, feet: -4.5, height: 6 } }] });
   console.log(`selftest on ${card}: oversized -> ${big.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; fitted -> ${ok.map((b) => b.why).join('; ') || 'passed'}`);
+  // the cut edge (round 11): the same bust lifted so its card ends 2 units above the frame's bottom fails; run off the
+  // bottom it passes
+  const cutIn = check({ pose: M.HOME, shot: 'selftest-cut', subjects: [{ card, at: { x: 0, feet: -2.5, height: 6 } }] }).filter((x) => /cut edge/.test(x.why));
+  const cutOff = check({ pose: M.HOME, shot: 'selftest-cut', subjects: [{ card, at: { x: 0, feet: -7, height: 9 } }] }).filter((x) => /cut edge/.test(x.why));
+  console.log(`selftest cut edge on ${card}: lifted -> ${cutIn.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; run off the bottom -> ${cutOff.map((b) => b.why).join('; ') || 'passed'}`);
   // the scale rule: the same card drawn at 60 units fails it, at 2 units it does not
   const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -20, height: 60 } }] });
   const sOk = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -4.5, height: 2 } }] });
@@ -240,7 +255,7 @@ if (selftest) {
   const gCut = paintingFails(girls('RK11', 0.4));
   console.log(`selftest painting girls: as drawn -> ${gOk.map((b) => b.why).join('; ') || 'passed'}; RK2 slid -> ${gGap.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; RK11 slid out -> ${gCut.map((b) => b.why).join('; ') || 'PASSED (wrong)'}`);
   rmSync(outDir, { recursive: true, force: true });
-  process.exit(big.length > 0 && ok.length === 0 && sBig.length > 0 && sOk.length === 0 && pOk.length === 0 && pSmall.length > 0 && pBig.length > 0 && pCard.length > 0 && vFlight.length === 0 && vOver.length > 0 && gOk.length === 0 && gGap.length > 0 && gCut.length > 0 ? 1 : 0);
+  process.exit(big.length > 0 && ok.length === 0 && cutIn.length > 0 && cutOff.length === 0 && sBig.length > 0 && sOk.length === 0 && pOk.length === 0 && pSmall.length > 0 && pBig.length > 0 && pCard.length > 0 && vFlight.length === 0 && vOver.length > 0 && gOk.length === 0 && gGap.length > 0 && gCut.length > 0 ? 1 : 0);
 }
 
 if (arg('dump')) {

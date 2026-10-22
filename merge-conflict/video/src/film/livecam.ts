@@ -108,6 +108,16 @@ const limitsOf = (pose: CameraPose, subjects: readonly Subject[]) => {
         zHi = Math.min(zHi, room / SPLIT_M);
       }
     }
+    // a bust's card is cut straight at its bottom: that edge stays below the frame wherever it is across the frame
+    // (round 11: the YES! busts showed it with the LED wall under it as the push began)
+    if (f.kind === 'bust') {
+      // (sampled finely and a little past the sides, so the edge cannot cross between two samples)
+      for (let i = 0; i <= 40; i++) {
+        const n = ndc(project(pose, cardPoint(s, i / 40, 1)));
+        const inside = Math.abs(n[0]) < W / H + 0.08 && (clipC === null || (s.clip?.keep === 'left' ? n[0] < clipC + 0.08 : n[0] > clipC - 0.08));
+        if (inside) lims.push({ n, lo: [-Infinity, -Infinity], hi: [Infinity, -1 - 8 / (H / 2)] });
+      }
+    }
     if (f.kind === 'full') {
       for (const n of corners(f.action)) lims.push({ n, lo: [-AX, s.crop === 'knee' ? -Infinity : -AY], hi: [AX, AY] });
       // a knee framing cuts at the knees or below: the knee line (70 % down the card) stays above the bottom edge
