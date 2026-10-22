@@ -104,7 +104,9 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<Wave key={e.id} spec={spec(e, { x: 120, y: 120, w: 1680, h: 300 })} t={t} opt={{ size: 130, face: 'shrikhand', amp: 40 }} />);
         break;
       case 'r-squash':
-        out.push(<Stack key={e.id} spec={spec(e, { x: 340, y: 140, w: 720, h: 420 })} t={t} />);
+        // round 11 (Burak via Gemini: "ALL YOUR SORRIES INTO" was pressed too flat to read in a 720 px box): the full
+        // top band, so every row holds a readable size while the slabs squash below it
+        out.push(<Stack key={e.id} spec={spec(e, { x: 120, y: 110, w: 1680, h: 440 })} t={t} />);
         break;
       case 'r-blame':
         // round 7d: a wide terminal in screen space, the line wrapped at a readable size (on the plane it was sized to
