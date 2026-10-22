@@ -48,10 +48,11 @@ const dive = (card: string, x: number, flip = false): Who => [card, { x, feet: -
 
 /** The build's girls: they rise from one knee in the tree and float up with it (the flight carries the camera). */
 export const RISE: Record<'B' | 'O', Placement> = { B: { x: -2.4, feet: -4.0, height: 5.2, z: 2.0 }, O: { x: 2.4, feet: -4.0, height: 5.2, z: 2.0 } };
-/** When the two girls step out of the two-branches painting (RK3, the build's first bar, shown whole and still) as
- *  particles that gather into them in the light-box rig: the build's second downbeat. The painting holds the quiet
- *  first bar and the flight then rises bar by bar (a painting at the end measured the least motion of the build). */
-export const BRANCHES_AT = db(150.6);
+/** When the two girls step out of the two-branches painting (RK3, shown whole and still) as particles that gather
+ *  into them in the light-box rig: the build's third beat. The painting opens the build and the flight then rises bar
+ *  by bar (a painting at the end measured the least motion of the build; a whole bar of it after RK2 left a 4 s
+ *  window under 0.1x the chorus motion). */
+export const BRANCHES_AT = bt(150.0);
 
 export const FSHOTS: FShot[] = [
   // ---- piano truce (140.04-149.38): disco, quiet, still; the girls come back from their own git lines
