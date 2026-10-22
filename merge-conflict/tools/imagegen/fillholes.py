@@ -6,7 +6,7 @@ With no ids, repairs every card holecheck fails. Inside the chin-extended face b
 transparent, inside the closed silhouette and not the flat key colour get their alpha back, with the colour
 taken from the card's source image. Restored pixels at the new edge take the colour of the nearest restored or
 opaque interior pixel and a 1 px feather (3x3 mean of the mask), so no grey key halo survives; nothing outside
-the closed silhouette is touched. Size, crop and every JSON stay as they are. The HD copies are not touched:
+the closed silhouette is touched. A 1-2 px partial-alpha ring left by an earlier repair is closed too. Size, crop and every JSON stay as they are. The HD copies are not touched:
 regenerate them with tools/hdcards.py.
 """
 import json
@@ -54,6 +54,17 @@ def repair(rgba, face, entry):
     feather = ndi.uniform_filter(core.astype(float), size=3, mode="nearest")
     new_a = np.clip(feather * 255 + 0.5, 0, 255).astype(np.uint8)
     out[..., 3] = np.where(restored, np.maximum(new_a, rgba[..., 3]), rgba[..., 3])
+    # the feather and erosion of the old hole edge leave a 1-2 px partial-alpha ring inside the face: close it
+    # (holecheck.hole_mask also finds rings; each pass can expose the next layer of an old edge)
+    for _ in range(2):
+        full = out.copy()
+        full[..., :3] = hit[1]
+        ring = H.hole_mask(full, face)
+        if not ring.any():
+            break
+        out[ring, :3] = hit[1][ring]
+        out[ring, 3] = 255
+        restored |= ring
     return out, int(restored.sum())
 
 

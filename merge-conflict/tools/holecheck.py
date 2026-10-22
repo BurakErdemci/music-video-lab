@@ -30,6 +30,8 @@ KEY_TOL = 14       # max channel distance from the flat key that still counts as
 GREY_SAT = 12      # channel spread at or below this is neutral grey
 BLUE_LEAN = 20     # blue minus red above this is a hair blend (lavender eyeshadow stays below it)
 DARK_DIST = 60     # ... unless it is this far from the key (black liner, pupils, iris, hair)
+RING_CLOSE = 2     # closing radius in px of the silhouette used for rings
+RING_DEPTH = 3     # px the closed silhouette is eroded before partial alpha counts as a ring
 LIMIT = 0.3        # percent of the face region that may be hole
 
 
@@ -98,6 +100,14 @@ def hole_mask(rgba, face):
     far = (dist > KEY_TOL) & ((dist > DARK_DIST) | warm)
     # a feathered repair edge (alpha 1/3..2/3) is not a hole; only near-transparent pixels count
     holes = ndi.binary_opening(inside & far & (alpha < 64), structure=np.ones((3, 3)))
+    # a ring: partial alpha deeper than RING_DEPTH px inside the silhouette is the edge of an old hole, any size
+    # (the silhouette is closed only by RING_CLOSE px here, so hair gaps wider than that are not bridged)
+    tight = ndi.binary_closing(np.pad(opaque, 4, mode="edge"), structure=ndi.generate_binary_structure(2, 1),
+                               iterations=RING_CLOSE)[4:-4, 4:-4]
+    deep = ndi.binary_erosion(ndi.binary_fill_holes(tight), iterations=RING_DEPTH, border_value=1)
+    # (pixels within 2 px of transparent key-coloured pixels are the edge of a thin real gap, not a ring)
+    gap = ndi.binary_dilation((alpha < 64) & ~far, iterations=2)
+    holes |= deep & far & (alpha < 200) & ~gap
     ya, yb, xa, xb = face_region(alpha.shape, face)
     box = np.zeros(alpha.shape, bool)
     box[ya:yb, xa:xb] = True
@@ -122,7 +132,20 @@ def selftest():
     rgba[90:140, 190:240, 3] = 0           # enclosed hole, face colour underneath
     rgba[110:150, 120:170, 3] = 0
     rgba[100:130, 80:130, 3] = 0           # bite open to the silhouette edge
-    planted = hole_pct(rgba, face)
+    ring = hole_pct(rgba, face)
+    rgba[100:130, 80:130, 3] = 255
+    rgba[110:150, 120:170, 3] = 255
+    rgba[90:140, 190:240, 3] = 255
+    rgba[100:160, 150:230, 3] = 255
+    rgba[100:160, 150, 3] = 100            # a 1 px partial-alpha ring only
+    rgba[100:160, 229, 3] = 100
+    rgba[100, 150:230, 3] = 100
+    rgba[159, 150:230, 3] = 100
+    only_ring = hole_pct(rgba, face)
+    print(f"selftest 1 px ring only={only_ring:.2f}%")
+    if only_ring <= LIMIT:
+        return 0
+    planted = ring
     print(f"selftest clean={clean:.2f}% planted={planted:.2f}% limit={LIMIT}%")
     return 1 if planted > LIMIT and clean <= LIMIT else 0
 
