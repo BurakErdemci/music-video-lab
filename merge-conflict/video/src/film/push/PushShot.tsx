@@ -19,7 +19,7 @@ import { Card, type CardLight, type Placement } from '../../cards/Card.tsx';
 import { at, EVENTS } from '../../events.ts';
 import { GRADES, type Grade, metalGrade } from '../../grade/grade.ts';
 import { useLayer, useShotBackground } from '../../layer.ts';
-import { clamp01, outQuad } from '../../lib/ease.ts';
+import { clamp01, type Hex, outQuad } from '../../lib/ease.ts';
 import { seeded } from '../../lib/seeded.ts';
 import { type Burst, Field } from '../../particles/field.tsx';
 import { Stage } from '../../stage/Stage.tsx';
@@ -28,14 +28,12 @@ import { beats, sec, sectionNamed } from '../../timing.ts';
 import { SceneTransition, type TransitionSpec, transitionWindow } from '../../transitions/scene/scene.tsx';
 import { FormDefs } from '../../type/forms/common.tsx';
 import { Shout } from '../../type/forms/Mega.tsx';
-import { Extrude } from '../../type/forms/Plates.tsx';
 import { Slam } from '../../type/Slam.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { BeamCone, Embers, FireWall, Halo, LedWall, NeonTube, Smoke, TilePlatform } from '../../worlds/kit/index.ts';
 import { InsertWorld } from '../chorus/worlds.tsx';
-import { faceSized, type ShotState, type Subject } from '../framing.ts';
+import { faceSized, screenBox, type ShotState, type Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
-import { REST_TYPE } from '../rest/plan.ts';
 import { GitHud } from '../rest/type.tsx';
 import './frames.ts';
 
@@ -54,15 +52,22 @@ const SEES = bt(122.36);
 const BACK = bt(123.36);
 /** Orange leaps on the beat after the cut back and rises until she smashes down on PUSH!. */
 const LEAP = bt(123.69);
-/** The ring leaves her fists on PUSH!, reaches blue's soles at HIT and throws her out of frame right by FORCE!. */
-const HIT = PUSH + 0.22;
-const THROW = 0.47;
+/** The ring leaves her fists on PUSH! and reaches blue's soles at HIT; a 4-frame hit-stop (both girls and the ring
+ *  frozen, blue's silhouette flashed cold white, the frame shaken for 3 frames), then the throw: she flies right in
+ *  plain sight for about 0.4 s and is leaving the frame on the cut to FORCE!. */
+export const HIT = PUSH + 0.18;
+export const STOP = 4 / 60;
+export const THROW_AT = HIT + STOP;
+/** The PUSH! wide shot's own clock: frozen through the hit-stop. */
+export const frozen = (t: number): number => (t >= HIT && t < THROW_AT ? HIT - 1e-4 : t);
+/** Blue stands a little nearer the centre in the PUSH! wide, so the whole throw is seen before she leaves the frame. */
+const BX_PUSH = 2.8;
 
 /** The geography: orange left, blue right, the whole time. */
 const OX = -3.3;
 const BX = 3.3;
-const O_AT: Placement = { x: OX, height: 6.0, z: 0 };
-const B_AT: Placement = { x: BX, height: 5.8, z: 0 };
+const O_AT: Placement = { x: OX, height: 6.5, z: 0 };
+const B_AT: Placement = { x: BX, height: 6.3, z: 0 };
 
 type ShotId = 'git' | 'charge' | 'sees' | 'charge-2' | 'push' | 'force';
 interface PShot { id: ShotId; t: number }
@@ -84,10 +89,10 @@ const lerp3 = (a: Vec3, b: Vec3, k: number): Vec3 => [lerp(a[0], b[0], k), lerp(
 const HITS = EVENTS.filter((e) => e.kind === 'hit' && e.t >= PUSH_START && e.t < PUSH_END).map((e) => e.t);
 /** A stepped jolt (every 3 frames) after each kick and, hardest, when the wave hits blue. */
 const jolt = (pose: CameraPose, t: number, amp: number): CameraPose => {
-  const h = [...HITS, GIT, HIT].filter((x) => t >= x).sort((a, b) => a - b).at(-1);
+  const h = [...HITS, GIT, THROW_AT].filter((x) => t >= x).sort((a, b) => a - b).at(-1);
   if (h === undefined || t - h > 0.3) return pose;
   const w = 1 - (t - h) / 0.3;
-  const big = h === HIT || h === GIT ? 2.2 : 1;
+  const big = h === THROW_AT || h === GIT ? 2.2 : 1;
   const r = seeded(`push-jolt:${Math.floor(t * 20)}`);
   const d = amp * big * w;
   return { ...pose, position: [pose.position[0] + r.range(-d, d), pose.position[1] + r.range(-d, d), pose.position[2]], roll: (pose.roll ?? 0) + r.range(-0.025, 0.025) * big * w };
@@ -99,24 +104,25 @@ const chargePose = (t: number): CameraPose => {
   const k = clamp01((t - CHARGE) / (PUSH - CHARGE));
   const e = 0.55 * k + 0.45 * k * k;
   const tilt = outQuad(clamp01((t - LEAP) / (PUSH - LEAP)));
-  return cam(lerp3([-0.8, -1.5, 13], [-2.6, -0.8, 8.6], e), [lerp(-1.4, -3.0, e), lerp(-0.4, 0.3, e) + 2.6 * tilt, 0], 44);
+  return cam(lerp3([-0.8, -1.4, 10.9], [-2.6, -0.9, 8.6], e), [lerp(-1.2, -3.0, e), lerp(-0.3, 0.3, e) + 2.6 * tilt, 0], 44);
 };
 
 /** Orange: her card and placement at t (she rises from the floor in the leap). */
 const orangeAt = (t: number): { card: string; at: Placement } => {
   if (t >= FORCE) return { card: 'OF4', at: { x: -1.8, height: 6.4, z: 0 } };
-  if (t >= PUSH) return { card: 'OF3', at: { ...O_AT, height: 5.4 } };
-  if (t >= LEAP) return { card: 'OF2', at: { ...O_AT, height: 5.8, feet: FLOOR_Y + 2.4 * outQuad(clamp01((t - LEAP) / (PUSH - LEAP - 0.05))) } };
+  if (t >= PUSH) return { card: 'OF3', at: { ...O_AT, height: 6.4 } };
+  if (t >= LEAP) return { card: 'OF2', at: { ...O_AT, height: 6.2, feet: FLOOR_Y + 2.4 * outQuad(clamp01((t - LEAP) / (PUSH - LEAP - 0.05))) } };
   return { card: 'OF1', at: O_AT };
 };
-/** How far into the throw blue is (0 before the ring reaches her soles). */
-export const throwK = (t: number): number => clamp01((t - HIT) / THROW);
-/** Blue: braced (BB1) until the ring hits her soles, then airborne (BF2) and thrown right, out of the frame. */
+/** Seconds into the throw (0 until the hit-stop ends). */
+export const throwT = (t: number): number => Math.max(0, t - THROW_AT);
+/** Blue: braced (BB1) until the hit-stop ends, then airborne (BF2) and thrown right at a steady 17.5 units a second (no
+ *  ease: a readable flight, not a blur), rising a little and falling. */
 const blueAt = (t: number): { card: string; at: Placement; dx: number; dy: number } => {
-  if (t < HIT) return { card: 'BB1', at: B_AT, dx: 0, dy: 0 };
-  const k = throwK(t);
-  // near-linear, so she is seen crossing the right half for about a third of a second before she leaves the frame
-  return { card: 'BF2', at: { x: BX, height: 4.6, z: 0, feet: FLOOR_Y + 0.5 }, dx: 14 * (0.75 * k + 0.25 * outQuad(k)), dy: 1.4 * Math.sin(Math.PI * Math.min(1, k * 1.2)) };
+  const x = t >= PUSH ? BX_PUSH : BX;
+  if (t < THROW_AT) return { card: 'BB1', at: { ...B_AT, x }, dx: 0, dy: 0 };
+  const u = throwT(t);
+  return { card: 'BF2', at: { x, height: 5.2, z: 0, feet: FLOOR_Y + 0.4 }, dx: 17.5 * u, dy: 1.6 * Math.sin(Math.PI * Math.min(1, u / 0.5)) };
 };
 
 const rawPose = (t: number): CameraPose => {
@@ -125,8 +131,8 @@ const rawPose = (t: number): CameraPose => {
   const k = clamp01(u / (nextT(s) - s.t));
   switch (s.id) {
     case 'git': {
-      // a wide low two-shot, drifting in; the punch on GIT!
-      const p = cam(lerp3([0, -2.2, 13.4], [0.3, -2.0, 12.6], k), [0, -0.2, 0], 44);
+      // a low two-shot, close enough that each girl is about two thirds of the frame height, drifting in; the punch on GIT!
+      const p = cam(lerp3([0, -2.0, 10.9], [0.3, -1.8, 10.3], k), [0, -0.1, 0], 44);
       const punch = t >= GIT ? 0.1 * (1 - outQuad(clamp01((t - GIT) * 4))) : 0;
       return jolt({ ...p, fov: p.fov * (1 - punch) }, t, 0.12);
     }
@@ -139,8 +145,14 @@ const rawPose = (t: number): CameraPose => {
     case 'push': {
       // one wide shot holding both; the camera whips a little after the wave once it reaches her (it follows, but she
       // outruns it: by the middle of the shot she is out of frame right, so the framing guard does not hold her)
-      const w = outQuad(clamp01((t - HIT) / 0.25));
-      const p = cam([0.4 + 0.6 * w, -1.6, 14.5], [0.3 + 1.2 * w, -0.6, 0], 46, -0.05 * w);
+      // close enough that both are about two thirds of the frame height at the hit (orange may lose her soles)
+      const w = outQuad(clamp01((t - THROW_AT) / 0.25));
+      const p = cam([0.6 + 0.2 * w, -1.5, 10.5], [0.5 + 0.4 * w, -0.5, 0], 46, -0.04 * w);
+      // the hit: a hard 3-frame shake on top of the jolt
+      if (t >= HIT && t < HIT + 3 / 60) {
+        const r = seeded(`push-hit:${Math.round(t * 60)}`);
+        return { ...p, position: [p.position[0] + r.range(-0.35, 0.35), p.position[1] + r.range(-0.25, 0.25), p.position[2]], roll: r.range(-0.03, 0.03) };
+      }
       return jolt(p, t, 0.16);
     }
     case 'force':
@@ -156,8 +168,9 @@ const rawPushStateAt = (t: number): ShotState => {
   } else {
     const o = orangeAt(t);
     subjects.push({ card: o.card, at: o.at, ...(o.card === 'OF2' ? { ground: false as const } : {}) });
-    // blue in the PUSH! shot is thrown out of frame: drawn, never held (pushStateAt adds her as an extra)
-    if (s.id !== 'force' && s.id !== 'push') {
+    // blue is held only in the GIT! two-shot: the charge pushes in on orange (blue slides off the edge) and in the
+    // PUSH! shot she is thrown out of frame; there she is drawn, never held (pushStateAt adds her as an extra)
+    if (s.id === 'git') {
       const b = blueAt(t);
       subjects.push({ card: b.card, at: b.at });
     }
@@ -169,31 +182,32 @@ const rawPushStateAt = (t: number): ShotState => {
 // shows at the middle of each shot, so blue thrown out of frame is drawn but not held (an extra) in the PUSH! shot
 const live = liveCamera(rawPushStateAt, (t) => {
   const s = shotAt(t);
-  // the charge is one shot on both sides of the cut-in
-  const t0 = s.id === 'charge-2' ? CHARGE : s.t;
-  return { t0, t1: nextT(s), key: s.id === 'charge-2' ? 'push-charge' : `push-${s.id}` };
+  // each side of the cut-in is its own span (the middle of one span over both fell in the cut-in, where blue's face
+  // made her a subject of the push toward orange); the same key keeps the Ken Burns direction
+  return { t0: s.t, t1: nextT(s), key: s.id === 'charge-2' ? 'push-charge' : `push-${s.id}` };
 });
-/** What the shot shows at t: the live camera's state, with blue in the PUSH! shot as an extra (drawn, not held in
- *  frame: the scene-map has the wave throw her out of frame right). */
+/** What the shot shows at t: the live camera's state, with blue in the charge and the PUSH! shot as an extra (drawn,
+ *  not held in frame: the charge pushes in on orange, and the wave throws blue out of frame right). */
 export const pushStateAt = (t: number): ShotState => {
   const st = live.stateAt(t);
-  if (shotAt(t).id !== 'push') return st;
+  const id = shotAt(t).id;
+  if (id !== 'push' && id !== 'charge' && id !== 'charge-2') return st;
   const b = blueAt(t);
   return { ...st, extras: [...(st.extras ?? []), { card: b.card, at: b.at, dx: b.dx, dy: b.dy, ...(b.card === 'BF2' ? { ground: false as const } : {}) }] };
 };
-
-/** The type of these words, from the rest plan's entries (the line and timing), placed for this geography. */
-const entry = (id: string) => REST_TYPE.find((e) => e.id === id);
-const R_PUSH = entry('r-push');
 
 /** The whisper's dissolve cover starts two frames before 125.36, inside this span (the rest family draws the rest). */
 const OUT: TransitionSpec = { id: 'r-tr-whisper', kind: 'dissolve', at: PUSH_END, pre: 2 / 60, post: 4 / 60, colors: ['#2a3a6a', '#4a5a8a'] };
 
 const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
-/** Blue in her own cold blue: the reviewed grade, never the metal (red) one. */
-const BLUE_OWN: Grade = { ...GRADES.reviewed, amount: 0.22 };
+/** Blue in her own colours (black leather, deep blue hair, steel): a light pull toward her blue, a cold rim and a cold
+ *  fill on the rim side, never the metal (red) grade. A full tint toward the hue washed her into a pale ghost. */
+const BLUE_OWN: Grade = { hue: '#1a5cff', rival: '#3a9cff', amount: 0.06, rim: 1.1, stage: 1 };
 const ORANGE_LIGHT: CardLight = { key: '#ff6a1a', keyAmt: 0.45, rim: 1.3 };
-const BLUE_LIGHT: CardLight = { key: '#4a90ff', keyAmt: 0.28, rim: 1.0 };
+const BLUE_LIGHT: CardLight = { key: '#6aa8ff', keyAmt: 0.15, rim: 1.0 };
+const BLUE_RIM: Hex = '#3a9cff';
+/** The hit: blue's silhouette alone flashes cold white over the hit-stop (not the frame: the flash rule). */
+const hitFlash = (t: number): number => (t >= HIT && t < THROW_AT ? 0.85 * (1 - (t - HIT) / STOP) + 0.15 : 0);
 
 /** The charge grows bar by bar (0 at the charge's start, 1 on PUSH!). */
 const chargeK = (t: number): number => {
@@ -211,7 +225,7 @@ const CRACKS: Vec3[][] = [-1.2, 0.2, 1.4].map((z, i) => {
 export const ringR = (t: number): number => {
   const u = t - PUSH - 2 / 60;
   if (u < 0) return 0;
-  const reach = Math.hypot(BX - OX, 0);
+  const reach = BX_PUSH - OX;
   // it reaches blue's soles at HIT, then runs on and out
   return reach * (u / (HIT - PUSH - 2 / 60)) ** 0.85;
 };
@@ -222,13 +236,15 @@ export const PushShot = ({ frame }: { frame: number }) => {
   const s = shotAt(t);
   const pose = live.poseAt(t);
   const ck = s.id === 'git' ? 0 : chargeK(t);
-  const o = orangeAt(t);
-  const b = blueAt(t);
+  // the PUSH! shot's girls and ring run on its own clock, frozen through the hit-stop
+  const tf = s.id === 'push' ? frozen(t) : t;
+  const o = orangeAt(tf);
+  const b = blueAt(t < THROW_AT ? tf : t);
   const bursts: Burst[] = ([
     { t: GIT, origin: [OX, 0, 0.5] },
     { t: PUSH, origin: [OX, FLOOR_Y + 0.5, 0.5] },
-    { t: HIT, origin: [BX, FLOOR_Y + 0.6, 0.5] },
-    { t: HIT + 0.1, origin: [BX + 2.5, FLOOR_Y + 1.2, 0.5] },
+    { t: THROW_AT, origin: [BX_PUSH, FLOOR_Y + 0.6, 0.5] },
+    { t: THROW_AT + 0.1, origin: [BX_PUSH + 2.5, FLOOR_Y + 1.2, 0.5] },
     { t: FORCE, origin: [-1.8, 1.5, 0] },
   ] as Burst[]).filter((x) => t >= x.t && t - x.t < 1.2);
   const world =
@@ -254,15 +270,15 @@ export const PushShot = ({ frame }: { frame: number }) => {
     );
   const girls =
     s.id === 'sees' ? (
-      <Card id="BMX1" t={t} grade={BLUE_OWN} {...faceSized('BMX1', 0.6, false, 2.7, 0.6)} rimDir={[1, 0.3]} rival="#8ac4ff" light={BLUE_LIGHT} ground={false} />
+      <Card id="BMX1" t={t} grade={BLUE_OWN} {...faceSized('BMX1', 0.6, false, 2.7, 0.6)} rimDir={[1, 0.3]} rival={BLUE_RIM} light={BLUE_LIGHT} ground={false} />
     ) : (
       <>
-        <Card key={o.card} id={o.card} t={t} grade={ORANGE_METAL} {...o.at} rimDir={[-1, 0.3]} rival="#19c8ff" light={ORANGE_LIGHT} ground={o.card === 'OF2' ? false : undefined} />
-        {s.id !== 'force' && <Card key={b.card} id={b.card} t={t} grade={BLUE_OWN} {...b.at} dx={b.dx} dy={b.dy} rimDir={[1, 0.3]} rival="#8ac4ff" light={BLUE_LIGHT} ground={b.card === 'BF2' ? false : undefined} />}
+        <Card key={o.card} id={o.card} t={tf} grade={ORANGE_METAL} {...o.at} rimDir={[-1, 0.3]} rival="#19c8ff" light={ORANGE_LIGHT} ground={o.card === 'OF2' ? false : undefined} />
+        {s.id !== 'force' && <Card key={b.card} id={b.card} t={tf} grade={BLUE_OWN} {...b.at} dx={b.dx} dy={b.dy} rimDir={[1, 0.3]} rival={BLUE_RIM} light={BLUE_LIGHT} ground={b.card === 'BF2' ? false : undefined} flat={{ color: '#eaf6ff', mix: hitFlash(t) }} />}
       </>
     );
   // the ring on the floor, projected through the frame's camera (a circle about her fists)
-  const r = s.id === 'push' ? ringR(t) : 0;
+  const r = s.id === 'push' ? ringR(tf) : 0;
   const ring = (rad: number, w: number, a: number) => {
     const pts = Array.from({ length: 49 }, (_, i) => {
       const th = (i / 48) * Math.PI * 2;
@@ -271,7 +287,7 @@ export const PushShot = ({ frame }: { frame: number }) => {
     });
     return <polyline points={pts.join(' ')} fill="none" stroke="#ffe0b0" strokeWidth={w} opacity={a} strokeLinejoin="round" />;
   };
-  const ringFade = clamp01(1 - (t - HIT - 0.15) / 0.3);
+  const ringFade = clamp01(1 - (t - THROW_AT - 0.15) / 0.3);
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
@@ -288,11 +304,15 @@ export const PushShot = ({ frame }: { frame: number }) => {
             {r > 1 && ring(r * 0.86, 12, 0.6 * ringFade)}
           </g>
         )}
-        {/* the throw: speed streaks trail her to the left as she flies right */}
-        {s.id === 'push' && throwK(t) > 0 && throwK(t) < 1 && (() => {
-          const c = project(pose, [BX + b.dx, (b.at.feet ?? FLOOR_Y) + b.at.height * 0.5 + b.dy, 0]);
-          const a = 1 - throwK(t);
-          return [-0.3, -0.15, 0, 0.12, 0.26, 0.38].map((v, i) => <line key={i} x1={c.x - 140} y1={c.y + v * 520} x2={c.x - 340 - 160 * a - (i % 2) * 90} y2={c.y + v * 520} stroke="#d8ecff" strokeWidth={10 - i} strokeLinecap="round" opacity={0.8 * a} />);
+        {/* the throw: speed streaks behind her (left of her card, never over her), she herself never fades */}
+        {s.id === 'push' && throwT(t) > 0 && (() => {
+          const bx = screenBox(pose, { card: b.card, at: b.at, dx: b.dx, dy: b.dy }, [0, 0.15, 1, 0.9]);
+          const len = 180 + 600 * Math.min(1, throwT(t) / 0.15);
+          return [0.05, 0.22, 0.4, 0.58, 0.76, 0.92].map((v, i) => {
+            const y = bx.y0 + v * (bx.y1 - bx.y0);
+            const x1 = bx.x0 - 16 - (i % 2) * 40;
+            return <line key={i} x1={x1} y1={y} x2={x1 - len * (0.7 + 0.3 * ((i * 7) % 3) / 2)} y2={y} stroke="#d8ecff" strokeWidth={10 - i} strokeLinecap="round" opacity={0.75} />;
+          });
         })()}
         {layer !== 'type' && (() => {
           const [a0, a1] = transitionWindow(OUT);
@@ -300,7 +320,9 @@ export const PushShot = ({ frame }: { frame: number }) => {
         })()}
         {/* the type last: no effect drawn over a settled form (round 7d) */}
         {t >= GIT && t < CHARGE && <Slam spec={{ text: 'GIT!', t0: GIT, t1: CHARGE - 0.02, x: 960, y: 230, size: 260, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />}
-        {R_PUSH && t >= PUSH && t < FORCE && <Extrude spec={{ id: 'p-push', line: R_PUSH.line, key: R_PUSH.key, singer: R_PUSH.singer, t0: R_PUSH.t0, t1: R_PUSH.t1, box: { x: 560, y: 70, w: 800, h: 260 }, range: R_PUSH.range }} t={t} opt={{ size: 220, face: 'metalmania', depth: 0.35 }} />}
+        {/* PUSH! in steel like FORCE! (the red extrude's P sank into the fire wall and read "rUSH"), low on the floor
+            between them where the ring runs: at this distance both heads fill the top of the frame */}
+        {t >= PUSH && t < FORCE && <Shout spec={{ id: 'p-push-s', text: 'PUSH!', at: PUSH, until: FORCE, style: 'steel', color: '#ff2a14', cx: 1000, cy: 880, w: 860, rot: -3 }} t={t} />}
         {t >= FORCE && <Shout spec={{ id: 'p-force-s', text: 'FORCE!', at: FORCE, until: PUSH_END, style: 'steel', color: '#ff2a14', cx: 1320, cy: 330, w: 860, rot: -4 }} t={t} />}
         <GitHud t={t} t0={GIT + 0.25} t1={PUSH - 0.6} until={PUSH} />
       </Svg>
