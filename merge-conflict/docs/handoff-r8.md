@@ -103,3 +103,21 @@ Part A, finale polish (140.04-232.12), and part B, GIT! PUSH! FORCE! rebuilt (12
   this geography); the HUD is the rest family's `GitHud`. BB1/BF2 boxes: `film/push/frames.json`.
 - **Checks:** `node tools/pushcheck.mjs` (both girls in frame at the PUSH! cut, the ring's leading edge between them,
   blue's action box moves >= 40 % of the frame width, one shot in 124.32-125.02).
+- **Shared fixes after 7d (round 9):**
+  - `rig/loop.ts` `RATE`: the piano plays its drawn loops at one drawing every two beats (the ripple tier stays 0).
+  - `film/framing.ts` `plate.view`: a painting the finale places itself reports its height, offset, magnification
+    and whether it is the flight's push; `framecheck` measures that, so the flight may crop RK3 but never pass
+    1.25x, and a resting painting must stay whole (selftest extended).
+  - `framecheck` no longer skips the glyph-size floor in 120.03-125.36 (`CAP_EXEMPT` is empty).
+  - `covercheck` drops rest covers lying wholly inside the push family's span (none today) and adds
+    `pushCovers()`; a cover both families draw a part of (the whisper's) counts once.
+  - `worlds/plategeo.ts` `plateView`: the plate's cover is computed from its real on-screen lean (0.75 x roll; it
+    turns with a quarter of the camera roll), and past `MAX_LEAN` the plate turns further with the camera. Chorus 2's
+    barrel rolls (104.8, 105.9 s) showed black corners before.
+  - **Ground check definition (accepted by the architect):** `framecheck --ground` skips a sole when the camera
+    roll is past 40 degrees ("camera rolled past 40 degrees"): there the floor is not below her soles on screen, so
+    the band and the floor beside sample the plate (105.85 s, BC1, chorus 2's spin-out).
+  - **Type over type:** the composition takes `only` (a type-plan entry id, or `'__none__'`), honoured by the four
+    type loops (`typeShown` in `layer.ts`). `framecheck --type` renders every active entry alone where two or more
+    are on screen and one has settled, and `typeframe.py` fails a settled form more than 2 % covered by another
+    form (`overlap`, in the selftest). Type outside the plan (HUDs, the push family's words) is not isolated.
