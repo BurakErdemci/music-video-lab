@@ -97,6 +97,7 @@ export const FSHOTS: FShot[] = [
   { id: 'eq2', t: tk(59, 1), scene: 'walls', cam: 'reverse', move: 'push', into: 'shock' },
   { id: 'eq3', t: tk(59, 2), scene: 'walls', cam: 'low', move: 'push', into: 'shock' },
   { id: 'whole', t: tk(59, 3), scene: 'line', cam: 'hero', move: 'push', into: 'shock', B: ['PB4', full(-1.8, 4.6)], O: ['PO4', full(1.8, 4.6)] },
+  { id: 'whole-b', t: tk(59, 5), scene: 'line', cam: 'low', move: 'dollyzoom', into: 'shock' },
   // "Merge conflict resolved": the logo move, resolved - the halves fly in and lock, the girls ride them into a high five
   { id: 'merge', t: tk(60, 0), scene: 'logo', cam: 'hero', move: 'still', into: 'tunnel', B: ['PB5', full(-3.4, 4.8)], O: ['PO5', full(3.4, 4.8)] },
   { id: 'merge-lock', t: tk(60, 1), scene: 'logo', cam: 'hero', move: 'push', into: 'shock' },
@@ -104,6 +105,7 @@ export const FSHOTS: FShot[] = [
   { id: 'soul', t: tk(60, 4), scene: 'spin', cam: 'hero', move: 'orbit', into: 'shock', B: ['PB6', full(-2.4)], O: ['PO6', full(2.4)] },
   { id: 'soul-2', t: tk(60, 5), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   { id: 'final-out', t: db(180.0), scene: 'spin', cam: 'wide', move: 'push', into: 'shock' },
+  { id: 'final-out-b', t: bt(180.4), scene: 'spin', cam: 'low', move: 'orbit', into: 'shock' },
   // ---- the chant (181.44-193.48): both metal; headbang, stage dive, ship it (RK8)
   { id: 'chant', t: CHANT.start, scene: 'forge', cam: 'hero', move: 'push', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
   { id: 'chant-both', t: tk(61, 1), scene: 'forge', cam: 'low', move: 'orbit', into: 'shock' },

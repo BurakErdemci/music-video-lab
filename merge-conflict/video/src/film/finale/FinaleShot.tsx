@@ -200,7 +200,7 @@ const finaleCamera = (t: number) => {
   // build-failed stop hold still
   const hits = final ? PULSES : HITS;
   const h = [...hits].reverse().find((x) => t >= x) ?? -10;
-  const amt = piano || failed ? 0 : final ? 0.11 : t >= OUTRO.start ? 0.04 : 0.05;
+  const amt = piano || failed ? 0 : final ? 0.12 : t >= OUTRO.start ? 0.04 : 0.05;
   const punched: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
   const pose = !final && !piano && !failed ? kick(punched, t, scene === 'panel' ? 0.06 : 0.1) : punched;
   return { shot, k, scene, blueP, orangeP, pose, planeBase };
