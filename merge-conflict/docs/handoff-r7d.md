@@ -99,3 +99,8 @@ Shared machinery the finale (140-232 s) also uses, changed in round 7d:
   painting. The camera's moves, punches and shake no longer crop it. Pass `kb` to `PlateLayer` and put `kb` on the
   state's `plate` for a painting shot; draw no card on a painting shot (its subjects stay empty). framecheck now fails a
   painting that is cut, under 97 % of the frame height, or has a card drawn over it (`--selftest` covers it).
+- **Type never shrinks.** `type/avoid.ts` only moves a form (mirror side, top or bottom band, sides) at its own size;
+  a shot with no room is re-framed. Every settled text line keeps a glyph cap height >= 3.5 % of the frame
+  (`small` in tools/typeframe.py via `framecheck --type`; 120.03-125.36 s is exempt while that span is rebuilt). The
+  editor chrome (grey title and gutter, the three window dots) is not counted. `Code` takes `wrap` (a long line at a
+  readable size); the rest and verse terminals are wide screen-space panels at 60 px.
