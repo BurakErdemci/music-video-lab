@@ -1,0 +1,100 @@
+diff --git a/merge-conflict/video/src/film/livecam.ts b/merge-conflict/video/src/film/livecam.ts
+index 9016eb5..4174114 100644
+--- a/merge-conflict/video/src/film/livecam.ts
++++ b/merge-conflict/video/src/film/livecam.ts
+@@ -24,7 +24,7 @@ export const bassAt = (t: number): number => (BASS[Math.max(0, Math.min(BASS.len
+ const SHAKE: Record<string, [number, boolean]> = {
+   intro_robot: [2, false], intro_groove: [9, true], verse1_sweet: [3, false], verse2_raspy: [3.5, false], prechorus: [4, false],
+   chorus1: [9, false], verse3_rebase: [5, false], chorus2: [9, false], verse4_trade: [5.5, false], scream: [10, true],
+-  breakdown_git_push_force: [3, true], whisper: [0, true], guitar_solo: [5, true], piano_interlude: [0, false], build: [3, false],
++  breakdown_git_push_force: [8, true], whisper: [0, true], guitar_solo: [5, true], piano_interlude: [0, false], build: [3, false],
+   final_chorus: [7, false], post_chorus_chant: [9, true], robot_build_failed: [2, false], scream_end: [10, true], outro: [8, true],
+ };
+ 
+diff --git a/merge-conflict/video/src/film/push/PushShot.tsx b/merge-conflict/video/src/film/push/PushShot.tsx
+index d8c15c2..e116d0b 100644
+--- a/merge-conflict/video/src/film/push/PushShot.tsx
++++ b/merge-conflict/video/src/film/push/PushShot.tsx
+@@ -104,7 +104,9 @@ const chargePose = (t: number): CameraPose => {
+   const k = clamp01((t - CHARGE) / (PUSH - CHARGE));
+   const e = 0.55 * k + 0.45 * k * k;
+   const tilt = outQuad(clamp01((t - LEAP) / (PUSH - LEAP)));
+-  return cam(lerp3([-0.8, -1.4, 10.9], [-2.6, -0.9, 8.6], e), [lerp(-1.2, -3.0, e), lerp(-0.3, 0.3, e) + 2.6 * tilt, 0], 44);
++  // a shallow arc as it pushes: the camera swings out to the right and back toward her (one continuous move)
++  const arc = 1.4 * Math.sin(Math.PI * k);
++  return cam(lerp3([-0.8 + arc, -1.4, 10.9], [-2.6 + arc, -0.9, 8.6], e), [lerp(-1.2, -3.0, e), lerp(-0.3, 0.3, e) + 2.6 * tilt, 0], 44);
+ };
+ 
+ /** Orange: her card and placement at t (she rises from the floor in the leap). */
+@@ -132,13 +134,20 @@ const rawPose = (t: number): CameraPose => {
+   switch (s.id) {
+     case 'git': {
+       // a low two-shot, close enough that each girl is about two thirds of the frame height, drifting in; the punch on GIT!
+-      const p = cam(lerp3([0, -2.0, 10.9], [0.3, -1.8, 10.3], k), [0, -0.1, 0], 44);
++      // it trucks across the two of them (a parallax arc) while it drifts in, so the roar shot is not a still frame
++      const p = cam(lerp3([-1.6, -2.0, 10.9], [1.4, -1.8, 10.3], 0.15 * k + 0.85 * k * k * (3 - 2 * k)), [0, -0.1, 0], 44);
+       const punch = t >= GIT ? 0.1 * (1 - outQuad(clamp01((t - GIT) * 4))) : 0;
+       return jolt({ ...p, fov: p.fov * (1 - punch) }, t, 0.12);
+     }
+     case 'charge':
+-    case 'charge-2':
+-      return jolt(chargePose(t), t, 0.08);
++    case 'charge-2': {
++      // the charge pulses on every beat, harder bar by bar (round 9: one slow push read too calm for the breakdown,
++      // 0.48x the chorus motion against the 0.7x floor)
++      const p = chargePose(t);
++      const b = [...beats].reverse().find((x) => t >= x) ?? t;
++      const punch = (0.04 + 0.06 * chargeK(t)) * (1 - outQuad(clamp01((t - b) * 5)));
++      return jolt({ ...p, fov: p.fov * (1 - punch) }, t, 0.14);
++    }
+     case 'sees':
+       // her face, cold blue: a slow push while she reads what is coming
+       return cam([0.6, 0.15 + 0.1 * k, 12.4 - 1.0 * k], [0.6, 0.15, 0], 40);
+@@ -212,6 +221,11 @@ const BLUE_RIM: Hex = '#3a9cff';
+ /** The hit: blue's silhouette alone flashes cold white over the hit-stop (not the frame: the flash rule). */
+ const hitFlash = (t: number): number => (t >= HIT && t < THROW_AT ? 0.85 * (1 - (t - HIT) / STOP) + 0.15 : 0);
+ 
++/** 1 on each beat, falling to 0 over a fifth of a second (the walls pulse with the drums). */
++const beatKick = (t: number): number => {
++  const b = [...beats].reverse().find((x) => t >= x);
++  return b === undefined ? 0 : 1 - outQuad(clamp01((t - b) * 5));
++};
+ /** The charge grows bar by bar (0 at the charge's start, 1 on PUSH!). */
+ const chargeK = (t: number): number => {
+   const n = beats.filter((x) => x >= CHARGE - 0.02 && x <= t).length;
+@@ -256,9 +270,9 @@ export const PushShot = ({ frame }: { frame: number }) => {
+     ) : (
+       <>
+         {/* the back walls: fire on orange's half, cold blue on blue's */}
+-        <LedWall position={[-9, 2.6, -11]} width={18} height={14} cols={36} rows={28} colors={['#3a0e04', '#ff5a14']} pattern="scan" pulse={0.3 + 0.5 * ck} t={t} />
+-        <LedWall position={[9, 2.6, -11]} width={18} height={14} cols={36} rows={28} colors={['#040c2a', '#2f6bff']} pattern="bars" pulse={0.25} t={t * 0.5} />
+-        <FireWall x0={-15} x1={-1.5} z={-6} height={4 + 3 * ck} rise={1} colors={['#ff3a10', '#ffd040']} t={t} />
++        <LedWall position={[-9, 2.6, -11]} width={18} height={14} cols={36} rows={28} colors={['#3a0e04', '#ff5a14']} pattern="scan" pulse={0.3 + 0.5 * ck + 0.4 * beatKick(t)} t={t * (2 + 2 * ck)} />
++        <LedWall position={[9, 2.6, -11]} width={18} height={14} cols={36} rows={28} colors={['#040c2a', '#2f6bff']} pattern="bars" pulse={0.25 + 0.3 * beatKick(t)} t={t * 2} />
++        <FireWall x0={-15} x1={-1.5} z={-6} height={6 + 3 * ck} rise={1} colors={['#ff3a10', '#ffd040']} t={t} />
+         <Smoke y={FLOOR_Y + 1.2} z={-5} width={14} height={4} color="#1a3a8a" density={0.5} t={t} />
+         <TilePlatform position={[0, FLOOR_Y, -2]} width={32} depth={16} cols={32} rows={16} splitX={0} left="#c8460f" right="#1846c0" t={t} pulse={0.2 + 0.3 * ck} erupt={t >= PUSH && t < PUSH + 0.8 ? [{ t: PUSH, x: OX, z: 0 }] : []} />
+         <BeamCone from={[-6, 8, -2]} to={[OX, FLOOR_Y, 0]} radius={3.2} color="#ff7a1a" intensity={0.5 + 0.3 * ck} />
+@@ -267,8 +281,8 @@ export const PushShot = ({ frame }: { frame: number }) => {
+         {ck > 0 && t < PUSH + 0.5 && CRACKS.map((p, i) => <NeonTube key={i} points={p} color="#ffb040" radius={0.05} on={clamp01(ck * 1.08 - i * 0.04)} />)}
+         {/* the power gathering in her fists */}
+         {t < PUSH && <Halo position={[OX + 0.2, FLOOR_Y + (t >= LEAP ? 4.6 + 2.4 * outQuad(clamp01((t - LEAP) / (PUSH - LEAP))) : 3.3), 0.6]} size={1.2 + 3.2 * Math.max(ck, s.id === 'git' ? 0.15 * clamp01((t - PUSH_START) / 1.3) : 0)} color="#ffb040" intensity={0.7 + 0.6 * ck} />}
+-        <Embers box={[-14, -0.5, FLOOR_Y, 6, -6, 3]} count={200} t={t} color="#ffa040" bursts={bursts.filter((x) => x.origin[0] < 0).map((x) => ({ t: x.t, origin: x.origin as Vec3 }))} />
+-        <Embers box={[0.5, 14, FLOOR_Y, 6, -6, 3]} count={140} t={t + 5} color="#9ac8ff" bursts={bursts.filter((x) => x.origin[0] > 0).map((x) => ({ t: x.t, origin: x.origin as Vec3 }))} />
++        <Embers box={[-14, -0.5, FLOOR_Y, 6, -6, 3]} count={700} t={t * (1 + ck)} color="#ffa040" bursts={bursts.filter((x) => x.origin[0] < 0).map((x) => ({ t: x.t, origin: x.origin as Vec3 }))} />
++        <Embers box={[0.5, 14, FLOOR_Y, 6, -6, 3]} count={420} t={t + 5} color="#9ac8ff" bursts={bursts.filter((x) => x.origin[0] > 0).map((x) => ({ t: x.t, origin: x.origin as Vec3 }))} />
+       </>
+     );
+   const girls =
+@@ -295,9 +309,9 @@ export const PushShot = ({ frame }: { frame: number }) => {
+     <AbsoluteFill style={{ background: useShotBackground() }}>
+       <Stage pose={pose}>
+         {world}
+-        <Field t={t} grade={ORANGE_METAL} layer="back" density={0.6} hueMix={0.4} metal={1} dust={false} bursts={bursts} />
++        <Field t={t} grade={ORANGE_METAL} layer="back" density={1.4} hueMix={0.4} metal={1} dust={false} bursts={bursts} />
+         {girls}
+-        <Field t={t} grade={BLUE_OWN} layer="front" density={0.4} hueMix={0.4} metal={1} dust={false} bursts={bursts} />
++        <Field t={t} grade={BLUE_OWN} layer="front" density={1.0} hueMix={0.4} metal={1} dust={false} bursts={bursts} />
+       </Stage>
+       <Svg>
+         <FormDefs />
