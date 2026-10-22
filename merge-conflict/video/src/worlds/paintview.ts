@@ -69,7 +69,7 @@ export type Particles = 'dust' | 'embers' | 'sparks' | 'confetti' | 'glitter';
 export type PaintMove = 'arc' | 'truck' | 'push' | 'rise';
 /** What a painting shot does: its camera move and direction, the particles in front of it (matched to the painting)
  *  and their two colours, the sweep's colour and angle (radians, 0 = left to right). */
-export interface Life { move: PaintMove; dir: 1 | -1; particles: Particles; colors: [Hex, Hex]; sweep: Hex; angle: number; /** the depth that holds still, if not the move's own */ pivot?: number; /** the shared field's kind, if not the particles' */ field?: Particles; /** the point the push swells about (painting uv, y up) */ focus?: [number, number] }
+export interface Life { move: PaintMove; dir: 1 | -1; particles: Particles; colors: [Hex, Hex]; sweep: Hex; angle: number; /** the depth that holds still, if not the move's own */ pivot?: number; /** the shared field's kind, if not the particles' */ field?: Particles; /** the point the push swells about (painting uv, y up) */ focus?: [number, number]; /** the two-bar sway's amplitude, if not the hold's own */ sway?: number }
 
 /** Every painting shot of the film, by shot id (film/rest/plan.ts and film/finale/plan.ts). */
 export const LIFE: Record<string, Life> = {
@@ -95,7 +95,8 @@ export const LIFE: Record<string, Life> = {
   'rk8-scream': { move: 'truck', dir: -1, particles: 'sparks', colors: ['#ff7a1a', '#ffe060'], sweep: '#ffe0b0', angle: -0.2 },
   // the outro: the dawn walk under the last confetti, then the last jump in confetti and sparks
   // the 5.35 s dawn walk holds still at mid depth, so the girls and the city slide one way and the near rubble the other
-  dawn: { move: 'arc', dir: 1, particles: 'confetti', colors: ['#ffd890', '#ffb060'], sweep: '#fff0c8', angle: -0.25, pivot: 0.45 },
+  // (round 11: two bars now, the walk stepping once a beat; a wider sway keeps it off the slide floor)
+  dawn: { move: 'arc', dir: 1, particles: 'confetti', colors: ['#ffd890', '#ffb060'], sweep: '#fff0c8', angle: -0.25, pivot: 0.45, sway: 0.1 },
   // the last jump: an arc about the girls (their hair reaches the top edge, so they may not rise or swell)
   // the walk toward us (round 11): a slow push toward the girls, the last confetti in the drift and dust in the light
   // (the swell is about their heads, so the push grows them down past the cut at the frame's bottom, never up out of it)
@@ -134,7 +135,7 @@ export const paintShotView = (shot: string, id: string, t: number, t0: number, t
   // the camera's travel across the shot: the speed times the shot's length, at least 2 % and at most 14 % of the
   // painting; plus a sway over two bars, wider the longer the hold, so it keeps moving after its travel is spent
   const travel = Math.min(0.14, Math.max(0.02, en.speed * dur));
-  const sway = 0.012 + 0.02 * Math.max(0, dur - 2);
+  const sway = life.sway ?? 0.012 + 0.02 * Math.max(0, dur - 2);
   const m = life.dir * (travel * (e - 0.5) * 2 + sway * Math.sin(Math.PI * barPos(t)));
   const layered = LAYERED[id];
   // an arc pivots on the girls (they hold, the depth slides past them); a truck and a rise pivot near the back
