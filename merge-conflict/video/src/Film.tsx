@@ -1,5 +1,6 @@
 // The film on take-v4: exactly one shot per frame (each shot owns the frame's single ThreeCanvas), then the
-// white-out hits on top. 0-140.04 s is rounds 6-7, 140.04 s to the end round 8 (film/finale).
+// white-out hits on top. 0-140.04 s is rounds 6-7 (GIT! PUSH! FORCE! rebuilt in round 9, film/push), 140.04 s to the
+// end round 8 (film/finale).
 import type { ComponentType } from 'react';
 import { useLayer, useShotBackground } from './layer.ts';
 import { AbsoluteFill, useCurrentFrame } from 'remotion';
@@ -13,6 +14,7 @@ import { REST_END, V4 } from './film/rest/plan.ts';
 import { RestShot, restStateAt } from './film/rest/RestShot.tsx';
 import { VersesShot, versesStateAt } from './film/verses/VersesShot.tsx';
 import { FinaleShot, finaleStateAt } from './film/finale/FinaleShot.tsx';
+import { PUSH_END, PUSH_START, PushShot, pushStateAt } from './film/push/PushShot.tsx';
 import { Whiteout } from './fx/whiteout.tsx';
 import { DURATION_FRAMES, f, sec } from './timing.ts';
 import { Fonts } from './type/fonts.tsx';
@@ -27,7 +29,10 @@ export const SHOTS: Shot[] = [
   { id: 'chorus1', from: f(CHORUS_START), to: f(PROOF_END), Component: ChorusShot, state: chorus1StateAt },
   { id: 'verse3', from: f(PROOF_END), to: f(CHORUS2_START), Component: RestShot, state: restStateAt },
   { id: 'chorus2', from: f(CHORUS2_START), to: f(V4.start), Component: Chorus2Shot, state: chorus2StateAt },
-  { id: 'verse4-solo', from: f(V4.start), to: f(REST_END), Component: RestShot, state: restStateAt },
+  // GIT! PUSH! FORCE! (120.03-125.36) is its own family since round 9 (film/push); the rest family draws around it
+  { id: 'verse4', from: f(V4.start), to: f(PUSH_START), Component: RestShot, state: restStateAt },
+  { id: 'push', from: f(PUSH_START), to: f(PUSH_END), Component: PushShot, state: pushStateAt },
+  { id: 'whisper-solo', from: f(PUSH_END), to: f(REST_END), Component: RestShot, state: restStateAt },
   { id: 'finale', from: f(REST_END), to: DURATION_FRAMES, Component: FinaleShot, state: finaleStateAt },
 ];
 // Overlapping shots would mount two ThreeCanvases on one frame (a second canvas renders black in parallel renders).
