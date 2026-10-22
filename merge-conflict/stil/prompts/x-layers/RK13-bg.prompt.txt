@@ -1,0 +1,10 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./RK13-bg.png
+
+The attached image is a finished painting from a music video (two girls, one with ORANGE hair, one with BLUE hair).
+
+Task: paint the SAME image with BOTH girls completely removed, as an empty set: repaint everything that was behind them (floor, stage, sky, lights, buildings, crowd) as a natural continuation, in exactly the same painterly style, light and colours. Everything else stays EXACTLY where it is: same camera, same framing, same composition, same objects. Leave no ghost, outline, shadow, held object or empty silhouette of the girls; their instruments, microphone and anything they hold go with them.
+
+Output: 16:9 landscape at the same size and framing as the attached image (for example 1672x941).
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks. No border.
+
+After copying, print the output path and pixel size.

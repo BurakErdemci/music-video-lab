@@ -1,0 +1,24 @@
+[
+ {
+  "id": "XK1-look-back",
+  "prompt": "stil/prompts/x-dawn/XK1-look-back.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-panels/out/RK11-dawn-walk.png"
+  ],
+  "out": "stil/prompts/x-dawn/out/XK1-look-back.png"
+ },
+ {
+  "id": "XK2-toward-us",
+  "prompt": "stil/prompts/x-dawn/XK2-toward-us.prompt.txt",
+  "refs": [
+   "stil/onayli/01-tarz-ve-ikili-F5.png",
+   "stil/onayli/04-karakter-turuncu-metal.png",
+   "stil/onayli/05-karakter-mavi-metal.png",
+   "stil/prompts/r-panels/out/RK11-dawn-walk.png"
+  ],
+  "out": "stil/prompts/x-dawn/out/XK2-toward-us.png"
+ }
+]

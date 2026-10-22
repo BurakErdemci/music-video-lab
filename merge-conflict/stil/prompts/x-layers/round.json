@@ -1,0 +1,40 @@
+[
+ {
+  "id": "RK13-bg",
+  "prompt": "stil/prompts/x-layers/RK13-bg.prompt.txt",
+  "refs": [
+   "stil/prompts/x-dawn/out/XK2-toward-us.png"
+  ],
+  "out": "stil/prompts/x-layers/out/RK13-bg.png"
+ },
+ {
+  "id": "RK13-fg",
+  "prompt": "stil/prompts/x-layers/RK13-fg.prompt.txt",
+  "refs": [
+   "stil/prompts/x-dawn/out/XK2-toward-us.png"
+  ],
+  "out": "stil/prompts/x-layers/out/RK13-fg.png"
+ },
+ {
+  "id": "RK13-fgb",
+  "prompt": "stil/prompts/x-layers/RK13-fgb.prompt.txt",
+  "refs": [
+   "stil/prompts/x-layers/out/RK13-fg.png"
+  ],
+  "out": "stil/prompts/x-layers/out/RK13-fgb.png",
+  "depends_on": [
+   "stil/prompts/x-layers/out/RK13-fg.png"
+  ]
+ },
+ {
+  "id": "RK13-fgc",
+  "prompt": "stil/prompts/x-layers/RK13-fgc.prompt.txt",
+  "refs": [
+   "stil/prompts/x-layers/out/RK13-fg.png"
+  ],
+  "out": "stil/prompts/x-layers/out/RK13-fgc.png",
+  "depends_on": [
+   "stil/prompts/x-layers/out/RK13-fg.png"
+  ]
+ }
+]

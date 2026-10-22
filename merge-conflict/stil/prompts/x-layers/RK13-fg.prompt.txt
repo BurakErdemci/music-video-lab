@@ -1,0 +1,10 @@
+Use your built-in image_gen tool to generate ONE image, then copy it from $CODEX_HOME/generated_images/... into the current directory as ./RK13-fg.png
+
+The attached image is a finished painting from a music video (two girls, one with ORANGE hair, one with BLUE hair).
+
+Task: keep ONLY the two girls (with their hair, outfits, boots and anything they hold or wear) EXACTLY as they are: same pose, same position in the frame, same size, same lighting and colours, same rim light. Replace EVERYTHING else (background, floor, effects, confetti, sparks, any object they do not hold) with a perfectly flat, uniform pure green #00FF00. No shadow, glow, reflection or gradient on the green; crisp edges between the girls and the green, every hair strand kept.
+
+Output: 16:9 landscape at the same size and framing as the attached image (for example 1672x941).
+- ABSOLUTELY NO text, letters, numbers, logos or watermarks. No border.
+
+After copying, print the output path and pixel size.
