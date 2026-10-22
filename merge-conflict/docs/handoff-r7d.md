@@ -92,3 +92,10 @@ Shared machinery the finale (140-232 s) also uses, changed in round 7d:
   pixels changed in the final frame (`hidden` in `tools/typeframe.py`).
 - Smaller: `Move` 'hold' (rest plan) keeps the camera still; `Arena` takes `pads={false}`; `Flap` takes `ink`;
   `MergeConflictLogo` takes `aligned` (each metal letter centred on its disco letter, so the cut never doubles a letter).
+- **Paintings are shown whole** (`worlds/plategeo.ts` `paintingView`, `paintingParallax`; `worlds/plate.tsx`
+  `PlateLayer panel`): a QK*/RK* painting is locked to the frame and fitted to its height (Ken Burns from 97 % to
+  100 % over the shot via the new `kb` prop, the shot's progress 0..1; default 1 = full height), over its own
+  blurred, darkened copy filling the side bands; depth parallax capped at 1 % shift and 3 % swell, sampled inside the
+  painting. The camera's moves, punches and shake no longer crop it. Pass `kb` to `PlateLayer` and put `kb` on the
+  state's `plate` for a painting shot; draw no card on a painting shot (its subjects stay empty). framecheck now fails a
+  painting that is cut, under 97 % of the frame height, or has a card drawn over it (`--selftest` covers it).
