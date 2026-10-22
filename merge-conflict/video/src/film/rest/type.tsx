@@ -64,7 +64,7 @@ const DIFF_BOX = { x: 150, y: 715, w: 1620, h: 300 };
 const AVOID: Record<string, AvoidBox> = {
   'r-rebased': { x: 530, y: 90, w: 860, h: 140 },
   'r-mine': { x: 120, y: 120, w: 1680, h: 300 },
-  'r-squash': { x: 340, y: 140, w: 720, h: 420 },
+  'r-squash': { x: 410, y: 110, w: 1100, h: 440 },
   'r-blame': TERM,
   'r-gone': { x: 580, y: 140, w: 760, h: 150 },
   'r-tabs': { x: 890, y: 470, w: 900, h: 300 },
@@ -104,9 +104,9 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<Wave key={e.id} spec={spec(e, { x: 120, y: 120, w: 1680, h: 300 })} t={t} opt={{ size: 130, face: 'shrikhand', amp: 40 }} />);
         break;
       case 'r-squash':
-        // round 11 (Burak via Gemini: "ALL YOUR SORRIES INTO" was pressed too flat to read in a 720 px box): the full
-        // top band, so every row holds a readable size while the slabs squash below it
-        out.push(<Stack key={e.id} spec={spec(e, { x: 120, y: 110, w: 1680, h: 440 })} t={t} />);
+        // round 11 (Burak via Gemini: "ALL YOUR SORRIES INTO" was pressed too flat to read in a 720 px box, in
+        // blackletter): the top band and the plainer faces, so every row reads while the slabs squash below it
+        out.push(<Stack key={e.id} spec={spec(e, { x: 410, y: 110, w: 1100, h: 440 })} t={t} faces={['bebas', 'display']} />);
         break;
       case 'r-blame':
         // round 7d: a wide terminal in screen space, the line wrapped at a readable size (on the plane it was sized to

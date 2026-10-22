@@ -16,30 +16,32 @@ const MAX_STRETCH = 1.6;
 const MAX_TRACK = 0.25;
 
 interface Row { toks: number[]; face: Face; text: string }
-const rowsFor = (s: FormSpec, perRow: number, t: number): Row[] => {
+const rowsFor = (s: FormSpec, perRow: number, t: number, faces: readonly Face[]): Row[] => {
   const toks = tokensOf(s);
   const k = keyIndex(s);
   const rows: Row[] = [];
   for (let i = 0; i < toks.length; ) {
     const end = i === k ? i + 1 : Math.min(i + perRow, k > i ? k : toks.length);
     const ids = Array.from({ length: end - i }, (_, n) => i + n);
-    const face = faceFor(i === k ? 'display' : (FACES[rows.length % FACES.length] as Face), s.singer, t);
+    const face = faceFor(i === k ? 'display' : (faces[rows.length % faces.length] as Face), s.singer, t);
     rows.push({ toks: ids, face, text: ids.map((n) => clean(toks[n]?.text ?? '').toUpperCase()).join(' ') });
     i = end;
   }
   return rows;
 };
 
-export const stackLayout = (s: FormSpec, t = 0): PlacedWord[] => {
+/** `faces`: the rows' faces in turn (the key row is always 'display'); round 11: a line that must read at a glance
+ *  takes the plainer ones (the default cycle swaps to blackletter in the metal parts). */
+export const stackLayout = (s: FormSpec, t = 0, faces: readonly Face[] = FACES): PlacedWord[] => {
   const k = keyIndex(s);
   const others = (rows: Row[]) => Math.max(1, rows.filter((r) => r.toks[0] !== k).length);
   let current: Row[] = [];
   const capFor = (r: Row) => (s.box.h * (r.toks[0] === k ? KEY_SHARE : (1 - KEY_SHARE) / others(current))) / capOf(r.face);
   const heightOf = (rows: Row[], f: number) => rows.reduce((a, r) => a + Math.min(s.box.w / widthOf(r.text, 1, r.face), capFor(r)) * f * capOf(r.face), 0) + GAP * (rows.length - 1);
   // fewest words per row whose block fits the box height; failing that, the densest grouping scaled down
-  let rows = rowsFor(s, 4, t);
+  let rows = rowsFor(s, 4, t, faces);
   for (let per = 1; per <= 4; per++) {
-    current = rowsFor(s, per, t);
+    current = rowsFor(s, per, t, faces);
     if (heightOf(current, 1) <= s.box.h) {
       rows = current;
       break;
@@ -73,13 +75,13 @@ export const stackLayout = (s: FormSpec, t = 0): PlacedWord[] => {
   return out;
 };
 
-export const Stack = ({ spec, t, hide = [] }: { spec: FormSpec; t: number; hide?: readonly number[] }) => {
+export const Stack = ({ spec, t, hide = [], faces = FACES }: { spec: FormSpec; t: number; hide?: readonly number[]; faces?: readonly Face[] }) => {
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
   return (
     <g>
-      {stackLayout(spec, t).map((w) => {
+      {stackLayout(spec, t, faces).map((w) => {
         const tok = toks[w.tok];
         if (!tok || hide.includes(w.tok)) return null;
         const a = appear(t, tok);
