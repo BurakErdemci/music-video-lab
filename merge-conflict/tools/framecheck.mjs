@@ -311,8 +311,8 @@ if (process.argv.includes('--ground')) {
   done(py.status);
 }
 
-// the glyph-size rule skips GIT! PUSH! FORCE! (120.03-125.36 s): that span is being rebuilt in its own lane (round 7d)
-const CAP_EXEMPT = [[120.03, 125.36]];
+// the glyph-size rule once skipped GIT! PUSH! FORCE! while it was rebuilt; no span is skipped now
+const CAP_EXEMPT = []; // round 9: GIT! PUSH! FORCE! is rebuilt (film/push), so no span is skipped any more
 
 if (process.argv.includes('--type')) {
   const every = Math.round(FPS / Number(arg('fps', 2)));
