@@ -5,7 +5,7 @@ Round 7d (grounding): the contact shadow and the floor reflection sit at the sol
 (the cut-outs keep 0.6-3 % of transparent margin under the boots, so a shadow at the edge floated below her).
 For every card of kind "full", "soles" = [u0, u1, v] in normalised card coordinates (y down): v is the lowest opaque
 row, u0..u1 the horizontal extent of the opaque pixels in the band 2.5 % of the card height above it (both boots
-when both stand, one when the other is lifted). The file read is the one the manifest loads.
+when both stand, one when the other is lifted). The file read is the one the manifest loads. Drawn-loop in-betweens keep their base card's entry (tools/loopcards.py).
 
   uv run --with pillow --with numpy python -I tools/soles.py [--check]
 --check only reports cards whose stored soles differ from a fresh measurement (exit 1 if any).
@@ -38,6 +38,9 @@ def main():
     changed = []
     for cid, f in frames.items():
         if f.get('kind') != 'full' or cid not in manifest:
+            continue
+        # a drawn-loop in-between (<base>b, <base>c) inherits its base card's boxes (tools/loopcards.py), soles too
+        if cid[-1] in 'bc' and cid[:-1] in frames:
             continue
         s = measure(os.path.join(ROOT, manifest[cid]['file'].replace('cards/', '', 1)))
         if f.get('soles') != s:
