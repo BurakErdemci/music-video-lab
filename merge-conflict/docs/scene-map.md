@@ -512,3 +512,19 @@ become rules (later rounds keep them):
   all. The shockwave ring leaves OF3's fists and the next shot shows it reaching BF1, who is thrown across >= 40 % of
   the frame width over >= 0.4 s, >= 50 % of the frame height, in her own colours (not tinted into the red). r7c had a
   burst cover, a 0.1 s painting and a torn-paper cover in those 0.7 s, so the blue girl was seen for 0.2 s.
+
+## Burak's notes on proof140-r7c (2026-10-22 morning, watched on a 2K monitor)
+
+Burak: "the motion work came out very well, it really brought the clip to life." His defects, by timestamp:
+- **Faces through windows** at 0:21 (flap board), 0:31 (button.css), 0:35 (CSS letters), 0:37 (300 scoreboard),
+  1:13 (git blame) and through the second git sequence 1:53-1:56: all the knockout. Covered by "Round 7d" (no knockouts);
+  each of these timestamps is checked by eye on the next proof.
+- **The paintings do not fit the screen** (1:06 the leash, 1:24 the run, 2:13 the duel): heads and feet are cut. The
+  paintings are 3:2 and were cover-cropped to 16:9, then pushed in. Binding from now on: **a painting is always shown
+  whole.** It is fitted to the frame height, and the side bands are filled with the painting's own edge, blurred and
+  darkened. Ken Burns stays <= 3 %, and depth parallax stays inside the painting's own bounds. Every head and foot that
+  is in the painting stays in frame.
+- **Nothing is pasted over a painting.** 1:24 put two big face cut-ins on top of the run painting; a painting shot
+  carries only its own lyric type, which follows the type rules.
+- **A stray glyph:** at 1:55 an "I" type tile sits on the blue girl's head before her line starts. No type element shows
+  before its line, and none over a head.
