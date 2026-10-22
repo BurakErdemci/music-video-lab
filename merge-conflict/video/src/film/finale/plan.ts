@@ -221,7 +221,7 @@ export const FINALE_TYPE: TypeEntry[] = [
   { id: 'f-acc2', line: 54, range: [0, 3], form: 'Stamp', t0: tk(54, 0), t1: tk(54, 3), singer: 'both', key: 1 },
   { id: 'f-yes2', line: 54, range: [3, 4], form: 'Shout', t0: tk(54, 3), t1: tk(55, 0), singer: 'both', key: 3, style: 'chrome', text: 'YES!' },
   { id: 'f-gradient', line: 55, range: [0, 8], form: 'Wave', t0: tk(55, 0), t1: tk(56, 0), singer: 'both', key: 6 },
-  { id: 'f-line', line: 56, range: [0, 4], form: 'RunwayLine', t0: tk(56, 0), t1: tk(56, 4), singer: 'both', key: 3 },
+  { id: 'f-line', line: 56, range: [0, 4], form: 'Stack', t0: tk(56, 0), t1: tk(56, 4), singer: 'both', key: 3 },
   { id: 'f-figured', line: 56, range: [4, 9], form: 'Marquee', t0: tk(56, 4), t1: tk(57, 0) - 0.02, singer: 'both', key: 6 },
   { id: 'f-acc3', line: 57, range: [0, 3], form: 'LightBox', t0: tk(57, 0), t1: tk(57, 3), singer: 'both', key: 1 },
   { id: 'f-yes3', line: 57, range: [3, 4], form: 'Shout', t0: tk(57, 3), t1: tk(58, 0), singer: 'both', key: 3, style: 'chrome', text: 'YES!' },

@@ -15,7 +15,7 @@ import { Code, Diff } from '../../type/forms/Code.tsx';
 import type { Box, FormSpec } from '../../type/forms/common.tsx';
 import { Marquee } from '../../type/forms/Dots.tsx';
 import { Flap, Wave } from '../../type/forms/Letters.tsx';
-import { RunwayLine, Shout } from '../../type/forms/Mega.tsx';
+import { Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
 import { LightBox } from '../../type/LightBox.tsx';
@@ -104,8 +104,14 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         out.push(<Wave key={e.id} spec={spec(e, { x: 140, y: 760, w: 1640, h: 250 })} t={t} opt={{ size: 120, face: 'bungee', amp: 34 }} />);
         break;
       case 'f-line':
-        // the line is typed across the runway floor in front of their feet, as in the choruses
-        out.push(<RunwayLine key={e.id} spec={{ id: e.id, text: words(e).map((x) => x.text).join(' ').toLowerCase(), gutter: '42', t0: e.t0, t1: e.t1, cps: 26, origin: [-6.4, -3.38, 2.2], dir: [1, 0, 0], up: [0, 0, -1], size: 0.95, color: '#ffffff' }} t={t} pose={pose} />);
+        // round 11 (Burak via Gemini: on the floor in steep perspective only "two girls, o" was ever in frame, its
+        // glow smearing the letters): standing in the bottom band in front of their feet, every word in frame
+        out.push(
+          <g key={e.id}>
+            <Scrim x={240} y={770} w={1440} h={230} pad={14} />
+            <Stack spec={spec(e, { x: 240, y: 770, w: 1440, h: 230 })} t={t} />
+          </g>,
+        );
         break;
       case 'f-figured':
         out.push(
