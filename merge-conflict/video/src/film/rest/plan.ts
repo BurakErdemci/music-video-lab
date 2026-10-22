@@ -63,18 +63,19 @@ const METAL: MShot[] = [
   // 3. the build: the charge grows (the HUD types the command), blue sees it coming, orange leaps, the camera
   //    tilts up after her; blue braces
   // (round 7c flash fix: the charge stays in the forge, a cut not a cover, so the build keeps under 3 flashes a second)
-  { id: 'push-charge', t: db(tk(45, 0) + 0.6), scene: 'forge', cam: 'hero', into: 'shock', move: 'orbit', O: ['OF1', full(0, 6.4)] },
-  { id: 'push-sees', t: bt(tk(45, 0) + 1.33), scene: 'faceB', cam: 'hero', into: 'shatter', move: 'push', B: faceC('BMX1'), O: null },
+  { id: 'push-charge', t: db(tk(45, 0) + 0.6), scene: 'forge', cam: 'hero', into: 'shock', move: 'push', O: ['OF1', full(0, 6.4)] },
+  { id: 'push-sees', t: bt(tk(45, 0) + 1.33), scene: 'forge', cam: 'hero', into: 'shock', move: 'whip', B: faceC('BMX1'), O: null },
   { id: 'push-leap', t: db(tk(45, 0) + 1.95), scene: 'forge', cam: 'low', into: 'fire', move: 'push', B: null, O: ['OF2', { x: 1.0, feet: -1.8, height: 6.2, z: 0 }] },
-  { id: 'push-leap-2', t: bt(tk(45, 0) + 2.65), scene: 'forge', cam: 'reverse', into: 'shock', move: 'orbit', O: ['OF2', { x: -0.8, feet: -1.2, height: 6.0, z: 0, flip: true }] },
-  { id: 'push-brace', t: bt(tk(45, 0) + 3.0), scene: 'faceB', cam: 'hero', into: 'shock', move: 'push', B: faceC('BMX4'), O: null },
+  { id: 'push-leap-2', t: bt(tk(45, 0) + 2.65), scene: 'forge', cam: 'reverse', into: 'shock', move: 'push', O: ['OF2', { x: -0.8, feet: -1.2, height: 6.0, z: 0, flip: true }] },
+  { id: 'push-brace', t: bt(tk(45, 0) + 3.0), scene: 'forge', cam: 'hero', into: 'shock', move: 'whip', B: faceC('BMX4'), O: null },
   // 4. PUSH!: she smashes down (an impact frame, the floor ring), then the painting, uncovered and shaken
   { id: 'push-push', t: tk(46, 0), scene: 'forge', cam: 'hero', into: 'shatter', move: 'dollyzoom', B: null, O: ['OF3', full(1.4, 6.6)] },
   { id: 'push-impact', t: tk(46, 0) + 0.2, scene: 'panel', panel: 'QK1', cam: 'hero', into: 'shock', move: 'push', B: null, O: null },
   // 5. the wave hits: blue is thrown back across the frame with speed streaks and debris
   { id: 'push-blown', t: bt(tk(46, 0) + 0.3), scene: 'forge', cam: 'hero', into: 'tear', B: ['BF1', { x: 0, height: 6.2, z: 0 }], O: null },
-  // 6. FORCE!: finger to the sky from a low angle, FORCE! beside her
-  { id: 'push-force', t: tk(47, 0), scene: 'pushface', cam: 'low', into: 'shock', move: 'orbit', B: null, O: ['OF4', full(2.2, 6.6)] },
+  // 6. FORCE!: finger to the sky from a low angle, FORCE! beside her (brace and FORCE! stand in the forge: the
+  //    insert world's racing lines pushed the breakdown over the chorus's motion; so does blue seeing it coming)
+  { id: 'push-force', t: tk(47, 0), scene: 'forge', cam: 'low', into: 'shock', move: 'orbit', B: null, O: ['OF4', full(2.2, 6.6)] },
   // the whisper: the quietest frame of the clip, still
   { id: 'whisper', t: WHISPER.start, scene: 'whisper', cam: 'hero', into: 'dissolve', B: ['BQ3', full(-1, 5.0)], O: null },
   { id: 'whisper-wouldnt', t: tk(48, 1), scene: 'whisper', cam: 'close', into: 'shock', B: ['BMX5', { x: -1.0, feet: -5.4, height: 11, z: 0 }] },
@@ -106,7 +107,8 @@ const ALT: Record<CamVariant, CamVariant> = { hero: 'low', low: 'hero', wide: 'c
   for (const [i, m] of solo.entries()) {
     const end = solo[i + 1]?.t ?? SOLO.end;
     const mid = bt(m.t + (end - m.t) / 2 - 0.05);
-    if (m.scene === 'panel' || mid - m.t < 0.3 || end - mid < 0.3) continue;
+    // (none right before a painting: three cuts and its cover inside a second flashed 4 times a second)
+    if (m.scene === 'panel' || solo[i + 1]?.scene === 'panel' || mid - m.t < 0.3 || end - mid < 0.3) continue;
     // a low angle under a full figure with the solo's push loses her feet; the faces take it, the stages reverse
     const face = m.scene === 'faceO' || m.scene === 'faceB' || m.scene === 'duel' || m.scene === 'scream';
     // (the tunnel's reverse starts deep inside it, past the girls: it widens instead)
