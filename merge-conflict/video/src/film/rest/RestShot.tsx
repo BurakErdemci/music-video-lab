@@ -188,9 +188,11 @@ const restCamera = (t: number) => {
   const h = [...hits].reverse().find((x) => t >= x) ?? 0;
   // the solo sits just under the chorus: its kicks are lighter than the scream's and the breakdown's
   const solo = t >= SOLO.start;
-  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.05 : solo ? 0.035 : metal ? 0.09 : 0.06;
+  // (round 7d: the scream's hard cuts replaced its covers and lifted its motion over the chorus's; its punch and kick
+  // came down to hold it at or under the chorus)
+  const amt = quiet ? 0 : t >= PUSH.start && heavy ? 0.05 : solo ? 0.035 : metal ? 0.05 : 0.06;
   const punchedPose: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
-  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.12 : solo ? 0.07 : 0.26) : punchedPose;
+  const pose = metal ? kick(punchedPose, t, t >= PUSH.start && heavy ? 0.12 : solo ? 0.07 : 0.12) : punchedPose;
   return { shot, k, scene, blueP, orangeP, pose, planeBase, quiet, metal, heavy, solo };
 };
 
