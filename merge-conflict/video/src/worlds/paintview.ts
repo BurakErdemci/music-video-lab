@@ -92,7 +92,7 @@ export const LIFE: Record<string, Life> = {
   rk8: { move: 'truck', dir: 1, particles: 'embers', colors: ['#ff7a1a', '#ffd040'], sweep: '#ffe0b0', angle: 0.2 },
   rk9: { move: 'truck', dir: 1, particles: 'sparks', colors: ['#ff5a2a', '#ffd040'], sweep: '#ffd0c0', angle: -0.2 },
   pillar: { move: 'rise', dir: 1, particles: 'embers', colors: ['#ff6a1a', '#7ab8ff'], sweep: '#e0f0ff', angle: 1.4 },
-  'rk8-scream': { move: 'truck', dir: -1, particles: 'sparks', colors: ['#ff7a1a', '#ffe060'], sweep: '#ffe0b0', angle: -0.2 },
+  impact: { move: 'truck', dir: -1, particles: 'sparks', colors: ['#ff7a1a', '#ffe060'], sweep: '#ffe0b0', angle: -0.2 },
   // the outro: the dawn walk under the last confetti, then the last jump in confetti and sparks
   // the 5.35 s dawn walk holds still at mid depth, so the girls and the city slide one way and the near rubble the other
   // (round 11: two bars now, the walk stepping once a beat; a wider sway keeps it off the slide floor)
