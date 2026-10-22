@@ -9,7 +9,7 @@ import { beatIndexAt, beatPos } from '../../timing.ts';
 import type { FormSpec } from '../../type/forms/common.tsx';
 import { Marquee } from '../../type/forms/Dots.tsx';
 import { Wave } from '../../type/forms/Letters.tsx';
-import { FlameText, GlitchText, RunwayLine, Shout } from '../../type/forms/Mega.tsx';
+import { FlameText, GlitchText, Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
 import { MergeConflictLogo } from '../../type/logo/Logo.tsx';
@@ -42,7 +42,7 @@ const shoutPlace = (e: TypeEntry) =>
  *  runway line lies on the floor and stays. */
 const avoidBox = (e: TypeEntry, c2: boolean): AvoidBox | undefined => {
   switch (e.form) {
-    case 'Stack': return box;
+    case 'Stack': return e.id === 'one-line' ? { x: 240, y: 770, w: 1440, h: 230 } : box;
     case 'Stamp': return { x: 200, y: 520, w: 1500, h: 480 };
     case 'Shout': {
       const p = shoutPlace(e);
@@ -75,7 +75,16 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
     const toks = lineTokens(e.line).slice(e.range[0], e.range[1]);
     switch (e.form) {
       case 'Stack':
-        out.push(<Stack key={e.id} spec={form(e)} t={t} />);
+        if (e.id === 'one-line') {
+          // round 11: "two girls, one line" stands in the bottom band (on the runway floor in steep perspective it
+          // ran off both edges and only "two girls, o" was ever in frame)
+          out.push(
+            <g key={e.id}>
+              <Scrim x={240} y={770} w={1440} h={230} pad={14} />
+              <Stack spec={form(e, { x: 240, y: 770, w: 1440, h: 230 })} t={t} />
+            </g>,
+          );
+        } else out.push(<Stack key={e.id} spec={form(e)} t={t} />);
         break;
       case 'Stamp':
         out.push(<Stamp key={e.id} spec={form(e, { x: 200, y: 520, w: 1500, h: 480 })} t={t} />);
@@ -84,10 +93,6 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         out.push(<Shout key={e.id} spec={{ id: `sh-${e.id}`, text: e.text ?? 'NO!', at: e.t0, until: e.t1, style: e.style ?? 'chrome', color: e.style === 'steel' ? '#ff2a14' : '#19c8ff', ...shoutPlace(e) }} t={t} />);
         break;
       case 'RunwayLine':
-        // the line is laid across the runway in front of their feet, typed as it is sung
-        out.push(<RunwayLine key={e.id} spec={{ id: e.id, text: toks.map((x) => x.text).join(' ').toLowerCase(), gutter: '42', t0: e.t0, t1: e.t1, cps: 26, origin: [-6.4, -3.38, 2.2], dir: [1, 0, 0], up: [0, 0, -1], size: 0.95, color: '#7fe3ff' }} t={t} pose={pose} />);
-        out.push(<RunwayLine key={`${e.id}-41`} spec={{ id: `${e.id}-41`, text: '.button {', gutter: '41', t0: e.t0, t1: e.t1, cps: 80, origin: [-5.2, -3.38, -1.6], dir: [1, 0, 0], up: [0, 0, -1], size: 0.5, color: '#5f6b8a' }} t={t} pose={pose} />);
-        out.push(<RunwayLine key={`${e.id}-43`} spec={{ id: `${e.id}-43`, text: '}', gutter: '43', t0: e.t0, t1: e.t1, cps: 80, origin: [-5.2, -3.38, 4.6], dir: [1, 0, 0], up: [0, 0, -1], size: 0.5, color: '#5f6b8a' }} t={t} pose={pose} />);
         break;
       case 'FlameText':
         out.push(<FlameText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, y: 720, size: 150, face: 'metalmania', until: e.t1, key: 4 }} t={t} />);
