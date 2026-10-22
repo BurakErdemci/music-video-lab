@@ -55,8 +55,8 @@ const panelAt = (t: number): boolean => {
 
 /** The terminals (round 7d): a wide panel in a band, its code at 60 px (a 4 % cap), wrapped onto two lines. */
 const TERM_SIZE = 60;
-const TERM = { x: 150, y: 760, w: 1620, h: 270 };
-const DIFF_BOX = { x: 150, y: 730, w: 1620, h: 300 };
+const TERM = { x: 150, y: 745, w: 1620, h: 270 };
+const DIFF_BOX = { x: 150, y: 715, w: 1620, h: 300 };
 
 /** Each form's box (its own coordinates: the type plane, or the screen for the Shouts) for type/avoid.ts; forms that
  *  sit on a world object (gutter, countdown, tag, case line) and the moment paintings' Flap stay where they are. */

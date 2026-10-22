@@ -52,7 +52,7 @@ const avoidBox = (e: TypeEntry, c2: boolean): AvoidBox | undefined => {
     case 'Wave': return { x: 140, y: 640, w: 1640, h: 380 };
     case 'Extrude': return { x: 260, y: 560, w: 1400, h: 440 };
     case 'Marquee': return { x: 140, y: 610, w: 1640, h: 390 };
-    case 'GlitchText': return c2 ? { x: 140, y: 600, w: 1640, h: 330 } : { x: 140, y: 680, w: 1640, h: 400 };
+    case 'GlitchText': return c2 ? undefined : { x: 140, y: 680, w: 1640, h: 400 };
     case 'Logo': return { x: 385, y: 200, w: 1150, h: 600 };
     default: return undefined;
   }
@@ -104,7 +104,9 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
         );
         break;
       case 'GlitchText':
-        out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, x: 140, ...(c2 ? { y: 720, size: 130 } : { y: 820, size: 170 }), face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
+        // chorus 2: in the bottom-right corner, wrapped onto two rows (the barrel roll sweeps the faces through the
+        // left and the top of these shots; round 7d)
+        out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, ...(c2 ? { x: 1040, y: 830, size: 120 } : { x: 140, y: 820, size: 170 }), face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
         break;
       case 'Logo': {
         const m = merges[e.id] as readonly [number, number, number, number];

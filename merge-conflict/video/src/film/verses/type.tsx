@@ -29,7 +29,7 @@ const spec = (e: TypeEntry, box: FormSpec['box']): FormSpec => ({ id: `v-${e.id}
  *  the scoreboard counter and the words thrown between the girls play with their objects and stay. */
 const AVOID: Record<string, AvoidBox> = {
   'v-head': STACK2.box,
-  'v-line42': { x: 760, y: 240, w: 770, h: 500 },
+  'v-line42': { x: 740, y: 220, w: 680, h: 540 },
   'v-approved': { x: 1060, y: 200, w: 760, h: 380 },
   'v-fresh': { x: 120, y: 140, w: 1680, h: 300 },
   'v-css': { x: 260, y: 90, w: 1400, h: 440 },
@@ -61,7 +61,8 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
           </g>);
         break;
       case 'v-line42':
-        out.push(<Flap key={e.id} spec={spec(e, { x: 760, y: 240, w: 770, h: 500 })} t={t} cols={14} backing />);
+        // (round 7d: 12 columns, so the board fits beside the run-blue close-up without shrinking)
+        out.push(<Flap key={e.id} spec={spec(e, { x: 760, y: 240, w: 620, h: 500 })} t={t} cols={12} backing />);
         break;
       case 'v-approved':
         out.push(<Stamp key={e.id} spec={spec(e, { x: 1060, y: 200, w: 760, h: 380 })} t={t} />);
@@ -82,7 +83,7 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
       case 'v-orange': {
         // round 7d: a wide terminal in screen space at a readable size (on the painted panel it shrank to a 1.5 % cap
         // under the plane); it takes the band clear of her face (type/avoid.ts)
-        const p = { x: 150, y: 730, w: 1620, h: 300 };
+        const p = { x: 150, y: 715, w: 1620, h: 300 };
         out.push(<Diff key={e.id} spec={spec(e, p)} t={t} opt={{ minus: 'the button was blue', size: 60, keyScale: 1.5, title: 'button.css', backing: true }} />);
         dyn = p;
         break;
