@@ -48,9 +48,10 @@ const dive = (card: string, x: number, flip = false): Who => [card, { x, feet: -
 
 /** The build's girls: they rise from one knee in the tree and float up with it (the flight carries the camera). */
 export const RISE: Record<'B' | 'O', Placement> = { B: { x: -2.4, feet: -4.0, height: 5.2, z: 2.0 }, O: { x: 2.4, feet: -4.0, height: 5.2, z: 2.0 } };
-/** When the two girls scatter into the tree's two branches: the build's last downbeat ("...tree, you know"), so the
- *  burst of particles crowns the rise instead of breaking it (on "Two branches" the bar after it measured lower). */
-export const BRANCHES_AT = db(158.6);
+/** When the two girls step out of the two-branches painting (RK3, the build's first bar, shown whole and still) as
+ *  particles that gather into them in the light-box rig: the build's second downbeat. The painting holds the quiet
+ *  first bar and the flight then rises bar by bar (a painting at the end measured the least motion of the build). */
+export const BRANCHES_AT = db(150.6);
 
 export const FSHOTS: FShot[] = [
   // ---- piano truce (140.04-149.38): disco, quiet, still; the girls come back from their own git lines
@@ -62,7 +63,7 @@ export const FSHOTS: FShot[] = [
   // "say hello": the mirror pair, palms nearly touching (RK2)
   { id: 'rk2', t: db(146.6), scene: 'panel', panel: 'RK2', cam: 'hero', move: 'orbit', into: 'dissolve', B: null, O: null },
   // ---- build (149.38-160.06): ONE continuous flight, no cut, into and through the two-branches tree (RK3)
-  { id: 'flight', t: BUILD.start, scene: 'flight', cam: 'hero', move: 'still', into: 'dissolve', B: ['BP2', RISE.B], O: ['OP2', RISE.O] },
+  { id: 'flight', t: BUILD.start, scene: 'flight', cam: 'hero', move: 'still', into: 'dissolve', B: null, O: null },
   // ---- final chorus "Accept both" (160.06-181.44): fusion; the chorus's tools, a cut every word or two beats
   { id: 'acc1', t: tk(53, 0), scene: 'arena', cam: 'hero', move: 'push', into: 'tunnel', B: ['PB1', full(-3.3)], O: ['PO1', full(3.3)] },
   { id: 'acc1-both', t: tk(53, 1), scene: 'arena', cam: 'low', move: 'dollyzoom', into: 'shock' },
@@ -81,7 +82,7 @@ export const FSHOTS: FShot[] = [
   // "and we figured it out": cheek to cheek at one mic (RK5)
   { id: 'rk5', t: tk(56, 4), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
   // the high five on the downbeat after the line
-  { id: 'highfive', t: db(169.3), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB5', full(-1.9, 4.8)], O: ['PO5', full(1.9, 4.8)] },
+  { id: 'highfive', t: tk(56, 7), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB5', full(-1.9, 4.8)], O: ['PO5', full(1.9, 4.8)] },
   { id: 'highfive-2', t: bt(170.0), scene: 'arena', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'acc3', t: tk(57, 0), scene: 'arena', cam: 'wide', move: 'whip', into: 'shock', B: ['PB1', full(-3.0)], O: ['PO1', full(3.0)] },
   { id: 'acc3-both', t: tk(57, 1), scene: 'arena', cam: 'low', move: 'push', into: 'shock' },
@@ -166,13 +167,13 @@ const poses = (who: 'B' | 'O'): FPose[] =>
     const w = s[who];
     return w === undefined ? [] : [w === null ? { t: s.t, card: null } : { t: s.t, card: w[0], at: w[1] }];
   });
-export const FBLUE: FPose[] = [...poses('B'), { t: BRANCHES_AT, card: null }].sort((a, b) => a.t - b.t);
-export const FORANGE: FPose[] = [...poses('O'), { t: BRANCHES_AT, card: null }].sort((a, b) => a.t - b.t);
+export const FBLUE: FPose[] = [...poses('B'), { t: BRANCHES_AT, card: 'BP2', at: RISE.B }].sort((a, b) => a.t - b.t);
+export const FORANGE: FPose[] = [...poses('O'), { t: BRANCHES_AT, card: 'OP2', at: RISE.O }].sort((a, b) => a.t - b.t);
 
 /** The final chorus's high-five and logo crash, the chant's and scream end's big hits: bursts of confetti or sparks. */
 export const FHITS = {
   yes: [tk(53, 3), tk(54, 3), tk(57, 3)],
-  highfive: bt(169.6),
+  highfive: bt(169.2),
   lock: tk(60, 1),
   push: tk(58, 4),
   walls: [tk(59, 0), tk(59, 1), tk(59, 2)],

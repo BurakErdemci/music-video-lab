@@ -123,7 +123,6 @@ const kick = (pose: CameraPose, t: number, amp: number): CameraPose => {
 // ---- the build's flight: one camera path over the whole build, accelerating (the build rises bar by bar). The
 // fov narrows from 50 to 30 degrees while the camera climbs and closes in on the girls and the particles; the RK3
 // painting behind them is shown whole (round 7d: locked to the frame, its own 3 % Ken Burns over the build).
-const flightU = (t: number): number => clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
 const flightK = (t: number): number => {
   const u = clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
   // the speed rises linearly from 0.35 to 1.65 times the mean: moving from the first bar, faster every bar
@@ -137,10 +136,10 @@ export const flightPose = (t: number): CameraPose => {
   return cam([sway, -1.6 + 2.4 * e, 17 - 7 * e], [0.35 * Math.sin(u * Math.PI * 1.5), 0.2 + 1.4 * e, -20], 50 - 20 * e, (0.02 + 0.04 * u) * Math.sin(u * Math.PI * 3));
 };
 const FLIGHT_BASE = flightPose(BUILD.start);
-/** How far the build's girls have risen (they float up from one knee until they scatter into the branches). */
-const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)));
-/** The painting comes up from mid light as the girls' particles become it (from black it read as a flash pair). */
-const treeGain = (t: number): number => 0.55 + 0.4 * outQuad(clamp01((t - BRANCHES_AT) / 0.5));
+/** How far the build's girls have risen (they float up from one knee after they step out of the painting). */
+const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BRANCHES_AT) / (BUILD.end - BRANCHES_AT)));
+/** The painting fades up out of the piano's dark over half a second. */
+const treeGain = (t: number): number => 0.95 * outQuad(clamp01((t - BUILD.start) / 0.5));
 
 /** The fusion's grades sit between the disco and the metal ones; the piano's are soft and plain. */
 const BLUE_SOFT: Grade = { ...GRADES.reviewed, amount: 0.3 };
@@ -167,9 +166,8 @@ const lightOf = (who: 'B' | 'O', t: number, scene: FScene): CardLight => {
 const atOf = (list: typeof FBLUE, t: number): Placement => poseAt(list, t)?.at as Placement;
 const GATHER_B = dissolvePlan({ id: 'f-gather-b', t0: tk(49, 0), gatherFrames: 18, to: { card: 'BP1', at: atOf(FBLUE, tk(49, 0)) } });
 const GATHER_O = dissolvePlan({ id: 'f-gather-o', t0: tk(50, 0), gatherFrames: 18, to: { card: 'OP1', at: atOf(FORANGE, tk(50, 0)) } });
-const risen = (p: Placement): Placement => ({ ...p, feet: (p.feet ?? FLOOR_Y) + riseDy(BRANCHES_AT) });
-const SCATTER_B = dissolvePlan({ id: 'f-branch-b', t0: BRANCHES_AT, scatterFrames: 28, from: { card: 'BP2', at: risen(RISE.B) } });
-const SCATTER_O = dissolvePlan({ id: 'f-branch-o', t0: BRANCHES_AT, scatterFrames: 28, from: { card: 'OP2', at: risen(RISE.O) } });
+const SCATTER_B = dissolvePlan({ id: 'f-branch-b', t0: BRANCHES_AT, gatherFrames: 18, to: { card: 'BP2', at: RISE.B } });
+const SCATTER_O = dissolvePlan({ id: 'f-branch-o', t0: BRANCHES_AT, gatherFrames: 18, to: { card: 'OP2', at: RISE.O } });
 const FINAL_BURST_AT = beats.find((x) => x >= 180.7) as number;
 const BURST_B = dissolvePlan({ id: 'f-burst-b', t0: FINAL_BURST_AT, scatterFrames: 28, from: { card: 'PB6', at: atOf(FBLUE, FINAL_BURST_AT - 0.01) } });
 const BURST_O = dissolvePlan({ id: 'f-burst-o', t0: FINAL_BURST_AT, scatterFrames: 28, from: { card: 'PO6', at: atOf(FORANGE, FINAL_BURST_AT - 0.01) } });
@@ -202,7 +200,7 @@ const finaleCamera = (t: number) => {
   // build-failed stop hold still
   const hits = final ? PULSES : HITS;
   const h = [...hits].reverse().find((x) => t >= x) ?? -10;
-  const amt = piano || failed ? 0 : final ? 0.09 : t >= OUTRO.start ? 0.04 : 0.05;
+  const amt = piano || failed ? 0 : final ? 0.11 : t >= OUTRO.start ? 0.04 : 0.05;
   const punched: CameraPose = { ...base, fov: base.fov * (1 - amt * (1 - outQuad(clamp01((t - h) * 6)))) };
   const pose = !final && !piano && !failed ? kick(punched, t, scene === 'panel' ? 0.06 : 0.1) : punched;
   return { shot, k, scene, blueP, orangeP, pose, planeBase };
@@ -234,9 +232,9 @@ const gatherOpacity = (who: 'B' | 'O', t: number): number => {
 
 const rawFinaleStateAt = (t: number): ShotState => {
   const { shot, k, scene, blueP, orangeP, pose, planeBase } = finaleCamera(t);
-  const plateId = scene === 'panel' ? shot.panel : scene === 'flight' ? (t >= BRANCHES_AT ? 'RK3' : undefined) : PLATES[scene];
+  const plateId = scene === 'panel' ? shot.panel : scene === 'flight' ? (t < BRANCHES_AT ? 'RK3' : undefined) : PLATES[scene];
   const panel = scene === 'panel' || scene === 'flight';
-  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? flightU(t) : k } : {}) } : undefined };
+  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)) : k } : {}) } : undefined };
 };
 
 const live = liveCamera(rawFinaleStateAt, (t) => {
@@ -288,9 +286,9 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
         );
       case 'flight':
         return (
-          // the girls rise in the light-box rig (the rig rebuilding, scene-map.md); when they scatter into the two
-          // branches the RK3 painting takes the frame, whole and with no card over it (round 7d)
-          t < BRANCHES_AT ? <LogoWorld t={t} flash={0} /> : <PlateLayer id="RK3" base={planeBase} panel dist={30} gain={treeGain(t)} kb={flightU(t)} />
+          // the first bar holds the two-branches painting whole, with no card over it (round 7d); then the girls step
+          // out of it as particles and rise in the light-box rig (the rig rebuilding, scene-map.md)
+          t < BRANCHES_AT ? <PlateLayer id="RK3" base={planeBase} panel dist={30} gain={treeGain(t)} kb={clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start))} /> : <LogoWorld t={t} flash={0} />
         );
       case 'arena':
         return <Arena t={t} stomps={[]} embers={[]} led={['#ff7a1a', '#2f7bff']} plate />;
@@ -331,7 +329,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   const subjects = subjectsAt(t, scene, blueP, orangeP);
   const fieldGrade = metal ? ORANGE_METAL : BLUE_MIX;
   // confetti is earned: the final chorus and its paintings; the piano and the build get dust, the metal embers
-  const density = quiet ? 0.6 : scene === 'flight' ? (t < BRANCHES_AT ? 0.6 + 0.2 * flightK(t) : 1) : 0.9;
+  const density = quiet ? 1 : scene === 'flight' ? 0.6 + 0.4 * flightK(t) : 1;
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
