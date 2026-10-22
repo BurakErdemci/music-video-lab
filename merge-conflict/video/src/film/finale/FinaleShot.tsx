@@ -364,5 +364,5 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
 
 export const FINALE_TRANSITIONS = TRANSITIONS;
 /** The opaque covers (every kind but the shock ring) for tools/covercheck.mjs, as the shot draws them. */
-export const finaleCovers = (): TransitionSpec[] => TRANSITIONS.filter((s) => s.kind !== 'shock');
+export const finaleCovers = () => TRANSITIONS.filter((s) => s.kind !== 'shock').map((s) => ({ id: s.id, kind: s.kind, window: transitionWindow(s) }));
 export { COVER_GAP };
