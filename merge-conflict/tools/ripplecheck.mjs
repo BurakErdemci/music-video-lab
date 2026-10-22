@@ -33,6 +33,8 @@ try {
         "export { RIPPLE_MAX, rippleAmp, rippleWeightFor, rippleWeight } from './rig/ripple.ts';",
         "export { GRID_COLS, GRID_ROWS } from './rig/rig.ts';",
         "export { CARD_FRAMES, cardAspectOf } from './film/framing.ts';",
+        // the round-8 cards' boxes live in film/finale/frames.json and are merged into CARD_FRAMES on import
+        "import './film/finale/frames.ts';",
         "export { bassAt } from './film/livecam.ts';",
         "export { sectionAt, sections, barLengthAt } from './timing.ts';",
       ].join('\n'),
