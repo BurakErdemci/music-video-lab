@@ -56,19 +56,27 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         break;
       }
       case 'f-hello':
-        out.push(<Wave key={e.id} spec={spec(e, { x: 110, y: 820, w: 1700, h: 180 })} t={t} opt={{ size: 74, face: 'shrikhand', amp: 14 }} />);
+        out.push(<Wave key={e.id} spec={spec(e, { x: 220, y: 820, w: 1480, h: 170 })} t={t} opt={{ size: 64, face: 'shrikhand', amp: 12 }} />);
         break;
       // ---- build
       case 'f-file':
         out.push(<Flap key={e.id} spec={spec(e, { x: 330, y: 830, w: 1260, h: 170 })} t={t} cols={20} backing />);
         break;
       case 'f-tree':
-        out.push(<Ring key={e.id} spec={spec(e, { x: 560, y: 160, w: 800, h: 700 })} t={t} opt={{ cx: 960, cy: 600, r: 330, size: 54, face: 'righteous', backing: true }} />);
+        out.push(<Ring key={e.id} spec={spec(e, { x: 700, y: 520, w: 520, h: 300 })} t={t} opt={{ cx: 960, cy: 790, r: 230, size: 42, face: 'righteous', backing: true }} />);
         break;
       // ---- final chorus
       case 'f-acc1':
-      case 'f-acc7':
         out.push(<Stack key={e.id} spec={spec(e, { x: 300, y: 600, w: 1320, h: 400 })} t={t} />);
+        break;
+      case 'f-acc7':
+        // the tunnel's chevrons are as bright as the letters: a backing
+        out.push(
+          <g key={e.id}>
+            <Scrim x={300} y={600} w={1320} h={400} pad={16} />
+            <Stack spec={spec(e, { x: 300, y: 600, w: 1320, h: 400 })} t={t} />
+          </g>,
+        );
         break;
       case 'f-acc2':
         out.push(<Stamp key={e.id} spec={spec(e, { x: 200, y: 600, w: 1500, h: 420 })} t={t} />);
@@ -86,13 +94,13 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         break;
       case 'f-line':
         // the line is typed across the runway floor in front of their feet, as in the choruses
-        out.push(<RunwayLine key={e.id} spec={{ id: e.id, text: words(e).map((x) => x.text).join(' ').toLowerCase(), gutter: '42', t0: e.t0, t1: e.t1, cps: 26, origin: [-6.4, -3.38, 2.2], dir: [1, 0, 0], up: [0, 0, -1], size: 0.95, color: '#ffb07a' }} t={t} pose={pose} />);
+        out.push(<RunwayLine key={e.id} spec={{ id: e.id, text: words(e).map((x) => x.text).join(' ').toLowerCase(), gutter: '42', t0: e.t0, t1: e.t1, cps: 26, origin: [-6.4, -3.38, 2.2], dir: [1, 0, 0], up: [0, 0, -1], size: 0.95, color: '#ffffff' }} t={t} pose={pose} />);
         break;
       case 'f-figured':
         out.push(
           <g key={e.id}>
-            <Scrim x={140} y={800} w={1640} h={210} pad={16} />
-            <Marquee spec={spec(e, { x: 140, y: 800, w: 1640, h: 210 })} t={t} />
+            <Scrim x={150} y={790} w={1620} h={196} pad={16} />
+            <Marquee spec={spec(e, { x: 150, y: 790, w: 1620, h: 196 })} t={t} />
           </g>,
         );
         break;
@@ -112,34 +120,34 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         out.push(<Slam key={e.id} spec={{ text: "NOW WE'RE WHOLE", t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 960, size: 120, color: '#ff5a8a', face: 'bungee', rot: -2 }} t={t} />);
         break;
       case 'f-merge':
-        out.push(<ResolvedLogo key={e.id} id="f-logo-merge" t={t} cy={620} width={1150} lock={MERGE_AT[1]} />);
+        out.push(<ResolvedLogo key={e.id} id="f-logo-merge" t={t} cy={720} width={1000} lock={MERGE_AT[1]} />);
         break;
       case 'f-soul':
-        out.push(<Stack key={e.id} spec={spec(e, { x: 300, y: 660, w: 1320, h: 360 })} t={t} />);
+        out.push(<Stack key={e.id} spec={spec(e, { x: 300, y: 650, w: 1320, h: 320 })} t={t} />);
         break;
       // ---- the chant (metal)
       case 'f-ship1': {
         // the deploy counter: 0 to 100 % across "ship it, ship it"
         const toks = words(e);
-        out.push(<Counter key={e.id} spec={{ from: 0, to: 100, t0: toks[0]?.start ?? e.t0, t1: toks.at(-1)?.end ?? e.t1, x: 960, y: 990, size: 190, color: '#ff4a1a', suffix: '%', backing: true }} t={t} />);
+        out.push(<Counter key={e.id} spec={{ from: 0, to: 100, t0: toks[0]?.start ?? e.t0, t1: toks.at(-1)?.end ?? e.t1, x: 960, y: 960, size: 170, color: '#ff4a1a', suffix: '%', backing: true }} t={t} />);
         break;
       }
       case 'f-acc5':
-        out.push(<Extrude key={e.id} spec={spec(e, { x: 200, y: 660, w: 1500, h: 360 })} t={t} opt={{ size: 240, face: 'metalmania', depth: 0.35 }} />);
+        out.push(<Extrude key={e.id} spec={spec(e, { x: 200, y: 640, w: 1500, h: 330 })} t={t} opt={{ size: 210, face: 'metalmania', depth: 0.35 }} />);
         break;
       case 'f-ship2':
       case 'f-ship4':
-        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'SHIP IT!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 860, w: 1160, rot: e.id === 'f-ship2' ? -4 : 4 }} t={t} />);
+        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'SHIP IT!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 810, w: 1000, rot: e.id === 'f-ship2' ? -4 : 4 }} t={t} />);
         break;
       case 'f-acc6':
-        out.push(<Slam key={e.id} spec={{ text: 'ACCEPT BOTH!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 960, size: 150, color: '#ff4a1a', face: 'metalmania', rot: -3 }} t={t} />);
+        out.push(<Slam key={e.id} spec={{ text: 'ACCEPT BOTH!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 900, size: 130, color: '#ff4a1a', face: 'metalmania', rot: -3 }} t={t} />);
         break;
       case 'f-ship3':
         out.push(<LightBox key={e.id} spec={{ id: e.id, words: words(e).map((w, i) => ({ text: clean(w.text), color: (i % 2 ? '#ffb020' : '#ff3014') as Hex })), t0: e.t0 + 0.02, stagger: 0.03, t1: e.t1, x: 960, y: 950, size: 100, face: 'metalmania', box: true, backing: true }} t={t} />);
         break;
       // ---- "Build failed. Syntax error on line forty-two."
       case 'f-failed':
-        out.push(<Code key={e.id} spec={spec(e, { x: 1000, y: 690, w: 820, h: 270 })} t={t} opt={{ gutter: '!', size: 72, keyScale: 1.4, chrome: 'build.log', terminal: true, backing: true }} />);
+        out.push(<Code key={e.id} spec={spec(e, { x: 960, y: 690, w: 800, h: 270 })} t={t} opt={{ gutter: '!', size: 64, keyScale: 1.4, chrome: 'build.log', terminal: true, backing: true }} />);
         break;
       case 'f-syntax':
         out.push(<LightBox key={e.id} spec={{ id: e.id, words: words(e).map((w) => ({ text: clean(w.text), color: '#ff3b3b' as Hex })), t0: e.t0 + 0.02, stagger: 0.04, t1: e.t1, x: 760, y: 960, size: 96, face: 'mono', box: true, backing: true }} t={t} />);
@@ -151,25 +159,31 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
       }
       // ---- the scream end and the outro: the merge's epilogue
       case 'f-scream':
-        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'AAAAAAAH!', at: e.t0 + 4 / 60, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 880, w: 1500, rot: -3 }} t={t} />);
+        out.push(<Shout key={e.id} spec={{ id: `${e.id}-s`, text: 'AAAAAAAH!', at: e.t0 + 4 / 60, until: e.t1, style: 'steel', color: '#ff2a14', cx: 960, cy: 810, w: 1380, rot: -3 }} t={t} />);
         break;
       case 'f-fix':
       case 'f-log':
-        out.push(
-          <g key={e.id}>
-            <Scrim x={100} y={930} w={e.id === 'f-fix' ? 420 : 900} h={80} pad={0} opacity={0.82} edge="#ffb08a" />
-            <CodeLine spec={{ gutter: '>', text: e.text ?? '', color: '#ffd6c2', gutterColor: '#ff4a1a', x: 124, y: 984, size: 36, t0: e.t0, t1: e.t1, perBeat: 3 }} t={t} />
-          </g>,
-        );
+        {
+          // CodeLine centres its text on x: the HUD sits in the bottom-left corner, inside the margin
+          const size = 34;
+          const gw = 2 * 0.6 * size;
+          const w = (e.text ?? '').length * 0.6 * size;
+          out.push(
+            <g key={e.id}>
+              <Scrim x={100} y={928} w={w + gw + 56} h={80} pad={0} opacity={0.82} edge="#ffb08a" />
+              <CodeLine spec={{ gutter: '>', text: e.text ?? '', color: '#ffd6c2', gutterColor: '#ff4a1a', x: 124 + gw + w / 2, y: 982, size, t0: e.t0, t1: e.t1, perBeat: 3 }} t={t} />
+            </g>,
+          );
+        }
         break;
       case 'f-commits':
-        out.push(<Counter key={e.id} spec={{ from: 0, to: 300, t0: e.t0, t1: e.t1 - 0.3, x: 960, y: 1000, size: 130, color: '#ffb020', suffix: ' commits', backing: true }} t={t} />);
+        out.push(<Counter key={e.id} spec={{ from: 0, to: 300, t0: e.t0, t1: e.t1 - 0.3, x: 960, y: 970, size: 112, color: '#ffb020', suffix: ' commits', backing: true }} t={t} />);
         break;
       case 'f-passing':
         out.push(<LightBox key={e.id} spec={{ id: e.id, words: [{ text: 'BUILD', color: '#3dff9a' }, { text: 'PASSING', color: '#3dff9a' }], t0: e.t0 + 0.05, stagger: 0.04, t1: e.t1, x: 960, y: 950, size: 96, face: 'mono', box: true, backing: true }} t={t} />);
         break;
       case 'f-shipped':
-        out.push(<Slam key={e.id} spec={{ text: 'SHIPPED!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 950, size: 190, color: '#ff4a1a', face: 'metalmania', rot: -4 }} t={t} />);
+        out.push(<Slam key={e.id} spec={{ text: 'SHIPPED!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 880, size: 170, color: '#ff4a1a', face: 'metalmania', rot: -4 }} t={t} />);
         break;
       case 'f-merged':
         out.push(<DissolveText key={e.id} spec={{ id: e.id, text: 'merged.', t0: e.t0, t1: e.t1, x: 1460, y: 220, size: 96, color: '#ffe2b0', face: 'mono', halo: true }} t={t} />);
