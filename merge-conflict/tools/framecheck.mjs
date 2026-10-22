@@ -370,9 +370,17 @@ if (process.argv.includes('--type')) {
   const activeAt = (t) => M.TYPE_PLAN.filter((e) => t >= e.t0 - 0.02 && t < e.t1);
   const settledAt = (e, t) => t >= e.t0 + 0.4 && t < e.t1 - 0.1;
   const overlapPicks = picks.filter((fr) => { const a = activeAt(fr / FPS); return a.length >= 2 && a.some((e) => settledAt(e, fr / FPS)); });
+  // round 11: every entry on screen is rendered alone at every sample, so tools/typeframe.py measures each form on its
+  // own (its margin with any backing, turned or projected; its cap height; a dot-matrix panel's unsung words against
+  // the same words lit, rendered once 0.12 s before the entry ends)
   const byId = new Map();
-  for (const fr of overlapPicks) for (const e of activeAt(fr / FPS)) byId.set(e.id, [...(byId.get(e.id) ?? []), fr]);
+  for (const fr of picks) for (const e of activeAt(fr / FPS)) byId.set(e.id, [...(byId.get(e.id) ?? []), fr]);
   const onlyLayers = [...byId].map(([id, frs]) => ({ key: `only_${id}`, props: { layer: 'type', only: id }, frames: frs }));
+  const litFrame = (e) => Math.round((e.t1 - 0.12) * FPS);
+  for (const id of byId.keys()) {
+    const e = M.TYPE_PLAN.find((x) => x.id === id);
+    if (e.form === 'Marquee') onlyLayers.push({ key: `lit_${id}`, props: { layer: 'type', only: id }, frames: [litFrame(e)] });
+  }
   if (overlapPicks.length) onlyLayers.push({ key: 'only___none', props: { layer: 'type', only: '__none__' }, frames: overlapPicks });
   console.log(`type over type: ${overlapPicks.length} samples with two or more forms on screen, ${byId.size} forms rendered alone`);
   // 'all' is the frame as it renders: tools/typeframe.py checks that nothing is drawn over the settled type
@@ -385,7 +393,8 @@ if (process.argv.includes('--type')) {
     const overlap = overlapPicks.includes(fr)
       ? { none: path.join(shots, `only___none-${fr}.png`), forms: activeAt(fr / FPS).map((e) => ({ id: e.id, png: path.join(shots, `only_${e.id}-${fr}.png`), settled: settledAt(e, fr / FPS) })) }
       : undefined;
-    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), cap_exempt: CAP_EXEMPT.some(([a, b]) => fr / FPS >= a && fr / FPS < b), faces, cards: subj.map((x) => x.card), ...(overlap ? { overlap } : {}) });
+    const entries = activeAt(fr / FPS).map((e) => ({ id: e.id, form: e.form, png: path.join(shots, `only_${e.id}-${fr}.png`), settled: settledAt(e, fr / FPS), ...(e.form === 'Marquee' ? { lit: path.join(shots, `lit_${e.id}-${litFrame(e)}.png`) } : {}) }));
+    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), cap_exempt: CAP_EXEMPT.some(([a, b]) => fr / FPS >= a && fr / FPS < b), faces, cards: subj.map((x) => x.card), entries, ...(overlap ? { overlap } : {}) });
   }
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));

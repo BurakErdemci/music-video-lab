@@ -259,6 +259,62 @@ def close(a, b):
     return b is not None and max(abs(a[0] - b[0]) / W, abs(a[2] - b[2]) / W, abs(a[1] - b[1]) / H, abs(a[3] - b[3]) / H) < SETTLE
 
 
+DIM_FLOOR = 0.3  # an unsung dot-matrix word's bulbs: at least this share of the same bulbs lit (round 11)
+
+
+def bright(p):
+    """Per-pixel brightness of a type render: its strongest channel times its alpha, 0..1."""
+    im = np.asarray(Image.open(p).convert("RGBA"), dtype=np.float32) / 255.0
+    return im[..., :3].max(axis=-1) * im[..., 3]
+
+
+def dim_ratio(e):
+    """A dot-matrix panel's dimmest bulbs now against the same bulbs with every word lit (its "lit" render): the 10th
+    percentile over the bulbs of (mean brightness now / mean brightness lit). Bulbs: components of the lit render
+    brighter than 0.25 (the panel behind them is near black), halved for speed."""
+    now, lit = bright(e["png"]), bright(e["lit"])
+    now, lit = now[::2, ::2], lit[::2, ::2]
+    ratios = []
+    for y0, x0, y1, x1, area in components(lit > 0.25):
+        if area < 3 or (y1 - y0) > 20 or (x1 - x0) > 20:
+            continue
+        m = lit[y0:y1, x0:x1] > 0.25
+        ratios.append(float(now[y0:y1, x0:x1][m].mean() / max(1e-3, lit[y0:y1, x0:x1][m].mean())))
+    return float(np.percentile(ratios, 10)) if len(ratios) >= 10 else 1.0
+
+
+# forms whose settled state may run past the margin by design: the Wave scrolls a long line with the singing
+EDGE_FREE = ("Wave",)
+
+
+def entry_checks(s, base):
+    """Each type-plan entry on screen, rendered alone (round 11): at its settled state its own box (glyphs, backing,
+    turned or projected) keeps inside the 4 % margin, its text lines keep the 3.5 % cap height, and a dot-matrix
+    panel shows its unsung words at DIM_FLOOR or more of their lit brightness."""
+    out = []
+    for e in s.get("entries") or []:
+        if not e.get("settled"):
+            continue
+        im = np.asarray(Image.open(e["png"]).convert("RGBA"), dtype=np.float32)
+        box = bbox(im[..., 3] > 127)
+        if box is None:
+            continue
+        box = tuple(int(v) for v in box)
+        over = sides(box)
+        if over and e["form"] not in EDGE_FREE:
+            out.append({**base, "kind": "edge", "value": max(over.values()), "why": f"form {e['id']} ({e['form']}) box {box} crosses the 4 % margin by {over} px"})
+        if not s.get("cap_exempt"):
+            small = [ln for ln in cap_lines({"type": e["png"]}) if ln[0] < CAP_MIN * H]
+            if small:
+                c, x, y, n = min(small)
+                out.append({**base, "kind": "small", "value": round(100 * c / H, 1), "why": f"form {e['id']}: a text line of {n} glyphs at ({x}, {y}) has a cap height of {100 * c / H:.1f} % (min {100 * CAP_MIN:.1f} %)"})
+        if e.get("lit"):
+            r = dim_ratio(e)
+            if r < DIM_FLOOR:
+                out.append({**base, "kind": "dim", "value": round(r, 2), "why": f"form {e['id']}: its unsung words show at {100 * r:.0f} % of their lit brightness (min {100 * DIM_FLOOR:.0f} %)"})
+    return out
+
+
 def analyse(samples):
     """Failures per sample: [{"t", "frame", "shot", "kind": margin|face|contrast|hidden|small|overlap, "value", "why"}].
     Settled = the box matches the previous or the next sample's box (it persists 2+ samples, 0.5 s apart)."""
@@ -299,6 +355,7 @@ def analyse(samples):
             cover = float(mask[y0:y1, x0:x1].mean())
             if cover > FACE_COVER:
                 out.append({**base, "kind": "face", "value": round(100 * cover), "why": f"type covers {100 * cover:.0f} % of face {card}"})
+        out.extend(entry_checks(s, base))
         ratio = contrast(mask, comp)
         if ratio < CONTRAST:
             ratio = max(ratio, own_contrast(s, mask))
@@ -356,8 +413,48 @@ def selftest():
             d.rectangle((560, 380, 1500, 700), fill=(13, 17, 23, 240))
             d.text((600, 500), words, font=ImageFont.truetype("consola.ttf", size), fill=(230, 237, 243, 255))
         return f
+    def entry_case(name, draw_entry, draw_lit=None, settled=True):
+        # a form rendered alone (round 11): the full type layer is a clean box, the entry's own render the defect
+        c = case(name, rect((600, 400, 1300, 600), white), dark, [])
+        im = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+        draw_entry(im)
+        ep = os.path.join(d, name + "-e.png")
+        im.save(ep)
+        e = {"id": name, "form": "Marquee" if draw_lit else "Stack", "png": ep, "settled": settled}
+        if draw_lit:
+            lit = Image.new("RGBA", (W, H), (0, 0, 0, 0))
+            draw_lit(lit)
+            e["lit"] = os.path.join(d, name + "-l.png")
+            lit.save(e["lit"])
+        c["entries"] = [e]
+        return c
+
+    def turned(im):
+        # a backing turned 30 degrees whose corner leaves the frame at the bottom left
+        from PIL import ImageDraw
+        ImageDraw.Draw(im).polygon([(60, 900), (700, 530), (800, 700), (160, 1075)], fill=(5, 3, 10, 200))
+
+    def bulbs(level):
+        def f(im):
+            from PIL import ImageDraw
+            dr = ImageDraw.Draw(im)
+            dr.rectangle((300, 380, 1620, 700), fill=(5, 3, 10, 230))
+            for i in range(40):
+                for j in range(5):
+                    x, y = 340 + i * 30, 440 + j * 30
+                    dr.ellipse((x, y, x + 16, y + 16), fill=(int(255 * level), int(60 * level), int(60 * level), 255))
+        return f
+
+    def tiny(im):
+        text("ALL YOUR SORRIES INTO", 22)(im)
+
     samples = [
         case("ok", rect((600, 400, 1300, 600), white), dark, [[100, 100, 200, 200]]),
+        entry_case("edge", turned),
+        entry_case("dim", bulbs(0.15), bulbs(1.0)),
+        entry_case("brightdim", bulbs(0.4), bulbs(1.0)),
+        entry_case("esmall", tiny),
+        entry_case("flying", turned, settled=False),
         case("margin", rect((20, 400, 800, 600), white), dark, []),
         case("face", rect((600, 400, 1300, 600), white), dark, [[900, 450, 1000, 550]]),
         case("contrast", rect((600, 400, 1300, 600), (170, 170, 170, 255)), mid, []),
@@ -370,7 +467,8 @@ def selftest():
     # the same box twice so the settled test sees it persist
     samples = [x for s in samples for x in (s, dict(s, t=0.5))]
     got = {(f["shot"], f["kind"]) for f in analyse(samples)}
-    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden"), ("small", "small"), ("overlap", "overlap")}
+    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden"), ("small", "small"), ("overlap", "overlap"),
+            ("edge", "edge"), ("dim", "dim"), ("esmall", "small")}
     print("typeframe selftest flagged:", sorted(got))
     ok = got == want
     print("typeframe selftest: " + ("PASS" if ok else "FAIL (wanted " + str(sorted(want)) + ")"))
@@ -384,8 +482,8 @@ def main():
     out = analyse(samples)
     if len(sys.argv) > 2:
         json.dump(out, open(sys.argv[2], "w", encoding="utf-8"))
-    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden", "small", "overlap")}
-    print(f"typeframe: {len(samples)} samples ({sum(1 for x in samples if x.get('overlap'))} with forms rendered alone); margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}, small {n['small']}, overlap {n['overlap']}")
+    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden", "small", "overlap", "edge", "dim")}
+    print(f"typeframe: {len(samples)} samples ({sum(1 for x in samples if x.get('overlap'))} with forms rendered alone); margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}, small {n['small']}, overlap {n['overlap']}, edge {n['edge']}, dim {n['dim']}")
     for f in out:
         print(f"  {f['t']:7.2f}  {str(f['shot']):22s} {f['kind']:8s} {f['why']}")
     print("typeframe: FAIL" if out else "typeframe: PASS")
