@@ -94,8 +94,9 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
       case 'v-commits': {
         const b = anchors.board ?? { x: 560, y: 120, w: 800, h: 360 };
         const tok = lineTokens(e.line);
-        out.push(<Counter key={e.id} spec={{ from: 0, to: 300, t0: tok[0]?.start ?? e.t0, t1: tok[2]?.end ?? e.t0 + 0.8, x: b.x + b.w / 2, y: b.y + b.h * 0.78, size: b.h * 0.78, color: '#ff7a1a', digits: 3, backing: true }} t={t} />);
-        dyn = b;
+        // the count lives on the scoreboard: it stays there, and leaves at the cut to her close-up, where the board is out
+        // of the frame (round 7d: moved off her face it landed under the NEVER marquee)
+        if (t < (tok[5]?.start ?? e.t1)) out.push(<Counter key={e.id} spec={{ from: 0, to: 300, t0: tok[0]?.start ?? e.t0, t1: tok[2]?.end ?? e.t0 + 0.8, x: b.x + b.w / 2, y: b.y + b.h * 0.78, size: b.h * 0.78, color: '#ff7a1a', digits: 3, backing: true }} t={t} />);
         break;
       }
       case 'v-never':
