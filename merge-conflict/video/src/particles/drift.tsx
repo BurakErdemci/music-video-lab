@@ -13,6 +13,7 @@ import { type Hex, rgb } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { ORDER, useUniforms } from '../stage/Stage.tsx';
 import type { Particles } from '../worlds/paintview.ts';
+import { useParticleCap } from './cap.ts';
 
 const PX = H / 2 / Math.tan((FOV * Math.PI) / 360);
 const LAYERS = {
@@ -31,7 +32,7 @@ const KINDS: Record<Particles, [number, number, number, number, number]> = {
 
 const VERT = /* glsl */ `
 uniform float uT; uniform vec3 uO; uniform vec3 uF; uniform vec3 uR; uniform vec3 uU; uniform vec2 uZ; uniform float uTan;
-uniform float uCycle; uniform float uSize; uniform float uRise; uniform float uPx; uniform float uDensity;
+uniform float uCycle; uniform float uSize; uniform float uRise; uniform float uPx; uniform float uMaxPx; uniform float uDensity;
 attribute vec4 aSeed;
 varying float vA; varying float vAng; varying float vTw; varying float vMix;
 void main() {
@@ -45,7 +46,7 @@ void main() {
   vec3 w = uO + uF * z + uR * fr.x + uU * fr.y;
   vec4 mv = modelViewMatrix * vec4(w, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = uSize * mix(0.6, 1.4, aSeed.y) * uPx / max(-mv.z, 0.5);
+  gl_PointSize = min(uSize * mix(0.6, 1.4, aSeed.y) * uPx / max(-mv.z, 0.5), uMaxPx);
   vA = smoothstep(0.0, 0.18, c) * (1.0 - smoothstep(0.82, 1.0, c)) * step(aSeed.y, uDensity);
   vAng = aSeed.w * 6.2832 + uT * mix(-4.0, 4.0, aSeed.z);
   vTw = sin(uT * mix(3.0, 9.0, aSeed.x) + aSeed.y * 40.0);
@@ -96,7 +97,7 @@ export const Drift = ({ t, layer, kind, colors, base, advance = 0, alpha = 1, de
   const [f, r, u] = basis({ ...base, roll: 0 });
   const uni = useUniforms({
     uT: t + advance, uO: base.position, uF: f, uR: r, uU: u, uZ: [L.z[0], L.z[1]], uTan: Math.tan((base.fov * Math.PI) / 360),
-    uCycle: cycle, uSize: size, uRise: rise, uPx: PX, uKind: k, uColA: rgb(colors[0]), uColB: rgb(colors[1]), uAlpha: a * alpha, uDensity: density,
+    uCycle: cycle, uSize: size, uRise: rise, uPx: PX, uMaxPx: useParticleCap(), uKind: k, uColA: rgb(colors[0]), uColB: rgb(colors[1]), uAlpha: a * alpha, uDensity: density,
   });
   return (
     <points geometry={geo} frustumCulled={false} renderOrder={L.order}>

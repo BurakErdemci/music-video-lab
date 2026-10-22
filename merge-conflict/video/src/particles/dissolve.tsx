@@ -13,6 +13,7 @@ import { GRADE_GLSL, type Grade } from '../grade/grade.ts';
 import { ramp, rgb } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { ORDER, useUniforms } from '../stage/Stage.tsx';
+import { useParticleCap } from './cap.ts';
 
 interface PointsFile { id: string; cols: number; rows: number; aspect: number; n: number; xy: number[]; rgb: number[] }
 
@@ -65,7 +66,7 @@ export const dissolveState = (p: DissolvePlan, t: number) => {
 
 const VERT = /* glsl */ `
 uniform float uT; uniform float uScatter; uniform float uGather; uniform float uHasA; uniform float uHasB;
-uniform float uPx; uniform float uDelay;
+uniform float uPx; uniform float uMaxPx; uniform float uDelay;
 attribute vec3 aA; attribute vec3 aB; attribute vec3 aColA; attribute vec3 aColB; attribute vec4 aRnd; attribute vec3 aOff; attribute float aCell;
 varying vec3 vCol; varying float vS;
 float oq(float x) { x = clamp(x, 0.0, 1.0); return 1.0 - (1.0 - x) * (1.0 - x); }
@@ -79,7 +80,7 @@ void main() {
   vS = pS * (1.0 - pG);
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = aCell * uPx / max(0.5, -mv.z) * mix(1.5, 0.9, vS);
+  gl_PointSize = min(aCell * uPx / max(0.5, -mv.z) * mix(1.5, 0.9, vS), uMaxPx);
 }`;
 
 const FRAG = /* glsl */ `
@@ -163,7 +164,7 @@ export const Dissolve = ({ plan, t, grade, rival = '#ff7a1a', spread = 2.4 }: { 
     uGather: plan.gather,
     uHasA: plan.from ? 1 : 0,
     uHasB: plan.to ? 1 : 0,
-    uPx: H / 2 / Math.tan((FOV * Math.PI) / 360),
+    uPx: H / 2 / Math.tan((FOV * Math.PI) / 360), uMaxPx: useParticleCap(),
     uDelay: DELAY,
     uHue: rgb(grade.hue),
     uAmount: grade.amount,

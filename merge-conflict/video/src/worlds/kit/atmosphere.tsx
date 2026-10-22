@@ -6,6 +6,7 @@ import { clamp01, type Hex, rgb } from '../../lib/ease.ts';
 import { seeded } from '../../lib/seeded.ts';
 import { useUniforms } from '../../stage/Stage.tsx';
 import { additive, clampOpacity, NOISE_GLSL, plain, PX, VERT } from './common.tsx';
+import { useParticleCap } from '../../particles/cap.ts';
 
 // ---- Smoke --------------------------------------------------------------------------------------------------
 const SMOKE_FRAG = /* glsl */ `uniform float uTime; uniform vec3 uColor; uniform float uDensity; uniform float uSeed; uniform float uDir; uniform float uOpacity;
@@ -57,7 +58,7 @@ export interface EmberBurst { t: number; origin: Vec3 }
 export const MAX_EMBER_BURSTS = 4;
 const SPARKS_PER_BURST = 90;
 
-const EMBER_VERT = /* glsl */ `uniform float uTime; uniform float uPx; uniform vec3 uBoxA; uniform vec3 uBoxB; uniform vec4 uBurstT; uniform vec3 uBurstO[4];
+const EMBER_VERT = /* glsl */ `uniform float uTime; uniform float uPx; uniform float uMaxPx; uniform vec3 uBoxA; uniform vec3 uBoxB; uniform vec4 uBurstT; uniform vec3 uBurstO[4];
 attribute vec4 aSeed; attribute vec4 aRnd; attribute float aKind;
 varying float vA; varying float vHot;
 void main() {
@@ -94,7 +95,7 @@ void main() {
   vA = alpha;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = alpha > 0.002 ? size * uPx / max(0.5, -mv.z) : 0.0;
+  gl_PointSize = min(alpha > 0.002 ? size * uPx / max(0.5, -mv.z) : 0.0, uMaxPx);
 }`;
 
 const EMBER_FRAG = /* glsl */ `uniform vec3 uColor; uniform float uOpacity; varying float vA; varying float vHot;
@@ -136,7 +137,7 @@ export const Embers = ({ box, count, t, color, bursts = [], opacity = 1, order =
   }, [count]);
   const u = useUniforms({
     uTime: t,
-    uPx: PX,
+    uPx: PX, uMaxPx: useParticleCap(),
     uBoxA: [box[0], box[2], box[4]],
     uBoxB: [box[1], box[3], box[5]],
     uBurstT: [0, 1, 2, 3].map((i) => bursts[i]?.t ?? -100),

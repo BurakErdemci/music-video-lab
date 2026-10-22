@@ -13,6 +13,7 @@ import { FLOOR_Y } from '../stage/floor.ts';
 import { additive, plain, PX, VERT } from './kit/common.tsx';
 import { BeamCone, type EmberBurst, Embers, FireWall, GlowBox, Halo, LaserFan, LedWall, NeonTube, Smoke, TilePlatform } from './kit/index.ts';
 import { PlateBackdrop } from './plate.tsx';
+import { useParticleCap } from '../particles/cap.ts';
 
 const F = FLOOR_Y;
 const RED: Hex = '#ff2a14';
@@ -152,7 +153,7 @@ const TUNNEL_RAILS: Vec3[][] = [[-5.6, F + 0.05], [5.6, F + 0.05], [-5.6, 5], [5
 
 const SPARKS = 220;
 const SPARK_TRAIL = 4;
-const SPARK_VERT = /* glsl */ `uniform float uTime; uniform float uPx;
+const SPARK_VERT = /* glsl */ `uniform float uTime; uniform float uPx; uniform float uMaxPx;
 attribute vec4 aSeed; attribute float aTrail;
 varying float vA; varying float vHot;
 void main() {
@@ -164,7 +165,7 @@ void main() {
   gl_Position = projectionMatrix * mv;
   vA = (1.0 - aTrail * 0.27) * smoothstep(-68.0, -50.0, z);
   vHot = 1.0 - aTrail * 0.3;
-  gl_PointSize = mv.z < -0.3 ? 0.075 * (1.0 - aTrail * 0.2) * uPx / -mv.z : 0.0;
+  gl_PointSize = min(mv.z < -0.3 ? 0.075 * (1.0 - aTrail * 0.2) * uPx / -mv.z : 0.0, uMaxPx);
 }`;
 const SPARK_FRAG = /* glsl */ `uniform float uOpacity; varying float vA; varying float vHot;
 void main() {
@@ -193,7 +194,7 @@ const SparkStream = ({ t, opacity }: { t: number; opacity: number }) => {
     g.setAttribute('aTrail', new BufferAttribute(trail, 1));
     return g;
   }, []);
-  const u = useUniforms({ uTime: t, uPx: PX, uOpacity: opacity });
+  const u = useUniforms({ uTime: t, uPx: PX, uMaxPx: useParticleCap(), uOpacity: opacity });
   return (
     <points geometry={geo} frustumCulled={false} renderOrder={9}>
       <shaderMaterial {...u} vertexShader={SPARK_VERT} fragmentShader={SPARK_FRAG} {...additive} />

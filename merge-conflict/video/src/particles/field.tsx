@@ -9,6 +9,7 @@ import { type Grade, RIOT } from '../grade/grade.ts';
 import { rgb } from '../lib/ease.ts';
 import { seeded } from '../lib/seeded.ts';
 import { ORDER, useUniforms } from '../stage/Stage.tsx';
+import { useParticleCap } from './cap.ts';
 
 export interface Burst { t: number; origin: [number, number, number] }
 export const MAX_BURSTS = 4;
@@ -21,7 +22,7 @@ const LAYERS = {
 export type FieldLayer = keyof typeof LAYERS;
 
 const VERT = /* glsl */ `
-uniform float uTime; uniform float uDensity; uniform float uPx; uniform float uSpanX; uniform vec2 uZ;
+uniform float uTime; uniform float uDensity; uniform float uPx; uniform float uMaxPx; uniform float uSpanX; uniform vec2 uZ;
 uniform vec4 uBurstT; uniform vec3 uBurstO[4]; uniform float uMetal; uniform float uDust;
 attribute vec4 aSeed; attribute vec4 aRnd; attribute vec3 aCol; attribute float aKind;
 varying vec3 vCol; varying float vAlpha; varying float vAngle; varying float vFlip; varying float vKind; varying float vEmber;
@@ -71,7 +72,7 @@ void main() {
   vAlpha = alpha;
   vec4 mv = modelViewMatrix * vec4(p, 1.0);
   gl_Position = projectionMatrix * mv;
-  gl_PointSize = alpha > 0.002 ? size * uPx / max(0.5, -mv.z) : 0.0;
+  gl_PointSize = min(alpha > 0.002 ? size * uPx / max(0.5, -mv.z) : 0.0, uMaxPx);
 }`;
 
 const FRAG = /* glsl */ `
@@ -163,7 +164,7 @@ export const Field = ({ t, grade, layer, density = 1, hueMix = 0.35, alpha = 1, 
   const u = useUniforms({
     uTime: t,
     uDensity: density,
-    uPx: PX,
+    uPx: PX, uMaxPx: useParticleCap(),
     uSpanX: L.spanX,
     uZ: [L.z[0], L.z[1]],
     uBurstT: bt,
