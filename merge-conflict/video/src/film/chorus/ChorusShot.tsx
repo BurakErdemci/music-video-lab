@@ -37,6 +37,8 @@ const COLORS: Record<Scene, [Hex, Hex]> = {
 };
 
 /** The painted plates behind the chorus worlds (trial, 21 Oct 2026); chorus 2 keeps the battle arena and varies the rest. */
+/** The chorus worlds with a floor the girls stand on (the others float them: no contact shadow or reflection). */
+const FLOOR_SCENES: readonly Scene[] = ['arena', 'spin', 'fire', 'walls', 'runway'];
 const plateMargin = (scene: Scene): number => (scene === 'spin' ? 2.2 : 1.35);
 const PLATES: Record<1 | 2, Partial<Record<Scene, string>>> = {
   1: { arena: 'W09', burst: 'W09', spin: 'W02', fire: 'W05', runway: 'W01' },
@@ -112,6 +114,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
         dx: logoEntry ? (who === 'B' ? -apart : apart) : 0,
         dy: logoEntry ? (who === 'B' ? apart * 0.35 : -apart * 0.35) : 0,
         clip: scene === 'split' ? { x: 0, keep: who === 'B' ? 'left' : 'right' } : undefined,
+        ...(FLOOR_SCENES.includes(scene) ? {} : { ground: false as const }),
       });
     }
     return out;
@@ -206,7 +209,7 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
     })();
     const figure = (s: Subject) => {
       const who = s.card.startsWith('B') ? 'B' : 'O';
-      return <Card key={`${who}-${s.card}`} id={s.card} t={t} grade={who === 'B' ? BLUE_GRADE : ORANGE_GRADE} {...s.at} dx={s.dx} dy={s.dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={s.clip} light={sceneLight(who, t, scene)} ground={scene === 'arena' || scene === 'spin' || scene === 'fire' || scene === 'walls' || scene === 'runway' ? undefined : false} />;
+      return <Card key={`${who}-${s.card}`} id={s.card} t={t} grade={who === 'B' ? BLUE_GRADE : ORANGE_GRADE} {...s.at} dx={s.dx} dy={s.dy} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={s.clip} light={sceneLight(who, t, scene)} ground={FLOOR_SCENES.includes(scene) ? undefined : false} />;
     };
     return (
       <AbsoluteFill style={{ background: useShotBackground() }}>

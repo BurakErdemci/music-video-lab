@@ -18,6 +18,10 @@
 // renders each sampled frame twice under the render lock (the type layer alone, the world without the type, the
 // composition's `layer` prop) and hands them with the frame's projected face boxes to tools/typeframe.py (the
 // settled box in a 4 % margin, no face covered, local contrast >= 3:1).
+//   node tools/framecheck.mjs --ground [--range 0-140.04] [--keep dir]
+// --ground checks the floor contact (round 7d, "the girls look pasted on"): on sampled frames of every shot with a
+// card standing on the floor it renders the world layer and hands each card's sole line to tools/groundframe.py
+// (the band just below the soles >= 25 % darker than the floor beside them at the same height).
 // Exit 1 on any failure (the selftest must exit 1: it frames a face card twice the frame).
 import { spawnSync } from 'node:child_process';
 import { createRequire } from 'node:module';
@@ -50,6 +54,7 @@ await esbuild.build({
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
       "export { panelParallax, plateView } from './worlds/plategeo.ts';",
+      "export { solesAt } from './rig/cardRig.ts';",
     ].join('\n'),
     resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
   bundle: true, platform: 'node', format: 'esm', outfile, jsx: 'automatic', packages: 'external', logLevel: 'error',
@@ -173,21 +178,19 @@ if (arg('dump')) {
   process.exit(0);
 }
 
-if (process.argv.includes('--type')) {
+/** Render `picks` once per layer into a private temp dir (under the render lock); `done` deletes the bundle (about
+ *  300 MB each), copies the stills to --keep if given, deletes them and exits. */
+const renderLayers = async (picks, layers, prefix) => {
   const { bundle } = require('@remotion/bundler');
   const { openBrowser, renderStill, selectComposition } = require('@remotion/renderer');
   const { withRenderLock } = await import(pathToFileURL(path.join(ROOT, 'tools', 'renderlock.mjs')).href);
-  const every = Math.round(FPS / Number(arg('fps', 2)));
-  const picks = [];
-  for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
   const serveUrl = await bundle({ entryPoint: path.join(VIDEO, 'src/index.ts'), publicDir: path.join(VIDEO, 'public') });
   // a private dir: the shared .framecheck dir is deleted by every other framecheck run that ends
-  const shots = mkdtempSync(path.join(tmpdir(), 'typecheck-'));
-  const samples = [];
+  const shots = mkdtempSync(path.join(tmpdir(), prefix));
   await withRenderLock(async () => {
     const chromiumOptions = { gl: 'angle' };
     const browser = await openBrowser('chrome', { chromeMode: 'chrome-for-testing', chromiumOptions });
-    for (const layer of ['type', 'world']) {
+    for (const layer of layers) {
       const composition = await selectComposition({ serveUrl, id: 'MC60', inputProps: { layer }, puppeteerInstance: browser, chromiumOptions });
       for (const fr of picks) {
         const output = path.join(shots, `${layer}-${fr}.png`);
@@ -196,6 +199,70 @@ if (process.argv.includes('--type')) {
     }
     await browser.close({ silent: true });
   });
+  const done = (code) => {
+    rmSync(serveUrl, { recursive: true, force: true });
+    if (arg('keep')) cpSync(shots, path.resolve(arg('keep')), { recursive: true });
+    rmSync(shots, { recursive: true, force: true });
+    rmSync(outDir, { recursive: true, force: true });
+    process.exit(code ?? 1);
+  };
+  return { shots, done };
+};
+
+/** The cards of a state standing on the floor with their soles in frame: the sole line on screen, the card's screen
+ *  height, and the screen boxes of the other cards (the beside-floor samples must not land on them). A split half,
+ *  a card off the floor (feet or a drop) and one drawn without floor contact (ground: false) are not checked. */
+const standing = (st, t) => {
+  const all = [...st.subjects, ...(st.extras ?? [])];
+  const rects = all.map((x) => { const b = screenBox(st.pose, x, frames[x.card]?.action ?? [0, 0, 1, 1]); return [b.x0, b.y0, b.x1, b.y1]; });
+  return all.flatMap((x, i) => {
+    // the soles where the rig draws the boots at t (Card.tsx places the shadow from the same function)
+    const so = M.solesAt(x.card, t);
+    if (!so || x.silhouette || x.clip || x.ground === false) return [];
+    if (Math.abs((x.at.feet ?? FLOOR_Y) - FLOOR_Y) > 0.01 || Math.abs(x.dy ?? 0) > 0.01) return [];
+    const [u0, u1, v] = so;
+    const a = M.project(st.pose, M.cardPoint(x, u0, v));
+    const b = M.project(st.pose, M.cardPoint(x, u1, v));
+    const top = M.project(st.pose, M.cardPoint(x, 0.5, 0));
+    const bot = M.project(st.pose, M.cardPoint(x, 0.5, 1));
+    // the card's own down direction on screen (a barrel roll turns it) and the sole line's half length across it
+    const hpx = Math.hypot(bot.x - top.x, bot.y - top.y);
+    const down = [(bot.x - top.x) / hpx, (bot.y - top.y) / hpx];
+    const sole = { card: x.card, cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, half: Math.abs((b.x - a.x) * down[1] - (b.y - a.y) * down[0]) / 2, down, hpx, others: rects.filter((_, j) => j !== i) };
+    return sole.cx < 0 || sole.cx > W || sole.cy < 4 || sole.cy > H - 12 ? [] : [sole];
+  });
+};
+
+if (process.argv.includes('--ground')) {
+  // every shot with a standing card, sampled at its middle (and its quarters when longer than 2 s): away from the
+  // cuts and their covers
+  const runs = [];
+  for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr++) {
+    const st = M.filmStateAt(fr);
+    if (!st) continue;
+    const r = runs.at(-1);
+    if (r && r.shot === st.shot && r.last === fr - 1) r.last = fr;
+    else runs.push({ shot: st.shot, first: fr, last: fr });
+  }
+  const picks = runs.flatMap((r) => {
+    const n = r.last - r.first + 1;
+    return (n > 2 * FPS ? [0.25, 0.5, 0.75] : [0.5]).map((k) => r.first + Math.round(k * (n - 1))).filter((fr) => standing(M.filmStateAt(fr), fr / FPS).length);
+  });
+  console.log(`ground ${A}-${B} s: ${runs.length} shots, ${picks.length} sampled frames with a standing card`);
+  const { shots, done } = await renderLayers(picks, ['world'], 'groundcheck-');
+  const samples = picks.map((fr) => { const st = M.filmStateAt(fr); return { frame: fr, t: fr / FPS, shot: st.shot, world: path.join(shots, `world-${fr}.png`), soles: standing(st, fr / FPS) }; });
+  const list = path.join(shots, 'samples.json');
+  writeFileSync(list, JSON.stringify(samples));
+  const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'groundframe.py'), list], { stdio: 'inherit' });
+  done(py.status);
+}
+
+if (process.argv.includes('--type')) {
+  const every = Math.round(FPS / Number(arg('fps', 2)));
+  const picks = [];
+  for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
+  const { shots, done } = await renderLayers(picks, ['type', 'world'], 'typecheck-');
+  const samples = [];
   for (const fr of picks) {
     const st = M.filmStateAt(fr);
     const subj = st.subjects.filter((x) => !x.silhouette && frames[x.card]);
@@ -205,11 +272,7 @@ if (process.argv.includes('--type')) {
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));
   const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'typeframe.py'), list, path.join(shots, 'failures.json')], { stdio: 'inherit' });
-  rmSync(serveUrl, { recursive: true, force: true });
-  // --keep <dir> copies the stills there before the temp dir goes
-  if (arg('keep')) cpSync(shots, path.resolve(arg('keep')), { recursive: true });
-  rmSync(shots, { recursive: true, force: true });
-  process.exit(py.status ?? 1);
+  done(py.status);
 }
 
 // walk the range; consecutive failing frames of one shot, card and reason merge into one run
