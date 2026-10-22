@@ -55,6 +55,13 @@ and video stand.
 5. **Check, then show.** `beatcheck` (0 frames drift, dead-air rule), frame-purity scan, contact
    sheets, full-speed looks at every transition, a blind reviewer — and only then the director.
 
+## The skill
+
+The process behind these clips is written down as a Claude Code skill in
+[`skill/music-video/`](skill/music-video/): ten phases from the input gate to delivery, plus
+[the lessons](skill/music-video/references/lessons.md) with the evidence for each rule. Copy it into
+`~/.claude/skills/` to use it with your own song.
+
 ## Repository layout
 
 ```
