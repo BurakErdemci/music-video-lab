@@ -58,13 +58,15 @@ export const Marquee = ({ spec, t }: { spec: FormSpec; t: number }) => {
         const on = tok && t >= tok.start;
         const color: Hex = c.tok === k ? mixHex(solidAt(spec.singer, t, 0), '#ffffff', 0.15) : solidAt(spec.singer, t, c.tok);
         // round 11 (the unlit words were near black and the panel read as empty): the whole line shows from the
-        // start, an unsung word's bulbs at 38 % of its own colour; each word snaps to full on its sung start
-        if (!on) return <circle key={i} cx={c.x} cy={c.y} r={c.r} fill={mixHex(color, '#000000', 0.62)} />;
+        // start, an unsung word's bulbs at 45 % of its own colour (about 35-40 % of its lit, whitened bulbs); each
+        // word snaps to full on its sung start
+        if (!on) return <circle key={i} cx={c.x} cy={c.y} r={c.r} fill={mixHex(color, '#000000', 0.55)} />;
         const chase = 0.7 + 0.3 * Math.sin(t * 9 - (c.x + c.y) * 0.03);
         const lv = Math.min(1, chase + 0.35 * kick);
         return (
           <g key={i}>
-            <circle cx={c.x} cy={c.y} r={c.r * 2} fill={color} opacity={0.22 * lv} />
+            {/* the glow stays inside its cell (round 11: wider glows ran a row of bulbs together into bars) */}
+            <circle cx={c.x} cy={c.y} r={c.r * 1.3} fill={color} opacity={0.3 * lv} />
             <circle cx={c.x} cy={c.y} r={c.r} fill={mixHex(color, '#ffffff', 0.45 * lv)} />
           </g>
         );
