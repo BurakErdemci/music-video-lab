@@ -4,7 +4,10 @@
 Remotion's browser capture on this machine sometimes returns a tiled "capture mosaic" or a
 torn frame; which frames are hit differs from render to render, while a single-frame still
 of the same frame is clean. So this tool:
-  1. renders the range twice (through tools/locked.sh, one Chrome at a time),
+  1. bundles the project ONCE and renders the range twice from that bundle (through tools/locked.sh, one Chrome at a
+     time). One bundle for both passes and the stills: the working tree is shared with other lanes, and a pass that
+     re-bundled picked up their edits made during the first pass (round 8: 2184 of 13928 frames "disputed" because the
+     painting code changed between pass A and pass B, which then cost hours of still-by-still arbitration),
   2. diffs both renders frame by frame (mean abs difference on a 192x108 downscale),
   3. re-renders every disputed frame as a still,
   4. splices the stills into render A (audio copied from A, or with --song the song file itself from the
@@ -137,8 +140,10 @@ def main():
     t0 = time.time()
     try:
         ra, rb = work / 'a.mp4', work / 'b.mp4'
+        bundle = work / 'bundle'
+        locked(['npx', 'remotion', 'bundle', a.entry, f'--out-dir={bundle}'])
         for r in (ra, rb):
-            locked(['npx', 'remotion', 'render', a.entry, a.comp, str(r), f'--frames={a.frames}'] + flags)
+            locked(['npx', 'remotion', 'render', bundle.as_posix(), a.comp, str(r), f'--frames={a.frames}'] + flags)
         A, B = small_frames(ra), small_frames(rb)
         if len(A) != len(B):
             sys.exit(f'frame counts differ: {len(A)} vs {len(B)}')
@@ -148,9 +153,7 @@ def main():
               [start + i for i in disputed], flush=True)
         stills = {}
         if disputed:
-            # one bundle and one lock hold for all stills: re-bundling per still made each cost ~10 s plus a lock wait
-            bundle = work / 'bundle'
-            locked(['npx', 'remotion', 'bundle', a.entry, f'--out-dir={bundle}'])
+            # the passes' bundle and one lock hold for all stills: re-bundling per still made each cost ~10 s plus a lock wait
             script = work / 'stills.sh'
             script.write_text('set -e' + NL + ''.join(
                 f'npx remotion still "{bundle.as_posix()}" {a.comp} "{(work / f"s{i}.png").as_posix()}" '
