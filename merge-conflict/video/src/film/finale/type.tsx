@@ -66,7 +66,7 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
       case 'f-file':
         // round 9 (Burak: dim, hard-to-read letters at 2:31): three rows of 16 cells across the bottom band, the
         // letters ~79 px (cap ~5 % of the frame) in near-white ink on the dark cells; the key word keeps its colour
-        out.push(<Flap key={e.id} spec={spec(e, { x: 100, y: 700, w: 1720, h: 330 })} t={t} cols={16} ink="#eef4ff" backing />);
+        out.push(<Flap key={e.id} spec={spec(e, { x: 100, y: 680, w: 1720, h: 330 })} t={t} cols={16} ink="#eef4ff" backing />);
         break;
       case 'f-tree':
         out.push(<Ring key={e.id} spec={spec(e, { x: 700, y: 520, w: 520, h: 300 })} t={t} opt={{ cx: 960, cy: 790, r: 230, size: 42, face: 'righteous', backing: true }} />);
