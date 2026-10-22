@@ -1,9 +1,10 @@
 // Type placed clear of the faces (round 7d, scene-map.md "No knockouts"): a form that would cover a subject's face box
 // (down to the chin, film/framing.ts faceFrame) moves or shrinks instead of being cut around the face. Per shot, the
 // faces are taken at three moments (12, 50 and 88 % of the shot) from the family's own living state, and the form's
-// box is tried at its authored place, then mirrored, in the top or bottom band, at the sides, and at 80, 62 and 48 %
-// of its size; the first placement that clears every face (with a pad) at all three moments and stays inside the 4 %
-// margin wins. The choice holds for the whole shot, so a form only moves at a cut. Node-safe and deterministic (a
+// box is tried at its authored place, then mirrored, in the top or bottom band and at the sides, always at its own
+// size (round 7d: a form never shrinks to clear a face; its glyphs keep >= 3.5 % of the frame height, and a shot
+// with no room is re-framed instead); the first placement that clears every face (with a pad) at all three moments
+// and stays inside the 4 % margin wins, else the one that covers the least. The choice holds for the whole shot, so a form only moves at a cut. Node-safe and deterministic (a
 // memo keyed by shot and box).
 import { type CameraPose, H, typePlane, W } from '../camera/camera.ts';
 import { faceFrame, CARD_FRAMES, screenBox, type ShotState } from '../film/framing.ts';
@@ -15,7 +16,7 @@ export interface Live { stateAt: (t: number) => ShotState; spanAt: (t: number) =
 const PAD = 28;
 const M = { x0: 0.04 * W, y0: 0.04 * H, x1: 0.96 * W, y1: 0.96 * H };
 const SAMPLES = [0.12, 0.5, 0.88];
-const SCALES = [1, 0.8, 0.62, 0.48];
+const SCALES = [1];
 const memo = new Map<string, string>();
 
 type Rect = [number, number, number, number];
