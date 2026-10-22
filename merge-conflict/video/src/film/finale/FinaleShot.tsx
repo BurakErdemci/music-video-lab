@@ -34,7 +34,7 @@ import { Arena, CYAN, FireWorld, InsertWorld, LineWorld, LogoWorld, RED, RunwayW
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
-import { BRANCHES_AT, BUILD, CHANT, FAILED, FBLUE, FHITS, FINAL, FINALE_END, FINALE_TYPE, FORANGE, type FScene, type FShot, FSHOTS, type Move, OUTRO, PIANO, RISE, SCREAM_END, tk } from './plan.ts';
+import { BRANCHES_AT, BUILD, CHANT, FAILED, FBLUE, FHITS, FINAL, FINALE_END, FINALE_TYPE, FORANGE, type FScene, type FShot, FSHOTS, type Move, OUTRO, shotSlot, PIANO, RISE, SCREAM_END, tk } from './plan.ts';
 import { logoIn } from './logo.ts';
 import { FinaleType } from './type.tsx';
 import { flightView } from './paint.ts';
@@ -84,7 +84,7 @@ const TRANSITIONS: TransitionSpec[] = (() => {
     const sameWorld = prev.scene === s.scene && s.scene !== 'panel';
     if (!sameWorld && s.into && s.into !== 'shock' && s.t - lastCover >= COVER_GAP) {
       lastCover = s.t;
-      out.push({ id: `f-tr-${s.id}`, kind: clipKind(s.into, metal, i), at: s.t, pre: 2 / 60, post: 4 / 60, colors });
+      out.push({ id: `f-tr-${s.id}`, kind: clipKind(s.into, metal, shotSlot(s)), at: s.t, pre: 2 / 60, post: 4 / 60, colors });
     } else if (sameWorld && s.into) {
       out.push({ id: `f-tr-${s.id}`, kind: 'shock', at: s.t, pre: 0, post: 14 / 60, colors, origin: [960, 980] });
     }
@@ -206,7 +206,7 @@ const finaleCamera = (t: number) => {
   const scene = shot.scene;
   const blueP = poseAt(FBLUE, t);
   const orangeP = poseAt(FORANGE, t);
-  const idx = FSHOTS.indexOf(shot);
+  const idx = shotSlot(shot);
   if (scene === 'flight') {
     // the build's pulse: a punch on every beat that grows with the build
     const b = [...PULSES].reverse().find((x) => t >= x) ?? t;

@@ -31,7 +31,7 @@ export type Move = 'push' | 'orbit' | 'whip' | 'dollyzoom' | 'still';
 type Who = readonly [string, Placement] | null;
 /** `panel`: for scene 'panel', the painting shown full frame (public/plates/<panel>.webp, depth map beside it).
  *  `fade`: the shot opens from black instead of a cover (out of the solo; the final freeze closes to black). */
-export interface FShot { id: string; t: number; scene: FScene; cam: CamVariant; move?: Move; panel?: string; into?: TransitionKind; fade?: boolean; B?: Who; O?: Who }
+export interface FShot { id: string; t: number; scene: FScene; cam: CamVariant; move?: Move; panel?: string; into?: TransitionKind; fade?: boolean; B?: Who; O?: Who; /** a shot added after Burak approved the shots around it: it takes no slot (shotSlot) */ inserted?: true }
 export interface FPose { t: number; card: string | null; at?: Placement }
 
 export const tk = (line: number, k: number): number => at(`tok-${line}-${k}`);
@@ -159,7 +159,7 @@ export const FSHOTS: FShot[] = [
   { id: 'dawn', t: OUTRO.start, scene: 'panel', panel: 'RK11', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   // round 11 (Burak: the walk from behind ran too long): two bars from behind, then a hard cut on the downbeat to the
   // girls walking toward us, arm in arm, laughing, the sunrise behind them (RK13)
-  { id: 'dawn-us', t: dbN(OUTRO.start, 2), scene: 'panel', panel: 'RK13', cam: 'hero', move: 'push', B: null, O: null },
+  { id: 'dawn-us', t: dbN(OUTRO.start, 2), scene: 'panel', panel: 'RK13', cam: 'hero', move: 'push', B: null, O: null, inserted: true },
   { id: 'title', t: db(218.8), scene: 'title', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   { id: 'title-b', t: db(220.1), scene: 'title', cam: 'close', move: 'orbit', into: 'shock' },
   { id: 'outro-faces', t: db(221.5), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
@@ -175,6 +175,13 @@ for (let i = 1; i < FSHOTS.length; i++) {
   const b = FSHOTS[i] as FShot;
   if (b.t - a.t < 0.12) throw new Error(`finale plan: shot ${b.id} at ${b.t.toFixed(2)} s is not after ${a.id} (${a.t.toFixed(2)} s)`);
 }
+
+/** A shot's slot: its index among the shots, not counting inserted ones before it. The camera's orbit and whip
+ *  direction and the cover's kind come from it, so a shot inserted later leaves every shot after it as approved. */
+export const shotSlot = (s: FShot): number => {
+  const i = FSHOTS.indexOf(s);
+  return i - FSHOTS.slice(0, i).filter((x) => x.inserted).length;
+};
 
 const poses = (who: 'B' | 'O'): FPose[] =>
   FSHOTS.flatMap((s) => {
