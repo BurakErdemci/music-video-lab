@@ -247,7 +247,8 @@ export const REST_TYPE: TypeEntry[] = [
   { id: 'r-spaces', line: 39, range: [0, 3], form: 'Extrude', t0: tk(39, 0) - 0.05, t1: tk(40, 0), singer: 'O', key: 2 },
   { id: 'r-data2', line: 40, range: [0, 5], form: 'LightBox', t0: tk(40, 0) - 0.05, t1: tk(41, 0), singer: 'B', key: 4 },
   { id: 'r-touch', line: 41, range: [0, 9], form: 'Code', t0: tk(41, 0) - 0.05, t1: tk(42, 0), singer: 'O', key: 7 },
-  { id: 'r-wrote', line: 42, range: [0, 4], form: 'Stamp', t0: tk(42, 0) - 0.05, t1: tk(43, 0), singer: 'B', key: 3 },
+  // (round 7d: the plates start with "wrote"; the lone I plate read as a stray glyph on her before her line)
+  { id: 'r-wrote', line: 42, range: [0, 4], form: 'Stamp', t0: tk(42, 1) - 0.05, t1: tk(43, 0), singer: 'B', key: 3 },
   { id: 'r-touched', line: 43, range: [0, 5], form: 'Diff', t0: tk(43, 0) - 0.05, t1: SCREAM.start, singer: 'O', key: 3 },
   { id: 'r-scream', line: 44, range: [0, 1], form: 'Shout', t0: SCREAM.start, t1: SCREAM.end, singer: 'both', key: 0, style: 'steel', text: 'AAAAAH!' },
   { id: 'r-git', line: 45, range: [0, 1], form: 'Slam', t0: tk(45, 0), t1: tk(46, 0), singer: 'O', key: 0 },
