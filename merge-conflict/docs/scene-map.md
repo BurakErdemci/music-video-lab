@@ -563,3 +563,45 @@ is the four-shot, one-continuous-push version ("GIT! PUSH! FORCE! rebuilt"; proo
 ceiling and its events-per-beat rule stay. Its gate is `node tools/pushcheck.mjs`: the girls in frame at the cut, the
 ring between them, the throw seen for >= 0.35 s and >= 40 % of the frame wide, scale and blue's saturation. If Burak
 finds the scene weak, apply `docs/patches/push-motion-levers.patch` first (measured gains in its `.md`).
+
+## Paintings that live (round 10, 2026-10-22; Burak on proof232-r9: "slayt resmi gibi duruyor", "yanlardan siyah bant")
+
+Burak approved the plan: every painting widened to 16:9 so it fills the frame; the long-held ones become living,
+layered paintings with a drawn loop; live effects in front of every painting. This replaces "a painting is always
+shown whole" (round 7d) and its side bands. Binding from now on:
+- **A painting covers the frame.** Every QK/RK painting shot draws its 16:9 plate (`public/plates/wide/<ID>.webp`, the
+  approved 3:2 original untouched in the middle, the sides outpainted). Its Ken Burns only pushes in, 100 % (covering)
+  to 103 %; a beat punch spends part of that same room, never more. The original 3:2 centre stays >= 97 % visible
+  (`tools/framecheck.mjs`). The build's flight into RK3 keeps its push (round 9).
+- **Every painting shot moves like a camera, not a zoom:** a truck, an arc (pivoting on the girls), a push or a rise
+  works the painting's depth map (`public/plates/depth/wide/`, Depth Anything V2 small, `tools/depthmap.py`): near
+  pixels slide and swell against far ones. Metal shots take the live camera's shake inside the push's room. The table
+  is `LIFE` in `video/src/worlds/paintview.ts`, one entry per painting shot.
+- **Life in front of every painting:** particles matched to the painting (confetti, embers, sparks, dust in the light,
+  glitter) drifting toward the camera through depth (`particles/drift.tsx`), the shared field in the same kind, a
+  light sweep every bar (two in the piano), a soft bloom of the painting's own highlights on the beat (stronger on the
+  downbeat), and a particle surge on every downbeat. Type is still drawn after all of it; flash <= 3/s holds.
+- **Living paintings (RK1, RK2, RK11, RK12):** the empty painting and the girls on their own plane in front, sliding
+  against it by their own depth; their drawn loop (base, b, c, b) plays at the section's `rig/loop.ts` rate; a beat
+  bob (a lift, 0.25 % of the frame) where the drawing is not cut by the frame; a contact shadow and a rim glow. The
+  girls' plane is the painting's own layer, not a card: "nothing pasted over a painting" still fails any card, and the
+  girls must stay inside the frame on every side their drawing did not cut (they may lose what the 3 % push hides)
+  and reach past it on every side it did.
+- **Paintings are not slides (`tools/slidecheck.mjs`):** every painting shot's mean frame-to-frame motion (the
+  intensity measure, inside the shot, covers and fades left out) is >= 0.5x the median of the live shots of its own
+  section. Why 0.5: on proof232-r9, which Burak called slides, every painting outside the piano measured 0.16-0.49x
+  its section's live median (the two highest rode on confetti and spark bursts), so the floor sits just above the
+  highest of them.
+
+Decisions taken in this round (the architect may overrule):
+- The girls' depth on the layered paintings is where they touch the ground (RK11 0.1) or, in the air or cut by the
+  frame, the median depth under them (RK2 0.46, RK12 0.62); RK1 0.65, between her seat and the near floor her boots
+  stand on, so the boots slip under 15 px.
+- RK2's girls do not bob (their drawing is cut on every side). RK12 moves as an arc about the girls: their hair
+  reaches the top edge, so they may not rise or swell.
+- The dawn walk (RK11, 5.35 s, the longest hold) pivots at mid depth: the girls and the city slide one way, the near
+  rubble the other; with an arc about the girls it measured 0.34x the outro's live median. Long holds also sway over
+  two bars, wider the longer the hold. The weak push moves were turned into trucks and arcs (a depth swell alone
+  measured 0.32-0.47x).
+- The keyed layers are upscaled before keying (the key runs on the 3640x2048 image); a thin blue strand on the green
+  reads cyan, so within 10 px of the screen green above 0.55 of the blue counts as screen (`tools/imagegen/greenkey.py`).

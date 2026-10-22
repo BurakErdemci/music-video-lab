@@ -121,3 +121,37 @@ Part A, finale polish (140.04-232.12), and part B, GIT! PUSH! FORCE! rebuilt (12
     type loops (`typeShown` in `layer.ts`). `framecheck --type` renders every active entry alone where two or more
     are on screen and one has settled, and `typeframe.py` fails a settled form more than 2 % covered by another
     form (`overlap`, in the selftest). Type outside the plan (HUDs, the push family's words) is not isolated.
+
+## Round 10 (2026-10-22): the paintings fill the frame and live
+Burak on proof232-r9: the paintings sat in blurred side bands and read as slides. Full proof:
+`video/out/proof232-r10.mp4`. Rules: scene-map.md "Paintings that live (round 10)".
+
+- **One painting path for both families.** `worlds/paintview.ts` (node-safe) computes a painting shot's view at t:
+  `paintShotView(shotId, paintingId, t, t0, t1)` from the `LIFE` table (one entry per painting shot: move, direction,
+  particle kind and colours, sweep colour and angle, optional pivot) and the per-section `ENERGY` (travel speed, sweep,
+  bloom, punch, drift density). `worlds/Painting.tsx` draws it (frame-locked bg quad with depth parallax, sweep and
+  bloom; for RK1/RK2/RK11/RK12 a second girls quad at `GIRLS_ORDER`, between the back field and the front one).
+  `RestShot` (`restPaintAt`) and `FinaleShot` (`paintViewAt`) report `plate.view.paint` in their state; framecheck
+  reads it. The old `PanelLayer`, `paintingView`/`paintingParallax`, `restView` and `film/finale/Painting.tsx` are gone.
+- **Assets:** `public/plates/wide/<ID>.webp` (17, commit 4ff5410), `public/plates/depth/wide/<ID>.png` and
+  `depth/layers/<ID>-bg.png` (`tools/depthmap.py`, Depth Anything V2 small on the CPU in a throwaway uv env),
+  `public/plates/layers/<ID>-{bg,fg,fgb,fgc}.webp` + `<ID>.json` (alpha box and cut edges per drawing;
+  `tools/imagegen/greenkey.py`, Upscayl under `tools/locked.sh`, `--selftest` exits 1). The 3:2 plates and
+  `plates/depth/<ID>.png` of the paintings are no longer read by the film (kept; delete if nobody wants them).
+- **Particles:** `particles/drift.tsx` (`Drift`, layers 'mid' and 'near'), seeded closed-form, kinds dust, embers,
+  sparks, confetti, glitter; `driftAdvance(t)` is the downbeat surge, `driftDensity(t)` the section's share. The
+  shared `Field` takes the painting's kind on painting shots (`fieldKind`).
+- **Checks:** `node tools/slidecheck.mjs --video <mp4> [--start s] [--range a-b]` (`--selftest` exits 1);
+  `framecheck` now fails a painting that leaves the frame uncovered, shows < 97 % of its 3:2 centre, has a card over
+  it, or whose girls are cut on a side their drawing was not (beyond the 1.5 % the push hides) or leave a gap on a
+  side it was. `FINALE_FADES` (FinaleShot) are left out of the slide measure.
+- **Open conflict for the architect:** `tools/intensity.mjs` fails one rule on proof232-r10: the scream measures
+  1.07x the chorus (cap 1.0; proof232-r9 0.99x). The scream was already at its cap, and its painting (QK2, 0.67 s)
+  went from 5.51 to 13.61 to clear the slide floor (0.5x the scream's live median 26.14 = 13.07). Even at the floor
+  the scream stays ~1.05x, so the two rules cannot both hold without calming the scream's live shots: lowering its
+  punch/kick (0.05/0.12 -> 0.04/0.08) gave 1.05x, its shake (10 -> 6 px) did nothing to the section; both reverted.
+  Options: raise the scream's ceiling to 1.1x (the solo has 1.15x), or exempt the scream's painting from the floor
+  (QK2 at its r9 level keeps the scream at 0.99x).
+- **Weak spots / next:** the parallax is one-sample on the depth map, so a large slide stretches the far pixels that
+  border a near object (most visible on RK11's rubble edge and RK5's faces at their shot ends); the RK11 walk loop
+  plays at the outro's 3 drawings a beat, quick for a walk; the girls' plane uses one depth for both girls.
