@@ -260,6 +260,9 @@ def close(a, b):
 
 
 DIM_FLOOR = 0.3  # an unsung dot-matrix word's bulbs: at least this share of the same bulbs lit (round 11)
+# a line pressed flat beside the form's biggest (round 11, "ALL YOUR SORRIES INTO" at 3.8 % under a 14.4 % SQUASHED):
+# under FLAT_REL of the form's largest line and under FLAT_ABS of the frame
+FLAT_REL, FLAT_ABS = 1 / 3, 0.05
 
 
 def bright(p):
@@ -283,8 +286,11 @@ def dim_ratio(e):
     return float(np.percentile(ratios, 10)) if len(ratios) >= 10 else 1.0
 
 
-# forms whose settled state may run past the margin by design: the Wave scrolls a long line with the singing
-EDGE_FREE = ("Wave",)
+# the forms whose own box the margin rule measures alone (round 11): the ones drawn turned or projected, which the
+# whole-layer box misses while they move - the control line's leaning backing, a line lying on the floor. (A sweep of
+# every form on proof232-r10 also found plane-carried and flying forms crossing the margin while they move: v-head,
+# the Stamps, the Logo halves, r-rebased, r-gone, r-data2, v-orange, f-equals; left to the architect.)
+EDGE_FORMS = ("GlitchText", "RunwayLine")
 
 
 def entry_checks(s, base):
@@ -301,13 +307,20 @@ def entry_checks(s, base):
             continue
         box = tuple(int(v) for v in box)
         over = sides(box)
-        if over and e["form"] not in EDGE_FREE:
+        if over and e["form"] in EDGE_FORMS:
             out.append({**base, "kind": "edge", "value": max(over.values()), "why": f"form {e['id']} ({e['form']}) box {box} crosses the 4 % margin by {over} px"})
         if not s.get("cap_exempt"):
-            small = [ln for ln in cap_lines({"type": e["png"]}) if ln[0] < CAP_MIN * H]
+            lines = cap_lines({"type": e["png"]})
+            small = [ln for ln in lines if ln[0] < CAP_MIN * H]
             if small:
                 c, x, y, n = min(small)
                 out.append({**base, "kind": "small", "value": round(100 * c / H, 1), "why": f"form {e['id']}: a text line of {n} glyphs at ({x}, {y}) has a cap height of {100 * c / H:.1f} % (min {100 * CAP_MIN:.1f} %)"})
+            elif lines:
+                top = max(ln[0] for ln in lines)
+                flat = [ln for ln in lines if ln[0] < FLAT_REL * top and ln[0] < FLAT_ABS * H]
+                if flat:
+                    c, x, y, n = min(flat)
+                    out.append({**base, "kind": "small", "value": round(100 * c / H, 1), "why": f"form {e['id']}: a text line of {n} glyphs at ({x}, {y}) is pressed to {100 * c / H:.1f} % under a {100 * top / H:.1f} % line"})
         if e.get("lit"):
             r = dim_ratio(e)
             if r < DIM_FLOOR:
@@ -420,7 +433,7 @@ def selftest():
         draw_entry(im)
         ep = os.path.join(d, name + "-e.png")
         im.save(ep)
-        e = {"id": name, "form": "Marquee" if draw_lit else "Stack", "png": ep, "settled": settled}
+        e = {"id": name, "form": "Marquee" if draw_lit else ("GlitchText" if name in ("edge", "flying") else "Stack"), "png": ep, "settled": settled}
         if draw_lit:
             lit = Image.new("RGBA", (W, H), (0, 0, 0, 0))
             draw_lit(lit)
@@ -448,12 +461,20 @@ def selftest():
     def tiny(im):
         text("ALL YOUR SORRIES INTO", 22)(im)
 
+    def flat(im):
+        # a big key line and a row pressed under it, still over the 3.5 % floor
+        from PIL import ImageDraw, ImageFont
+        d = ImageDraw.Draw(im)
+        d.text((300, 200), "SQUASHED", font=ImageFont.truetype("consola.ttf", 200), fill=(230, 40, 40, 255))
+        d.text((300, 500), "ALL YOUR SORRIES INTO", font=ImageFont.truetype("consola.ttf", 58), fill=(230, 40, 40, 255))
+
     samples = [
         case("ok", rect((600, 400, 1300, 600), white), dark, [[100, 100, 200, 200]]),
         entry_case("edge", turned),
         entry_case("dim", bulbs(0.15), bulbs(1.0)),
         entry_case("brightdim", bulbs(0.4), bulbs(1.0)),
         entry_case("esmall", tiny),
+        entry_case("eflat", flat),
         entry_case("flying", turned, settled=False),
         case("margin", rect((20, 400, 800, 600), white), dark, []),
         case("face", rect((600, 400, 1300, 600), white), dark, [[900, 450, 1000, 550]]),
@@ -468,7 +489,7 @@ def selftest():
     samples = [x for s in samples for x in (s, dict(s, t=0.5))]
     got = {(f["shot"], f["kind"]) for f in analyse(samples)}
     want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden"), ("small", "small"), ("overlap", "overlap"),
-            ("edge", "edge"), ("dim", "dim"), ("esmall", "small")}
+            ("edge", "edge"), ("dim", "dim"), ("esmall", "small"), ("eflat", "small")}
     print("typeframe selftest flagged:", sorted(got))
     ok = got == want
     print("typeframe selftest: " + ("PASS" if ok else "FAIL (wanted " + str(sorted(want)) + ")"))
