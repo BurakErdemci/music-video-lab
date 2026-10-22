@@ -26,6 +26,9 @@ import { GlowBox } from '../../worlds/kit/index.ts';
 import type { ShotState, Subject } from '../framing.ts';
 import { liveCamera } from '../livecam.ts';
 import { PlateLayer } from '../../worlds/plate.tsx';
+import { Painting } from '../../worlds/Painting.tsx';
+import { driftAdvance, driftDensity, fieldKind, LIFE, paintMag, paintShotView } from '../../worlds/paintview.ts';
+import { Drift } from '../../particles/drift.tsx';
 import { SUBWAY_CAMERA, SubwayWorld } from '../../worlds/v1.tsx';
 import { RAILS_CAMERA, RailsWorld } from '../../worlds/v2.tsx';
 import { BLAME_CAMERA, BLAME_GUTTERS, BlameWorld, CALLGRID_CAMERA, CallGridWorld, COUNTDOWN_FRAME, PIPELINE_CAMERA, PipelineWorld, SQUASH_CAMERA, SquashWorld } from '../../worlds/v3.tsx';
@@ -196,6 +199,21 @@ const restCamera = (t: number) => {
   return { shot, k, scene, blueP, orangeP, pose, planeBase, quiet, metal, heavy, solo };
 };
 
+/** A shot's span for the living camera: verse 3 ends at chorus 2, the solo at the piano. */
+const restSpan = (t: number) => {
+  const { shot } = shotIn(RSHOTS, t);
+  const next = RSHOTS[RSHOTS.indexOf(shot) + 1];
+  const stop = shot.t < sectionNamed('chorus2').start ? sectionNamed('chorus2').start : sectionNamed('piano_interlude').start;
+  return { t0: shot.t, t1: Math.min(next?.t ?? stop, stop), key: `r-${shot.id}` };
+};
+/** A painting shot's view at t (round 10, worlds/paintview.ts): the component draws it, the state reports it. */
+const restPaintAt = (t: number) => {
+  const { shot } = shotIn(RSHOTS, t);
+  if (shot.scene !== 'panel' || !shot.panel) return null;
+  const s = restSpan(t);
+  return { id: shot.panel, view: paintShotView(shot.id, shot.panel, t, s.t0, s.t1) };
+};
+
 /** What verse 3 through the solo shows at t, for tools/framecheck.mjs (the cards the component draws). */
 const rawRestStateAt = (t: number): ShotState => {
   const { shot, k, scene, blueP: blue0, orangeP: orange0, pose, planeBase } = restCamera(t);
@@ -211,16 +229,12 @@ const rawRestStateAt = (t: number): ShotState => {
   if (b?.card && b.at) subjects.push({ card: b.card, at: b.at, clip: clip('B'), crop, dx: blownDx(t) });
   if (orangeP?.card && orangeP.at) subjects.push({ card: orangeP.card, at: orangeP.at, clip: clip('O'), crop });
   const plateId = scene === 'panel' ? shot.panel : PLATES[scene];
-  return { pose, shot: shot.id, subjects, typeBase: planeBase, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75, kb: k } : undefined };
+  const pv = restPaintAt(t);
+  const view = pv ? { h: pv.view.h, ox: pv.view.ox, oy: pv.view.oy, mag: paintMag(pv.view), push: false, paint: pv.view } : undefined;
+  return { pose, shot: shot.id, subjects, typeBase: planeBase, plate: plateId ? { id: plateId, base: planeBase, dist: scene === 'panel' ? 30 : 46, margin: scene === 'panel' ? 1.25 : 1.75, kb: k, ...(view ? { view } : {}) } : undefined };
 };
 
-const live = liveCamera(rawRestStateAt, (t) => {
-  const { shot } = shotIn(RSHOTS, t);
-  const next = RSHOTS[RSHOTS.indexOf(shot) + 1];
-  // verse 3 ends at chorus 2, the solo at the piano
-  const stop = shot.t < sectionNamed('chorus2').start ? sectionNamed('chorus2').start : sectionNamed('piano_interlude').start;
-  return { t0: shot.t, t1: Math.min(next?.t ?? stop, stop), key: `r-${shot.id}` };
-});
+const live = liveCamera(rawRestStateAt, restSpan);
 export const restStateAt = live.stateAt;
 export const REST_LIVE = live;
 
@@ -299,9 +313,11 @@ export const RestShot = ({ frame }: { frame: number }) => {
         return <InsertWorld t={t} color={RED} hit={shot.t} />;
       case 'faceB':
         return <InsertWorld t={t} color={CYAN} hit={shot.t} />;
-      case 'panel':
-        // a moment painting: pushed in, shaken on the kicks by the shot camera, parallax against the particles
-        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} kb={k} />;
+      case 'panel': {
+        // a moment painting living in front of its depth (round 10): its own move, light and the particles below
+        const pv = restPaintAt(t);
+        return pv ? <Painting id={pv.id} view={pv.view} /> : null;
+      }
       case 'whisper':
         return <WhisperWorld t={t} />;
       case 'arena':
@@ -320,6 +336,9 @@ export const RestShot = ({ frame }: { frame: number }) => {
     return <Card key={`${who}-${pp.card}`} id={pp.card as string} t={t} grade={grade} {...pp.at} opacity={opacity} rimDir={[who === 'B' ? 1 : -1, 0.3]} rival={who === 'B' ? '#ff3a14' : '#19c8ff'} clip={clip} light={light} ground={grounded ? undefined : false} dx={who === 'B' ? blownDx(t) : 0} />;
   };
   const turn = dissolveState(BLUE_TURN, t);
+  // a painting's own particles (round 10): the field in its kind and the drift through depth in front of it
+  const life = scene === 'panel' ? LIFE[shot.id] : undefined;
+  const fk = life ? fieldKind(life.particles) : { metal: t >= SCREAM.start ? 1 : 0, dust: t < SCREAM.start };
   const blueFig = turn.active ? <>{figure('B', { t: 0, card: 'BX3', at: BLUE_TURN.from?.at }, turn.fromOpacity)}{figure('B', { t: 0, card: 'BMX2', at: BLUE_TURN.to?.at }, turn.toOpacity)}</> : figure('B', blueP);
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
@@ -327,13 +346,15 @@ export const RestShot = ({ frame }: { frame: number }) => {
         {/* the moves (whip, orbit, dolly zoom) swing past the opening frame, so the plate overflows more */}
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={1.75} />}
         {world}
-        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={0.7} hueMix={0.5} metal={t >= SCREAM.start ? 1 : 0} dust={t < SCREAM.start} bursts={bursts} />}
+        {!quiet && <Field t={t} grade={t >= SCREAM.start ? ORANGE_METAL : BLUE_DISCO} layer="back" density={life ? 1 : 0.7} hueMix={0.5} metal={fk.metal} dust={fk.dust} bursts={bursts} />}
+        {life && <Drift t={t} layer="mid" kind={life.particles} colors={life.colors} base={planeBase} advance={driftAdvance(t)} density={driftDensity(t)} />}
         {/* GIT!: she stands on a giant glowing ENTER key that pulses with every kick */}
         {KEY_SHOTS.includes(shot.id) && orangeP?.at && <GlowBox position={[orangeP.at.x, FLOOR_Y + 0.22, orangeP.at.z ?? 0]} size={[3.8, 0.44, 3.0]} color="#ff3014" edge={1} fill={0.45 + 0.4 * kickW(t)} />}
         {blueFig}
         {figure('O', orangeP)}
         {turn.active && <Dissolve plan={BLUE_TURN} t={t} grade={BLUE_METAL} />}
-        {!quiet && <Field t={t} grade={BLUE_DISCO} layer="front" density={0.5} hueMix={0.5} metal={t >= SCREAM.start ? 1 : 0} dust={t < SCREAM.start} bursts={bursts} />}
+        {!quiet && <Field t={t} grade={BLUE_DISCO} layer="front" density={life ? 0.9 : 0.5} hueMix={0.5} metal={fk.metal} dust={fk.dust} bursts={bursts} />}
+        {life && <Drift t={t} layer="near" kind={life.particles} colors={life.colors} base={planeBase} advance={driftAdvance(t)} density={driftDensity(t)} />}
       </Stage>
       <Svg>
         <FormDefs />

@@ -7,6 +7,7 @@ import { type CameraPose, project } from '../camera/camera.ts';
 import framesJson from '../../public/cards/frames.json' with { type: 'json' };
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
 import { FLOOR_Y } from '../stage/floor.ts';
+import type { PaintView } from '../worlds/paintview.ts';
 
 export interface Subject {
   card: string;
@@ -35,10 +36,10 @@ export interface ShotState {
    *  distance and its width over the frame's, for the pixel-scale rule (round 7c, "Resolution"). */
   plate?: {
     id: string; base: CameraPose; dist: number; margin: number; /** a painting's Ken Burns progress 0..1 */ kb?: number;
-    /** A painting the finale places itself (film/finale/paint.ts): its height in frame heights, centre offset in frame
-     *  widths/heights (y up), the most a pixel is magnified at 2K, and whether it is the build's flight (a push that may
-     *  crop it, scene-map.md round 9); without `push` it must be whole. */
-    view?: { h: number; ox: number; oy: number; mag: number; push: boolean };
+    /** A moment painting (worlds/paintview.ts, round 10): its height in frame heights, centre offset in frame
+     *  widths/heights (y up), the most a pixel is magnified at 2K, whether it is the build's flight (a push that may
+     *  crop it, scene-map.md round 9), and the whole view as drawn (a living painting's girls plane included). */
+    view?: { h: number; ox: number; oy: number; mag: number; push: boolean; paint?: PaintView };
   };
   /** The pose the shot's type plane is authored in (typePlane(pose, typeBase, 1)), for placing type off the faces. */
   typeBase?: CameraPose;

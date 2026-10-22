@@ -23,6 +23,9 @@ import { FormDefs } from '../../type/forms/common.tsx';
 import { Svg } from '../../type/Svg.tsx';
 import { CATHEDRAL_CAMERA, CathedralWorld, CHEVRON_TUNNEL_CAMERA, ChevronTunnelWorld, FORGE_CAMERA, ForgeWorld } from '../../worlds/groove.tsx';
 import { PlateLayer } from '../../worlds/plate.tsx';
+import { Painting } from '../../worlds/Painting.tsx';
+import { driftAdvance, driftDensity, fieldKind, LIFE, paintMag, paintShotView, type PaintView } from '../../worlds/paintview.ts';
+import { Drift } from '../../particles/drift.tsx';
 import { TERMINAL_CAMERA, TerminalWorld } from '../../worlds/v1.tsx';
 import { GRAFFITI_CAMERA, GraffitiWorld, STADIUM_CAMERA, StadiumWorld } from '../../worlds/v2.tsx';
 import { WHISPER_CAMERA, WhisperWorld } from '../../worlds/v4.tsx';
@@ -34,8 +37,7 @@ import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BRANCHES_AT, BUILD, CHANT, FAILED, FBLUE, FHITS, FINAL, FINALE_END, FINALE_TYPE, FORANGE, type FScene, type FShot, FSHOTS, type Move, OUTRO, PIANO, RISE, SCREAM_END, tk } from './plan.ts';
 import { logoIn } from './logo.ts';
 import { FinaleType } from './type.tsx';
-import { flightView, paintMag, type PaintView, restView } from './paint.ts';
-import { Painting } from './Painting.tsx';
+import { flightView } from './paint.ts';
 
 const cam = (position: Vec3, target: Vec3, fov = 40, roll = 0): CameraPose => ({ position, target, fov, roll });
 const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
@@ -144,9 +146,7 @@ export const flightPose = (t: number): CameraPose => {
   return cam([sway, -1.6 + 2.4 * e, 17 - 7 * e], [0.35 * Math.sin(u * Math.PI * 1.5), 0.2 + 1.4 * e, -20], 50 - 20 * e, (0.02 + 0.04 * u) * Math.sin(u * Math.PI * 3));
 };
 const FLIGHT_BASE = flightPose(BUILD.start);
-/** The paintings that move (round 9, film/finale/paint.ts): the piano's two and the dawn walk drift whole with their
- *  depth; the build's flight pushes into RK3. Every other painting is the shared whole painting (worlds/plate.tsx). */
-const RESTING: Record<string, [number, number]> = { rk1: [1, 0.1], rk2: [-1, 0.1], dawn: [1, 0.15] };
+/** Every painting lives (round 10, worlds/paintview.ts); the build's flight pushes into RK3 (paint.ts). */
 const FLIGHT = { t0: BUILD.start, t1: BRANCHES_AT };
 export const paintViewAt = (t: number): { id: string; view: PaintView } | null => {
   const { shot, k } = shotIn(FSHOTS, t);
@@ -155,10 +155,9 @@ export const paintViewAt = (t: number): { id: string; view: PaintView } | null =
     const v = flightView(t, FLIGHT);
     return { id: 'RK3', view: { ...v, gain: v.gain * treeGain(t) } };
   }
-  const rest = RESTING[shot.id];
-  if (rest === undefined || !shot.panel) return null;
+  if (shot.scene !== 'panel' || !shot.panel) return null;
   const next = FSHOTS[FSHOTS.indexOf(shot) + 1];
-  return { id: shot.panel, view: restView(k, (next?.t ?? FINALE_END) - shot.t, rest[0], rest[1]) };
+  return { id: shot.panel, view: paintShotView(shot.id, shot.panel, t, shot.t, next?.t ?? FINALE_END) };
 };
 /** How far the build's girls have risen (they float up from one knee after they step out of the painting). */
 const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BRANCHES_AT) / (BUILD.end - BRANCHES_AT)));
@@ -264,7 +263,7 @@ const rawFinaleStateAt = (t: number): ShotState => {
   const panel = scene === 'panel' || scene === 'flight';
   // a painting the finale places itself (paint.ts) is reported as drawn, so framecheck measures its push and scale
   const pv = paintViewAt(t);
-  const view = pv ? { h: pv.view.h, ox: pv.view.ox, oy: pv.view.oy, mag: paintMag(pv.view), push: scene === 'flight' } : undefined;
+  const view = pv ? { h: pv.view.h, ox: pv.view.ox, oy: pv.view.oy, mag: paintMag(pv.view), push: scene === 'flight', paint: pv.view } : undefined;
   return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)) : k } : {}), ...(view ? { view } : {}) } : undefined };
 };
 
@@ -291,6 +290,12 @@ const burstsAt = (t: number): Burst[] =>
     ...EVENTS.filter((e) => e.kind === 'spark' && e.t >= FINAL.start && e.t < OUTRO.start).map((e, i) => ({ t: e.t, origin: [i % 2 ? 3 : -3, -1, 0] })),
   ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).sort((a, b) => a.t - b.t).slice(-4);
 
+/** The fades from and to black (the piano opening out of the solo, the final freeze closing on the last note). */
+const FADE_IN: [number, number] = [PIANO.start, PIANO.start + 0.6];
+const FADE_OUT: [number, number] = [FINALE_END - 1.6, FINALE_END];
+/** For tools/slidecheck.mjs: frames inside a fade measure the fade, not the painting. */
+export const FINALE_FADES: [number, number][] = [FADE_IN, FADE_OUT];
+
 export const FinaleShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const layer = useLayer();
@@ -307,7 +312,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
     switch (scene) {
       case 'panel':
         // a painting shown whole, locked to the frame (round 7d): only its own lyric type over it
-        return painting ? <Painting id={painting.id} view={painting.view} /> : <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} kb={k} />;
+        return painting ? <Painting id={painting.id} view={painting.view} /> : null;
       case 'quiet':
         // the truce: the empty stage after hours, its floor half blue, half orange
         return (
@@ -371,23 +376,29 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   // confetti is earned: the final chorus and its paintings, and the piano's slow confetti (scene-map.md QUIET set); the
   // build gets dust, the metal embers
   const density = quiet ? 1 : scene === 'flight' ? 0.6 + 0.4 * flightK(t) : 1;
+  // a painting's own particles (round 10): the field in its kind, and the drift through depth in front of it
+  const life = scene === 'panel' ? LIFE[shot.id] : undefined;
+  const fk = life ? fieldKind(life.particles) : { metal: metal ? 1 : 0, dust: !final && !quiet };
+  const adv = driftAdvance(t);
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={plateMargin(scene)} />}
         {world}
-        <Field t={t} grade={fieldGrade} layer="back" density={density} hueMix={0.6} metal={metal ? 1 : 0} dust={!final && !quiet} bursts={bursts} />
+        <Field t={t} grade={fieldGrade} layer="back" density={density} hueMix={0.6} metal={fk.metal} dust={fk.dust} bursts={bursts} />
+        {life && <Drift t={t} layer="mid" kind={life.particles} colors={life.colors} base={planeBase} advance={adv} density={driftDensity(t)} />}
         {subjects.map(figure)}
         {PLANS.map((p) => (dissolveState(p, t).active ? <Dissolve key={p.id} plan={p} t={t} grade={gradeOf(p.id.endsWith('-b') ? 'B' : 'O', p.t0 + 0.01)} rival={p.id.endsWith('-b') ? '#ff7a1a' : '#19c8ff'} spread={p.id.startsWith('f-branch') ? 1.4 : 2.4} /> : null))}
-        <Field t={t} grade={BLUE_MIX} layer="front" density={density * 0.8} hueMix={0.6} metal={metal ? 1 : 0} dust={!final && !quiet} bursts={bursts} />
+        <Field t={t} grade={BLUE_MIX} layer="front" density={density * 0.8} hueMix={0.6} metal={fk.metal} dust={fk.dust} bursts={bursts} />
+        {life && <Drift t={t} layer="near" kind={life.particles} colors={life.colors} base={planeBase} advance={adv} density={driftDensity(t)} />}
       </Stage>
       <Svg>
         <FormDefs />
         {layer !== 'type' && (() => {
           // out of the solo the piano opens from black over 0.6 s; the final freeze closes to black on the last note;
           // the build-failed stop holds its frame
-          const fadeIn = t < PIANO.start + 0.6 ? 0.85 * (1 - (t - PIANO.start) / 0.6) : 0;
-          const fadeOut = t > FINALE_END - 1.6 ? clamp01((t - (FINALE_END - 1.6)) / 1.4) : 0;
+          const fadeIn = t < FADE_IN[1] ? 0.85 * (1 - (t - PIANO.start) / 0.6) : 0;
+          const fadeOut = t > FADE_OUT[0] ? clamp01((t - FADE_OUT[0]) / 1.4) : 0;
           const a = Math.max(fadeIn, inQuad(fadeOut));
           return a > 0 ? <rect x={0} y={0} width={1920} height={1080} fill="#000" opacity={a} /> : null;
         })()}
