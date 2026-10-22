@@ -74,7 +74,8 @@ export const VBLUE: VPose[] = [
   // the kick: BD6 where proof.ts's KICK plan expects her (VERSE_FULL), so HEAD flies off her foot
   { t: tk(2, 5), card: 'BD6', at: { x: -4.4, height: 4.6 } },
   { t: tk(3, 0), card: 'BD4', at: full(-2.2, 4.8) },
-  { t: tk(3, 5), card: 'BX5', at: bust(-2.4) },
+  // (round 7d: framed smaller so the line-42 board fits beside her face at a readable size)
+  { t: tk(3, 5), card: 'BX5', at: bust(-2.4, 7.4) },
   { t: tk(4, 0), card: 'BC3', at: full(-4.2, 4.8, false, 1.5) },
   { t: PRESS_CLOSE, card: 'BX1', at: bust(-3.2) },
   { t: tk(4, 6), card: 'BX2', at: bust(-3.2) },
@@ -105,7 +106,8 @@ export const VORANGE: VPose[] = [
   { t: tk(8, 0), card: 'OD7', at: full(2.6, 4.8) },
   { t: tk(8, 6), card: 'OD8', at: full(2.6, 4.8) },
   { t: tk(9, 0), card: 'OD8', at: full(3.5, 4.8) },
-  { t: tk(9, 5), card: 'OX3', at: { x: 3.0, feet: -5.2, height: 10, z: 0, flip: true } },
+  // (round 7d: a little smaller, so the NEVER marquee clears her chin)
+  { t: tk(9, 5), card: 'OX3', at: { x: 3.0, feet: -3.5, height: 8.8, z: 0, flip: true } },
   { t: tk(10, 0), card: null },
   { t: tk(11, 0), card: 'OX5', at: { x: 4.4, feet: -5.2, height: 10, z: 0, flip: true } },
   // the ORANGE! turn, one frame-by-frame sequence on one spot: OT1 crouches on the "Blue!" before (anticipation),
