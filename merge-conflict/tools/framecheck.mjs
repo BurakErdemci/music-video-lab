@@ -15,10 +15,11 @@
 // "px" if present, else w x h; a plate against 3072x2048, its far plane and, except for a moment panel, its near plane).
 //   node tools/framecheck.mjs [--range 0-140.04] [--step 1] [--selftest]
 //   node tools/framecheck.mjs --type [--range 0-140.04] [--fps 2]
-// --type checks the type instead (scene-map.md "Polish from Gemini's review", item 1): it bundles the film once,
-// renders each sampled frame twice under the render lock (the type layer alone, the world without the type, the
-// composition's `layer` prop) and hands them with the frame's projected face boxes to tools/typeframe.py (the
-// settled box in a 4 % margin, no face covered, local contrast >= 3:1).
+// --type checks the type instead (scene-map.md "Polish from Gemini's review", item 1, and "Round 7d"): it bundles the
+// film once, renders each sampled frame three times under the render lock (the type layer alone, the world without
+// the type, the whole frame: the composition's `layer` prop) and hands them with the frame's projected face boxes
+// (down to the chin) to tools/typeframe.py (the settled box in a 4 % margin, no face covered, local contrast >= 3:1,
+// nothing drawn over the settled type).
 //   node tools/framecheck.mjs --ground [--range 0-140.04] [--keep dir]
 // --ground checks the floor contact (round 7d, "the girls look pasted on"): on sampled frames of every shot with a
 // card standing on the floor it renders the world layer and hands each card's sole line to tools/groundframe.py
@@ -263,13 +264,14 @@ if (process.argv.includes('--type')) {
   const every = Math.round(FPS / Number(arg('fps', 2)));
   const picks = [];
   for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
-  const { shots, done } = await renderLayers(picks, ['type', 'world'], 'typecheck-');
+  // 'all' is the frame as it renders: tools/typeframe.py checks that nothing is drawn over the settled type
+  const { shots, done } = await renderLayers(picks, ['type', 'world', 'all'], 'typecheck-');
   const samples = [];
   for (const fr of picks) {
     const st = M.filmStateAt(fr);
     const subj = st.subjects.filter((x) => !x.silhouette && frames[x.card]);
     const faces = subj.map((x) => { const b = screenBox(st.pose, x, M.faceFrame(x.card)); return [b.x0, b.y0, b.x1, b.y1]; });
-    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), faces, cards: subj.map((x) => x.card) });
+    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), faces, cards: subj.map((x) => x.card) });
   }
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));

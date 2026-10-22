@@ -4,12 +4,16 @@
   uv run --with pillow --with numpy python -I tools/typeframe.py <samples.json> [failures.json]
   uv run --with pillow --with numpy python -I tools/typeframe.py --selftest
 
-samples.json (written by tools/framecheck.mjs --type): [{"frame", "t", "type": png, "world": png, "shot", "faces": [[x0,y0,x1,y1], ...], "cards": [name, ...]}]
-where `type` is the frame's type layer alone on a transparent background and `world` the frame without its SVG layers.
+samples.json (written by tools/framecheck.mjs --type): [{"frame", "t", "type": png, "world": png, "final": png, "shot", "faces": [[x0,y0,x1,y1], ...], "cards": [name, ...]}]
+where `type` is the frame's type layer alone on a transparent background, `world` the frame without its SVG layers and
+`final` (optional) the whole frame as it renders.
 Per sample:
   * settled box: the type's bounding box (alpha > 0.5). When the box at the previous or the next sample (0.5 s apart)
     is within 5 % of the frame of it, the type persists (is not mid-animation) and must sit inside a 4 % margin.
   * faces: type pixels may cover at most 3 % of any projected face box.
+  * hidden (round 7d, "Type is never hidden by a card"): where the type layer is opaque (alpha >= 0.95), the final
+    frame must show the type's own colour; a settled form with more than 2 % of those pixels changed (any channel off
+    by more than 48) is covered by a card, an effect or a cover.
   * local contrast: the type's fill (and, separately, its outer 2 px edge band: stroke or backing) against the composite
     in a 6 px ring around it, worst case the ring's 85th/15th percentile; the better of the two must give >= 3:1; failing that, the type layer's own colour spread (own_contrast) may carry it.
 Exit 1 on any failure. Prints failing samples with time and reason, and a count per check.
@@ -25,6 +29,8 @@ MARGIN = 0.04
 SETTLE = 0.05
 FACE_COVER = 0.03
 CONTRAST = 3.0
+HIDDEN = 0.02
+HIDDEN_DIFF = 48
 
 
 def lum(rgb):
@@ -39,6 +45,17 @@ def load(s):
     a = ty[..., 3:] / 255.0
     comp = ty[..., :3] * a + wo * (1 - a)
     return ty[..., 3] > 127, comp
+
+
+def hidden(s):
+    """Share of the type layer's opaque pixels that the final frame does not show in the type's colour."""
+    ty = np.asarray(Image.open(s["type"]).convert("RGBA"), dtype=np.float32)
+    fin = np.asarray(Image.open(s["final"]).convert("RGB"), dtype=np.float32)
+    solid = ty[..., 3] >= 0.95 * 255
+    if solid.sum() < 200:
+        return 0.0
+    off = np.abs(fin - ty[..., :3]).max(axis=-1) > HIDDEN_DIFF
+    return float((off & solid).sum() / solid.sum())
 
 
 def bbox(mask):
@@ -111,8 +128,13 @@ def analyse(samples):
         prv = data[i - 1][3] if i else None
         base = {"t": s["t"], "frame": s.get("frame"), "shot": s.get("shot")}
         over = sides(box)
-        if over and (close(box, nxt) or close(box, prv)):
+        settled = close(box, nxt) or close(box, prv)
+        if over and settled:
             out.append({**base, "kind": "margin", "value": max(over.values()), "why": f"box {box} crosses the 4 % margin by {over} px"})
+        if settled and s.get("final"):
+            h = hidden(s)
+            if h > HIDDEN:
+                out.append({**base, "kind": "hidden", "value": round(100 * h), "why": f"{100 * h:.0f} % of the type's opaque pixels hidden in the final frame"})
         cards = s.get("cards") or [None] * len(s["faces"])
         for f, card in zip(s["faces"], cards):
             x0, y0, x1, y1 = [int(round(v)) for v in f]
@@ -136,14 +158,19 @@ def selftest():
     import tempfile
     d = tempfile.mkdtemp(prefix="typeframe-selftest-")
 
-    def case(name, draw_type, world_rgb, faces):
+    def case(name, draw_type, world_rgb, faces, cover=None):
         ty = Image.new("RGBA", (W, H), (0, 0, 0, 0))
         draw_type(ty)
         wo = Image.new("RGB", (W, H), world_rgb)
-        tp, wp = os.path.join(d, name + "-t.png"), os.path.join(d, name + "-w.png")
+        fin = wo.copy()
+        fin.paste(ty, (0, 0), ty)
+        if cover:
+            fin.paste((200, 60, 20), cover)  # a card drawn over the end of the word
+        tp, wp, fp = os.path.join(d, name + "-t.png"), os.path.join(d, name + "-w.png"), os.path.join(d, name + "-f.png")
         ty.save(tp)
         wo.save(wp)
-        return {"frame": 0, "t": 0.0, "shot": name, "type": tp, "world": wp, "faces": faces}
+        fin.save(fp)
+        return {"frame": 0, "t": 0.0, "shot": name, "type": tp, "world": wp, "final": fp, "faces": faces}
 
     def rect(box, fill):
         def f(im):
@@ -156,11 +183,12 @@ def selftest():
         case("margin", rect((20, 400, 800, 600), white), dark, []),
         case("face", rect((600, 400, 1300, 600), white), dark, [[900, 450, 1000, 550]]),
         case("contrast", rect((600, 400, 1300, 600), (170, 170, 170, 255)), mid, []),
+        case("hidden", rect((600, 400, 1300, 600), white), dark, [], cover=(1150, 380, 1400, 640)),
     ]
     # the same box twice so the settled test sees it persist
     samples = [x for s in samples for x in (s, dict(s, t=0.5))]
     got = {(f["shot"], f["kind"]) for f in analyse(samples)}
-    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast")}
+    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden")}
     print("typeframe selftest flagged:", sorted(got))
     ok = got == want
     print("typeframe selftest: " + ("PASS" if ok else "FAIL (wanted " + str(sorted(want)) + ")"))
@@ -174,8 +202,8 @@ def main():
     out = analyse(samples)
     if len(sys.argv) > 2:
         json.dump(out, open(sys.argv[2], "w", encoding="utf-8"))
-    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast")}
-    print(f"typeframe: {len(samples)} samples; margin {n['margin']}, face {n['face']}, contrast {n['contrast']}")
+    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden")}
+    print(f"typeframe: {len(samples)} samples; margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}")
     for f in out:
         print(f"  {f['t']:7.2f}  {str(f['shot']):22s} {f['kind']:8s} {f['why']}")
     print("typeframe: FAIL" if out else "typeframe: PASS")
