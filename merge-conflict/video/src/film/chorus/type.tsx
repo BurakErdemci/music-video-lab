@@ -53,7 +53,7 @@ const avoidBox = (e: TypeEntry, c2: boolean): AvoidBox | undefined => {
     case 'Wave': return { x: 140, y: 640, w: 1640, h: 380 };
     case 'Extrude': return { x: 260, y: 560, w: 1400, h: 440 };
     case 'Marquee': return { x: 140, y: 610, w: 1640, h: 390 };
-    case 'GlitchText': return c2 ? undefined : { x: 140, y: 680, w: 1640, h: 400 };
+    case 'GlitchText': return undefined;
     case 'Logo': return { x: 385, y: 200, w: 1150, h: 600 };
     default: return undefined;
   }
@@ -67,10 +67,10 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
     if (!typeShown(only, e.id)) continue;
     const n0 = out.length;
     if (t < e.t0 - 0.02 || t >= e.t1) continue;
-    // chorus 2's I CAN'T TAKE CONTROL is set in screen space: on the plane its barrel roll carried the second row off
-    // the frame bottom (round 7d, 105.4-105.9 s)
+    // I CAN'T TAKE CONTROL is set in screen space in both choruses: on the plane the barrel roll carried its rows and
+    // its backing off the frame (round 7d chorus 2 at 105.4-105.9 s; round 11 chorus 1 at 63.4-64.4 s)
     const c2 = t >= CHORUS2_START;
-    const isScreen = SCREEN_FORMS.includes(e.form) || (e.form === 'GlitchText' && c2);
+    const isScreen = SCREEN_FORMS.includes(e.form) || e.form === 'GlitchText';
     if (isScreen !== screen) continue;
     const toks = lineTokens(e.line).slice(e.range[0], e.range[1]);
     switch (e.form) {
@@ -109,7 +109,13 @@ export const ChorusType = ({ entries, t, pose, screen, merges }: { entries: read
       case 'GlitchText':
         // chorus 2: in the bottom-right corner, wrapped onto two rows (the barrel roll sweeps the faces through the
         // left and the top of these shots; round 7d)
-        out.push(<GlitchText key={e.id} spec={{ id: e.id, tokens: toks, ...(c2 ? { x: 1040, y: 830, size: 120 } : { x: 140, y: 820, size: 170 }), face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />);
+        // it leans a little with the camera's roll (a fifth of it, at most 8 degrees) about its own middle, set in so
+        // the turned backing keeps inside the 4 % margin (round 11)
+        out.push(
+          <g key={e.id} transform={`rotate(${(Math.max(-0.14, Math.min(0.14, 0.2 * (pose.roll ?? 0))) * 180) / Math.PI} 1380 780)`}>
+            <GlitchText spec={{ id: e.id, tokens: toks, x: 1000, y: 820, size: 120, face: 'metalmania', until: e.t1, key: 3, color: '#ffffff' }} t={t} />
+          </g>,
+        );
         break;
       case 'Logo': {
         const m = merges[e.id] as readonly [number, number, number, number];

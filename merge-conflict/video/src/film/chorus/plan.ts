@@ -115,7 +115,8 @@ export const chorusPlan = (L: ChorusLines) => {
     { id: 'control', t: tk(L.merge2, 7), scene: 'spin', from: cam([0, 2.2, 15], [0, -1, -1], 44, 0.3), to: cam([0, 2, 12], [0, -1, -1], 44, -0.6), into: 'mirror' },
     { id: 'control-out', t: controlOut, scene: 'spin', from: cam([5, 3, 12], [0, -1, -1], 46, -0.6), to: cam([3, 2.6, 10], [0, -1, -1], 46, -1.4), into: 'shock' },
     // the chorus end: everything bursts into particles
-    { id: 'burst', t: burstAt, scene: 'burst', from: cam([0, 1, 13], [0, -0.6, -1], 44), to: cam([0, 1.4, 16], [0, -0.6, -1], 48), into: 'dissolve' },
+    // (round 11: a laser cover, the chorus's own; the pixel-block dissolve read as a leftover)
+    { id: 'burst', t: burstAt, scene: 'burst', from: cam([0, 1, 13], [0, -0.6, -1], 44), to: cam([0, 1.4, 16], [0, -0.6, -1], 48), into: 'laser' },
   ];
   // round 7: the logo crashes, the line of light and "I can't" held 0.68-0.72 s (2.1 beats); one more cut on the
   // first beat inside each, a closer angle of the same world
