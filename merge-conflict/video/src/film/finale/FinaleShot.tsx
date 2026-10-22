@@ -328,17 +328,18 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   };
   const subjects = subjectsAt(t, scene, blueP, orangeP);
   const fieldGrade = metal ? ORANGE_METAL : BLUE_MIX;
-  // confetti is earned: the final chorus and its paintings; the piano and the build get dust, the metal embers
+  // confetti is earned: the final chorus and its paintings, and the piano's slow confetti (scene-map.md QUIET set); the
+  // build gets dust, the metal embers
   const density = quiet ? 1 : scene === 'flight' ? 0.6 + 0.4 * flightK(t) : 1;
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>
       <Stage pose={pose}>
         {PLATES[scene] && <PlateLayer id={PLATES[scene] as string} base={planeBase} margin={plateMargin(scene)} />}
         {world}
-        <Field t={t} grade={fieldGrade} layer="back" density={density} hueMix={0.6} metal={metal ? 1 : 0} dust={!final} bursts={bursts} />
+        <Field t={t} grade={fieldGrade} layer="back" density={density} hueMix={0.6} metal={metal ? 1 : 0} dust={!final && !quiet} bursts={bursts} />
         {subjects.map(figure)}
         {PLANS.map((p) => (dissolveState(p, t).active ? <Dissolve key={p.id} plan={p} t={t} grade={gradeOf(p.id.endsWith('-b') ? 'B' : 'O', p.t0 + 0.01)} rival={p.id.endsWith('-b') ? '#ff7a1a' : '#19c8ff'} spread={p.id.startsWith('f-branch') ? 1.4 : 2.4} /> : null))}
-        <Field t={t} grade={BLUE_MIX} layer="front" density={density * 0.8} hueMix={0.6} metal={metal ? 1 : 0} dust={!final} bursts={bursts} />
+        <Field t={t} grade={BLUE_MIX} layer="front" density={density * 0.8} hueMix={0.6} metal={metal ? 1 : 0} dust={!final && !quiet} bursts={bursts} />
       </Stage>
       <Svg>
         <FormDefs />
