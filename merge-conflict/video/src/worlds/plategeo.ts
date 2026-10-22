@@ -89,3 +89,30 @@ export const panelParallax = (pose: CameraPose, base: CameraPose, dist: number, 
   const zoom = Math.min(Math.max(0, (dot(d, bf) / dist) * 0.8), room / 0.7);
   return { shift, zoom, mag: 1 + 0.7 * zoom };
 };
+
+// ---- moment paintings shown whole (round 7d, Burak: "the paintings do not fit the screen") ---------------------
+// A painting (QK*, RK*: 3:2) is fitted to the frame height and locked to the frame, so every head and foot in it
+// stays in frame whatever the camera does; the side bands show the same painting cover-fitted behind it, blurred and
+// darkened. Its Ken Burns runs from 97 % to 100 % of the frame height over the shot (never past the frame), and the
+// depth parallax is capped so near pixels move at most 1 % of the painting and swell at most 3 %.
+export const PAINT_KB = 0.03;
+export const PAINT_SHIFT_MAX = 0.01;
+export const PAINT_ZOOM_MAX = 0.03;
+export interface PaintingView { centre: Vec3; right: Vec3; up: Vec3; w: number; h: number; bandW: number; bandH: number; scale: number }
+/** The painting plane at `dist` in front of `pose` (and its blurred band plane), `kb` the shot's progress 0..1. */
+export const paintingView = (pose: CameraPose, dist: number, kb = 1): PaintingView => {
+  const [fwd, right, up] = basis(pose);
+  const s = 1 - PAINT_KB * (1 - Math.min(1, Math.max(0, kb)));
+  const frameH = 2 * dist * tanHalf(pose.fov);
+  const h = frameH * s;
+  const bandW = frameH * ASPECT * 1.02;
+  // the painting's height at the 2K output over its own pixel height (2048)
+  return { centre: add(pose.position, fwd, dist), right, up, w: h * PLATE_ASPECT, h, bandW, bandH: bandW / PLATE_ASPECT, scale: (s * (OUTPUT_W / ASPECT)) / (PLATE_PX / PLATE_ASPECT) };
+};
+/** panelParallax capped for a painting shown whole (shift and swell inside its bounds). */
+export const paintingParallax = (pose: CameraPose, base: CameraPose, dist: number, scale: number) => {
+  const p = panelParallax(pose, base, dist, scale);
+  const c = (v: number) => Math.max(-PAINT_SHIFT_MAX, Math.min(PAINT_SHIFT_MAX, v));
+  const zoom = Math.min(p.zoom, PAINT_ZOOM_MAX);
+  return { shift: [c(p.shift[0]), c(p.shift[1])] as [number, number], zoom, mag: 1 + 0.7 * zoom };
+};
