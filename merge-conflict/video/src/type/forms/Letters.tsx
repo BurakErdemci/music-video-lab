@@ -13,7 +13,8 @@ import { appear, clean, faceFor, type FormSpec, hueAt, INK, keyFill, keyIndex, l
 
 const MONO = familyOf('jetbrains');
 
-export const Flap = ({ spec, t, cols = 16, backing = false }: { spec: FormSpec; t: number; cols?: number; backing?: boolean }) => {
+/** `ink`: one light colour for every letter but the key (the singer's palette read low on a busy painting). */
+export const Flap = ({ spec, t, cols = 16, backing = false, ink }: { spec: FormSpec; t: number; cols?: number; backing?: boolean; ink?: string }) => {
   if (!visible(spec, t)) return null;
   const toks = tokensOf(spec);
   const k = keyIndex(spec);
@@ -55,7 +56,7 @@ export const Flap = ({ spec, t, cols = 16, backing = false }: { spec: FormSpec; 
             }
           }
           const isKey = cell?.tok === k;
-          const color: string = isKey ? keyFill(spec.singer, t) : tok ? hueAt(spec.singer, t, cell?.tok ?? 0) : '#ffffff';
+          const color: string = isKey ? keyFill(spec.singer, t) : tok ? (ink ?? hueAt(spec.singer, t, cell?.tok ?? 0)) : '#ffffff';
           return (
             <g key={`${ri}-${ci}`}>
               <rect x={x + 3} y={y + 3} width={cw - 6} height={ch - 6} rx={6} fill="#14101c" stroke="#2c2438" strokeWidth={2} />

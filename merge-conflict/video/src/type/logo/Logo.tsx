@@ -16,7 +16,9 @@ export type LogoDesign = 'A' | 'B' | 'C';
 /** beat: position inside the current beat (0..1, the shove); beatIndex: the beat number, which re-seeds the
  *  split edge's diff-line jitter on every beat. */
 /** apart: px the two halves are shoved apart (B: the disco side left, the metal side right; 0 = locked). */
-export interface LogoProps { design: LogoDesign; resolved: boolean; cx: number; cy: number; width: number; beat?: number; beatIndex?: number; apart?: number; id: string }
+/** aligned (B): each metal letter is centred on its disco letter, so the cut takes each letter from one side only
+ *  (round 7d: the two faces' own spacings put R twice and lost an F at the seam, unreadable in chorus 2). */
+export interface LogoProps { design: LogoDesign; resolved: boolean; cx: number; cy: number; width: number; beat?: number; beatIndex?: number; apart?: number; id: string; aligned?: boolean }
 
 const BLUE = '#2f7bff';
 const CYAN = '#7fe3ff';
@@ -119,7 +121,7 @@ const LogoA = ({ resolved, cx, cy, width, beat = 0, id }: LogoProps) => {
 };
 
 // ---- B: split word -----------------------------------------------------------------------------------------
-const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, apart = 0, id }: LogoProps) => {
+const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, apart = 0, id, aligned = false }: LogoProps) => {
   const disco: Face = 'bungee';
   const metal: Face = 'pirata';
   const lines = ['MERGE', 'CONFLICT'];
@@ -130,6 +132,21 @@ const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, apart = 0, id }: LogoPr
     const y0 = cy - (2 * capH + gap) / 2 + capH;
     return lines.map((l, i) => ({ text: l, x: cx - widthOf(l, s, face) / 2, y: y0 + i * (capH + gap), s, face }));
   };
+  // the words letter by letter, every letter centred where the disco face sets it
+  const glyphs = (face: Face) => {
+    const own = set(face);
+    return set(disco).flatMap((d, i) => {
+      const o = own[i] as (typeof own)[number];
+      let x = d.x;
+      return [...d.text].map((c, k) => {
+        const w = widthOf(c, d.s, disco);
+        const g = { text: c, x: x + w / 2 - widthOf(c, o.s, face) / 2, y: o.y, s: o.s, face, key: `${i}-${k}` };
+        x += w;
+        return g;
+      });
+    });
+  };
+  const words = (face: Face) => (aligned ? glyphs(face) : set(face).map((w) => ({ ...w, key: w.text })));
   const half = width * 0.55;
   const r = seeded(`logoB:${beatIndex}`);
   // the cut: a diagonal from top-right to bottom-left, jittering like a diff line
@@ -155,8 +172,8 @@ const LogoB = ({ resolved, cx, cy, width, beatIndex = 0, apart = 0, id }: LogoPr
         <clipPath id={`${id}-disco`}><path d={discoSide} /></clipPath>
         <clipPath id={`${id}-metal`}><path d={metalSide} /></clipPath>
       </defs>
-      <g transform={`translate(${-apart} ${-apart * 0.35})`}><g clipPath={`url(#${id}-disco)`}>{set(disco).map((w) => <Word key={w.text} text={w.text} x={w.x} y={w.y} size={w.s} face={disco} fill={`url(#${id}-chrome)`} glow={BLUE} />)}</g></g>
-      <g transform={`translate(${apart} ${apart * 0.35})`}><g clipPath={`url(#${id}-metal)`}>{set(metal).map((w) => <Word key={w.text} text={w.text} x={w.x} y={w.y} size={w.s} face={metal} fill={`url(#${id}-flame)`} glow={RED} sw={0.035} />)}</g></g>
+      <g transform={`translate(${-apart} ${-apart * 0.35})`}><g clipPath={`url(#${id}-disco)`}>{words(disco).map((w) => <Word key={w.key} text={w.text} x={w.x} y={w.y} size={w.s} face={disco} fill={`url(#${id}-chrome)`} glow={BLUE} />)}</g></g>
+      <g transform={`translate(${apart} ${apart * 0.35})`}><g clipPath={`url(#${id}-metal)`}>{words(metal).map((w) => <Word key={w.key} text={w.text} x={w.x} y={w.y} size={w.s} face={metal} fill={`url(#${id}-flame)`} glow={RED} sw={0.035} />)}</g></g>
       {/* the cut edge as a diff line: red - marks on the disco side, green + marks on the metal side */}
       <path d={cut} fill="none" stroke="#ffffff" strokeWidth={5} />
       {pts.filter((_, k) => k % 2).map(([x, y], k) => (
