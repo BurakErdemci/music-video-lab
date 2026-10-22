@@ -14,7 +14,7 @@ import { DissolveText } from '../../type/DissolveText.tsx';
 import { Code, Diff } from '../../type/forms/Code.tsx';
 import type { Box, FormSpec } from '../../type/forms/common.tsx';
 import { Marquee } from '../../type/forms/Dots.tsx';
-import { Flap, Ring, Wave } from '../../type/forms/Letters.tsx';
+import { Flap, Wave } from '../../type/forms/Letters.tsx';
 import { RunwayLine, Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
@@ -72,7 +72,9 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
         out.push(<Flap key={e.id} spec={spec(e, { x: 100, y: 680, w: 1720, h: 330 })} t={t} cols={16} ink="#eef4ff" backing />);
         break;
       case 'f-tree':
-        out.push(<Ring key={e.id} spec={spec(e, { x: 700, y: 520, w: 520, h: 300 })} t={t} opt={{ cx: 960, cy: 790, r: 230, size: 42, face: 'righteous', backing: true }} />);
+        // round 11 (the horseshoe sat on the tree painting's middle): the two branches as a `git log` line in a
+        // terminal across the bottom band, clear of the tree's middle and the girls' faces
+        out.push(<Code key={e.id} spec={spec(e, { x: 100, y: 776, w: 1720, h: 220 })} t={t} opt={{ gutter: '*', size: 60, keyScale: 1.4, chrome: 'git log --graph', terminal: true, backing: true, wrap: true }} />);
         break;
       // ---- final chorus
       case 'f-acc1':

@@ -214,7 +214,7 @@ export const FINALE_TYPE: TypeEntry[] = [
   { id: 'f-hello', line: 50, range: [4, 9], form: 'LightBox', t0: tk(50, 4), t1: tk(51, 0), singer: 'O', key: 8 },
   // the build: a departure board for "different times", then the ring round the meeting hands
   { id: 'f-file', line: 51, range: [0, 8], form: 'Flap', t0: tk(51, 0), t1: tk(52, 0), singer: 'B', key: 3 },
-  { id: 'f-tree', line: 52, range: [0, 9], form: 'Ring', t0: tk(52, 0), t1: BUILD.end - 0.1, singer: 'both', key: 1 },
+  { id: 'f-tree', line: 52, range: [0, 9], form: 'Code', t0: tk(52, 0), t1: BUILD.end - 0.1, singer: 'both', key: 1 },
   // the final chorus
   { id: 'f-acc1', line: 53, range: [0, 3], form: 'Stack', t0: tk(53, 0), t1: tk(53, 3), singer: 'both', key: 1 },
   { id: 'f-yes1', line: 53, range: [3, 4], form: 'Shout', t0: tk(53, 3), t1: tk(54, 0), singer: 'both', key: 3, style: 'chrome', text: 'YES!' },

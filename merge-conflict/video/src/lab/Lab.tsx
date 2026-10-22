@@ -19,7 +19,7 @@ import { familyOf, Fonts, SANS } from '../type/fonts.tsx';
 import { Code, Diff } from '../type/forms/Code.tsx';
 import { FormDefs, type FormSpec, type Singer } from '../type/forms/common.tsx';
 import { Floor, Marquee } from '../type/forms/Dots.tsx';
-import { Flap, Ring, Wave } from '../type/forms/Letters.tsx';
+import { Flap, Wave } from '../type/forms/Letters.tsx';
 import { Extrude, Stamp as StampForm } from '../type/forms/Plates.tsx';
 import { Stack } from '../type/forms/Stack.tsx';
 import { counterOf, counterPlan, holeOf, LetterMorph, MarkerWipe, morphPlan, shatterEnd, shatterPlan, TextShatter, ThroughCounter, TypeWhip, whipPlan, type WordAt, wipePlan } from '../type/transitions/transitions.tsx';
@@ -315,7 +315,6 @@ const TYPE: Segment[] = [
   formSeg('stack', 'form STACK: line 0, key HEAD', startOf(2, 0, 0.2), (st) => <Stack spec={spec('lab-stack', 2, 1, 'B')} t={st} />),
   formSeg('code', 'form CODE: line 1 words 0-4, key 42', startOf(3, 0, 0.2), (st) => <Code spec={spec('lab-code', 3, 1, 'B', [0, 5])} t={st} opt={{ gutter: '42', size: 64 }} />),
   formSeg('diff', 'form DIFF: line 1 words 5-9, key BLUE', startOf(3, 5, 0.3), (st) => <Diff spec={spec('lab-diff', 3, 5, 'B', [5, 10])} t={st} opt={{ minus: 'color: orange;', size: 60 }} />),
-  formSeg('ring', 'form RING: line 3 around a centre, key WHO', startOf(5, 0, 0.2), (st) => <Ring spec={spec('lab-ring', 5, 5, 'O')} t={st} opt={{ cx: 960, cy: 700, r: 420, size: 110 }} />),
   formSeg('wave', 'form WAVE: line 2 on a beat-kicked baseline, key APPROVED', startOf(4, 0, 0.2), (st) => <Wave spec={spec('lab-wave', 4, 2, 'both')} t={st} opt={{ size: 130 }} />),
   formSeg('floor', 'form FLOOR: line 0 lit in the floor tiles, key HEAD', startOf(2, 0, 0.2), (st) => <Floor spec={spec('lab-floor', 2, 1, 'B')} t={st} opt={{ pose: HOME, x: 1.2, z: 1.6, tile: 0.36 }} />),
   formSeg('marquee', 'form MARQUEE: line 0 in bulbs, key HEAD', startOf(2, 0, 0.2), (st) => <Marquee spec={spec('lab-marquee', 2, 1, 'O')} t={st} />),

@@ -1,9 +1,9 @@
-// Letter-placed forms: FLAP, RING and WAVE. Each letter is positioned from the measured advances.
+// Letter-placed forms: FLAP and WAVE. Each letter is positioned from the measured advances. (RING, the line on an arc,
+// was retired in round 11: Burak and Gemini read it as a gauge; tools/typecheck.mjs fails it.)
 // FLAP: a split-flap departure board; every cell folds its own letter in, dim, and lands on it at
 //   the word's measured start (the last flaps fold on frames, so the landing is on time).
-// RING: the line runs on a 220-degree arc over a centre (the mirror ball or a girl), every letter upright;
-//   the key word larger. Short lines fit; longer ones keep a readable minimum size and scroll with the singing.
-// WAVE: the line sits on a baseline that waves; every beat kicks the amplitude; same minimum size and scroll.
+// WAVE: the line sits on a baseline that waves; every beat kicks the amplitude; the key word larger. Short lines fit;
+//   longer ones keep a readable minimum size and scroll with the singing.
 import type { ReactNode } from 'react';
 import { type Hex, mixHex, outQuad } from '../../lib/ease.ts';
 import { beatPos } from '../../timing.ts';
@@ -78,64 +78,6 @@ export const Flap = ({ spec, t, cols = 16, backing = false, ink }: { spec: FormS
  *  of its measured duration. Continuous, so a scrolling line glides instead of jumping word to word. */
 const sungPx = (toks: readonly { start: number; end: number }[], widths: readonly number[], t: number): number =>
   toks.reduce((a, tk, i) => a + (widths[i] as number) * Math.min(1, Math.max(0, (t - tk.start) / Math.max(0.05, tk.end - tk.start))), 0);
-
-export interface RingOptions { cx: number; cy: number; r: number; size: number; face?: Face; minSize?: number; /** a dark band along the arc with a light edge and a soft shadow, for a plate as bright as the letters */ backing?: boolean }
-/** The arc the RING uses: 220 degrees over the top, so every letter stays upright (no upside-down bottom). */
-const ARC0 = -Math.PI - 0.35;
-const ARC = Math.PI + 0.7;
-
-export const Ring = ({ spec, t, opt }: { spec: FormSpec; t: number; opt: RingOptions }) => {
-  if (!visible(spec, t)) return null;
-  const toks = tokensOf(spec);
-  const k = keyIndex(spec);
-  const face = faceFor(opt.face ?? 'bungee', spec.singer, t);
-  const arcLen = ARC * opt.r;
-  const words = toks.map((tk, i) => `${clean(tk.text).toUpperCase()} `);
-  const natural = words.reduce((a, w, i) => a + layout(w, i === k ? 1.6 : 1, face).width, 0);
-  // fit the line on the arc, but never below the readable minimum: a longer line scrolls along the arc
-  const size = Math.max(opt.minSize ?? 56, Math.min(opt.size, arcLen / natural));
-  const letters: { ch: string; tok: number; adv: number; size: number }[] = [];
-  const widths = words.map((w, i) => {
-    const sz = i === k ? size * 1.6 : size;
-    const l = layout(w, sz, face);
-    [...w].forEach((c, n) => letters.push({ ch: c, tok: i, adv: l.ws[n] as number, size: sz }));
-    return l.width;
-  });
-  const total = widths.reduce((a, b) => a + b, 0);
-  const scroll = Math.max(0, Math.min(total - arcLen, sungPx(toks, widths, t) - arcLen * 0.85));
-  let s = -scroll + Math.max(0, (arcLen - total) / 2);
-  const a1 = ARC0 + ARC;
-  const arc = `M ${opt.cx + Math.cos(ARC0) * opt.r} ${opt.cy + Math.sin(ARC0) * opt.r} A ${opt.r} ${opt.r} 0 1 1 ${opt.cx + Math.cos(a1) * opt.r} ${opt.cy + Math.sin(a1) * opt.r}`;
-  return (
-    <g fontFamily={familyOf(face)}>
-      {opt.backing && t >= (toks[0]?.start ?? 0) && (
-        <g fill="none" strokeLinecap="round">
-          <path d={arc} stroke="#000" strokeOpacity={0.49} strokeWidth={size * 1.9 + 2 * FRAME_W + 56} />
-          <path d={arc} stroke={FRAME} strokeOpacity={FRAME_ALPHA} strokeWidth={size * 1.9 + 2 * FRAME_W} />
-          <path d={arc} stroke="#07040c" strokeOpacity={0.8} strokeWidth={size * 1.9} />
-        </g>
-      )}
-      {letters.map((l, i) => {
-        const mid = s + l.adv / 2;
-        s += l.adv;
-        const tok = toks[l.tok];
-        if (!tok || l.ch === ' ' || mid < 0 || mid > arcLen) return null;
-        const p = appear(t, tok);
-        if (!p) return null;
-        const a = ARC0 + mid / opt.r;
-        const edge = Math.min(1, mid / 60, (arcLen - mid) / 60);
-        const x = opt.cx + Math.cos(a) * opt.r;
-        const y = opt.cy + Math.sin(a) * opt.r;
-        const isKey = l.tok === k;
-        return (
-          <text key={i} x={0} y={0} textAnchor="middle" fontSize={l.size} fill={isKey ? keyFill(spec.singer, t) : hueAt(spec.singer, t, l.tok)} stroke={INK} strokeWidth={l.size * 0.05} paintOrder="stroke" opacity={p * edge} transform={`translate(${x} ${y}) rotate(${(a * 180) / Math.PI + 90}) scale(${landScale(t, tok, 1.6)})`}>
-            {l.ch}
-          </text>
-        );
-      })}
-    </g>
-  );
-};
 
 export interface WaveOptions { size: number; face?: Face; amp?: number; minSize?: number }
 

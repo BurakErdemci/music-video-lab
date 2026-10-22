@@ -122,7 +122,7 @@ export const VERSE_TYPE: TypeEntry[] = [
   { id: 'v-head', line: 2, range: [0, 8], form: 'Stack', t0: V1.start, t1: tk(3, 0), singer: 'B', key: 1 },
   { id: 'v-line42', line: 3, range: [0, 10], form: 'Flap', t0: tk(3, 0) - 0.05, t1: tk(4, 0), singer: 'B', key: 5 },
   { id: 'v-approved', line: 4, range: [0, 8], form: 'Stamp', t0: tk(4, 0) - 0.05, t1: tk(5, 0), singer: 'B', key: 2 },
-  { id: 'v-midnight', line: 5, range: [0, 8], form: 'Ring', t0: tk(5, 0) - 0.05, t1: tk(6, 0), singer: 'B', key: 4 },
+  { id: 'v-midnight', line: 5, range: [0, 8], form: 'Stack', t0: tk(5, 0) - 0.05, t1: tk(6, 0), singer: 'B', key: 4 },
   { id: 'v-feature', line: 6, range: [0, 3], form: 'Hoop', t0: tk(6, 0) - 0.05, t1: tk(6, 3), singer: 'O', key: 1 },
   { id: 'v-fresh', line: 6, range: [3, 8], form: 'Wave', t0: tk(6, 3) - 0.02, t1: tk(7, 0), singer: 'O', key: 4 },
   { id: 'v-orange', line: 7, range: [0, 10], form: 'Diff', t0: tk(7, 0) - 0.05, t1: tk(8, 0), singer: 'O', key: 3 },

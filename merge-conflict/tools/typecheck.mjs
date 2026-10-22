@@ -4,13 +4,23 @@
 //  2. every tokened line sung inside the range is covered, token by token, by entries of the film's type plan
 //     (video/src/film/typeplan.ts) with a designed form;
 //  3. at least 6 distinct forms in every 30 s window (sliding by 1 s) of the range;
-//  4. never the same form twice in a row.
+//  4. never the same form twice in a row;
+//  5. no retired form (round 11: RING, the line on an arc, read as a gauge to Burak and Gemini).
 // Prints the line -> form table.   node tools/typecheck.mjs [--range 0-64.15]   Exit 1 on any failure.
+//   node tools/typecheck.mjs --selftest   (must exit 1: a plan with a retired form fails, one without passes)
 import { readdirSync, readFileSync, statSync } from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
 
 const ROOT = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+export const RETIRED = ['Ring'];
+const retired = (plan) => plan.filter((e) => RETIRED.includes(e.form)).map((e) => `${e.id} uses the retired form ${e.form}`);
+if (process.argv.includes('--selftest')) {
+  const ok = retired([{ id: 'a', form: 'Stack' }, { id: 'b', form: 'Wave' }]);
+  const bad = retired([{ id: 'a', form: 'Stack' }, { id: 'v-midnight', form: 'Ring' }]);
+  console.log(`selftest: clean -> ${ok.join('; ') || 'passes'}; with a Ring -> ${bad.join('; ') || 'PASSES (wrong)'}`);
+  process.exit(ok.length === 0 && bad.length === 1 ? 1 : 0);
+}
 const arg = (n, d) => { const i = process.argv.indexOf(`--${n}`); return i === -1 ? d : process.argv[i + 1]; };
 const [A, B] = arg('range', '0-64.15').split('-').map(Number);
 const { TYPE_PLAN } = await import(pathToFileURL(path.join(ROOT, 'video/src/film/typeplan.ts')).href);
@@ -44,6 +54,7 @@ for (let w = A; w + 30 <= B + 1e-6 || w === A; w += 1) {
   if (set.size < minForms) { minForms = set.size; minAt = w; }
   if (w + 30 > B) break;
 }
+errors.push(...retired(TYPE_PLAN));
 if (minForms < 6) errors.push(`only ${minForms} distinct forms in the 30 s from ${minAt.toFixed(1)} s (need 6)`);
 for (let i = 1; i < plan.length; i++) if (plan[i].form === plan[i - 1].form) errors.push(`${plan[i - 1].id} and ${plan[i].id} both use ${plan[i].form} back to back`);
 

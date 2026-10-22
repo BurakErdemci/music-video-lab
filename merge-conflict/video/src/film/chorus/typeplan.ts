@@ -5,7 +5,7 @@ import { at } from '../../events.ts';
 import type { Singer } from '../../type/forms/common.tsx';
 import { after, type ChorusLines, twoGirlsAt } from './plan.ts';
 
-export type FormName = 'Stack' | 'Shout' | 'Stamp' | 'RunwayLine' | 'FlameText' | 'Logo' | 'Wave' | 'Extrude' | 'Marquee' | 'GlitchText' | 'Slam' | 'Flap' | 'Diff' | 'Code' | 'Counter' | 'LightBox' | 'Hoop' | 'Ring' | 'DissolveText' | 'CodeLine' | 'Fill' | 'Kick' | 'Floor';
+export type FormName = 'Stack' | 'Shout' | 'Stamp' | 'RunwayLine' | 'FlameText' | 'Logo' | 'Wave' | 'Extrude' | 'Marquee' | 'GlitchText' | 'Slam' | 'Flap' | 'Diff' | 'Code' | 'Counter' | 'LightBox' | 'Hoop' | 'DissolveText' | 'CodeLine' | 'Fill' | 'Kick' | 'Floor';
 export interface TypeEntry { id: string; line: number; range: [number, number]; form: FormName; t0: number; t1: number; singer: Singer; key: number; style?: 'chrome' | 'steel'; text?: string }
 
 export const chorusType = (L: ChorusLines): TypeEntry[] => {

@@ -1,5 +1,5 @@
 // The verses' type layer: draws every VERSE_TYPE entry with its designed form. Forms that live on a world object
-// (the Ring around the clock face, the Diff on the graffiti panel, the Counter on the scoreboard) get their
+// (the Diff on the graffiti panel, the Counter on the scoreboard) get their
 // screen box from the shot (anchors), so the type plays with the object instead of floating over it.
 import { typeShown, useTypeOnly } from '../../layer.ts';
 import type { ReactNode } from 'react';
@@ -10,7 +10,7 @@ import { Counter } from '../../type/Counter.tsx';
 import { Diff } from '../../type/forms/Code.tsx';
 import { type FormSpec, hueAt, keyFill } from '../../type/forms/common.tsx';
 import { Marquee } from '../../type/forms/Dots.tsx';
-import { Flap, Ring, Wave } from '../../type/forms/Letters.tsx';
+import { Flap, Wave } from '../../type/forms/Letters.tsx';
 import { Shout } from '../../type/forms/Mega.tsx';
 import { Extrude, Stamp } from '../../type/forms/Plates.tsx';
 import { Stack } from '../../type/forms/Stack.tsx';
@@ -71,10 +71,16 @@ export const VerseType = ({ entries, t, pose, anchors, hoop, throwP }: { entries
         out.push(<Stamp key={e.id} spec={spec(e, { x: 1060, y: 200, w: 760, h: 380 })} t={t} />);
         break;
       case 'v-midnight': {
-        const c = anchors.clock ?? { cx: 1180, cy: 420, r: 300 };
-        // the arc sits low in the dial: round the dial's rim it would run off the top of the frame
-        out.push(<Ring key={e.id} spec={spec(e, { x: c.cx - c.r, y: c.cy - c.r, w: 2 * c.r, h: 2 * c.r })} t={t} opt={{ cx: c.cx, cy: c.cy + 310, r: c.r * 0.77, size: 64, face: 'righteous', backing: true }} />);
-        dyn = { x: c.cx - c.r * 0.77 - 60, y: c.cy + 310 - c.r * 0.77 - 60, w: 2 * (c.r * 0.77 + 60), h: 2 * (c.r * 0.77 + 60) };
+        // round 11 (Burak via Gemini: the horseshoe read like a gauge): a straight stack on a dark backing beside the
+        // clock, clear of her (the shot frames her lower left)
+        const p = { x: 900, y: 560, w: 860, h: 400 };
+        out.push(
+          <g key={e.id}>
+            <Scrim x={p.x} y={p.y} w={p.w} h={p.h} pad={16} />
+            <Stack spec={spec(e, p)} t={t} />
+          </g>,
+        );
+        dyn = p;
         break;
       }
       case 'v-feature':
