@@ -85,7 +85,8 @@ export const LIFE: Record<string, Life> = {
   rk2: { move: 'arc', dir: -1, particles: 'glitter', colors: ['#9fc8ff', '#ffc890'], sweep: '#f4ecff', angle: 1.57 },
   // the final chorus: confetti and stars
   rk4: { move: 'arc', dir: 1, particles: 'confetti', colors: ['#ff8a2a', '#3a8cff'], sweep: '#fff2e0', angle: 0.4 },
-  rk5: { move: 'truck', dir: 1, particles: 'confetti', colors: ['#ff4fd8', '#ffb020'], sweep: '#ffe8f6', angle: -0.4 },
+  // (round 11: the particle cap took its confetti's size; a wider sway keeps it over the floor)
+  rk5: { move: 'truck', dir: 1, particles: 'confetti', colors: ['#ff4fd8', '#ffb020'], sweep: '#ffe8f6', angle: -0.4, sway: 0.05 },
   rk6: { move: 'rise', dir: 1, particles: 'confetti', colors: ['#ff8a2a', '#8ab8ff'], sweep: '#fff4e0', angle: 1.2 },
   rk7: { move: 'arc', dir: -1, particles: 'confetti', colors: ['#ff4fd8', '#ffd040'], sweep: '#ffe6ff', angle: 0.3 },
   // the chant and the scream end: embers off the rocket and the pillar, sparks
@@ -109,7 +110,7 @@ export const LIFE: Record<string, Life> = {
 interface Energy { speed: number; sweep: number; period: number; bloom: number; punch: boolean; /** share of the drift particles */ drift: number }
 const CALM: Energy = { speed: 0.03, sweep: 0.12, period: 2, bloom: 0.35, punch: false, drift: 0.55 };
 const VERSE: Energy = { speed: 0.09, sweep: 0.2, period: 1, bloom: 0.5, punch: false, drift: 1 };
-const PEAK: Energy = { speed: 0.12, sweep: 0.32, period: 1, bloom: 0.7, punch: true, drift: 1 };
+const PEAK: Energy = { speed: 0.15, sweep: 0.32, period: 1, bloom: 0.7, punch: true, drift: 1 };
 const ENERGY: Record<string, Energy> = {
   piano_interlude: CALM, robot_build_failed: { ...CALM, speed: 0.06, sweep: 0.2 }, verse3_rebase: VERSE, verse4_trade: VERSE,
   outro: { ...VERSE, sweep: 0.36, bloom: 0.6, drift: 1 }, final_chorus: PEAK, scream: PEAK, guitar_solo: PEAK, post_chorus_chant: PEAK, scream_end: PEAK,
@@ -132,9 +133,9 @@ export const paintShotView = (shot: string, id: string, t: number, t0: number, t
   // the push-in: 100 % -> 103 % of covering; on the peaks a beat punch spends a fifth of that room
   const punch = en.punch ? after(beatPos(t), 7) : 0;
   const h = COVER * (1 + KB * Math.min(1, 0.8 * e + 0.2 * punch));
-  // the camera's travel across the shot: the speed times the shot's length, at least 2 % and at most 14 % of the
+  // the camera's travel across the shot: the speed times the shot's length, at least 2 % and at most 18 % of the
   // painting; plus a sway over two bars, wider the longer the hold, so it keeps moving after its travel is spent
-  const travel = Math.min(0.14, Math.max(0.02, en.speed * dur));
+  const travel = Math.min(0.18, Math.max(0.02, en.speed * dur));
   const sway = life.sway ?? 0.012 + 0.02 * Math.max(0, dur - 2);
   const m = life.dir * (travel * (e - 0.5) * 2 + sway * Math.sin(Math.PI * barPos(t)));
   const layered = LAYERED[id];

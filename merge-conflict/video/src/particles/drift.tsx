@@ -17,8 +17,8 @@ import { useParticleCap } from './cap.ts';
 
 const PX = H / 2 / Math.tan((FOV * Math.PI) / 360);
 const LAYERS = {
-  mid: { n: 520, z: [11, 26], order: ORDER.fieldBack + 0.2 },
-  near: { n: 300, z: [2.5, 11], order: ORDER.fieldFront + 0.5 },
+  mid: { n: 700, z: [11, 26], order: ORDER.fieldBack + 0.2 },
+  near: { n: 420, z: [2.5, 11], order: ORDER.fieldFront + 0.5 },
 } as const;
 export type DriftLayer = keyof typeof LAYERS;
 /** kind -> [shader kind, cycle seconds, size, rise per cycle (frame halves), alpha] */
