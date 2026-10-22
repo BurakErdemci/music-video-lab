@@ -204,7 +204,8 @@ export const pushCovers = () => [{ id: OUT.id, kind: OUT.kind, window: transitio
 const ORANGE_METAL: Grade = metalGrade(GRADES.mainline, 1);
 /** Blue in her own colours (black leather, deep blue hair, steel): a light pull toward her blue, a cold rim and a cold
  *  fill on the rim side, never the metal (red) grade. A full tint toward the hue washed her into a pale ghost. */
-const BLUE_OWN: Grade = { hue: '#1a5cff', rival: '#3a9cff', amount: 0.06, rim: 1.1, stage: 1 };
+// (the hue is also the floor glow pooled under her soles: a deep blue, so her contact shadow still reads on the tiles)
+const BLUE_OWN: Grade = { hue: '#0c2c8a', rival: '#3a9cff', amount: 0.06, rim: 1.1, stage: 1 };
 const ORANGE_LIGHT: CardLight = { key: '#ff6a1a', keyAmt: 0.45, rim: 1.3 };
 const BLUE_LIGHT: CardLight = { key: '#6aa8ff', keyAmt: 0.15, rim: 1.0 };
 const BLUE_RIM: Hex = '#3a9cff';
@@ -259,7 +260,7 @@ export const PushShot = ({ frame }: { frame: number }) => {
         <LedWall position={[9, 2.6, -11]} width={18} height={14} cols={36} rows={28} colors={['#040c2a', '#2f6bff']} pattern="bars" pulse={0.25} t={t * 0.5} />
         <FireWall x0={-15} x1={-1.5} z={-6} height={4 + 3 * ck} rise={1} colors={['#ff3a10', '#ffd040']} t={t} />
         <Smoke y={FLOOR_Y + 1.2} z={-5} width={14} height={4} color="#1a3a8a" density={0.5} t={t} />
-        <TilePlatform position={[0, FLOOR_Y, -2]} width={32} depth={16} cols={32} rows={16} splitX={0} left="#ff5a14" right="#1e5bff" t={t} pulse={0.3 + 0.4 * ck} erupt={t >= PUSH && t < PUSH + 0.8 ? [{ t: PUSH, x: OX, z: 0 }] : []} />
+        <TilePlatform position={[0, FLOOR_Y, -2]} width={32} depth={16} cols={32} rows={16} splitX={0} left="#c8460f" right="#1846c0" t={t} pulse={0.2 + 0.3 * ck} erupt={t >= PUSH && t < PUSH + 0.8 ? [{ t: PUSH, x: OX, z: 0 }] : []} />
         <BeamCone from={[-6, 8, -2]} to={[OX, FLOOR_Y, 0]} radius={3.2} color="#ff7a1a" intensity={0.5 + 0.3 * ck} />
         <BeamCone from={[6, 8, -2]} to={[BX, FLOOR_Y, 0]} radius={3.2} color="#3a7bff" intensity={0.55} />
         {/* the cracks race from her feet toward blue, a step on every beat of the charge */}
