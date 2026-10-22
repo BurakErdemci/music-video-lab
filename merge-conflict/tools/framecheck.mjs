@@ -59,6 +59,7 @@ await esbuild.build({
       "export { cardPoint } from './film/framing.ts';",
       "export { panelParallax, plateView, paintingView, paintingParallax, PAINT_KB } from './worlds/plategeo.ts';",
       "export { solesAt } from './rig/cardRig.ts';",
+      "export { TYPE_PLAN } from './film/typeplan.ts';",
     ].join('\n'),
     resolveDir: path.join(VIDEO, 'src'), loader: 'ts' },
   bundle: true, platform: 'node', format: 'esm', outfile, jsx: 'automatic', packages: 'external', logLevel: 'error',
@@ -244,11 +245,13 @@ const renderLayers = async (picks, layers, prefix) => {
   await withRenderLock(async () => {
     const chromiumOptions = { gl: 'angle' };
     const browser = await openBrowser('chrome', { chromeMode: 'chrome-for-testing', chromiumOptions });
-    for (const layer of layers) {
-      const composition = await selectComposition({ serveUrl, id: 'MC60', inputProps: { layer }, puppeteerInstance: browser, chromiumOptions });
-      for (const fr of picks) {
-        const output = path.join(shots, `${layer}-${fr}.png`);
-        await renderStill({ composition, serveUrl, output, frame: fr, inputProps: { layer }, puppeteerInstance: browser, chromiumOptions, imageFormat: 'png', overwrite: true });
+    // a layer is a name ('type', 'world', 'all': every pick) or { key, props, frames } (its own props and frames)
+    for (const spec of layers) {
+      const { key, props, frames: own } = typeof spec === 'string' ? { key: spec, props: { layer: spec }, frames: picks } : spec;
+      const composition = await selectComposition({ serveUrl, id: 'MC60', inputProps: props, puppeteerInstance: browser, chromiumOptions });
+      for (const fr of own) {
+        const output = path.join(shots, `${key}-${fr}.png`);
+        await renderStill({ composition, serveUrl, output, frame: fr, inputProps: props, puppeteerInstance: browser, chromiumOptions, imageFormat: 'png', overwrite: true });
       }
     }
     await browser.close({ silent: true });
@@ -318,14 +321,28 @@ if (process.argv.includes('--type')) {
   const every = Math.round(FPS / Number(arg('fps', 2)));
   const picks = [];
   for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
+  // type over type (round 9): where two or more type-plan entries are on screen and one has settled (0.4 s after it
+  // starts, 0.1 s before it ends), each is rendered alone (the `only` prop) and once with none (the type outside the
+  // plan), so tools/typeframe.py can tell whether a settled form is covered by another form
+  const activeAt = (t) => M.TYPE_PLAN.filter((e) => t >= e.t0 - 0.02 && t < e.t1);
+  const settledAt = (e, t) => t >= e.t0 + 0.4 && t < e.t1 - 0.1;
+  const overlapPicks = picks.filter((fr) => { const a = activeAt(fr / FPS); return a.length >= 2 && a.some((e) => settledAt(e, fr / FPS)); });
+  const byId = new Map();
+  for (const fr of overlapPicks) for (const e of activeAt(fr / FPS)) byId.set(e.id, [...(byId.get(e.id) ?? []), fr]);
+  const onlyLayers = [...byId].map(([id, frs]) => ({ key: `only_${id}`, props: { layer: 'type', only: id }, frames: frs }));
+  if (overlapPicks.length) onlyLayers.push({ key: 'only___none', props: { layer: 'type', only: '__none__' }, frames: overlapPicks });
+  console.log(`type over type: ${overlapPicks.length} samples with two or more forms on screen, ${byId.size} forms rendered alone`);
   // 'all' is the frame as it renders: tools/typeframe.py checks that nothing is drawn over the settled type
-  const { shots, done } = await renderLayers(picks, ['type', 'world', 'all'], 'typecheck-');
+  const { shots, done } = await renderLayers(picks, ['type', 'world', 'all', ...onlyLayers], 'typecheck-');
   const samples = [];
   for (const fr of picks) {
     const st = M.filmStateAt(fr);
     const subj = st.subjects.filter((x) => !x.silhouette && frames[x.card]);
     const faces = subj.map((x) => { const b = screenBox(st.pose, x, M.faceFrame(x.card)); return [b.x0, b.y0, b.x1, b.y1]; });
-    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), cap_exempt: CAP_EXEMPT.some(([a, b]) => fr / FPS >= a && fr / FPS < b), faces, cards: subj.map((x) => x.card) });
+    const overlap = overlapPicks.includes(fr)
+      ? { none: path.join(shots, `only___none-${fr}.png`), forms: activeAt(fr / FPS).map((e) => ({ id: e.id, png: path.join(shots, `only_${e.id}-${fr}.png`), settled: settledAt(e, fr / FPS) })) }
+      : undefined;
+    samples.push({ frame: fr, t: fr / FPS, shot: st.shot, type: path.join(shots, `type-${fr}.png`), world: path.join(shots, `world-${fr}.png`), final: path.join(shots, `all-${fr}.png`), cap_exempt: CAP_EXEMPT.some(([a, b]) => fr / FPS >= a && fr / FPS < b), faces, cards: subj.map((x) => x.card), ...(overlap ? { overlap } : {}) });
   }
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));

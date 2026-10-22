@@ -64,6 +64,45 @@ def hidden(s):
     return float((off & solid).sum() / solid.sum())
 
 
+OVERLAP = 0.02  # share of a settled form's own pixels another type form may cover
+
+
+def overlaps(s):
+    """Type over type (round 9): with each type-plan entry rendered alone (s["overlap"]["forms"]) and with none of
+    them (["none"], the type outside the plan), a settled form's own pixels are its alone-render's opaque pixels minus
+    the none-render's. Where another form's own pixels fall on them, the full type layer shows whichever is drawn on
+    top: if it matches the other form there, the settled one is covered. Returns [(id, other, share)] over OVERLAP."""
+    ov = s.get("overlap")
+    if not ov:
+        return []
+    rgba = lambda p: np.asarray(Image.open(p).convert("RGBA"), dtype=np.float32)
+    none = rgba(ov["none"])[..., 3] > 127
+    full = rgba(s["type"])[..., :3]
+    forms = []
+    for f in ov["forms"]:
+        im = rgba(f["png"])
+        forms.append((f, im[..., :3], (im[..., 3] > 127) & ~none))
+    out = []
+    for f, _, own in forms:
+        if not f.get("settled") or own.sum() < 200:
+            continue
+        for g, grgb, gown in forms:
+            if g is f:
+                continue
+            both = own & gown
+            if both.sum() < 50:
+                continue
+            frgb = next(r for h, r, _ in forms if h is f)
+            # covered where the full layer shows the other form's colour rather than this one's
+            d_self = np.abs(full[both] - frgb[both]).max(axis=-1)
+            d_other = np.abs(full[both] - grgb[both]).max(axis=-1)
+            covered = int(((d_other < d_self) & (d_self > HIDDEN_DIFF)).sum())
+            share = covered / float(own.sum())
+            if share > OVERLAP:
+                out.append((f["id"], g["id"], share))
+    return out
+
+
 def box_mean(a, r):
     """Mean of a over a (2r+1)^2 box, by summed-area table."""
     c = np.pad(a, ((r + 1, r), (r + 1, r)), mode="edge").cumsum(0).cumsum(1)
@@ -221,7 +260,7 @@ def close(a, b):
 
 
 def analyse(samples):
-    """Failures per sample: [{"t", "frame", "shot", "kind": margin|face|contrast, "value", "why"}].
+    """Failures per sample: [{"t", "frame", "shot", "kind": margin|face|contrast|hidden|small|overlap, "value", "why"}].
     Settled = the box matches the previous or the next sample's box (it persists 2+ samples, 0.5 s apart)."""
     data = []
     for s in samples:
@@ -248,6 +287,8 @@ def analyse(samples):
             h = hidden(s)
             if h > HIDDEN:
                 out.append({**base, "kind": "hidden", "value": round(100 * h), "why": f"{100 * h:.0f} % of the type's opaque pixels hidden in the final frame"})
+        for fid, gid, share in overlaps(s):
+            out.append({**base, "kind": "overlap", "value": round(100 * share), "why": f"settled form {fid} is {100 * share:.0f} % covered by the form {gid}"})
         cards = s.get("cards") or [None] * len(s["faces"])
         # round 7d: the face rule binds a form at its settled state (a form flying in may cross a face on its way)
         for f, card in zip(s["faces"] if settled else [], cards):
@@ -286,6 +327,20 @@ def selftest():
         fin.save(fp)
         return {"frame": 0, "t": 0.0, "shot": name, "type": tp, "world": wp, "final": fp, "faces": faces}
 
+    def overlap_case(name, cover):
+        # two forms: a settled counter (A) and a marquee (B) drawn after it - over A's right half, or beside it
+        a_box, b_box = (600, 400, 1100, 600), ((900, 380, 1500, 640) if cover else (1200, 380, 1700, 640))
+        fa, fb, fn = [Image.new("RGBA", (W, H), (0, 0, 0, 0)) for _ in range(3)]
+        fa.paste((240, 200, 40, 255), a_box)
+        fb.paste((40, 120, 240, 255), b_box)
+        ty = fa.copy()
+        ty.alpha_composite(fb)
+        paths = {k: os.path.join(d, f"{name}-{k}.png") for k in ("a", "b", "n")}
+        fa.save(paths["a"]), fb.save(paths["b"]), fn.save(paths["n"])
+        c = case(name, lambda im: im.alpha_composite(ty), (20, 20, 20), [])
+        c["overlap"] = {"none": paths["n"], "forms": [{"id": "A", "png": paths["a"], "settled": True}, {"id": "B", "png": paths["b"], "settled": False}]}
+        return c
+
     def rect(box, fill):
         def f(im):
             im.paste(fill, box)
@@ -309,11 +364,13 @@ def selftest():
         case("hidden", rect((600, 400, 1300, 600), white), dark, [], cover=(1150, 380, 1400, 640)),
         case("small", text("You wrote a comment that just says", 22), (120, 120, 120), []),
         case("bigtext", text("I WROTE THAT COMMENT", 64), (120, 120, 120), []),
+        overlap_case("overlap", cover=True),
+        overlap_case("sidebyside", cover=False),
     ]
     # the same box twice so the settled test sees it persist
     samples = [x for s in samples for x in (s, dict(s, t=0.5))]
     got = {(f["shot"], f["kind"]) for f in analyse(samples)}
-    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden"), ("small", "small")}
+    want = {("margin", "margin"), ("face", "face"), ("contrast", "contrast"), ("hidden", "hidden"), ("small", "small"), ("overlap", "overlap")}
     print("typeframe selftest flagged:", sorted(got))
     ok = got == want
     print("typeframe selftest: " + ("PASS" if ok else "FAIL (wanted " + str(sorted(want)) + ")"))
@@ -327,8 +384,8 @@ def main():
     out = analyse(samples)
     if len(sys.argv) > 2:
         json.dump(out, open(sys.argv[2], "w", encoding="utf-8"))
-    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden", "small")}
-    print(f"typeframe: {len(samples)} samples; margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}, small {n['small']}")
+    n = {k: sum(1 for f in out if f["kind"] == k) for k in ("margin", "face", "contrast", "hidden", "small", "overlap")}
+    print(f"typeframe: {len(samples)} samples ({sum(1 for x in samples if x.get('overlap'))} with forms rendered alone); margin {n['margin']}, face {n['face']}, contrast {n['contrast']}, hidden {n['hidden']}, small {n['small']}, overlap {n['overlap']}")
     for f in out:
         print(f"  {f['t']:7.2f}  {str(f['shot']):22s} {f['kind']:8s} {f['why']}")
     print("typeframe: FAIL" if out else "typeframe: PASS")
