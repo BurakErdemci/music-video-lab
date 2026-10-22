@@ -181,7 +181,9 @@ export const makeChorusShot = (L: ChorusLines, v: 1 | 2) => {
         case 'arena':
           return <Arena t={t} stomps={stomps} embers={embers} led={v === 1 ? undefined : ['#7a3cff', '#ff3d9a']} plate />;
         case 'spin':
-          return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6} led={v === 1 ? ['#ff4fd8', CYAN] : ['#ff3014', '#ffb020']} plate />;
+          // (round 7d: the Accept pads stay in the arena; the spinning girls do not stand on them, so they read as
+          // glass risers floating beside her feet)
+          return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6} led={v === 1 ? ['#ff4fd8', CYAN] : ['#ff3014', '#ffb020']} plate pads={false} />;
         case 'burst':
           return <Arena t={t} stomps={stomps} embers={embers} lasers={1.6 * (1 - clamp01((t - H.burst) / 0.5))} plate />;
         case 'insert':

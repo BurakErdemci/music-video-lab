@@ -38,8 +38,8 @@ const Backdrop = ({ color = '#04020a' }: { color?: string }) => (
 
 const PATTERNS: LedPattern[] = ['bars', 'radial', 'checker', 'scan'];
 
-export interface ArenaProps { t: number; stomps: readonly { t: number; x: number }[]; embers: readonly EmberBurst[]; lasers?: number; led?: [Hex, Hex]; plate?: boolean }
-export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED], plate = false }: ArenaProps) => {
+export interface ArenaProps { t: number; stomps: readonly { t: number; x: number }[]; embers: readonly EmberBurst[]; lasers?: number; led?: [Hex, Hex]; plate?: boolean; /** the Accept pads (off where the girls do not stand on them) */ pads?: boolean }
+export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED], plate = false, pads = true }: ArenaProps) => {
   // the beat pulse runs at 3 per second over most of the frame: kept small, or it counts as flashing (round 6,
   // 43.5-45.3 s failed the flash check once the bright W09 plate sat behind the floor)
   const p = pulseAt(t) * (plate ? 0.35 : 1);
@@ -59,9 +59,13 @@ export const Arena = ({ t, stomps, embers, lasers = 1, led = [BLUE, RED], plate 
       <Smoke y={F + 1.2} z={-4} width={36} height={5} color="#6a5cff" density={0.5} t={t} />
       <TilePlatform position={[0, F, -1.5]} width={24} depth={13} cols={24} rows={13} splitX={0} left={BLUE} right={RED} t={t} pulse={p} erupt={erupt} opacity={plate ? 0.55 : 1} />
       {/* the Accept buttons: a disco floor pad under blue, a dark pad in the middle, a steel pedestal by orange */}
-      <GlowBox position={[ARENA.blueX, F + 0.06, ARENA.z]} size={[2.8, 0.12, 1.6]} color={CYAN} edge={pressed(ARENA.blueX) ? 1 : 0.6} fill={pressed(ARENA.blueX) ? 0.7 : 0.35} />
-      <GlowBox position={[0, F + 0.06, ARENA.z]} size={[2.2, 0.12, 1.4]} color="#7a6cff" edge={0.3} fill={0.12} />
-      <GlowBox position={[ARENA.orangeX + 1.9, F + 0.75, ARENA.z]} size={[1.3, 1.5, 1.3]} color={pressed(ARENA.orangeX) ? '#ff5a1a' : '#9aa3ad'} edge={pressed(ARENA.orangeX) ? 1 : 0.55} fill={pressed(ARENA.orangeX) ? 0.9 : 0.3} />
+      {pads && (
+        <>
+          <GlowBox position={[ARENA.blueX, F + 0.06, ARENA.z]} size={[2.8, 0.12, 1.6]} color={CYAN} edge={pressed(ARENA.blueX) ? 1 : 0.6} fill={pressed(ARENA.blueX) ? 0.7 : 0.35} />
+          <GlowBox position={[0, F + 0.06, ARENA.z]} size={[2.2, 0.12, 1.4]} color="#7a6cff" edge={0.3} fill={0.12} />
+          <GlowBox position={[ARENA.orangeX + 1.9, F + 0.75, ARENA.z]} size={[1.3, 1.5, 1.3]} color={pressed(ARENA.orangeX) ? '#ff5a1a' : '#9aa3ad'} edge={pressed(ARENA.orangeX) ? 1 : 0.55} fill={pressed(ARENA.orangeX) ? 0.9 : 0.3} />
+        </>
+      )}
       <LaserFan origin={[-8, 5.8, -9]} count={9} spread={0.7} angle={-0.9 + side * 0.25 + sweep * 0.35} length={26} color={CYAN} width={0.035} intensity={0.9 * lasers} />
       <LaserFan origin={[8, 5.8, -9]} count={9} spread={0.7} angle={Math.PI + 0.9 - side * 0.25 - sweep * 0.35} length={26} color={RED} width={0.035} intensity={0.9 * lasers} />
       <BeamCone from={[ARENA.blueX - 1.2, 8, 1]} to={[ARENA.blueX, F, 0.2]} radius={2.4} color={CYAN} intensity={0.35 + 0.25 * p} />
