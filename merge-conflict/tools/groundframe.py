@@ -62,6 +62,8 @@ def sample(L, s, r):
 
 def measure(L, s):
     """(verdict, band, beside) for one sole; verdict is 'ok', 'fail' or a skip reason."""
+    if s.get('skip'):
+        return s['skip'], None, None
     band_r, side_rs = regions(s)
     bv, bin_, bon = sample(L, s, band_r)
     if bin_ < 0.9:

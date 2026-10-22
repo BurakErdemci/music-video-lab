@@ -285,7 +285,10 @@ const standing = (st, t) => {
     // the card's own down direction on screen (a barrel roll turns it) and the sole line's half length across it
     const hpx = Math.hypot(bot.x - top.x, bot.y - top.y);
     const down = [(bot.x - top.x) / hpx, (bot.y - top.y) / hpx];
-    const sole = { card: x.card, cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, half: Math.abs((b.x - a.x) * down[1] - (b.y - a.y) * down[0]) / 2, down, hpx, others: rects.filter((_, j) => j !== i) };
+    // a barrel roll past 40 degrees (chorus 2's spin-out) turns the floor away from below her soles on screen: the band
+    // and the floor beside would sample the plate or the void, so such a sole is reported as skipped, not measured
+    const rolled = Math.abs(st.pose.roll ?? 0) > (40 * Math.PI) / 180;
+    const sole = { card: x.card, ...(rolled ? { skip: 'camera rolled past 40 degrees' } : {}), cx: (a.x + b.x) / 2, cy: (a.y + b.y) / 2, half: Math.abs((b.x - a.x) * down[1] - (b.y - a.y) * down[0]) / 2, down, hpx, others: rects.filter((_, j) => j !== i) };
     return sole.cx < 0 || sole.cx > W || sole.cy < 4 || sole.cy > H - 12 ? [] : [sole];
   });
 };
