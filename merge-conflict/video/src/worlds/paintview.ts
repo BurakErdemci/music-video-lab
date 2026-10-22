@@ -53,19 +53,23 @@ export interface PaintView {
  *  their soles do not slide on it (RK11: the street under the boots 0.07, the girls 0.13); in the air or cut by the
  *  frame, the median of the wide plate's depth under them (RK2 0.46, RK12 0.62). RK1 sits on the stage edge with her
  *  boots on the near floor (girls 0.33, the floor under the boots 0.77): 0.65 keeps the boots' slip under 15 px. */
-export const LAYERED: Record<string, { depth: number; bob: boolean }> = {
+/** `walk`: the drawings are a walk cycle, stepped one drawing a beat (round 11; the section's rate made it hurry). */
+export const LAYERED: Record<string, { depth: number; bob: boolean; walk?: boolean }> = {
   RK1: { depth: 0.65, bob: true },
   // RK2's girls are cut by the frame on every side (layers/RK2.json): a bob would open a gap at one edge
   RK2: { depth: 0.46, bob: false },
-  RK11: { depth: 0.1, bob: true },
+  RK11: { depth: 0.1, bob: true, walk: true },
   RK12: { depth: 0.62, bob: true },
+  // RK13: walking toward the camera, cut at the frame's bottom (no bob); the depth map puts them at 0.19 against a
+  // near sky, but they are the nearest thing in the frame: 0.6, so the push brings them toward us
+  RK13: { depth: 0.6, bob: false, walk: true },
 };
 
 export type Particles = 'dust' | 'embers' | 'sparks' | 'confetti' | 'glitter';
 export type PaintMove = 'arc' | 'truck' | 'push' | 'rise';
 /** What a painting shot does: its camera move and direction, the particles in front of it (matched to the painting)
  *  and their two colours, the sweep's colour and angle (radians, 0 = left to right). */
-export interface Life { move: PaintMove; dir: 1 | -1; particles: Particles; colors: [Hex, Hex]; sweep: Hex; angle: number; /** the depth that holds still, if not the move's own */ pivot?: number }
+export interface Life { move: PaintMove; dir: 1 | -1; particles: Particles; colors: [Hex, Hex]; sweep: Hex; angle: number; /** the depth that holds still, if not the move's own */ pivot?: number; /** the shared field's kind, if not the particles' */ field?: Particles; /** the point the push swells about (painting uv, y up) */ focus?: [number, number] }
 
 /** Every painting shot of the film, by shot id (film/rest/plan.ts and film/finale/plan.ts). */
 export const LIFE: Record<string, Life> = {
@@ -93,6 +97,9 @@ export const LIFE: Record<string, Life> = {
   // the 5.35 s dawn walk holds still at mid depth, so the girls and the city slide one way and the near rubble the other
   dawn: { move: 'arc', dir: 1, particles: 'confetti', colors: ['#ffd890', '#ffb060'], sweep: '#fff0c8', angle: -0.25, pivot: 0.45 },
   // the last jump: an arc about the girls (their hair reaches the top edge, so they may not rise or swell)
+  // the walk toward us (round 11): a slow push toward the girls, the last confetti in the drift and dust in the light
+  // (the swell is about their heads, so the push grows them down past the cut at the frame's bottom, never up out of it)
+  'dawn-us': { move: 'push', dir: 1, particles: 'confetti', field: 'dust', colors: ['#ffd890', '#ffb070'], sweep: '#fff0c8', angle: -0.25, focus: [0.5, 0.95] },
   freeze: { move: 'arc', dir: 1, particles: 'confetti', colors: ['#ff4fd8', '#4aa8ff'], sweep: '#ffe6ff', angle: 0.5 },
 };
 
@@ -144,13 +151,13 @@ export const paintShotView = (shot: string, id: string, t: number, t0: number, t
   // the bloom: a soft pulse on the beat (every second beat in the piano), stronger on the downbeat
   const beat = en === CALM ? after(beatPos(t) / 2, 4) : after(beatPos(t), 5);
   const bloom = en.bloom * (0.55 * beat + 0.45 * after(barPos(t), 3.5));
-  const focus: [number, number] = [0.5, 0.55];
+  const focus: [number, number] = life.focus ?? [0.5, 0.55];
   const view: PaintView = { h, ox, oy, shift, pivot, zoom, focus, gain: 1, sweep, bloom };
   if (!layered) return view;
   return {
     ...view, layered: true,
         // the bob lifts them on the beat (a lift keeps a drawing cut at the top edge, RK12's c, from opening a gap)
-    girls: { drawing: loopIndex(t), depth: layered.depth, bob: layered.bob ? -0.0025 * after(beatPos(t), 6) : 0, glow: life.sweep, glowAmt: 0.35 + 0.25 * beat, shadow: 0.55 },
+    girls: { drawing: loopIndex(t, layered.walk ? 1 : undefined), depth: layered.depth, bob: layered.bob ? -0.0025 * after(beatPos(t), 6) : 0, glow: life.sweep, glowAmt: 0.35 + 0.25 * beat, shadow: 0.55 },
   };
 };
 

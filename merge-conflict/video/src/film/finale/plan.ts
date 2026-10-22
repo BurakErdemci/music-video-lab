@@ -37,6 +37,8 @@ export interface FPose { t: number; card: string | null; at?: Placement }
 export const tk = (line: number, k: number): number => at(`tok-${line}-${k}`);
 const db = (t: number) => downbeats.find((x) => x >= t - 0.02) as number;
 const bt = (t: number) => beats.find((x) => x >= t - 0.02) as number;
+/** The n-th downbeat after the one at (or just after) t. */
+const dbN = (t: number, n: number) => downbeats[downbeats.findIndex((x) => x >= t - 0.02) + n] as number;
 
 const full = (x: number, height = 5.0, flip = false, z = 0): Placement => ({ x, height, flip, z });
 /** A face of a split or duel (left or right half), and a centred face cut-in: sized by the measured face box. */
@@ -155,6 +157,9 @@ export const FSHOTS: FShot[] = [
   { id: 'climax', t: db(212.1), scene: 'marena', cam: 'wide', move: 'push', into: 'shock', B: ['BS4', full(-3.0, 5.0)], O: ['OS4', full(3.0, 5.0)] },
   // ---- the outro (213.54-232.12): the dawn walk (RK11), the resolved title, a last metal round, the final freeze (RK12)
   { id: 'dawn', t: OUTRO.start, scene: 'panel', panel: 'RK11', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
+  // round 11 (Burak: the walk from behind ran too long): two bars from behind, then a hard cut on the downbeat to the
+  // girls walking toward us, arm in arm, laughing, the sunrise behind them (RK13)
+  { id: 'dawn-us', t: dbN(OUTRO.start, 2), scene: 'panel', panel: 'RK13', cam: 'hero', move: 'push', B: null, O: null },
   { id: 'title', t: db(218.8), scene: 'title', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   { id: 'title-b', t: db(220.1), scene: 'title', cam: 'close', move: 'orbit', into: 'shock' },
   { id: 'outro-faces', t: db(221.5), scene: 'duel', cam: 'hero', move: 'push', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },

@@ -338,7 +338,7 @@ export const RestShot = ({ frame }: { frame: number }) => {
   const turn = dissolveState(BLUE_TURN, t);
   // a painting's own particles (round 10): the field in its kind and the drift through depth in front of it
   const life = scene === 'panel' ? LIFE[shot.id] : undefined;
-  const fk = life ? fieldKind(life.particles) : { metal: t >= SCREAM.start ? 1 : 0, dust: t < SCREAM.start };
+  const fk = life ? fieldKind(life.field ?? life.particles) : { metal: t >= SCREAM.start ? 1 : 0, dust: t < SCREAM.start };
   const blueFig = turn.active ? <>{figure('B', { t: 0, card: 'BX3', at: BLUE_TURN.from?.at }, turn.fromOpacity)}{figure('B', { t: 0, card: 'BMX2', at: BLUE_TURN.to?.at }, turn.toOpacity)}</> : figure('B', blueP);
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>

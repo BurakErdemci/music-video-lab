@@ -62,7 +62,7 @@ await esbuild.build({
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
       "export { plateView } from './worlds/plategeo.ts';",
-      "export { paintRects, girlsAt, girlsMag, COVER } from './worlds/paintview.ts';",
+      "export { paintRects, girlsAt, girlsMag, COVER, LAYERED } from './worlds/paintview.ts';",
       "export { solesAt } from './rig/cardRig.ts';",
       "export { TYPE_PLAN } from './film/typeplan.ts';",
     ].join('\n'),
@@ -83,7 +83,7 @@ const PANEL_DIST = 30; // the shots pass dist 30 for a moment painting; every wo
 /** The girls drawings' alpha boxes of the living paintings (tools/imagegen/greenkey.py). */
 const LAYERS = (() => {
   const out = {};
-  for (const id of ['RK1', 'RK2', 'RK11', 'RK12']) out[id] = JSON.parse(readFileSync(path.join(VIDEO, 'public', 'plates', 'layers', `${id}.json`), 'utf8'));
+  for (const id of Object.keys(M.LAYERED)) out[id] = JSON.parse(readFileSync(path.join(VIDEO, 'public', 'plates', 'layers', `${id}.json`), 'utf8'));
   return out;
 })();
 const DRAWINGS = ['fg', 'fgb', 'fgc'];

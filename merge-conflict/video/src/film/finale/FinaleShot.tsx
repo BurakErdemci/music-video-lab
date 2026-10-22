@@ -378,7 +378,7 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   const density = quiet ? 1 : scene === 'flight' ? 0.6 + 0.4 * flightK(t) : 1;
   // a painting's own particles (round 10): the field in its kind, and the drift through depth in front of it
   const life = scene === 'panel' ? LIFE[shot.id] : undefined;
-  const fk = life ? fieldKind(life.particles) : { metal: metal ? 1 : 0, dust: !final && !quiet };
+  const fk = life ? fieldKind(life.field ?? life.particles) : { metal: metal ? 1 : 0, dust: !final && !quiet };
   const adv = driftAdvance(t);
   return (
     <AbsoluteFill style={{ background: useShotBackground() }}>

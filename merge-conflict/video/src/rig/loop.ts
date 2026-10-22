@@ -26,8 +26,9 @@ export const loopRate = (t: number): number => {
   return tier >= 0.7 ? 3 : tier >= 0.35 ? 2 : tier > 0 ? 1 : 0;
 };
 
-/** Which drawing (0 base, 1 b, 2 c) shows at t. */
-export const loopIndex = (t: number): 0 | 1 | 2 => {
-  const r = loopRate(t);
+/** Which drawing (0 base, 1 b, 2 c) shows at t, at the section's rate or at `rate` drawings a beat (round 11: a walk
+ *  steps one drawing a beat, so base, b, c, b is one stride cycle of four beats, whatever the section's tier). */
+export const loopIndex = (t: number, rate?: number): 0 | 1 | 2 => {
+  const r = rate ?? loopRate(t);
   return r === 0 ? 0 : PATTERN[Math.floor(beatPos(t) * r) % PATTERN.length] as 0 | 1 | 2;
 };
