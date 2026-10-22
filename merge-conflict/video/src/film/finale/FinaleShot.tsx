@@ -210,10 +210,12 @@ const subjectsAt = (t: number, scene: FScene, blueP: ReturnType<typeof poseAt>, 
   }
   return out;
 };
-/** A girl scattered into particles (the build's branches, the final chorus's burst) is not drawn after the scatter
- *  starts; the next pose brings her back. */
-const scattered = (who: 'B' | 'O', t: number): boolean =>
-  PLANS.some((p) => p.from && p.id.endsWith(who === 'B' ? '-b' : '-o') && t >= p.t0 && t < p.t0 + 2);
+/** A girl scattered into particles (the build's branches, the final chorus's burst) is not drawn from the scatter
+ *  on, until her next pose brings her back. */
+const scattered = (who: 'B' | 'O', t: number): boolean => {
+  const since = poseAt(who === 'B' ? FBLUE : FORANGE, t)?.t ?? -Infinity;
+  return PLANS.some((p) => p.from && p.id.endsWith(who === 'B' ? '-b' : '-o') && t >= p.t0 && since <= p.t0);
+};
 /** A girl gathering from the particles of her git line fades in with them. */
 const gatherOpacity = (who: 'B' | 'O', t: number): number => {
   const p = PLANS.find((x) => x.to && x.id.endsWith(who === 'B' ? '-b' : '-o') && dissolveState(x, t).active);

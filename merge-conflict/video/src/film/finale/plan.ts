@@ -47,7 +47,7 @@ const bustAt = (card: string, x: number): Who => [card, faceSized(card, x, false
 const dive = (card: string, x: number, flip = false): Who => [card, { x, feet: -1.4, height: 3.0, flip, z: 0 }];
 
 /** The build's girls: they rise from one knee in the tree and float up with it (the flight carries the camera). */
-export const RISE: Record<'B' | 'O', Placement> = { B: { x: -2.5, feet: -4.0, height: 4.6, z: 1.2 }, O: { x: 2.5, feet: -4.0, height: 4.6, z: 1.2 } };
+export const RISE: Record<'B' | 'O', Placement> = { B: { x: -2.4, feet: -4.0, height: 5.2, z: 2.0 }, O: { x: 2.4, feet: -4.0, height: 5.2, z: 2.0 } };
 /** When the two girls scatter into the tree's two branches ("Two branches"). */
 export const BRANCHES_AT = tk(52, 0);
 
@@ -117,8 +117,8 @@ export const FSHOTS: FShot[] = [
   { id: 'ship-3', t: tk(64, 4), scene: 'cathedral', cam: 'hero', move: 'dollyzoom', into: 'shock', B: ['BS3', full(-2.4, 5.0)], O: ['OS3', full(2.4, 5.0)] },
   // ---- "Build failed. Syntax error on line forty-two." (193.10-196.49): the music stops; blue reads it deadpan
   //      (the intro's terminal), orange's jaw drops, the frozen jump (RK9). Comedic hard stop: hard cuts, no move.
-  { id: 'failed', t: tk(65, 0), scene: 'terminal', cam: 'hero', move: 'still', B: ['BH3', full(-2.6, 5.2)], O: null },
-  { id: 'jaw', t: tk(66, 0), scene: 'terminal', cam: 'reverse', move: 'still', into: 'shock', B: null, O: ['OH3', full(2.4, 5.2)] },
+  { id: 'failed', t: tk(65, 0), scene: 'terminal', cam: 'hero', move: 'still', B: ['BH3', full(-2.4, 6.4)], O: null },
+  { id: 'jaw', t: tk(66, 0), scene: 'terminal', cam: 'hero', move: 'still', into: 'shock', B: null, O: ['OH3', full(-2.4, 6.4)] },
   { id: 'rk9', t: tk(66, 2), scene: 'panel', panel: 'RK9', cam: 'hero', move: 'still', B: null, O: null },
   // ---- the scream end (196.15-213.54): metal; sky scream, guitar smash, keytar spin, the scream pillar (RK10)
   { id: 'pillar', t: SCREAM_END.start, scene: 'panel', panel: 'RK10', cam: 'hero', move: 'push', into: 'fire', B: null, O: null },
