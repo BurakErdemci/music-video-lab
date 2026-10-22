@@ -4,7 +4,8 @@
 // given a render, the mean frame-to-frame motion (mean absolute difference of consecutive frames, luma 0-255,
 // decoded at 480x270). Rules: each chorus >= 1.5x the verses on both; verses 3-4 >= 0.5x the chorus motion and
 // >= the verse 1-2 events; scream and breakdown in [0.7, 1.0]x and the solo in [0.7, 1.15]x the chorus motion with >= 1.10 events per
-// beat; the 4 s after each chorus >= 0.5x the chorus motion; the whisper is exempt ("No cliff after the chorus").
+// beat; the 4 s after each chorus >= 0.5x the chorus motion; the whisper is exempt ("No cliff after the chorus"); the
+// breakdown (120.03-125.36) has no motion floor since round 9 (see BREAKDOWN_NO_FLOOR).
 //   node tools/intensity.mjs [--range 0-64.15] [--video video/out/proof64.mp4] [--start 0]
 // --start is the film time of the video's first frame. Exit 1 when any rule fails.
 import { spawn } from 'node:child_process';
@@ -56,6 +57,8 @@ if (video) {
 const isVerse = (n) => /^verse/.test(n);
 const isChorus = (n) => /^chorus/.test(n);
 const METAL = ['scream', 'breakdown_git_push_force', 'guitar_solo'];
+// round 9: a rebuilt continuous-push storyboard, judged by tools/pushcheck.mjs (impact), not by cut density
+const BREAKDOWN_NO_FLOOR = 'breakdown_git_push_force';
 const mean = (xs) => xs.reduce((x, y) => x + y, 0) / (xs.length || 1);
 const byName = (n) => secs.find((s) => s.name === n);
 const vEv = mean(secs.filter((s) => isVerse(s.name)).map((s) => s.evPerBeat));
@@ -86,7 +89,8 @@ for (const n of METAL) {
   if (s.evPerBeat < 1.1) fails.push(`${n} events/beat ${s.evPerBeat.toFixed(2)} < 1.10`);
   // the solo may reach 1.15x the chorus (scene-map.md "Living motion", Burak's call); the others stay under it
   const top = n === 'guitar_solo' ? 1.15 : 1.0;
-  if (video && choruses.length && (s.motion < 0.7 * cMo || s.motion > top * cMo)) fails.push(`${n} motion ${s.motion.toFixed(2)} outside [0.7, ${top}]x chorus ${cMo.toFixed(2)}`);
+  const floor = n === BREAKDOWN_NO_FLOOR ? 0 : 0.7;
+  if (video && choruses.length && (s.motion < floor * cMo || s.motion > top * cMo)) fails.push(`${n} motion ${s.motion.toFixed(2)} outside [${floor}, ${top}]x chorus ${cMo.toFixed(2)}`);
 }
 // 4. no cliff: the 4 s after each chorus
 if (video && diffs) {

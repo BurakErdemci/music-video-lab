@@ -555,3 +555,11 @@ One stage, one geography: orange LEFT, blue RIGHT, the whole time. Four shots on
 Colour: orange's side is fire, blue's side stays cold blue until the wave crosses into it. The lasers are dimmed in
 this sequence, and blue is never tinted red. BF1, if used at all, is mirrored so the blast comes from the left. Every
 card here plays its drawn loop (OF1-4, BF1, BMX1: loops-4).
+
+## The breakdown's intensity (round 9, 2026-10-22, the architect's decision)
+
+GIT! PUSH! FORCE! (120.03-125.36 s) is exempt from the intensity floor of 0.7x the chorus motion while its storyboard
+is the four-shot, one-continuous-push version ("GIT! PUSH! FORCE! rebuilt"; proof232-r9 measures 0.48x). Its 1.0x
+ceiling and its events-per-beat rule stay. Its gate is `node tools/pushcheck.mjs`: the girls in frame at the cut, the
+ring between them, the throw seen for >= 0.35 s and >= 40 % of the frame wide, scale and blue's saturation. If Burak
+finds the scene weak, apply `docs/patches/push-motion-levers.patch` first (measured gains in its `.md`).
