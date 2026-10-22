@@ -10,12 +10,12 @@ import { AdditiveBlending, BufferAttribute, DoubleSide, LinearFilter, LinearMipm
 import manifestJson from '../../public/cards/manifest.json' with { type: 'json' };
 import { type Hex, rgb } from '../lib/ease.ts';
 import { GRADE_GLSL, type Grade, rivalOf } from '../grade/grade.ts';
-import { cardRig, frameOf } from '../rig/cardRig.ts';
+import { cardRig, frameOf, solesAt } from '../rig/cardRig.ts';
 import { loopIds, loopIndex } from '../rig/loop.ts';
 import { RIPPLE_MAX, rippleAmp, ripplePhase, rippleWeight } from '../rig/ripple.ts';
 import { GRID_COLS, GRID_ROWS, MAX_BONES, rows, weightsAt } from '../rig/rig.ts';
 import { FLOOR_Y } from '../stage/SetPlate.tsx';
-import { ORDER, useUniforms } from '../stage/Stage.tsx';
+import { ORDER, useStagePoseMaybe, useUniforms } from '../stage/Stage.tsx';
 
 interface ManifestEntry { file: string; w: number; h: number; bbox: number[]; source: string }
 const MANIFEST = manifestJson as Record<string, ManifestEntry>;
@@ -140,10 +140,25 @@ void main() {
   gl_FragColor = vec4(min(col, vec3(1.0)), c.a * uOpacity * fade);
 }`;
 
-const SHADOW_VERT = /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
-/** A soft contact shadow: an elliptical falloff, darkest under the feet. */
-const SHADOW_FRAG = /* glsl */ `uniform float uOpacity; varying vec2 vUv;
-void main() { float r = length((vUv - 0.5) * 2.0); float a = (1.0 - smoothstep(0.0, 1.0, r)) * uOpacity; gl_FragColor = vec4(0.0, 0.0, 0.0, a); }`;
+const SHADOW_VERT = /* glsl */ `varying vec2 vUv; varying vec2 vP; void main() { vUv = uv; vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
+/** The contact shadow (round 7d, "the girls look pasted on"), in floor-plane world units about the soles' centre
+ *  (x right, y away from the camera): a tight dark occlusion core hugging the sole line, a soft falloff around it,
+ *  and a short cast away from the key light, all in a dark tint of the set's hue. */
+const SHADOW_FRAG = /* glsl */ `uniform float uOpacity; uniform float uHalf; uniform float uCore; uniform float uSoft; uniform vec3 uCast; uniform vec3 uTint;
+varying vec2 vP;
+void main() {
+  // distance to the sole line (a capsule along the soles' extent)
+  vec2 q = vec2(max(abs(vP.x) - uHalf, 0.0), vP.y);
+  float d = length(q);
+  float core = exp(-pow(d / uCore, 2.0));
+  float soft = exp(-pow(d / uSoft, 2.0));
+  // the cast: along uCast.xy (unit, plane coords), uCast.z long, as wide as the soles
+  float s = dot(vP, uCast.xy);
+  float l = abs(vP.x * uCast.y - vP.y * uCast.x);
+  float throwS = s > 0.0 ? exp(-s / uCast.z) * exp(-pow(max(l - uHalf * 0.8, 0.0) / uCore, 2.0)) : 0.0;
+  float a = 1.0 - (1.0 - 0.9 * core) * (1.0 - 0.55 * soft) * (1.0 - 0.45 * throwS);
+  gl_FragColor = vec4(uTint, a * uOpacity);
+}`;
 
 const lightUniforms = (l: CardLight | undefined, t: number) => ({
   uKey: rgb(l?.key ?? '#ffffff'),
@@ -234,6 +249,22 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
   const sx = flip ? -1 : 1;
   const fy = feet ?? FLOOR_Y;
   const grounded = ground ?? Math.abs(fy - FLOOR_Y) < 0.01;
+  // the soles (tools/soles.py, through the rig): the cut-outs keep a transparent margin under the boots, so the
+  // shadow, the glow and the mirror line sit at the measured sole line and centre, not at the card's bottom edge
+  const soles = solesAt(id, t, dance);
+  const lift = soles ? (1 - soles[2]) * height * stretch[1] : 0;
+  const w0 = height * cardAspect(id);
+  const soleX = x + dx + (soles ? sx * w0 * stretch[0] * ((soles[0] + soles[1]) / 2 - 0.5) : 0);
+  const soleHalf = soles ? (w0 * stretch[0] * (soles[1] - soles[0])) / 2 : w0 * 0.25;
+  const floorY = FLOOR_Y + lift;
+  // a camera close to the floor sees a floor shadow edge-on: the shadow plane tips toward it (its far edge on the sole
+  // line, its near edge below) until it is seen at 22 degrees or more, so the contact still reads on a low angle
+  const pose = useStagePoseMaybe();
+  const elev = pose ? Math.atan2(pose.position[1] - floorY, Math.max(0.1, Math.hypot(pose.position[0] - soleX, pose.position[2] - (z ?? 0)))) : 0.4;
+  const tip = Math.max(0, (22 * Math.PI) / 180 - elev);
+  // seen from high above (the barrel-rolled chorus shots), the mirrored flat card reads as a pale glass slab under
+  // her, not a reflection: it fades out between 25 and 40 degrees of camera elevation; the contact shadow stays
+  const mirrorK = Math.min(1, Math.max(0, ((40 * Math.PI) / 180 - elev) / ((15 * Math.PI) / 180)));
   const u = useUniforms({
     map: tex,
     uR0: r0,
@@ -264,30 +295,45 @@ export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity =
   const refl = useUniforms({
     map: tex, uR0: r0, uR1: r1, uSquash: f.squash, uRipAmp: RIPPLE_MAX * rippleAmp(t), uRipPhase: ripplePhase(t), uHue: rgb(grade.hue), uRival: rgb(rival ?? rivalOf(girlOf(id))),
     uAmount: Math.min(1, grade.amount + 0.15), uRim: 0, uSplit: 0, uTexel: [1 / e.w, 1 / e.h], uRimDir: [0, 1],
-    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 0.45, uOpacity: grounded ? opacity * 0.4 : 0, uFade: 0.3,
+    uClip: clip ? [clip.keep === 'left' ? 1 : -1, clip.x] : [0, 0], uSoft: 0.45, uOpacity: grounded ? opacity * 0.4 * mirrorK : 0, uFade: 0.3,
     uLit: lit, uFlat: rgb(flat?.color ?? '#000000'), uFlatMix: flat?.mix ?? 0, uGround: 0, ...lightUniforms(undefined, t),
   });
-  const shadow = useUniforms({ uOpacity: grounded ? opacity * 0.78 : 0 });
+  // the cast falls away from the key light: the key lights the side away from the rim, so the cast goes toward the
+  // rim's side and toward the camera (the sets are lit from behind and above), a third of her height long
+  const castX = dir[0] >= 0 ? 1 : -1;
+  const cl = Math.hypot(castX * 0.55, 1);
+  const shadow = useUniforms({
+    uOpacity: grounded ? opacity : 0,
+    uHalf: soleHalf,
+    uCore: 0.06 * height,
+    uSoft: 0.17 * height,
+    uCast: [(castX * 0.55) / cl, -1 / cl, 0.12 * height],
+    uTint: rgb(grade.hue).map((c) => c * 0.12) as [number, number, number],
+  });
   // the floor glow: the set's light pooling around her feet (round 7c, Gemini: the girls looked pasted on)
   const glow = useUniforms({ uOpacity: grounded ? opacity * 0.5 : 0, uColor: rgb(grade.hue) });
-  const w = height * cardAspect(id);
+  const w = w0;
   return (
     <>
       {grounded && (
         <>
-          <mesh position={[x + dx, FLOOR_Y + 0.003, z ?? 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool} visible={opacity > 0.001}>
+          <mesh position={[soleX, floorY + 0.003, z ?? 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool} visible={opacity > 0.001}>
             <planeGeometry args={[w * 2.2, height * 0.42]} />
             <shaderMaterial {...glow} vertexShader={SHADOW_VERT} fragmentShader={GLOW_FRAG} transparent depthTest={false} depthWrite={false} blending={AdditiveBlending} side={DoubleSide} />
           </mesh>
-          <mesh position={[x + dx, FLOOR_Y + 0.004, z ?? 0]} rotation={[-Math.PI / 2, 0, 0]} renderOrder={ORDER.pool + 1} visible={opacity > 0.001}>
-            <planeGeometry args={[w * 1.3, height * 0.2]} />
-            <shaderMaterial {...shadow} vertexShader={SHADOW_VERT} fragmentShader={SHADOW_FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
-          </mesh>
-          <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], -height * stretch[1], 1]} visible={opacity > 0.001}>
+          {/* the reflection mirrors her about the sole line (the group origin sits as far above the soles as her
+              card's bottom edge sits below them) */}
+          <group position={[x + dx, fy + dy + 2 * lift, z ?? 0]} scale={[sx * height * stretch[0], -height * stretch[1], 1]} visible={opacity > 0.001}>
             <mesh geometry={geo} position={[0, 0.5, 0]} renderOrder={ORDER.pool + 1} frustumCulled={false}>
               <shaderMaterial {...refl} vertexShader={VERT} fragmentShader={FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
             </mesh>
           </group>
+          {/* the contact shadow over the reflection (the occlusion darkens the mirrored boots too) and over the set's
+              props (a podium under her feet), just under the cards */}
+          <mesh position={[soleX, floorY + 0.004, z ?? 0]} rotation={[-Math.PI / 2 + tip, 0, 0]} renderOrder={ORDER.card - 0.5} visible={opacity > 0.001}>
+            <planeGeometry args={[2 * soleHalf + height * 0.7, height * 0.9]} />
+            <shaderMaterial {...shadow} vertexShader={SHADOW_VERT} fragmentShader={SHADOW_FRAG} transparent depthTest={false} depthWrite={false} side={DoubleSide} />
+          </mesh>
         </>
       )}
       <group position={[x + dx, fy + dy, z ?? 0]} scale={[sx * height * stretch[0], height * stretch[1], 1]} visible={opacity > 0.001}>

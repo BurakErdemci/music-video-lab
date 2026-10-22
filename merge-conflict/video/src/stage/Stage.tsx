@@ -34,6 +34,9 @@ export const useStagePose = (): CameraPose => {
   return p;
 };
 
+/** The pose, or null outside a <Stage> (a card in a lab board). */
+export const useStagePoseMaybe = (): CameraPose | null => useContext(PoseContext);
+
 const StageCanvas = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (
   <ThreeCanvas width={W} height={H} flat linear camera={{ fov: pose.fov, near: 0.1, far: 200, position: pose.position }} gl={{ antialias: true }}>
     <CameraRig pose={pose} />

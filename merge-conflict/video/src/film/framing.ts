@@ -18,6 +18,8 @@ export interface Subject {
   crop?: 'knee';
   /** A flat silhouette (the groove): no face to keep, only the action rule. */
   silhouette?: boolean;
+  /** The card is drawn without its floor contact (a world with no floor under her): the grounding check skips it. */
+  ground?: false;
   /** A split-screen half: the card only shows on this side of world x. */
   clip?: { x: number; keep: 'left' | 'right' };
 }
@@ -37,7 +39,14 @@ export interface ShotState {
 // ---- the card geometry framecheck and the live camera share --------------------------------------------------
 
 /** A card's measured face box and action box (normalised card coordinates, y down) and whether it is a bust. */
-export interface CardFrames { face: [number, number, number, number]; action: [number, number, number, number]; kind: 'bust' | 'full' }
+export interface CardFrames {
+  face: [number, number, number, number];
+  action: [number, number, number, number];
+  kind: 'bust' | 'full';
+  /** Full cards: the soles' horizontal extent and height [u0, u1, v] (tools/soles.py), where the contact shadow and
+   *  the floor reflection sit (round 7d grounding). */
+  soles?: [number, number, number];
+}
 export const CARD_FRAMES = framesJson as unknown as Record<string, CardFrames>;
 const MANIFEST = manifestJson as Record<string, { w: number; h: number }>;
 
