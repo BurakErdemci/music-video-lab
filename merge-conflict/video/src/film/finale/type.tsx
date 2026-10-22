@@ -44,7 +44,7 @@ const ResolvedLogo = ({ id, t, cy, width, lock }: { id: string; t: number; cy: n
 export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]; t: number; pose: CameraPose }) => {
   const out: ReactNode[] = [];
   for (const e of entries) {
-    if (t < e.t0 - 0.02 || t >= e.t1 + (e.form === 'DissolveText' ? 0.6 : 0)) continue;
+    if (t < e.t0 || t >= e.t1 + (e.form === 'DissolveText' ? 0.6 : 0)) continue;
     switch (e.id) {
       // ---- piano truce
       case 'f-mine': {
@@ -185,14 +185,11 @@ export const FinaleType = ({ entries, t, pose }: { entries: readonly TypeEntry[]
       case 'f-shipped':
         out.push(<Slam key={e.id} spec={{ text: 'SHIPPED!', t0: e.t0, t1: e.t1 - 0.02, x: 960, y: 880, size: 170, color: '#ff4a1a', face: 'metalmania', rot: -4 }} t={t} />);
         break;
-      case 'f-merged':
-        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: 'merged.', t0: e.t0, t1: e.t1, x: 1460, y: 220, size: 96, color: '#ffe2b0', face: 'mono', halo: true }} t={t} />);
-        break;
       case 'f-title':
         out.push(<ResolvedLogo key={e.id} id="f-logo-title" t={t} cy={540} width={1300} />);
         break;
       case 'f-end':
-        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: 'resolved.', t0: e.t0, t1: e.t1, x: 960, y: 1000, size: 64, color: '#ffffff', face: 'mono', halo: true }} t={t} />);
+        out.push(<DissolveText key={e.id} spec={{ id: e.id, text: 'resolved.', t0: e.t0, t1: e.t1, x: 960, y: 960, size: 72, color: '#ffffff', face: 'mono', halo: true }} t={t} />);
         break;
       default:
         break;

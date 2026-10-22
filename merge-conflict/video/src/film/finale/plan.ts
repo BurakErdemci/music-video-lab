@@ -73,7 +73,6 @@ export const FSHOTS: FShot[] = [
   { id: 'yes2', t: tk(54, 3), scene: 'split', cam: 'hero', move: 'push', into: 'shock', B: bustAt('PBX3', -4.3), O: bustAt('POX3', 4.3) },
   // "Blue and orange together, it's a gradient now": spinning hand in hand (RK4), then the gradient arena
   { id: 'rk4', t: tk(55, 0), scene: 'panel', panel: 'RK4', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
-  { id: 'rk4-b', t: tk(55, 3), scene: 'panel', panel: 'RK4', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'gradient', t: tk(55, 6), scene: 'spin', cam: 'hero', move: 'orbit', into: 'laser', B: ['PB6', full(-2.6)], O: ['PO6', full(2.6)] },
   { id: 'gradient-now', t: tk(55, 7), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   // "Two girls, one line,": the runway again, but now they reach for each other (chorus 1 had them back to back)
@@ -81,7 +80,6 @@ export const FSHOTS: FShot[] = [
   { id: 'line-one', t: tk(56, 2), scene: 'runway', cam: 'hero', move: 'dollyzoom', into: 'shock' },
   // "and we figured it out": cheek to cheek at one mic (RK5)
   { id: 'rk5', t: tk(56, 4), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
-  { id: 'rk5-b', t: tk(56, 6), scene: 'panel', panel: 'RK5', cam: 'hero', move: 'orbit', into: 'shock' },
   // the high five on the downbeat after the line
   { id: 'highfive', t: db(169.3), scene: 'arena', cam: 'hero', move: 'push', into: 'streaks', B: ['PB5', full(-1.9, 4.8)], O: ['PO5', full(1.9, 4.8)] },
   { id: 'highfive-2', t: bt(170.0), scene: 'arena', cam: 'hero', move: 'orbit', into: 'shock' },
@@ -102,7 +100,6 @@ export const FSHOTS: FShot[] = [
   { id: 'merge', t: tk(60, 0), scene: 'logo', cam: 'hero', move: 'still', into: 'tunnel', B: ['PB5', full(-3.4, 4.8)], O: ['PO5', full(3.4, 4.8)] },
   { id: 'merge-lock', t: tk(60, 1), scene: 'logo', cam: 'hero', move: 'push', into: 'shock' },
   { id: 'rk7', t: tk(60, 2), scene: 'panel', panel: 'RK7', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
-  { id: 'rk7-b', t: tk(60, 3), scene: 'panel', panel: 'RK7', cam: 'hero', move: 'orbit', into: 'shock' },
   { id: 'soul', t: tk(60, 4), scene: 'spin', cam: 'hero', move: 'orbit', into: 'shock', B: ['PB6', full(-2.4)], O: ['PO6', full(2.4)] },
   { id: 'soul-2', t: tk(60, 5), scene: 'spin', cam: 'low', move: 'whip', into: 'shock' },
   { id: 'final-out', t: db(180.0), scene: 'spin', cam: 'wide', move: 'push', into: 'shock' },
@@ -189,35 +186,35 @@ export const FHITS = {
  *  is the git story's epilogue (non-lyric entries on line 67, drawn with explicit text). */
 export const FINALE_TYPE: TypeEntry[] = [
   // piano truce: blue lets go of her line, orange says hello
-  { id: 'f-mine', line: 49, range: [0, 6], form: 'Diff', t0: tk(49, 0) - 0.05, t1: tk(50, 0), singer: 'B', key: 1 },
-  { id: 'f-hello', line: 50, range: [0, 9], form: 'Wave', t0: tk(50, 0) - 0.05, t1: tk(51, 0), singer: 'O', key: 8 },
+  { id: 'f-mine', line: 49, range: [0, 6], form: 'Diff', t0: tk(49, 0), t1: tk(50, 0), singer: 'B', key: 1 },
+  { id: 'f-hello', line: 50, range: [0, 9], form: 'Wave', t0: tk(50, 0), t1: tk(51, 0), singer: 'O', key: 8 },
   // the build: a departure board for "different times", then the ring round the meeting hands
-  { id: 'f-file', line: 51, range: [0, 8], form: 'Flap', t0: tk(51, 0) - 0.05, t1: tk(52, 0), singer: 'B', key: 3 },
-  { id: 'f-tree', line: 52, range: [0, 9], form: 'Ring', t0: tk(52, 0) - 0.05, t1: BUILD.end - 0.1, singer: 'both', key: 1 },
+  { id: 'f-file', line: 51, range: [0, 8], form: 'Flap', t0: tk(51, 0), t1: tk(52, 0), singer: 'B', key: 3 },
+  { id: 'f-tree', line: 52, range: [0, 9], form: 'Ring', t0: tk(52, 0), t1: BUILD.end - 0.1, singer: 'both', key: 1 },
   // the final chorus
-  { id: 'f-acc1', line: 53, range: [0, 3], form: 'Stack', t0: tk(53, 0) - 0.02, t1: tk(53, 3), singer: 'both', key: 1 },
+  { id: 'f-acc1', line: 53, range: [0, 3], form: 'Stack', t0: tk(53, 0), t1: tk(53, 3), singer: 'both', key: 1 },
   { id: 'f-yes1', line: 53, range: [3, 4], form: 'Shout', t0: tk(53, 3), t1: tk(54, 0), singer: 'both', key: 3, style: 'chrome', text: 'YES!' },
   { id: 'f-acc2', line: 54, range: [0, 3], form: 'Stamp', t0: tk(54, 0), t1: tk(54, 3), singer: 'both', key: 1 },
   { id: 'f-yes2', line: 54, range: [3, 4], form: 'Shout', t0: tk(54, 3), t1: tk(55, 0), singer: 'both', key: 3, style: 'chrome', text: 'YES!' },
-  { id: 'f-gradient', line: 55, range: [0, 8], form: 'Wave', t0: tk(55, 0) - 0.02, t1: tk(56, 0), singer: 'both', key: 6 },
+  { id: 'f-gradient', line: 55, range: [0, 8], form: 'Wave', t0: tk(55, 0), t1: tk(56, 0), singer: 'both', key: 6 },
   { id: 'f-line', line: 56, range: [0, 4], form: 'RunwayLine', t0: tk(56, 0), t1: tk(56, 4), singer: 'both', key: 3 },
   { id: 'f-figured', line: 56, range: [4, 9], form: 'Marquee', t0: tk(56, 4), t1: tk(57, 0) - 0.02, singer: 'both', key: 6 },
-  { id: 'f-acc3', line: 57, range: [0, 3], form: 'LightBox', t0: tk(57, 0) - 0.02, t1: tk(57, 3), singer: 'both', key: 1 },
+  { id: 'f-acc3', line: 57, range: [0, 3], form: 'LightBox', t0: tk(57, 0), t1: tk(57, 3), singer: 'both', key: 1 },
   { id: 'f-yes3', line: 57, range: [3, 4], form: 'Shout', t0: tk(57, 3), t1: tk(58, 0), singer: 'both', key: 3, style: 'chrome', text: 'YES!' },
-  { id: 'f-commit', line: 58, range: [0, 4], form: 'Code', t0: tk(58, 0) - 0.02, t1: tk(58, 4), singer: 'both', key: 2 },
+  { id: 'f-commit', line: 58, range: [0, 4], form: 'Code', t0: tk(58, 0), t1: tk(58, 4), singer: 'both', key: 2 },
   { id: 'f-pushit', line: 58, range: [4, 6], form: 'Shout', t0: tk(58, 4), t1: tk(59, 0), singer: 'both', key: 4, style: 'chrome', text: 'PUSH IT!' },
   { id: 'f-equals', line: 59, range: [0, 3], form: 'Extrude', t0: tk(59, 0), t1: tk(59, 3), singer: 'both', key: 2 },
   { id: 'f-whole', line: 59, range: [3, 6], form: 'Slam', t0: tk(59, 3), t1: tk(60, 0), singer: 'both', key: 5 },
   { id: 'f-merge', line: 60, range: [0, 2], form: 'Logo', t0: tk(60, 0), t1: tk(60, 2), singer: 'both', key: 0 },
   { id: 'f-soul', line: 60, range: [2, 6], form: 'Stack', t0: tk(60, 2), t1: CHANT.start, singer: 'both', key: 2 },
   // the chant: deploy stamps and counters, metal faces
-  { id: 'f-acc4', line: 61, range: [0, 4], form: 'Stamp', t0: tk(61, 0) - 0.02, t1: tk(61, 4), singer: 'both', key: 1 },
+  { id: 'f-acc4', line: 61, range: [0, 4], form: 'Stamp', t0: tk(61, 0), t1: tk(61, 4), singer: 'both', key: 1 },
   { id: 'f-ship1', line: 61, range: [4, 8], form: 'Counter', t0: tk(61, 4), t1: tk(62, 0), singer: 'both', key: 4 },
-  { id: 'f-acc5', line: 62, range: [0, 4], form: 'Extrude', t0: tk(62, 0) - 0.02, t1: tk(62, 4), singer: 'both', key: 1 },
+  { id: 'f-acc5', line: 62, range: [0, 4], form: 'Extrude', t0: tk(62, 0), t1: tk(62, 4), singer: 'both', key: 1 },
   { id: 'f-ship2', line: 62, range: [4, 6], form: 'Shout', t0: tk(62, 4), t1: tk(63, 0), singer: 'both', key: 4, style: 'steel', text: 'SHIP IT!' },
-  { id: 'f-acc6', line: 63, range: [0, 4], form: 'Slam', t0: tk(63, 0) - 0.02, t1: tk(63, 4), singer: 'both', key: 1 },
+  { id: 'f-acc6', line: 63, range: [0, 4], form: 'Slam', t0: tk(63, 0), t1: tk(63, 4), singer: 'both', key: 1 },
   { id: 'f-ship3', line: 63, range: [4, 8], form: 'LightBox', t0: tk(63, 4), t1: tk(64, 0), singer: 'both', key: 4 },
-  { id: 'f-acc7', line: 64, range: [0, 4], form: 'Stack', t0: tk(64, 0) - 0.02, t1: tk(64, 4), singer: 'both', key: 1 },
+  { id: 'f-acc7', line: 64, range: [0, 4], form: 'Stack', t0: tk(64, 0), t1: tk(64, 4), singer: 'both', key: 1 },
   { id: 'f-ship4', line: 64, range: [4, 6], form: 'Shout', t0: tk(64, 4), t1: tk(65, 0), singer: 'both', key: 4, style: 'steel', text: 'SHIP IT!' },
   // "Build failed. Syntax error on line forty-two.": the red build log, the line counter racing to 42
   { id: 'f-failed', line: 65, range: [0, 2], form: 'Code', t0: tk(65, 0), t1: tk(66, 0), singer: 'B', key: 1 },
@@ -229,8 +226,7 @@ export const FINALE_TYPE: TypeEntry[] = [
   { id: 'f-commits', line: 67, range: [0, 1], form: 'Counter', t0: db(202.8), t1: db(204.1), singer: 'both', key: 0 },
   { id: 'f-passing', line: 67, range: [0, 1], form: 'LightBox', t0: db(206.8), t1: db(208.1), singer: 'both', key: 0, text: 'BUILD PASSING' },
   { id: 'f-shipped', line: 67, range: [0, 1], form: 'Slam', t0: db(210.8), t1: db(212.1), singer: 'both', key: 0, text: 'SHIPPED!' },
-  { id: 'f-merged', line: 67, range: [0, 1], form: 'DissolveText', t0: OUTRO.start + 0.4, t1: db(218.8) - 0.6, singer: 'both', key: 0, text: 'merged.' },
   { id: 'f-title', line: 67, range: [0, 1], form: 'Logo', t0: db(218.8), t1: db(221.5), singer: 'both', key: 0 },
   { id: 'f-log', line: 67, range: [0, 1], form: 'CodeLine', t0: db(222.8), t1: db(226.8), singer: 'both', key: 0, text: "* Merge branch 'orange' into main" },
-  { id: 'f-end', line: 67, range: [0, 1], form: 'DissolveText', t0: db(228.2) + 0.4, t1: FINALE_END - 2.4, singer: 'both', key: 0, text: 'resolved.' },
+  { id: 'f-end', line: 67, range: [0, 1], form: 'DissolveText', t0: db(226.8) + 0.1, t1: db(228.2) - 0.65, singer: 'both', key: 0, text: 'resolved.' },
 ];

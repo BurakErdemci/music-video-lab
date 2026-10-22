@@ -121,8 +121,9 @@ const kick = (pose: CameraPose, t: number, amp: number): CameraPose => {
 };
 
 // ---- the build's flight: one camera path over the whole build, accelerating (the build rises bar by bar). The
-// fov narrows from 50 to 30 degrees while the camera climbs and closes in: the painting grows from 1.02 to about 1.38
-// frame widths (1.15x its pixels at 2K, inside the 1.25x rule) while the particles and the girls rush past in depth.
+// fov narrows from 50 to 30 degrees while the camera climbs and closes in on the girls and the particles; the RK3
+// painting behind them is shown whole (round 7d: locked to the frame, its own 3 % Ken Burns over the build).
+const flightU = (t: number): number => clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
 const flightK = (t: number): number => {
   const u = clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
   // the speed rises linearly from 0.35 to 1.65 times the mean: moving from the first bar, faster every bar
@@ -138,9 +139,8 @@ export const flightPose = (t: number): CameraPose => {
 const FLIGHT_BASE = flightPose(BUILD.start);
 /** How far the build's girls have risen (they float up from one knee until they scatter into the branches). */
 const riseDy = (t: number): number => 1.1 * outQuad(clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)));
-/** The painting ghosts behind the rising girls ("same file, different times": the two poses over each other) and
- *  lights up bar by bar as the build rises (no step: a jump in its light read as a flash and broke the rise). */
-const treeGain = (t: number): number => 0.45 + 0.5 * clamp01((t - BUILD.start) / (BUILD.end - BUILD.start));
+/** The painting comes up from mid light as the girls' particles become it (from black it read as a flash pair). */
+const treeGain = (t: number): number => 0.55 + 0.4 * outQuad(clamp01((t - BRANCHES_AT) / 0.5));
 
 /** The fusion's grades sit between the disco and the metal ones; the piano's are soft and plain. */
 const BLUE_SOFT: Grade = { ...GRADES.reviewed, amount: 0.3 };
@@ -233,10 +233,10 @@ const gatherOpacity = (who: 'B' | 'O', t: number): number => {
 };
 
 const rawFinaleStateAt = (t: number): ShotState => {
-  const { shot, scene, blueP, orangeP, pose, planeBase } = finaleCamera(t);
-  const plateId = scene === 'panel' ? shot.panel : scene === 'flight' ? 'RK3' : PLATES[scene];
+  const { shot, k, scene, blueP, orangeP, pose, planeBase } = finaleCamera(t);
+  const plateId = scene === 'panel' ? shot.panel : scene === 'flight' ? (t >= BRANCHES_AT ? 'RK3' : undefined) : PLATES[scene];
   const panel = scene === 'panel' || scene === 'flight';
-  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: scene === 'flight' ? 1.02 : panel ? 1.25 : plateMargin(scene) } : undefined };
+  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? flightU(t) : k } : {}) } : undefined };
 };
 
 const live = liveCamera(rawFinaleStateAt, (t) => {
@@ -265,7 +265,7 @@ const burstsAt = (t: number): Burst[] =>
 export const FinaleShot = ({ frame }: { frame: number }) => {
   const t = sec(frame);
   const layer = useLayer();
-  const { shot, scene, blueP, orangeP, planeBase } = finaleCamera(t);
+  const { shot, k, scene, blueP, orangeP, planeBase } = finaleCamera(t);
   const pose = live.poseAt(t);
   const metal = t >= CHANT.start;
   const final = t >= FINAL.start - 0.05 && t < CHANT.start;
@@ -276,7 +276,8 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
   const world = (() => {
     switch (scene) {
       case 'panel':
-        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} margin={1.25} />;
+        // a painting shown whole, locked to the frame (round 7d): only its own lyric type over it
+        return <PlateLayer id={shot.panel as string} base={planeBase} panel dist={30} gain={1} kb={k} />;
       case 'quiet':
         // the truce: the empty stage after hours, its floor half blue, half orange
         return (
@@ -287,9 +288,9 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
         );
       case 'flight':
         return (
-          <>
-            <PlateLayer id="RK3" base={planeBase} panel dist={30} gain={treeGain(t)} margin={1.02} />
-          </>
+          // the girls rise in the light-box rig (the rig rebuilding, scene-map.md); when they scatter into the two
+          // branches the RK3 painting takes the frame, whole and with no card over it (round 7d)
+          t < BRANCHES_AT ? <LogoWorld t={t} flash={0} /> : <PlateLayer id="RK3" base={planeBase} panel dist={30} gain={treeGain(t)} kb={flightU(t)} />
         );
       case 'arena':
         return <Arena t={t} stomps={[]} embers={[]} led={['#ff7a1a', '#2f7bff']} plate />;
