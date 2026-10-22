@@ -130,6 +130,8 @@ export const EVENTS: FilmEvent[] = [
   ...[49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66].flatMap((l) => tokens(l, lines[l]?.text.split(/\s+/).filter(Boolean).length ?? 0, 'type')),
   ...beatsIn(sectionNamed('piano_interlude').start, sectionNamed('piano_interlude').end).filter((b) => b % 2 === 0).map((b) => ev(`breath-${b}`, 'breath', 'beat', b)),
   ...[sectionNamed('build'), sectionNamed('final_chorus')].flatMap((sec) => beatsIn(sec.start, sec.end).map((b) => ev(`pulse-${b}`, 'pulse', 'beat', b))),
+  // the final chorus throws a confetti burst on every second offbeat (it must stay 1.5x the verses' events per beat)
+  ...beatsIn(sectionNamed('final_chorus').start, sectionNamed('final_chorus').end).filter((b) => b % 2 === 0).map((b) => ev(`spark-${b}`, 'spark', 'offbeat', b)),
   ...[sectionNamed('post_chorus_chant'), sectionNamed('scream_end'), sectionNamed('outro')].flatMap((sec) => beatsIn(sec.start, sec.end).flatMap((b) => [ev(`hit-${b}`, 'hit', 'beat', b), ...(b % 2 === 0 && sec.name !== 'outro' ? [ev(`spark-${b}`, 'spark', 'offbeat', b)] : [])])),
 ];
 

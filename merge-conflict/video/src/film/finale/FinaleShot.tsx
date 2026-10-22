@@ -250,7 +250,7 @@ const burstsAt = (t: number): Burst[] =>
     { t: FHITS.smash2, origin: [2.6, -1.5, 0.5] },
     { t: SCREAM_END.start, origin: [0, 1, 0] },
     { t: FHITS.climax, origin: [0, 0, 0] },
-    ...EVENTS.filter((e) => e.kind === 'spark' && e.t >= CHANT.start && e.t < OUTRO.start).map((e, i) => ({ t: e.t, origin: [i % 2 ? 3 : -3, -1, 0] })),
+    ...EVENTS.filter((e) => e.kind === 'spark' && e.t >= FINAL.start && e.t < OUTRO.start).map((e, i) => ({ t: e.t, origin: [i % 2 ? 3 : -3, -1, 0] })),
   ] as Burst[]).filter((b) => t >= b.t && t - b.t < 1.2).sort((a, b) => a.t - b.t).slice(-4);
 
 export const FinaleShot = ({ frame }: { frame: number }) => {
