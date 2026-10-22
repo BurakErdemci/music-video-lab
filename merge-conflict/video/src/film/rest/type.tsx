@@ -68,7 +68,7 @@ const AVOID: Record<string, AvoidBox> = {
   'r-touched': { x: 390, y: 250, w: 1110, h: 450 },
   'r-red': { x: 110, y: 80, w: 1700, h: 310 },
   'r-git': { x: 220, y: 250, w: 600, h: 300 },
-  'r-push': { x: 70, y: 180, w: 780, h: 420 },
+  'r-push': { x: 70, y: 180, w: 680, h: 400 },
   'r-force': { x: 110, y: 160, w: 860, h: 340 },
   'r-wouldnt': { x: 1080, y: 470, w: 740, h: 100 },
 };
@@ -76,6 +76,8 @@ const AVOID: Record<string, AvoidBox> = {
 /** Forms drawn in screen space (the rest ride the type plane): the Shouts, and the marquee, whose board the pipeline
  *  push magnified past the frame on the plane (round 7d). */
 export const REST_SCREEN: readonly string[] = ['Shout', 'Marquee'];
+/** PUSH! too: on the plane the smash's dolly zoom carried it off the left edge while it was still on (round 7d). */
+export const restOnScreen = (e: TypeEntry): boolean => REST_SCREEN.includes(e.form) || e.id === 'r-push';
 
 export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[]; t: number; anchors: RestAnchors }) => {
   const out: ReactNode[] = [];
@@ -166,7 +168,7 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
         out.push(<Slam key={e.id} spec={{ text: 'GIT!', t0: e.t0, t1: Math.min(e.t1, anchors.gitUntil ?? e.t1) - 0.02, x: 520, y: 400, size: 300, color: '#ff2a14', face: 'metalmania', rot: -3 }} t={t} />);
         break;
       case 'r-push':
-        if (t < (anchors.pushUntil ?? e.t1)) out.push(<Extrude key={e.id} spec={spec(e, { x: 70, y: 180, w: 780, h: 420 })} t={t} opt={{ size: 300, face: 'metalmania', depth: 0.35 }} />);
+        if (t < (anchors.pushUntil ?? e.t1)) out.push(<Extrude key={e.id} spec={spec(e, { x: 70, y: 180, w: 680, h: 400 })} t={t} opt={{ size: 280, face: 'metalmania', depth: 0.35 }} />);
         break;
       case 'r-force':
         out.push(<Shout key={e.id} spec={{ id: 'r-force-s', text: 'FORCE!', at: e.t0, until: e.t1, style: 'steel', color: '#ff2a14', cx: 540, cy: 330, w: 860, rot: -4 }} t={t} />);
@@ -182,7 +184,7 @@ export const RestType = ({ entries, t, anchors }: { entries: readonly TypeEntry[
     // round 7d: no knockout; the form moves or shrinks off the faces of the shot (type/avoid.ts)
     const b = AVOID[e.id];
     if (b && out.length > n0) {
-      const tf = avoidFaces(REST_LIVE, t, b, !REST_SCREEN.includes(e.form));
+      const tf = avoidFaces(REST_LIVE, t, b, !restOnScreen(e));
       if (tf) out.push(<g key={`${e.id}-avoid`} transform={tf}>{out.splice(n0)}</g>);
     }
   }

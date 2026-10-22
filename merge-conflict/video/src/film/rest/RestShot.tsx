@@ -33,7 +33,7 @@ import { CASE_LINE, GUILTY_TAG, LASERCASE_CAMERA, LaserCaseWorld, NAMETAG_CAMERA
 import { Arena, CYAN, InsertWorld, RED, SplitWorld } from '../chorus/worlds.tsx';
 import { focusOf, type Hero, poseAt, shotIn, variant } from '../shotkit.ts';
 import { BLUE_METAL_AT, type Move, PUSH, RBLUE, REST_TYPE, type RestScene, RORANGE, type RShot, RSHOTS, SCREAM, SOLO, WHISPER } from './plan.ts';
-import { type Box, GitHud, REST_SCREEN, RestType } from './type.tsx';
+import { type Box, GitHud, RestType, restOnScreen } from './type.tsx';
 
 const cam = (position: Vec3, target: Vec3, fov = 40): CameraPose => ({ position, target, fov });
 const FACE_CAMERA: Hero = { from: cam([0, 0, 12.4], [0, 0, 0]), to: cam([0, 0.2, 11.2], [0, 0.2, 0]) };
@@ -362,9 +362,9 @@ export const RestShot = ({ frame }: { frame: number }) => {
         })}
         {/* the type over every effect and cover (round 7d: no card or effect is drawn over a settled type form) */}
         <g transform={plane.transform}>
-          <RestType entries={REST_TYPE.filter((e) => !REST_SCREEN.includes(e.form))} t={t} anchors={anchors} />
+          <RestType entries={REST_TYPE.filter((e) => !restOnScreen(e))} t={t} anchors={anchors} />
         </g>
-        <RestType entries={REST_TYPE.filter((e) => REST_SCREEN.includes(e.form))} t={t} anchors={anchors} />
+        <RestType entries={REST_TYPE.filter(restOnScreen)} t={t} anchors={anchors} />
         <GitHud t={t} t0={PUSH_HUD.t0} t1={PUSH_HUD.t1} until={PUSH_HUD.until} />
       </Svg>
     </AbsoluteFill>
