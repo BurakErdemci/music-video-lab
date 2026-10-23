@@ -215,3 +215,21 @@ wall) and lost the blue girl in two face duels. Full proof: `video/out/proof232-
   On r11c's plan it fails yes2 54.7 %, yes3 57.3 %, sky-faces 53.3 %, outro-faces 54.0 %, tunnel-3 88.8 %,
   outro-dive 98.2 %. It is not gated before 140.04 s (the earlier families have no scene table; their dark worlds
   are unmeasured).
+
+## Round 11e (2026-10-23): the set rule on every frame
+The 4 fps `--set` run stepped over yes3's last 10 frames (172.58-172.73: the wall turned into a tilted panel before
+the burst). Full proof: `video/out/proof232-r11e.mp4`.
+- **yes3** is `hero still` (its worst frame 27.5 % bare); the other 25 re-cammed shots are unchanged.
+- **`framecheck --set` covers every frame by default:** the frame without the type is rendered twice as half-size
+  4:4:4 videos (plain 'world' and keyed 'worldkey', `renderMedia`, concurrency 1 under the render lock) and
+  `setframe.py --video` compares them frame by frame (erosion 7 px, band 12 px at half size). 140.04-232.12: 5526
+  frames in about 13.5 min (9.2 min rendering, 4 min comparing). `--fps N` keeps the still sampling.
+- **Why not a prefilter on the rendered film:** a darkness score of the film's border is not selective in this dark
+  film (the lowest score among frames the keyed run measured over 1 % was 0.127; 5022 of 5525 frames score >= 0.06)
+  and it cannot see under a cover (172.73 s scores 0.0 in the film while its set is 57.7 % bare). Rendering every
+  frame as video was faster than rendering a prefiltered set as stills.
+- **Limits from the approved framings' worst frame** (every frame, r11d's tree): split/duel 53 % (chant-faces-2
+  51.4 %, yes1 43.2 %), tunnel 86 % (dive-b 83.7 %). On r11c's plan the every-frame run fails yes2 (163.48-163.72,
+  up to 60.0 %), yes3 (172.48-172.55, 71.2 %), sky-faces (198.18-198.60, 57.2 %), tunnel-3 (206.87-207.40, 97.1 %),
+  outro-faces (221.58-222.10, 57.0 %) and outro-dive (225.58-226.92, 98.6 %). setframe's selftest has an 8-frame void
+  at a shot's end that the 4 fps samples pass and every frame fails.
