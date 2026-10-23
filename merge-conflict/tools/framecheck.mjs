@@ -345,25 +345,58 @@ const standing = (st, t) => {
 };
 
 // ---- the set covers the frame (round 11d) ---------------------------------------------------------------------
-// --set renders the set alone (no girls, no type) at --fps samples a second, plain and with the dark backdrops keyed,
-// and hands both to tools/setframe.py: at most 1 % of the border band may show the bare backdrop (no set drawn there).
+// --set renders the frame without the type, plain and with the dark backdrops keyed, and hands both to
+// tools/setframe.py: at most 1 % of the border band may show the bare backdrop (no set drawn there). By default every
+// frame of the range (two half-size layer videos); with --fps N, stills at N samples a second.
 // The limit is 1 % of the border band. The finale's worlds whose dark space is the set itself are designed voids
 // (not measured): the piano's empty club after hours ('quiet', a lit floor under a dark room), the light-box rig the
 // girls rise in ('flight'), the single line of light ('line'), the equals walls closing in ('walls'), the logo stage
 // ('logo'), the intro's terminal room ('terminal'), the resolved title ('title') and the face inserts ('faceO',
-// 'faceB'). Two dark worlds hold a measured limit: the LED-wall split screens ('split', 'duel': 42 %, the approved
-// framings measure up to 39 %) and the chevron tunnel floating in the dark ('tunnel': 82 %, approved up to 77 %); on
-// proof232-r11c's tree the re-cammed yes2, sky-faces and outro-faces measured 44-54 % and tunnel-3 and outro-dive
-// 91-97 % (round 11d).
-const VOID_LIMITS = { split: 0.42, duel: 0.42, tunnel: 0.82 };
+// 'faceB'). Two dark worlds hold a measured limit, the approved framings' worst frame (measured every frame at half
+// size on proof232-r11d's tree, round 11e) plus 1-2 points: the LED-wall split screens ('split', 'duel': 53 %;
+// chant-faces-2 51.4 %, yes1 43.2 %) and the chevron tunnel floating in the dark ('tunnel': 86 %; dive-b 83.7 %).
+// On proof232-r11c's tree yes2, yes3, sky-faces and outro-faces measured 54-58 % and tunnel-3 and outro-dive up to
+// 89-98 % at 4 fps (round 11d); r11d's yes3 tail 58.5 % every frame (round 11e).
+const VOID_LIMITS = { split: 0.53, duel: 0.53, tunnel: 0.86 };
 const VOID_SCENES = ['quiet', 'flight', 'line', 'walls', 'logo', 'terminal', 'title', 'faceO', 'faceB'];
+const setLimit = (scene) => (VOID_SCENES.includes(scene) ? 1.01 : VOID_LIMITS[scene] ?? 0.01);
+if (process.argv.includes('--set') && !arg('fps')) {
+  // round 11e (the architect: the 4 fps samples stepped over yes3's 8-frame tail): every frame. The two layers are
+  // rendered as videos at half size (renderMedia pipelines the frames; per-frame stills cost several times as much)
+  // in 4:4:4 so the key's colour is not smeared, and tools/setframe.py --video compares them frame by frame.
+  const { bundle } = require('@remotion/bundler');
+  const { renderMedia, selectComposition } = require('@remotion/renderer');
+  const { withRenderLock } = await import(pathToFileURL(path.join(ROOT, 'tools', 'renderlock.mjs')).href);
+  const f0 = Math.round(A * FPS), f1 = Math.round(B * FPS);
+  const t0 = Date.now();
+  const serveUrl = await bundle({ entryPoint: path.join(VIDEO, 'src/index.ts'), publicDir: path.join(VIDEO, 'public') });
+  const dir = mkdtempSync(path.join(tmpdir(), 'setvideo-'));
+  const chromiumOptions = { gl: 'angle' };
+  await withRenderLock(async () => {
+    for (const layer of ['world', 'worldkey']) {
+      const composition = await selectComposition({ serveUrl, id: 'MC60', inputProps: { layer }, chromiumOptions, chromeMode: 'chrome-for-testing' });
+      await renderMedia({ composition, serveUrl, codec: 'h264', crf: 8, pixelFormat: 'yuv444p', scale: 0.5, frameRange: [f0, f1], outputLocation: path.join(dir, `${layer}.mp4`), inputProps: { layer }, concurrency: 1, muted: true, chromiumOptions, chromeMode: 'chrome-for-testing', overwrite: true });
+    }
+  });
+  const meta = [];
+  for (let fr = f0; fr <= f1; fr++) { const st = M.filmStateAt(fr); const scene = fr / FPS >= 140.04 ? M.finaleSceneAt(fr / FPS) : null; meta.push({ frame: fr, t: fr / FPS, shot: st?.shot ?? '-', scene, limit: setLimit(scene) }); }
+  const list = path.join(dir, 'frames.json');
+  writeFileSync(list, JSON.stringify(meta));
+  console.log(`set ${A}-${B} s: ${meta.length} frames rendered in ${((Date.now() - t0) / 60000).toFixed(1)} min`);
+  const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'setframe.py'), '--video', path.join(dir, 'world.mp4'), path.join(dir, 'worldkey.mp4'), list, ...(process.argv.includes('--all') ? ['--all'] : [])], { stdio: 'inherit' });
+  console.log(`set: ${((Date.now() - t0) / 60000).toFixed(1)} min in all`);
+  rmSync(serveUrl, { recursive: true, force: true });
+  rmSync(dir, { recursive: true, force: true });
+  rmSync(outDir, { recursive: true, force: true });
+  process.exit(py.status ?? 1);
+}
 if (process.argv.includes('--set')) {
   const every = Math.round(FPS / Number(arg('fps', 4)));
   const picks = [];
   for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
   console.log(`set ${A}-${B} s: ${picks.length} frames of the set layer`);
   const { shots, done } = await renderLayers(picks, [{ key: 'world', props: { layer: 'world' }, frames: picks }, { key: 'worldkey', props: { layer: 'worldkey' }, frames: picks }], 'setcheck-');
-  const samples = picks.map((fr) => { const st = M.filmStateAt(fr); const scene = fr / FPS >= 140.04 ? M.finaleSceneAt(fr / FPS) : null; return { frame: fr, t: fr / FPS, shot: st.shot, scene, png: path.join(shots, `world-${fr}.png`), keyed: path.join(shots, `worldkey-${fr}.png`), limit: VOID_SCENES.includes(scene) ? 1.01 : VOID_LIMITS[scene] ?? 0.01 }; });
+  const samples = picks.map((fr) => { const st = M.filmStateAt(fr); const scene = fr / FPS >= 140.04 ? M.finaleSceneAt(fr / FPS) : null; return { frame: fr, t: fr / FPS, shot: st.shot, scene, png: path.join(shots, `world-${fr}.png`), keyed: path.join(shots, `worldkey-${fr}.png`), limit: setLimit(scene) }; });
   const list = path.join(shots, 'samples.json');
   writeFileSync(list, JSON.stringify(samples));
   const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'setframe.py'), list, ...(process.argv.includes('--all') ? ['--all'] : [])], { stdio: 'inherit' });
