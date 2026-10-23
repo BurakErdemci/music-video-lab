@@ -94,7 +94,7 @@ export const FSHOTS: FShot[] = [
   { id: 'acc3', t: tk(57, 0), scene: 'arena', cam: 'wide', move: 'whip', into: 'shock', B: ['PB1', full(-3.0)], O: ['PO1', full(3.0)] },
   { id: 'acc3-both', t: tk(57, 1), scene: 'arena', cam: 'low', move: 'push', into: 'shock' },
   { id: 'acc3-changes', t: tk(57, 2), scene: 'arena', cam: 'reverse', move: 'orbit', into: 'shock' },
-  { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'hero', move: 'dollyzoom', into: 'shock', B: bustAt('PBX1', -3.9), O: bustAt('POX2', 3.9) },
+  { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'hero', move: 'still', into: 'shock', B: bustAt('PBX1', -3.9), O: bustAt('POX2', 3.9) },
   // "Commit and push it! (PUSH IT!)": both push, then the half mirror ball, half fireball (RK6)
   { id: 'commit', t: tk(58, 0), scene: 'arena', cam: 'hero', move: 'dollyzoom', into: 'streaks', B: ['PB2', full(-2.6)], O: ['PO2', full(2.6)] },
   { id: 'commit-push', t: tk(58, 2), scene: 'arena', cam: 'reverse', move: 'dollyzoom', into: 'shock' },
