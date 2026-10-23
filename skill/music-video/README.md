@@ -31,4 +31,4 @@ lyric video or a launch trailer.
 | --- | --- | --- |
 | Vorathul: NERFED | [`vorathul-nerfed/`](../../vorathul-nerfed/) | [YouTube](https://www.youtube.com/watch?v=QUtyszbWdDg) |
 | Her Sabah Baştan | [`her-sabah-bastan/`](../../her-sabah-bastan/) | [YouTube](https://www.youtube.com/watch?v=j-LT1IEJDvk) |
-| Merge Conflict | [`merge-conflict/`](../../merge-conflict/) | in progress |
+| Merge Conflict | [`merge-conflict/`](../../merge-conflict/) | YouTube soon |
