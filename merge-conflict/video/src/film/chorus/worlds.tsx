@@ -10,6 +10,7 @@
 //  heart  a heartbeat line (a git graph gone mad) racing across a dark grid.
 //  walls  the ======= walls of the stage closing in, one step per "equals".
 //  line   the walls crushed into a single line of light.
+import { isKeyed, SET_KEY, useLayer } from '../../layer.ts';
 import { useMemo } from 'react';
 import type { Vec3 } from '../../camera/camera.ts';
 import type { Hex } from '../../lib/ease.ts';
@@ -29,12 +30,16 @@ export const pulseAt = (t: number): number => (1 - (beatPos(t) % 1)) ** 2;
 /** The latest hits within `win` seconds before t (at most n), newest last. */
 export const recent = (hits: readonly number[], t: number, win: number, n = 4): number[] => hits.filter((h) => h <= t && t - h < win).slice(-n);
 
-const Backdrop = ({ color = '#04020a' }: { color?: string }) => (
-  <mesh position={[0, 0, -16]} renderOrder={0}>
-    <planeGeometry args={[120, 70]} />
-    <meshBasicMaterial color={color} depthTest={false} depthWrite={false} />
-  </mesh>
-);
+/** The dark behind a world's set: in the set layer it shows the key, so framecheck --set sees where no set is. */
+const Backdrop = ({ color = '#04020a' }: { color?: string }) => {
+  const keyed = isKeyed(useLayer());
+  return (
+    <mesh position={[0, 0, -16]} renderOrder={0}>
+      <planeGeometry args={[120, 70]} />
+      <meshBasicMaterial color={keyed ? SET_KEY : color} depthTest={false} depthWrite={false} />
+    </mesh>
+  );
+};
 
 const PATTERNS: LedPattern[] = ['bars', 'radial', 'checker', 'scan'];
 

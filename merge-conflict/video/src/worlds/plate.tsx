@@ -5,6 +5,7 @@
 // floor slides further than the far wall, so the painting keeps depth. The neon, particles and girls of the world stand in front.
 // A world draws <PlateBackdrop plate={...} />: with no plate the dark code backdrop, with 'shot' nothing (the shot
 // draws <PlateLayer/> itself).
+import { isKeyed, SET_KEY, useLayer } from '../layer.ts';
 import { useLoader } from '@react-three/fiber';
 import { staticFile } from 'remotion';
 import { Matrix4, NoColorSpace, Quaternion, TextureLoader, Vector3 } from 'three';
@@ -23,15 +24,18 @@ const PlateImage = ({ src, z, size }: { src: string; z: number; size: [number, n
   );
 };
 
-export const PlateBackdrop = ({ plate, color = '#04020a', z = -18, size = [140, 80] }: { plate?: string; color?: string; z?: number; size?: [number, number] }) =>
-  plate === 'shot' ? null : plate ? (
+export const PlateBackdrop = ({ plate, color = '#04020a', z = -18, size = [140, 80] }: { plate?: string; color?: string; z?: number; size?: [number, number] }) => {
+  // the dark code backdrop is "no set": in the set layer it shows the key (framecheck --set, round 11d)
+  const keyed = isKeyed(useLayer());
+  return plate === 'shot' ? null : plate ? (
     <PlateImage src={plate} z={z} size={size} />
   ) : (
     <mesh position={[0, 2, z]} renderOrder={0}>
       <planeGeometry args={size} />
-      <meshBasicMaterial color={color} depthTest={false} depthWrite={false} />
+      <meshBasicMaterial color={keyed ? SET_KEY : color} depthTest={false} depthWrite={false} />
     </mesh>
   );
+};
 
 const VERT = /* glsl */ `varying vec2 vUv; void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`;
 const FRAG = /* glsl */ `uniform sampler2D map; uniform float uNear; uniform float uGain; varying vec2 vUv;

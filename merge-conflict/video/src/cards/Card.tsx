@@ -3,6 +3,7 @@
 // (rig/rig.ts: a static lower body, spine lean per bar, a sole-anchored squash on the beat, chest bounce,
 // head nod, breathing, arm swing, lagged hair). The fragment tints toward the shot hue (luminance kept) and adds a rim of the
 // rival colour from the alpha gradient: edge = 1 - blurred alpha, weighted toward the rival light's side.
+import { isSetLayer, useLayer } from '../layer.ts';
 import { useLoader } from '@react-three/fiber';
 import { useMemo } from 'react';
 import { staticFile } from 'remotion';
@@ -228,6 +229,8 @@ export interface CardLight {
 }
 
 export const Card = ({ id, t, grade, x, feet, z, height, flip = false, opacity = 1, lit = 1, rimDir, rival, dy = 0, dx = 0, flat, dance = 0, stretch = [1, 1], clip, soft = 0, ground, light }: CardProps) => {
+  // the set alone (round 11d, framecheck --set): no girl drawn
+  if (isSetLayer(useLayer())) return null;
   // a drawn motion loop when the card has in-betweens (rig/loop.ts); three loads always, so the hooks stay fixed
   const ids = loopIds(id);
   const texs = [useCardTexture(ids[0]), useCardTexture(ids[1]), useCardTexture(ids[2])];

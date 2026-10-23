@@ -2,7 +2,7 @@
 // Every 3D element (set plate, spotlight, cards, particles) is a child of this. `flat` and `linear`: no
 // tone mapping and no output colour conversion, so every shader writes raw values to the framebuffer.
 import { useThree } from '@react-three/fiber';
-import { useLayer } from '../layer.ts';
+import { isKeyed, SET_KEY, useLayer } from '../layer.ts';
 import { ThreeCanvas } from '@remotion/three';
 import { createContext, type ReactNode, useContext, useLayoutEffect, useMemo } from 'react';
 import type { IUniform, PerspectiveCamera, ShaderMaterial } from 'three';
@@ -23,7 +23,10 @@ const CameraRig = ({ pose }: { pose: CameraPose }) => {
   return null;
 };
 
-export const Stage = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (useLayer() === 'type' ? null : <StageCanvas pose={pose}>{children}</StageCanvas>);
+export const Stage = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => {
+  const layer = useLayer();
+  return layer === 'type' ? null : <StageCanvas pose={pose} keyed={isKeyed(layer)}>{children}</StageCanvas>;
+};
 
 /** The frame's camera pose for elements that stand relative to it (the plates, worlds/plate.tsx). The provider sits
  *  inside the canvas: React contexts do not cross into the three.js reconciler from outside. */
@@ -37,8 +40,10 @@ export const useStagePose = (): CameraPose => {
 /** The pose, or null outside a <Stage> (a card in a lab board). */
 export const useStagePoseMaybe = (): CameraPose | null => useContext(PoseContext);
 
-const StageCanvas = ({ pose, children }: { pose: CameraPose; children: ReactNode }) => (
+/** `keyed`: the set layer (framecheck --set) clears to the key magenta, so every pixel no set mesh covers shows it. */
+const StageCanvas = ({ pose, children, keyed }: { pose: CameraPose; children: ReactNode; keyed: boolean }) => (
   <ThreeCanvas width={W} height={H} flat linear camera={{ fov: pose.fov, near: 0.1, far: 200, position: pose.position }} gl={{ antialias: true }}>
+    {keyed && <color attach="background" args={[SET_KEY]} />}
     <CameraRig pose={pose} />
     <PoseContext.Provider value={pose}>{children}</PoseContext.Provider>
   </ThreeCanvas>

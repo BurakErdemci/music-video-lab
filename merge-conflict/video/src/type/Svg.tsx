@@ -1,13 +1,14 @@
 // Every SVG layer of the film goes through <Svg>: it carries a frame-dependent attribute so React rewrites
 // it on every frame (architecture.md: static SVG layers vanished in 11 of 48 frames of PRESS START).
 import type { ReactNode } from 'react';
-import { useLayer } from '../layer.ts';
+import { isWorldLayer, useLayer } from '../layer.ts';
 import { useCurrentFrame } from 'remotion';
 import { H, W } from '../camera/camera.ts';
 
 export const Svg = ({ children, opacity = 1 }: { children: ReactNode; opacity?: number }) => {
   const frame = useCurrentFrame();
-  if (useLayer() === 'world') return null;
+  const layer = useLayer();
+  if (isWorldLayer(layer)) return null;
   return (
     <svg width={W} height={H} viewBox={`0 0 ${W} ${H}`} data-frame={frame} opacity={opacity} style={{ position: 'absolute', inset: 0, overflow: 'visible', pointerEvents: 'none' }}>
       {children}
