@@ -133,7 +133,8 @@ def main():
             sys.exit(f'song not found: {song}')
     start = int(a.frames.split('-')[0])
     flags = a.render_flags.split() + (['--muted'] if song and '--muted' not in a.render_flags.split() else [])
-    still_flags = [f for f in flags if f.startswith('--gl')]  # the other flags are render-only
+    # --scale too: without it a 2K render's disputed frames came back as 1080p stills upscaled in splice()
+    still_flags = [f for f in flags if f.startswith(('--gl', '--scale'))]  # the other flags are render-only
     out = Path(a.out).resolve()
     out.parent.mkdir(parents=True, exist_ok=True)
     work = Path(tempfile.mkdtemp(prefix='render_film_'))
