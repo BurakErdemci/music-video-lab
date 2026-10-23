@@ -41,6 +41,9 @@ export interface ShotState {
      *  crop it, scene-map.md round 9), and the whole view as drawn (a living painting's girls plane included). */
     view?: { h: number; ox: number; oy: number; mag: number; push: boolean; paint?: PaintView };
   };
+  /** The girls the shot's plan entry sets (its B and O, non-null): each must be a subject, her face in frame (round
+   *  11d: a re-cammed shot lost the blue girl to the dark, and the live camera silently made her an extra). */
+  authored?: ('B' | 'O')[];
   /** The pose the shot's type plane is authored in (typePlane(pose, typeBase, 1)), for placing type off the faces. */
   typeBase?: CameraPose;
 }

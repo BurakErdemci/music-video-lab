@@ -264,7 +264,9 @@ const rawFinaleStateAt = (t: number): ShotState => {
   // a painting the finale places itself (paint.ts) is reported as drawn, so framecheck measures its push and scale
   const pv = paintViewAt(t);
   const view = pv ? { h: pv.view.h, ox: pv.view.ox, oy: pv.view.oy, mag: paintMag(pv.view), push: scene === 'flight', paint: pv.view } : undefined;
-  return { pose, shot: shot.id, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)) : k } : {}), ...(view ? { view } : {}) } : undefined };
+  // the girls this shot's entry sets (not a girl kept from an earlier shot, not one scattered into particles)
+  const authored = (['B', 'O'] as const).filter((w) => shot[w] && !scattered(w, t));
+  return { pose, shot: shot.id, authored, subjects: subjectsAt(t, scene, blueP, orangeP), plate: plateId ? { id: plateId, base: planeBase, dist: panel ? 30 : 46, margin: panel ? 1.25 : plateMargin(scene), ...(panel ? { kb: scene === 'flight' ? clamp01((t - BUILD.start) / (BRANCHES_AT - BUILD.start)) : k } : {}), ...(view ? { view } : {}) } : undefined };
 };
 
 const live = liveCamera(rawFinaleStateAt, (t) => {
@@ -414,6 +416,8 @@ export const FinaleShot = ({ frame }: { frame: number }) => {
 };
 
 export const FINALE_TRANSITIONS = TRANSITIONS;
+/** The finale's scene at t (for framecheck --set's per-scene limits). */
+export const finaleSceneAt = (t: number): FScene => shotIn(FSHOTS, t).shot.scene;
 /** The opaque covers (every kind but the shock ring) for tools/covercheck.mjs, as the shot draws them. */
 export const finaleCovers = () => TRANSITIONS.filter((s) => s.kind !== 'shock').map((s) => ({ id: s.id, kind: s.kind, window: transitionWindow(s) }));
 export { COVER_GAP };

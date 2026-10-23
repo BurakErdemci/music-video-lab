@@ -62,6 +62,7 @@ await esbuild.build({
       "export { KNEE_V } from './film/livecam.ts';",
       "export { cardPoint } from './film/framing.ts';",
       "export { plateView } from './worlds/plategeo.ts';",
+      "export { finaleSceneAt } from './film/finale/FinaleShot.tsx';",
       "export { paintRects, girlsAt, girlsMag, COVER, LAYERED } from './worlds/paintview.ts';",
       "export { solesAt } from './rig/cardRig.ts';",
       "export { TYPE_PLAN } from './film/typeplan.ts';",
@@ -170,8 +171,13 @@ const scaleFails = (state) => [...cardScales(state), ...plateScales(state)].filt
 }));
 
 /** The failures of one frame's state. */
+const whoOf = (card) => (card.startsWith('B') || card.startsWith('PB') ? 'B' : 'O');
 const check = (state) => {
   const out = [];
+  // round 11d: a girl the shot's plan entry sets is a subject (her face in frame at the shot's middle), not an extra
+  for (const w of state.authored ?? []) {
+    if (!state.subjects.some((s) => whoOf(s.card) === w)) out.push({ s: { card: w === 'B' ? 'blue' : 'orange' }, key: 'authored', why: `the ${w === 'B' ? 'blue' : 'orange'} girl the shot sets is not in frame as a subject` });
+  }
   for (const s of state.subjects) {
     const f = frames[s.card];
     if (!f) { out.push({ s, why: 'no face/action box in frames.json' }); continue; }
@@ -231,6 +237,11 @@ if (selftest) {
   const cutIn = check({ pose: M.HOME, shot: 'selftest-cut', subjects: [{ card, at: { x: 0, feet: -2.5, height: 6 } }] }).filter((x) => /cut edge/.test(x.why));
   const cutOff = check({ pose: M.HOME, shot: 'selftest-cut', subjects: [{ card, at: { x: 0, feet: -7, height: 9 } }] }).filter((x) => /cut edge/.test(x.why));
   console.log(`selftest cut edge on ${card}: lifted -> ${cutIn.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; run off the bottom -> ${cutOff.map((b) => b.why).join('; ') || 'passed'}`);
+  // the authored girls (round 11d): a shot that sets both girls with only orange a subject fails; with both it passes
+  const okCard = (who) => Object.keys(frames).find((k) => frames[k].kind === 'bust' && whoOf(k) === who);
+  const aLost = check({ pose: M.HOME, shot: 'selftest-authored', authored: ['B', 'O'], subjects: [{ card: okCard('O'), at: { x: 0, feet: -7, height: 9 } }] }).filter((x) => x.key === 'authored');
+  const aBoth = check({ pose: M.HOME, shot: 'selftest-authored', authored: ['B', 'O'], subjects: [{ card: okCard('O'), at: { x: 2, feet: -7, height: 9 } }, { card: okCard('B'), at: { x: -2, feet: -7, height: 9 } }] }).filter((x) => x.key === 'authored');
+  console.log(`selftest authored: blue lost -> ${aLost.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; both in frame -> ${aBoth.map((b) => b.why).join('; ') || 'passed'}`);
   // the scale rule: the same card drawn at 60 units fails it, at 2 units it does not
   const sBig = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -20, height: 60 } }] });
   const sOk = scaleFails({ pose: M.HOME, subjects: [{ card, at: { x: 0, feet: -4.5, height: 2 } }] });
@@ -255,7 +266,7 @@ if (selftest) {
   const gCut = paintingFails(girls('RK11', 0.4));
   console.log(`selftest painting girls: as drawn -> ${gOk.map((b) => b.why).join('; ') || 'passed'}; RK2 slid -> ${gGap.map((b) => b.why).join('; ') || 'PASSED (wrong)'}; RK11 slid out -> ${gCut.map((b) => b.why).join('; ') || 'PASSED (wrong)'}`);
   rmSync(outDir, { recursive: true, force: true });
-  process.exit(big.length > 0 && ok.length === 0 && cutIn.length > 0 && cutOff.length === 0 && sBig.length > 0 && sOk.length === 0 && pOk.length === 0 && pSmall.length > 0 && pBig.length > 0 && pCard.length > 0 && vFlight.length === 0 && vOver.length > 0 && gOk.length === 0 && gGap.length > 0 && gCut.length > 0 ? 1 : 0);
+  process.exit(big.length > 0 && ok.length === 0 && aLost.length > 0 && aBoth.length === 0 && cutIn.length > 0 && cutOff.length === 0 && sBig.length > 0 && sOk.length === 0 && pOk.length === 0 && pSmall.length > 0 && pBig.length > 0 && pCard.length > 0 && vFlight.length === 0 && vOver.length > 0 && gOk.length === 0 && gGap.length > 0 && gCut.length > 0 ? 1 : 0);
 }
 
 if (arg('dump')) {
@@ -332,6 +343,32 @@ const standing = (st, t) => {
     return sole.cx < 0 || sole.cx > W || sole.cy < 4 || sole.cy > H - 12 ? [] : [sole];
   });
 };
+
+// ---- the set covers the frame (round 11d) ---------------------------------------------------------------------
+// --set renders the set alone (no girls, no type) at --fps samples a second, plain and with the dark backdrops keyed,
+// and hands both to tools/setframe.py: at most 1 % of the border band may show the bare backdrop (no set drawn there).
+// The limit is 1 % of the border band. The finale's worlds whose dark space is the set itself are designed voids
+// (not measured): the piano's empty club after hours ('quiet', a lit floor under a dark room), the light-box rig the
+// girls rise in ('flight'), the single line of light ('line'), the equals walls closing in ('walls'), the logo stage
+// ('logo'), the intro's terminal room ('terminal'), the resolved title ('title') and the face inserts ('faceO',
+// 'faceB'). Two dark worlds hold a measured limit: the LED-wall split screens ('split', 'duel': 42 %, the approved
+// framings measure up to 39 %) and the chevron tunnel floating in the dark ('tunnel': 82 %, approved up to 77 %); on
+// proof232-r11c's tree the re-cammed yes2, sky-faces and outro-faces measured 44-54 % and tunnel-3 and outro-dive
+// 91-97 % (round 11d).
+const VOID_LIMITS = { split: 0.42, duel: 0.42, tunnel: 0.82 };
+const VOID_SCENES = ['quiet', 'flight', 'line', 'walls', 'logo', 'terminal', 'title', 'faceO', 'faceB'];
+if (process.argv.includes('--set')) {
+  const every = Math.round(FPS / Number(arg('fps', 4)));
+  const picks = [];
+  for (let fr = Math.round(A * FPS); fr <= Math.round(B * FPS); fr += every) if (M.filmStateAt(fr)) picks.push(fr);
+  console.log(`set ${A}-${B} s: ${picks.length} frames of the set layer`);
+  const { shots, done } = await renderLayers(picks, [{ key: 'world', props: { layer: 'world' }, frames: picks }, { key: 'worldkey', props: { layer: 'worldkey' }, frames: picks }], 'setcheck-');
+  const samples = picks.map((fr) => { const st = M.filmStateAt(fr); const scene = fr / FPS >= 140.04 ? M.finaleSceneAt(fr / FPS) : null; return { frame: fr, t: fr / FPS, shot: st.shot, scene, png: path.join(shots, `world-${fr}.png`), keyed: path.join(shots, `worldkey-${fr}.png`), limit: VOID_SCENES.includes(scene) ? 1.01 : VOID_LIMITS[scene] ?? 0.01 }; });
+  const list = path.join(shots, 'samples.json');
+  writeFileSync(list, JSON.stringify(samples));
+  const py = spawnSync('uv', ['run', '--with', 'pillow', '--with', 'numpy', 'python', '-I', path.join(ROOT, 'tools', 'setframe.py'), list, ...(process.argv.includes('--all') ? ['--all'] : [])], { stdio: 'inherit' });
+  done(py.status);
+}
 
 if (process.argv.includes('--ground')) {
   // every shot with a standing card, sampled at its middle (and its quarters when longer than 2 s): away from the
