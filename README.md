@@ -16,6 +16,16 @@ be that reference.
 
 <table>
 <tr>
+<td colspan="2" valign="top">
+<a href="merge-conflict/"><img src="merge-conflict/docs/media/hero.jpg" alt="Merge Conflict: the orange metal girl and the blue disco girl walk arm in arm at sunrise" width="100%"></a><br>
+<b><a href="merge-conflict/">Merge Conflict</a></b><br>
+Kawaii heavy-metal disco battle of two girls over one line of code, until "accept both changes" turns the
+spotlight into a gradient. 3:52, 1440p at 60 fps. Painted poses, LED and laser worlds, living paintings and
+a designed type form for every sung line.<br>
+On YouTube soon.
+</td>
+</tr>
+<tr>
 <td width="50%" valign="top">
 <a href="her-sabah-bastan/"><img src="her-sabah-bastan/docs/media/hero.jpg" alt="Her Sabah Baştan: a human and an AI press palms on a halftone moon" width="100%"></a><br>
 <b><a href="her-sabah-bastan/">Her Sabah Baştan</a></b><br>
@@ -30,6 +40,31 @@ Symphonic metal anthem of a final boss who is nerfed in a patch and climbs out o
 4:33.8, 1440p at 60 fps. Graphic noir comic cut-outs on a 2.5D stage.<br>
 <a href="https://www.youtube.com/watch?v=QUtyszbWdDg">Watch on YouTube</a>
 </td>
+</tr>
+</table>
+
+### Moments
+
+Two excerpts from each final render, 15 fps. More in each clip's README.
+
+<table>
+<tr>
+<td width="50%" valign="top"><img src="merge-conflict/docs/media/02-blue-orange.webp" alt="The orange girl turns metal on her shout ORANGE!" width="100%"><br>
+<b>Merge Conflict 0:38</b> "Blue! Orange!" The orange girl turns metal on her own shout.</td>
+<td width="50%" valign="top"><img src="merge-conflict/docs/media/05-push-it-whole.webp" alt="PUSH IT!, EQUALS, NOW WE'RE WHOLE, then the MERGE CONFLICT logo whole" width="100%"><br>
+<b>Merge Conflict 2:53</b> "Push it!", "equals", "now we're whole", and the logo resolved.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="vorathul-nerfed/docs/media/01-fan-wings-fight.webp" alt="Close on the organ-pipe wings, then a wide shot with an impact burst" width="100%"><br>
+<b>Vorathul: NERFED</b> The organ-pipe wings, then the fight.</td>
+<td width="50%" valign="top"><img src="vorathul-nerfed/docs/media/05-breakout.webp" alt="A NERFED! balloon on the office wall, then Vorathul bursts out of the painting in shards" width="100%"><br>
+<b>Vorathul: NERFED</b> He bursts out of the painting on the office wall.</td>
+</tr>
+<tr>
+<td width="50%" valign="top"><img src="her-sabah-bastan/docs/media/03-bus-heart.webp" alt="On a night bus the AI draws a heart in the fogged window" width="100%"><br>
+<b>Her Sabah Baştan 2:30</b> Night bus. The AI draws a heart in the fogged glass.</td>
+<td width="50%" valign="top"><img src="her-sabah-bastan/docs/media/05-halftone-meeting.webp" alt="Human and AI press palms on a halftone moon, a heart is drawn, the frame floods moon yellow" width="100%"><br>
+<b>Her Sabah Baştan 3:44</b> Palms meet on the moon and the frame floods one colour.</td>
 </tr>
 </table>
 
@@ -67,6 +102,8 @@ The process behind these clips is written down as a Claude Code skill in
 ```
 her-sabah-bastan/   clip 1: song data, style frames, Remotion project, tools, briefs
 vorathul-nerfed/    clip 2: same layout, plus docs/scene-map.md and docs/making-of/
+merge-conflict/     clip 3: same layout, plus docs/scene-map.md and round-by-round handoffs
+skill/music-video/  the Claude Code skill and its lessons
 ```
 
 Each clip currently carries its own copy of the measurement and check tools (`tools/`). They will
