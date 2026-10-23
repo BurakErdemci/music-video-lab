@@ -195,3 +195,23 @@ are tight there; any change to the scream's shots needs a re-measure of both. Ru
 - **Open:** typecheck 0-232.12 fails its 6-forms-per-30 s rule at 127-157 (5 forms; it was 5 on r10 too: the solo
   has no lyrics). The per-form margin sweep also found plane-carried and flying forms crossing the margin while they
   move (v-head, the Stamps, the Logo halves, r-rebased, r-gone, r-data2, v-orange, f-equals): not gated.
+
+## Round 11d (2026-10-23): the re-cammed shots that exposed the set
+The architect found that the repeat fix (5dee335) framed some finale shots off their set (black void, a tilted LED
+wall) and lost the blue girl in two face duels. Full proof: `video/out/proof232-r11d.mp4`.
+- **Re-cammed again** (still unique for `repeatcheck`): yes2 reverse push, yes3 hero dollyzoom, sky-faces hero still,
+  outro-faces reverse push, tunnel-3 hero still, outro-dive hero orbit. The other 20 re-cammed shots pass both new
+  rules.
+- **A girl the shot sets stays a subject:** the finale state reports `authored` (the shot entry's non-null B and O,
+  not scattered); `framecheck` fails a frame where one of them is not a subject (r11c: sky-faces 198.17-198.83,
+  outro-faces 221.58-222.92; selftest case "blue lost").
+- **The set covers the frame:** `framecheck --set --range 140.04-232.12 [--fps 4] [--all]` renders the frame without
+  the type twice, plain ('world') and with the worlds' dark backdrops keyed magenta ('worldkey'; `layer.ts` also has
+  'set' and 'setkey' without the girls). Where the two differ by nearly the whole key, the backdrop is bare;
+  `tools/setframe.py` erodes that mask by 15 px (the LED walls' and floors' translucent gaps) and fails a frame with
+  more than 1 % of its 24 px border band bare. The girls count as set: measured without them the approved YES!
+  frames read 64 % bare behind the busts. Designed voids (not measured): quiet, flight, line, walls, logo, terminal,
+  title, faceO, faceB. Measured limits: split/duel 42 % (approved up to 39 %), tunnel 82 % (approved up to 77 %).
+  On r11c's plan it fails yes2 54.7 %, yes3 57.3 %, sky-faces 53.3 %, outro-faces 54.0 %, tunnel-3 88.8 %,
+  outro-dive 98.2 %. It is not gated before 140.04 s (the earlier families have no scene table; their dark worlds
+  are unmeasured).
