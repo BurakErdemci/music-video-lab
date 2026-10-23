@@ -22,7 +22,7 @@ be that reference.
 Kawaii heavy-metal disco battle of two girls over one line of code, until "accept both changes" turns the
 spotlight into a gradient. 3:52, 1440p at 60 fps. Painted poses, LED and laser worlds, living paintings and
 a designed type form for every sung line.<br>
-On YouTube soon.
+<a href="https://www.youtube.com/watch?v=J37b5WfH-7w">Watch on YouTube</a>
 </td>
 </tr>
 <tr>

@@ -1,6 +1,6 @@
 # Merge Conflict
 
-**On YouTube soon.** The link goes here when the video is up.
+**Watch it on YouTube: [Merge Conflict || Opus 5.5 Music Clip](https://www.youtube.com/watch?v=J37b5WfH-7w)**
 
 <img src="docs/media/hero.jpg" alt="The orange metal girl and the blue disco girl walk arm in arm and laugh, a sunrise city behind them" width="100%">
 
