@@ -76,7 +76,7 @@ export const FSHOTS: FShot[] = [
   { id: 'yes1', t: tk(53, 3), scene: 'split', cam: 'hero', move: 'push', into: 'glitch', B: bustAt('PBX2', -3.9), O: bustAt('POX2', 3.9) },
   { id: 'acc2', t: tk(54, 0), scene: 'arena', cam: 'reverse', move: 'whip', into: 'shock', B: ['PB3', full(-2.4)], O: ['PO3', full(2.4)] },
   { id: 'acc2-changes', t: tk(54, 2), scene: 'arena', cam: 'low', move: 'orbit', into: 'shock' },
-  { id: 'yes2', t: tk(54, 3), scene: 'split', cam: 'low', move: 'push', into: 'shock', B: bustAt('PBX3', -3.9), O: bustAt('POX3', 3.9) },
+  { id: 'yes2', t: tk(54, 3), scene: 'split', cam: 'reverse', move: 'push', into: 'shock', B: bustAt('PBX3', -3.9), O: bustAt('POX3', 3.9) },
   // "Blue and orange together, it's a gradient now": spinning hand in hand (RK4), then the gradient arena
   { id: 'rk4', t: tk(55, 0), scene: 'panel', panel: 'RK4', cam: 'hero', move: 'push', into: 'shock', B: null, O: null },
   { id: 'gradient', t: tk(55, 6), scene: 'spin', cam: 'hero', move: 'orbit', into: 'laser', B: ['PB6', full(-2.6)], O: ['PO6', full(2.6)] },
@@ -94,7 +94,7 @@ export const FSHOTS: FShot[] = [
   { id: 'acc3', t: tk(57, 0), scene: 'arena', cam: 'wide', move: 'whip', into: 'shock', B: ['PB1', full(-3.0)], O: ['PO1', full(3.0)] },
   { id: 'acc3-both', t: tk(57, 1), scene: 'arena', cam: 'low', move: 'push', into: 'shock' },
   { id: 'acc3-changes', t: tk(57, 2), scene: 'arena', cam: 'reverse', move: 'orbit', into: 'shock' },
-  { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'wide', move: 'push', into: 'shock', B: bustAt('PBX1', -3.9), O: bustAt('POX2', 3.9) },
+  { id: 'yes3', t: tk(57, 3), scene: 'split', cam: 'hero', move: 'dollyzoom', into: 'shock', B: bustAt('PBX1', -3.9), O: bustAt('POX2', 3.9) },
   // "Commit and push it! (PUSH IT!)": both push, then the half mirror ball, half fireball (RK6)
   { id: 'commit', t: tk(58, 0), scene: 'arena', cam: 'hero', move: 'dollyzoom', into: 'streaks', B: ['PB2', full(-2.6)], O: ['PO2', full(2.6)] },
   { id: 'commit-push', t: tk(58, 2), scene: 'arena', cam: 'reverse', move: 'dollyzoom', into: 'shock' },
@@ -137,7 +137,7 @@ export const FSHOTS: FShot[] = [
   // round 9: no set more than twice (Burak: the forge and the laser stage came round again and again) - the stadium,
   // the fire hall, the graffiti alley and RK8 join; face inserts for each girl in her own colour
   { id: 'sky', t: db(197.4), scene: 'stadium', cam: 'low', move: 'push', into: 'tear', B: ['BH4', full(-2.6, 4.8)], O: ['OH4', full(2.6, 4.8)] },
-  { id: 'sky-faces', t: bt(198.1), scene: 'duel', cam: 'hero', move: 'orbit', into: 'shock', B: faceAt('BMX2', -4.4), O: faceAt('OMX3', 4.4, true) },
+  { id: 'sky-faces', t: bt(198.1), scene: 'duel', cam: 'hero', move: 'still', into: 'shock', B: faceAt('BMX2', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'smash-up', t: db(198.8), scene: 'forge', cam: 'hero', move: 'orbit', into: 'shock', B: null, O: ['OS4', full(1.6, 5.6)] },
   { id: 'smash', t: db(200.1), scene: 'forge', cam: 'low', move: 'dollyzoom', into: 'shock' },
   { id: 'keytar', t: db(201.4), scene: 'fire', cam: 'hero', move: 'whip', into: 'tear', B: ['BS4', full(-1.4, 5.4)], O: null },
@@ -148,7 +148,7 @@ export const FSHOTS: FShot[] = [
   // unused since the breakdown was rebuilt, takes its place)
   { id: 'impact', t: db(204.1), scene: 'panel', panel: 'QK1', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   { id: 'headbang', t: db(205.4), scene: 'graffiti', cam: 'wide', move: 'whip', into: 'tear', B: ['BH1', full(-2.5, 4.8)], O: ['OH1', full(2.5, 4.8)] },
-  { id: 'tunnel-3', t: db(206.8), scene: 'tunnel', cam: 'wide', move: 'push', into: 'shock', B: ['BS2', full(-1.8, 4.8)], O: ['OS2', full(1.8, 4.8)] },
+  { id: 'tunnel-3', t: db(206.8), scene: 'tunnel', cam: 'hero', move: 'still', into: 'shock', B: ['BS2', full(-1.8, 4.8)], O: ['OS2', full(1.8, 4.8)] },
   { id: 'faces-3', t: bt(207.5), scene: 'faceO', cam: 'hero', move: 'orbit', into: 'shock', B: null, O: faceC('OMX1', true) },
   { id: 'arena-3', t: db(208.1), scene: 'cathedral', cam: 'reverse', move: 'orbit', into: 'shock', B: ['BS3', full(-3.0, 5.0)], O: ['OS3', full(3.0, 5.0)] },
   { id: 'smash-2', t: db(209.5), scene: 'stadium', cam: 'wide', move: 'dollyzoom', into: 'tear', B: ['BS4', full(-2.6, 5.0)], O: ['OS4', full(2.6, 5.2)] },
@@ -163,10 +163,10 @@ export const FSHOTS: FShot[] = [
   { id: 'dawn-us', t: dbN(OUTRO.start, 2), scene: 'panel', panel: 'RK13', cam: 'hero', move: 'push', B: null, O: null, inserted: true },
   { id: 'title', t: db(218.8), scene: 'title', cam: 'hero', move: 'push', into: 'tear', B: null, O: null },
   { id: 'title-b', t: db(220.1), scene: 'title', cam: 'close', move: 'orbit', into: 'shock' },
-  { id: 'outro-faces', t: db(221.5), scene: 'duel', cam: 'close', move: 'orbit', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
+  { id: 'outro-faces', t: db(221.5), scene: 'duel', cam: 'reverse', move: 'push', into: 'shock', B: faceAt('BMX3', -4.4), O: faceAt('OMX3', 4.4, true) },
   { id: 'outro-arena', t: db(222.8), scene: 'marena', cam: 'wide', move: 'dollyzoom', into: 'tear', B: ['BS4', full(-3.0, 5.0)], O: ['OS4', full(3.0, 5.0)] },
   { id: 'outro-forge', t: db(224.2), scene: 'forge', cam: 'hero', move: 'whip', into: 'shock', B: ['BH4', full(-2.5, 4.8)], O: ['OH4', full(2.5, 4.8)] },
-  { id: 'outro-dive', t: db(225.5), scene: 'tunnel', cam: 'wide', move: 'whip', into: 'shock', B: dive('BH2', -2.2), O: dive('OH2', 2.4) },
+  { id: 'outro-dive', t: db(225.5), scene: 'tunnel', cam: 'hero', move: 'orbit', into: 'shock', B: dive('BH2', -2.2), O: dive('OH2', 2.4) },
   { id: 'outro-cathedral', t: db(226.8), scene: 'cathedral', cam: 'low', move: 'whip', into: 'tear', B: ['BS1', full(-2.6, 5.0)], O: ['OS1', full(2.6, 5.0)] },
   { id: 'freeze', t: db(228.2), scene: 'panel', panel: 'RK12', cam: 'hero', move: 'still', into: 'shock', B: null, O: null },
 ];
